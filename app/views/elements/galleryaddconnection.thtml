@@ -1,0 +1,115 @@
+<?php
+	echo "<div class='project_connect_header'>\n";
+	echo "<h5>"; 
+	printf(___('Where do you want to add %s?', true), " <a href='/projects/$user_name/$project_id'>$project_name</a>");
+	echo "</h5>\n";
+	echo "</div>\n";
+	
+	echo "<div id='gallery_menu'>\n";
+	if ($option == "owner") {
+		$owner_address = "/galleries/addtogallery/$project_id/owner";
+		$link_name = ___('owned by me', true);
+		echo $ajax->link("<span class='button2_selected'>$link_name</span>", '#', 
+					array("url"=> $owner_address, 
+							"update"=>"gallery_connect", 
+							"id"=>"gallery_connect_owner",
+							"class"=>"gallery_connect_button",
+							"complete"=>""), 
+							NULL, false);
+	} else {
+		$owner_address = "/galleries/addtogallery/$project_id/owner";
+		$link_name = ___('owned by me', true);
+		echo $ajax->link("<span class='button2'>$link_name</span>", '#', 
+					array("url"=> $owner_address, 
+							"update"=>"gallery_connect", 
+							"id"=>"gallery_connect_owner",
+							"class" => 'gallery_connect_button',
+							"complete"=>""), 
+							NULL, false);
+	}
+	
+	if ($option == "public") {
+		$link_name = ___('bookmarked', true);
+		$public_address = "/galleries/addtogallery/$project_id/public";
+		echo $ajax->link("<span class='button2_selected'>$link_name</span>", '#', 
+					array("url"=> $public_address, 
+							"update"=>"gallery_connect", 
+							"id"=>"gallery_connect_public",
+							"class" => 'gallery_connect_button',
+							"complete"=>""), 
+							NULL, false);
+	} else {
+		$link_name = ___('bookmarked', true);
+		$public_address = "/galleries/addtogallery/$project_id/public";
+		echo $ajax->link("<span class='button2'>$link_name</span>", '#', 
+					array("url"=> $public_address, 
+							"update"=>"gallery_connect", 
+							"id"=>"gallery_connect_public",
+							"class" => 'gallery_connect_button',
+							"complete"=>""), 
+							NULL, false);
+	}
+	
+	if ($option == "memberof") {
+		$link_name = ___('shared by my friends', true);
+		$member_address = "/galleries/addtogallery/$project_id/memberof";
+		echo $ajax->link("<span class='button2_selected'>$link_name</span>", '#', 
+					array("url"=> $member_address, 
+							"update"=>"gallery_connect", 
+							"id"=>"gallery_connect_member",
+							"class" => "gallery_connect_button",
+							"complete"=>""), 
+							NULL, false);
+	} else {
+		$link_name = ___('shared by my friends', true);
+		$member_address = "/galleries/addtogallery/$project_id/memberof";
+		echo $ajax->link("<span class='button2'>$link_name</span>", '#', 
+					array("url"=> $member_address, 
+							"update"=>"gallery_connect", 
+							"id"=>"gallery_connect_member",
+							"class" => "gallery_connect_button",
+							"complete"=>""), 
+							NULL, false);
+	}
+   echo "</div>\n";
+   
+	echo "<div class='project_connect_content'>\n";
+		foreach ($data as $gallery) {
+			$gallery = $gallery['Gallery'];
+			$gallery_name = $gallery['name'];
+			$gallery_id = $gallery['id'];
+			$gallery_totalProjects = $gallery['total_projects'];
+			$gallery_icon_src = getThemeIcon($gallery_id);
+			$gallery_url = "/galleries/view/$gallery_id";
+			$gallery_desc = $gallery['description'];
+			if (strlen($gallery_name) >= 15) {
+				$gallery_name = substr($gallery_name,0,15) . " ...";
+			}
+			$exists = $gallery['exists'];
+			
+			if ($exists == false) {
+				e($ajax->link("<div class='gallery_connect_item'>
+									<div class='gallery_connect_img'>
+										<img class='clean_img' src='/img/blank.gif' width='13' height='13'></img>
+									</div>
+									<div class='gallery_connect_text'>
+										<h6>$gallery_name</h6>
+									</div>
+								</div>", '#', 
+								array('url'=>'/galleries/addproject/' . $gallery_id . '/' . $project_id . '/' . $option, 'update'=>'gallery_connect', 
+								'condition'=>'checkLogin()'), NULL, false));
+			} else {
+				e($ajax->link("<div class='gallery_connect_item'>
+									<div class='gallery_connect_img'>
+										<img class='clean_img' src='/img/checkmark.gif' width='13' height='13'></img>
+									</div>
+									<div class='gallery_connect_text'>
+										<h6>$gallery_name</h6>
+									</div>
+								</div>", '#', 
+							array('url'=>'/galleries/addproject/' . $gallery_id . '/' . $project_id . '/' . $option, 'update'=>'gallery_connect', 
+							'condition'=>'checkLogin()'), NULL, false));
+			}
+		}
+	echo "</div>\n";
+?>

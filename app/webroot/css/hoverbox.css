@@ -1,0 +1,100 @@
+
+/* =Basic HTML, Non-essential
+----------------------------------------------------------------------*/
+
+a.gallery_element
+{
+	text-decoration: none;
+}
+
+h1.gallery_name
+{
+	background: inherit;
+	border-bottom: 1px dashed #ccc;
+	color: #933;
+	font: 18px Georgia, serif;
+	margin: 0 0 10px;
+	padding: 0 0 5px;
+	text-align: center;
+}
+
+.gallery_set
+{
+	width:130px;
+	height:150px;
+}
+
+a.gallery_element
+{
+	background: inherit;
+	color: #777;
+}
+
+a.gallery_element:hover
+{
+	background: inherit;
+	color: #000;
+}
+
+/* =Hoverbox Code
+----------------------------------------------------------------------*/
+
+.gallery_box
+{
+	cursor: default;
+	list-style: none;
+}
+
+.gallery_box a.gallery_element
+{
+	cursor: default;
+}
+
+.gallery_box a.gallery_element .gallery_element_preview
+{
+	display: none;
+}
+
+.gallery_box a.gallery_element:hover .gallery_element_preview
+{
+	display: block;
+	position: absolute;
+	top: -33px;
+	left: -45px;
+	z-index: 1;
+}
+
+.gallery_box img.gallery_element_std
+{
+	cursor: pointer;
+	background: #fff;
+	border-color: #aaa #ccc #ddd #bbb;
+	border-style: solid;
+	border-width: 1px;
+	color: inherit;
+	padding: 2px;
+	vertical-align: top;
+	width: 100px;
+	height: 75px;
+}
+
+.gallery_box li
+{
+	background: #eee;
+	border-color: #ddd #bbb #aaa #ccc;
+	border-style: solid;
+	border-width: 1px;
+	color: inherit;
+	display: inline;
+	float: left;
+	margin: 3px;
+	padding: 5px;
+	position: relative;
+}
+
+.gallery_box .gallery_element_preview
+{
+	border-color: #000;
+	width: 200px;
+	height: 150px;
+}

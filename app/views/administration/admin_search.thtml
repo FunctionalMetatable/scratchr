@@ -1,0 +1,156 @@
+<div id='ajax_pagination'>
+<div class="gallery_pagination_container">
+	<?php 
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination'); 
+	?>
+</div>
+<?php
+	if (!empty($results)) {
+		foreach ($results as $current_result) {
+			if ($search_table == 'users') {
+				$user = $current_result;
+				$user_id = $user['User']['id'];
+				$user_name = $user['User']['username'];
+				$user_email = $user['User']['email'];
+				$user_birth = $user['User']['byear'];
+				$user_country = $user['User']['country'];
+				$user_created = $user['User']['created'];
+				$user_status = $user['User']['status'];
+				$user_url = "http://scratch.mit.edu/users/$user_name";
+				
+				echo "<div class='gallerythumb clearme'>\n";
+				echo "\t<div class='admin_leftcolumn'>\n";
+				?>
+				<span>Name: <a href="<?php echo $html->url($user_url)?>"><?php e($user_name)?></a></span><br />
+				
+				<?php
+				echo "\t\t<span>Email:";
+				echo "$user_email"; echo "</span><br/>\n";
+				echo "\t\t<span>Created:";
+				echo "$user_created"; echo "</span>\n";
+				echo "\t</div>";
+				echo "\t<div class='admin_rightcolumn'>\n";
+				echo "\t\t<span>Country:";
+				echo " $user_country" ; 
+				echo "\t\t</span><br/>\n";
+				echo "\t\t<span> Birth ";
+				echo "$user_birth"; 
+				echo "\t\t</span><br/>\n";
+				echo "\t\t<span><br/>\n";
+				$delete_user_url = '/administration/deleteuser/' . $user_id;
+				$restore_user_url = '/administration/restore/' . $user_id;
+				if ($user_status == 'delbyadmin') {
+					echo "Restore";
+					echo " | ";
+				} else {
+					echo $html->link('Delete', $delete_user_url, Array(), 'Are you sure?', false);
+					echo " | ";
+				}
+				?>
+				
+				<a href="<?php echo $html->url('/administration/viewuser/'.$user_id)?>">View Details</a>
+				<?php
+				echo "\t\t</span>\n";
+				echo "\t</div>\n";
+				echo "</div>\n";
+			} elseif ($search_table == 'projects') {
+				$project = $current_result;
+				$project_name = htmlspecialchars($project['Project']['name']);
+				$project_loves = $project['Project']['loveit'];
+				$project_flags = $project['Project']['flagit'];
+				$project_created = $project['Project']['created'];
+				$project_modified = $project['Project']['modified'];
+				$project_favorites = $project['Project']['num_favoriters'];
+				$project_creator = htmlspecialchars($project['User']['username']);
+				$project_views = $project['Project']['views'];
+				$project_id = $project['Project']['id'];
+				$project_url = "/projects/view/$project_creator/$project_id";
+				$project_safe_level = $project['Project']['status'];
+				
+				echo "<div class='gallerythumb clearme'>\n";
+				echo "\t<div class='admin_leftcolumn'>\n";
+				?>
+				<span>Name: <a href="<?php echo $html->url($project_url)?>"><?php e($project_name)?></a></span><br />
+				
+				<?php
+				echo "\n\t\t<span>Loves:";
+				echo "$project_loves"; echo "</span><br/>\n";
+				echo "\t\t<span>Flags:";
+				echo "$project_flags"; echo "</span><br/>\n";
+				echo "\t\t<span>Favorites:";
+				echo "$project_favorites"; echo "</span><br/>\n";
+				echo "\t\t<span>Status: ";
+				echo "$project_safe_level"; echo "</span>\n";
+				echo "\t\t<span>Last Reviewed By:";
+				echo "$project_favorites"; echo "</span><br/>\n";
+				echo "\t</div>";
+				
+				
+				echo "\t<div class='admin_rightcolumn'>\n";
+				echo "\t\t<span>Creator:";
+				echo " $project_creator" ; 
+				echo "\t\t</span><br/>\n";
+				echo "\t\t<span> Creation Date: ";
+				echo "$project_created"; 
+				echo "\t\t</span><br/>\n";
+				echo "\t\t<span> Last Modified: ";
+				echo "$project_modified"; echo "</span>\n";
+				echo "\t\t<span><br/>\n";
+				?>
+				<a href="<?php echo $html->url('/administration/deleteproject/'.$project_id)?>">Delete</a>|
+				<a href="<?php echo $html->url('/administration/censorproject/'.$project_id)?>">Censor</a><br />
+				
+				<?php
+				echo "\t\t</span><br/>\n";
+				?>
+				<a href="<?php echo $html->url('/administration/viewproject/'.$project_id)?>">View Details</a>
+				
+				<?php
+				echo "\t</div>\n";
+				echo "</div>\n";
+			} elseif ($search_table == 'galleries') {
+				$gallery = $current_result;
+				$gallery_name = $gallery['Gallery']['name'];
+				$gallery_id = $gallery['Gallery']['id'];
+				$gallery_totalProjects = $gallery['Gallery']['total_projects'];
+				$gallery_url = "/galleries/view/$gallery_id";
+				$gallery_desc = $gallery['Gallery']['description'];
+				$creation_date = $gallery['Gallery']['created'];
+				$gallery_safe_level = $gallery['Gallery']['status'];
+				$gallery_creator = $gallery['User']['username'];
+				
+				echo "<div class='gallerythumb clearme'>\n";
+				echo "\t<div class='admin_leftcolumn'>\n";
+				?>
+				<span>Name: <a href="<?php echo $html->url($gallery_url)?>"><?php e($gallery_name)?></a></span><br />
+				
+				<?php
+				echo "\t\t<span>Total Projects:";
+				echo "$gallery_totalProjects"; echo "</span><br/>\n";
+				echo "\t\t<span>Status: ";
+				echo "$gallery_safe_level"; echo "</span>\n";
+				echo "\t\t<span>Last Reviewed By:";
+				echo "</span><br/>\n";
+				echo "\t</div>";
+				
+				echo "\t<div class='admin_rightcolumn'>\n";
+				echo "\t\t<span>Creator:";
+				echo " $gallery_creator" ; 
+				echo "\t\t</span><br/>\n";
+				echo "\t\t<span> Creation Date: ";
+				echo "$creation_date"; 
+				echo "\t\t</span><br/>\n";
+				echo "\t</div>\n";
+				echo "</div>\n";
+			}
+		}
+	}
+?>
+<div class="gallery_pagination_container">
+	<?php 
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination'); 
+	?>
+</div>
+</div>

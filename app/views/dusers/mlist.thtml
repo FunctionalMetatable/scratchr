@@ -1,0 +1,33 @@
+<h1>Scratch friends</h1>
+<table>
+	<tr>
+		<th>date</th>
+		<th>first name</th>
+		<th>last name</th>
+		<th>email</th>
+		<th>role</th>
+		<th>organization</th>
+		<th>city</th>
+		<th>state</th>
+		<th>country</th>
+		<th>heard about from</th>
+		<th>interests about</th>
+		<th>comments</th>
+	</tr>
+	<?php foreach ($dusers as $duser): ?>
+	<tr>
+		<td><?php echo $duser['Duser']['created']; ?></td>
+		<td><?php echo $duser['Duser']['firstname']; ?></td>
+		<td><?php echo $duser['Duser']['lastname']; ?></td>
+		<td><?php echo $duser['Duser']['email']; ?></td>
+		<td><?php echo $duser['Duser']['role']; ?></td>
+		<td><?php echo $duser['Duser']['organization']; ?></td>
+		<td><?php echo $duser['Duser']['city']; ?></td>
+		<td><?php echo $duser['Duser']['state']; ?></td>
+		<td><?php echo $duser['Duser']['country']; ?></td>
+		<td><?php echo $duser['Duser']['hearabout']; ?></td>
+		<td><?php echo $duser['Duser']['interestsabout']; ?></td>
+		<td><?php echo $duser['Duser']['comment']; ?></td>
+	</tr>
+	<?php endforeach; ?>
+</table>

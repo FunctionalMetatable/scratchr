@@ -1,0 +1,17 @@
+<ul id="taglist">
+<?php 
+	$count=0;
+	$tagcount=count($tags);
+	foreach($tags as $tag):
+		$sprite_tag_id = $tag['SpriteTag']['id'];
+		$tag_name = $tag['Tag']['name'];
+		$tag_id = $tag['Tag']['id'];
+		$tag_url = "/tags/view/".$tag_name;
+		$count++;
+		$tag_size = $tag['SpriteTag']['size'];
+	?>
+	<li id="tag-<?php echo $sprite_tag_id?>">
+		<?php echo "<span class='tag_size_$tag_size'>"; ?> <a href="<?php e($tag_url)?>"><?php e($tag_name)?></a> <?php echo "</span>"; ?>
+	</li>
+	<?php endforeach;?>
+</ul>

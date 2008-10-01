@@ -1,0 +1,36 @@
+<ul id="taglist">
+<?php 
+	$count=0;
+	$tagcount=count($tags);
+	foreach($tags as $tag):
+		$gallery_tag_id = $tag['GalleryTag']['id'];
+		$tag_name = $tag['Tag']['name'];
+		$tag_id = $tag['Tag']['id'];
+		$tag_url = "/tags/view/".$tag_name;
+		$count++;
+		$flagged = $tag['GalleryTag']['flagged'];
+		$tagged = $tag['GalleryTag']['tagged'];
+		$tag_size = $tag['GalleryTag']['size'];
+	?>
+	<li id="tag-<?php echo $gallery_tag_id?>">
+	<span class="tag_size_<?php echo $tag_size?>">
+	<a href="<?php echo $html->url($tag_url)?>"><?php e($tag_name)?></a>
+	</span>
+		
+		<?php
+			if (!$tagged) {
+				echo "<span>";
+				e($ajax->link('[+]', '#', array("url"=>"/galleries/upgradeTag/$gallery_tag_id", "update"=>"tag-$gallery_tag_id"), NULL, false));
+				echo "</span>";
+			}
+		?>
+		<?php 
+			if (!$flagged) {
+				echo "<span>";
+				e($ajax->link('[flag]', '#', array("url"=>"/galleries/markTag/$gallery_tag_id", "update"=>"tag-$gallery_tag_id"), NULL, false));
+				echo "</span>";
+			}
+		?>
+	</li>
+	<?php endforeach;?>
+</ul>

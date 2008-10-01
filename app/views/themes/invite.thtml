@@ -1,0 +1,63 @@
+<?php $head->register_js('scratchr.js'); ?>
+
+
+<!-- |||||| Begin main content area ||||||| -->
+<div id="main">
+<div class="container">
+  <h3>Invite friends to join <?php e($theme_name)?></h3>
+  
+	<?php 
+//	$session->flash(FLASH_ERROR_KEY);
+	$session->flash(FLASH_NOTICE_KEY);
+	?>
+
+
+	<div class="filter_form">
+	<p>Invite friends on Scratch:
+	<form method="post" action="">
+		<input id="auto_query" type="text" /><script>document.getElementById("auto_query").onkeyup = populateUserList;</script>
+	</form>
+	</p>
+	</div>
+	<br>
+
+	
+	<table>
+	<tr><td>
+	<div class="sidecontainer">
+	<div style="width:215px; height:200px; overflow: auto;">
+      <ul id="userlist" class="sidelist"><?php /* keep syntax compress; if there's any txt (even new line characters) between ul and li elements, javascript will not get the right elements*/
+	  	foreach ($users as $user):
+		$user = $user['User'];
+		$user_id = $user['id'];
+		$user_name = $user['username'];
+		$user_urlname = $user['urlname'];
+		$user_url= "/users/view/".$user_urlname;
+		$buddy_icon = getBuddyIcon($user['id']);
+		?><li id="uid_<?php e($user_id)?>" name="<?php e($user_name)?>"><input uid="<?php e($user_id)?>" uname="<?php e($user_name)?>" type="checkbox" onclick="addPendingInvite(this, el('uid_<?php e($user_id)?>'))"><a href="<?php echo $html->url($user_url)?>">
+		<?php echo $html->image($buddy_icon,array('id'=>'uimg_'.$user_id,'width'=>'28','height'=>'28'))?>
+		
+		<?php e($user_name)?></a></li><?php endforeach; ?></ul>
+	  </div>
+	</div>
+	</td>
+	
+	
+	<td>
+	<div class="sidecontainer">
+	<h4>Invitation list</h4>
+	<div style="width:215px;">
+	  <form action="/galleries/invite?gid=<?php e($theme_id)?>" method="post">
+		<ul id="invitelist" class="sidelist"></ul>
+	    <p><input type="submit" class="button" value="Invite"></p>
+	  </form>
+	</div>
+	</div>
+	</td>
+	</tr>
+	</table>
+</div>
+
+
+</div>
+<!-- ////// End main content ////// -->

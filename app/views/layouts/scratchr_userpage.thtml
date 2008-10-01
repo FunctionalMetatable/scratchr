@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<?php
+	echo $this->renderElement('superheader');
+?>
+<title>Scratch | <?php echo $isMe? "My Stuff | $urlname" : "$urlname's Stuff"; ?> </title>
+
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/feeds/getRecentUserProjects/<?=$user_id?>">
+<?php
+echo $javascript->link('prototype.js');
+echo $javascript->link('scriptaculous.js');
+echo $javascript->link('scratchr.js?v=1.2');
+echo $javascript->link('jquery.js');
+echo $javascript->link('ajax.js');
+echo $html->css('global');
+
+?>
+
+
+<!-- |||||| IE- only stylesheet in conditional comment ||||||| -->
+<!--[if IE]>
+<link href="/css/global_ie.css" rel="stylesheet" type="text/css">
+
+<![endif]-->
+<!--[if IE 6]>
+<link href="/css/ie6.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/js/ie_hacks.js"></script>
+<![endif]-->
+<?php
+
+if ($isLoggedIn) {
+		
+    e($javascript->codeBlock("
+
+    function checkLogin() {
+        return true;
+    }
+		
+	function showThemeBox(event, position_element_id, boxNum) {
+		endBubble(event);
+		var obj=document.getElementById('themebox'+boxNum);
+		var dp='';
+		if(obj.style.display==''){
+			dp='none';
+		} else {
+			var anchor_div = document.getElementById(position_element_id);
+			pos = findPos(anchor_div);
+			obj.style.left = (pos[0]-0)+'px';
+			obj.style.top = (pos[1]+40)+'px';
+		}
+		obj.style.display=dp;
+	}
+
+	function endBubble(e){if(!e)e=window.event;e.cancelBubble=true;}
+
+    "));
+
+    if(!$isMe)
+    {
+
+        e($javascript->codeBlock("
+	
+	document.onclick=function(event){
+		if(document.getElementById('themebox1').style.display==''){
+			showThemeBox(event,'',1);
+		}
+		if (document.getElementById('themebox2').style.display==''){
+			showThemeBox(event,'',2);
+		}
+	}
+
+    "));
+    }
+    else
+    {
+
+        e($javascript->codeBlock("
+
+	document.onclick=function(event){
+		if(document.getElementById('themebox1').style.display==''){
+			showThemeBox(event,'',1);
+		}
+	}
+
+        "));
+
+    }
+
+    e($javascript->codeBlock("
+	removeProjectSelections(); // runs on body load
+    "));
+
+} else {
+		$pleaselogin = ___('Please login.', true);
+    e($javascript->codeBlock("
+    function checkLogin() {
+				alert('$pleaselogin');
+        return false;
+    }
+    "));
+}
+
+if (isset($head)) echo $head->print_registered();
+?>
+
+</head>
+<body>
+<!-- |||||| Begin main container ||||||| -->
+<div id="container">
+
+
+<!-- |||||| Begin header ||||||| -->
+<?php
+if ($isLoggedIn)
+    echo $this->renderElement('header_loggedin');
+else {
+    echo $this->renderElement('header_default');
+}
+?>
+<!-- ////// End header ////// -->
+
+
+<?php echo $content_for_layout?>
+
+
+<!-- ||||| Footer |||| -->
+
+<?php echo $this->renderElement('footer'); ?>
+<?php
+	echo $this->renderElement('ajax_indicator');
+?>
+</body>
+</html>

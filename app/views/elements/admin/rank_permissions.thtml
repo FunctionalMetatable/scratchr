@@ -1,0 +1,45 @@
+<?php
+	$rank_id = $rank['KarmaRank']['id'];
+	$level = $rank['KarmaRank']['rank'];
+	$rank_name = $rank['KarmaRank']['name'];
+	$canComment = $rank['KarmaRank']['canComment'];
+	$canTag = $rank['KarmaRank']['canTag'];
+	$canUpload = $rank['KarmaRank']['canUpload'];
+	$rating_cap = $rank['KarmaRank']['rating_cap'];
+		
+	echo "<span>";
+	if ($canComment == 0) {
+		e($ajax->link("<img class='clean_img' src='/img/blank.gif' width='13' height='13'></img>
+						<h6>Comment</h6>", '#', 
+				array('url'=>'/administration/set_rank_permission/' . $rank_id . '/' . $level . '/' . 'canComment/1', 'update'=>'rank_permissions_wrapper'), NULL, false));
+	} else {
+		e($ajax->link("<img class='clean_img' src='/img/checkmark.gif' width='13' height='13'></img>
+						<h6>Comment</h6>", '#', 
+				array('url'=>'/administration/set_rank_permission/' . $rank_id . '/' . $level . '/' . 'canComment/0', 'update'=>'rank_permissions_wrapper'), NULL, false));
+	}
+	echo "</span>";
+	echo "<br/>";
+	echo "<span>"; 
+	if ($canTag == 0) {
+		e($ajax->link("<img class='clean_img' src='/img/blank.gif' width='13' height='13'></img>
+						<h6>Tag</h6>", '#', 
+				array('url'=>'/administration/set_rank_permission/' . $rank_id . '/' . $level . '/' . 'canTag/1', 'update'=>'rank_permissions_wrapper'), NULL, false));
+	} else {
+		e($ajax->link("<img class='clean_img' src='/img/checkmark.gif' width='13' height='13'></img>
+						<h6>Tag</h6>", '#', 
+				array('url'=>'/administration/set_rank_permission/' . $rank_id . '/' . $level . '/' . 'canTag/0', 'update'=>'rank_permissions_wrapper'), NULL, false));
+	}
+	echo "</span>";
+	echo "<br/>";
+	echo "<span>"; 
+	if ($canUpload == 0) {
+		e($ajax->link("<img class='clean_img' src='/img/blank.gif' width='13' height='13'></img>
+						<h6>upload</h6>", '#', 
+				array('url'=>'/administration/set_rank_permission/' . $rank_id . '/' . $level . '/' . 'canUpload/1', 'update'=>'rank_permissions_wrapper'), NULL, false));
+	} else {
+		e($ajax->link("<img class='clean_img' src='/img/checkmark.gif' width='13' height='13'></img>
+						<h6>upload</h6>", '#', 
+				array('url'=>'/administration/set_rank_permission/' . $rank_id . '/' . $level . '/' . 'canUpload/0', 'update'=>'rank_permissions_wrapper'), NULL, false));
+	}
+	echo "</span>";
+?>

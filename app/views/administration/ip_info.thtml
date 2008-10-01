@@ -1,0 +1,7 @@
+<div class="fullcontent">
+<h5> Additional IP Info</h5>
+<br/>
+<?php
+	echo $this->renderElement('admin/user_ip_list');
+?>
+</div>

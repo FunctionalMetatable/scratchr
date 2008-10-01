@@ -1,0 +1,22 @@
+ .clearme,.container, .sidecontainer {
+zoom: 1;
+
+}
+
+.button{
+	overflow: visible;
+	width: auto;
+}
+* html #searchbar{
+	padding-top: 5px;
+	padding-bottom:0 !important;
+	height: 35px;
+}
+
+.step, .thumb{
+	display: inline;
+}
+* html #header{
+	line-height:1em;
+	margin-right:-3px;
+}

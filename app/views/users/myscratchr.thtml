@@ -1,0 +1,459 @@
+﻿<?php if ($isLoggedIn): ?>
+<style>
+#themebox1 div{width:200px;}
+#themebox2 div{width:200px;}
+</style>
+
+<div id="themebox1" style="display:none;position:absolute;background:#ffff99;border:1px solid #369;margin:-.5ex 1ex;padding:.5ex .5ex .5ex .8ex;z-index:100" onclick="endBubble(event);">
+	<form name="theme_select1" method="post" action="">
+		<tr><td>
+		<font>
+		<div style="overflow-y:scroll; overflow-X:hidden;">
+
+			<?php if (count($session_user_themes) == 0): ?>
+				<?php ___('Join a gallery first'); ?>
+			<?php else:
+				foreach($session_user_themes as $theme):?>
+				<input type="checkbox" name="<?php e($theme['id'])?>">
+				<?php e($theme['name']) ?>
+				<br>
+			<?php endforeach; endif; ?>
+
+		</div>
+
+		<?php if (count($session_user_themes) !== 0):?>
+		<input type="submit" class="button" value="<?php ___('Submit'); ?>">
+		<?php endif;?>
+
+		</font>
+		</td>
+		</tr>
+		</table>
+	</form>
+</div>
+
+
+<?php if (!$isMe): ?>
+<div id="themebox2" style="display:none;position:absolute;background:#ffff99;border:1px solid #369;margin:-.5ex 1ex;padding:.5ex .5ex .5ex .8ex;z-index:100" onclick="endBubble(event);">
+	<form name="theme_select2" method="post" action="">
+		<table border=0 cellspacing=0 cellpadding=0 style="width:12ex">
+		<tr><td>
+		<font>
+		<div style="overflow-y:scroll; overflow-X:hidden;">
+
+			<?php if (count($joinable_themes) == 0): ?>
+				<?php ___('No galleries that user can join'); ?>
+			<?php else:
+				foreach($joinable_themes as $theme): $theme = $theme['themes']; ?>
+				<input type="checkbox" name="<?php e($theme['id'])?>">
+				<?php e($theme['name']) ?>
+				<br>
+			<?php endforeach; endif; ?>
+
+		</div>
+
+		<?php if (0 && count($joinable_themes) !== 0):?>
+		<input type="submit" class="button" <?php echo 'onclick="if (confirm(' . "'" . ___('Are you sure you want to invite this user to gallery?', true) . "'" .  ')) return true; return false;"'; ?> value=<?php ___("Invite"); ?>
+		<?php endif;?>
+
+		</font>
+		</td>
+		</tr>
+		</table>
+	</form>
+</div>
+<?php endif; ?>
+<?php endif; ?>
+
+
+   <!-- |||||| Begin User sidebar ||||||| -->
+  <div id="userside">
+    <div  id="user" class="sidecontainer highlight">
+      <h3><?php e($user['username'])?> </h3>
+
+      <p>
+	  
+	  <?php echo $html->image(getBuddyIconBySize($user['id'],'med', $content_status) . '?' . time(),array('height'=>'90','width'=>'90','alt'=>'scratch code'))?>
+	  
+		
+		<?php if ((!empty($user['city']) && $age >= 13) || ($isMe || $isAdmin)): ?>
+		<b><?php ___('Location'); ?>:</b>
+		<div id="user_city"><?php e($user['city']); ?></div>
+		<?php if ($isMe || $isAdmin)
+			echo $javascript->codeBlock("
+			new Ajax.InPlaceEditor('user_city', '/users/update', { callback: function(form, value) { return 'id=".$user['id']."&city=' + encodeURIComponent(value) }})
+		");
+		?>
+		<?php endif;?>
+
+
+		<?php if ((!empty($user['state']) && $age >= 13) || ($isMe || $isAdmin)): ?>
+		<div id="user_state"><?php e($user['state']);?></div>
+		<?php if ($isMe || $isAdmin)
+			echo $javascript->codeBlock("
+			new Ajax.InPlaceEditor('user_state', '/users/update', { callback: function(form, value) { return 'id=".$user['id']."&state=' + encodeURIComponent(value) }})
+		");
+		?>
+		<?php endif;?>
+
+
+		<?php if (!empty($user['country'])): ?>
+		<div id="user_country"><?php ___($user['country']);?></div>
+		<?php if ($isMe || $isAdmin) {
+		/* We intended to teach your site the name of the countries in other languages. 
+		First, we created an array with all the countries (we took it from the file "signup.thtml".  
+		Afterwars, we created the function langList which sorts the languages alphabetically and returns a list for the Ajax.InPlaceCollectionEditor
+		The list looks like: ['Albania', 'Albanien'], ['France', 'Frankreich'], ...
+		*/
+		
+			$countries = array("Afghanistan"=>___("Afghanistan", true),  "Albania"=>___("Albania", true),  "Algeria"=>___("Algeria", true),  "American Samoa"=>___("American Samoa", true),  "Andorra"=>___("Andorra", true),    "Angola"=>___("Angola", true),  "Anguilla"=>___("Anguilla", true),  "Antarctica"=>___("Antarctica", true),  "Antigua and Barbuda"=>___("Antigua and Barbuda", true),  "Argentina"=>___("Argentina", true),  "Armenia"=>___("Armenia", true),  "Aruba"=>___("Aruba", true),  "Australia"=>___("Australia", true),  "Austria"=>___("Austria", true),    "Azerbaijan"=>___("Azerbaijan", true),  "Bahamas"=>___("Bahamas", true),  "Bahrain"=>___("Bahrain", true),  "Bangladesh"=>___("Bangladesh", true),  "Barbados"=>___("Barbados", true),  "Belarus"=>___("Belarus", true),  "Belgium"=>___("Belgium", true),  "Belize"=>___("Belize", true),  "Benin"=>___("Benin", true),    "Bermuda"=>___("Bermuda", true),  "Bhutan"=>___("Bhutan", true),  "Bolivia"=>___("Bolivia", true),  "Bosnia and Herzegovina"=>___("Bosnia and Herzegovina", true),  "Botswana"=>___("Botswana", true),  "Bouvet Island"=>___("Bouvet Island", true),  "Brazil"=>___("Brazil", true),  "British Indian Ocean Territory"=>___("British Indian Ocean Territory", true),  "Brunei Darussalam"=>___("Brunei Darussalam", true),    "Bulgaria"=>___("Bulgaria", true),  "Burkina Faso"=>___("Burkina Faso", true),  "Burundi"=>___("Burundi", true),  "Cambodia"=>___("Cambodia", true),  "Cameroon"=>___("Cameroon", true),  "Canada"=>___("Canada", true),  "Cape Verde"=>___("Cape Verde", true),  "Cayman Islands"=>___("Cayman Islands", true),  "Central African Republic"=>___("Central African Republic", true),    "Chad"=>___("Chad", true),  "Chile"=>___("Chile", true),  "China"=>___("China", true),  "Christmas Island"=>___("Christmas Island", true),  "Cocos (Keeling) Islands"=>___("Cocos (Keeling) Islands", true),  "Colombia"=>___("Colombia", true),  "Comoros"=>___("Comoros", true),  "Congo"=>___("Congo", true),  "Congo, Dem. Rep. of The"=>___("Congo, Dem. Rep. of The", true),    "Cook Islands"=>___("Cook Islands", true),  "Costa Rica"=>___("Costa Rica", true),  "Cote D'ivoire"=>___("Cote D\'ivoire", true),  "Croatia"=>___("Croatia", true),  "Cuba"=>___("Cuba", true),  "Cyprus"=>___("Cyprus", true),  "Czech Republic"=>___("Czech Republic", true),  "Denmark"=>___("Denmark", true),  "Djibouti"=>___("Djibouti", true),    "Dominica"=>___("Dominica", true),  "Dominican Republic"=>___("Dominican Republic", true),  "Ecuador"=>___("Ecuador", true),  "Egypt"=>___("Egypt", true),  "El Salvador"=>___("El Salvador", true),  "Equatorial Guinea"=>___("Equatorial Guinea", true),  "Eritrea"=>___("Eritrea", true),  "Estonia"=>___("Estonia", true),  "Ethiopia"=>___("Ethiopia", true),    "Falkland Islands (Malvinas)"=>___("Falkland Islands (Malvinas)", true),  "Faroe Islands"=>___("Faroe Islands", true),  "Fiji"=>___("Fiji", true),  "Finland"=>___("Finland", true),  "France"=>___("France", true),  "French Guiana"=>___("French Guiana", true),  "French Polynesia"=>___("French Polynesia", true),  "French Southern Territories"=>___("French Southern Territories", true),  "Gabon"=>___("Gabon", true),    "Gambia"=>___("Gambia", true),  "Georgia"=>___("Georgia", true),  "Germany"=>___("Germany", true),  "Ghana"=>___("Ghana", true),  "Gibraltar"=>___("Gibraltar", true),  "Greece"=>___("Greece", true),  "Greenland"=>___("Greenland", true),  "Grenada"=>___("Grenada", true),  "Guadeloupe"=>___("Guadeloupe", true),    "Guam"=>___("Guam", true),  "Guatemala"=>___("Guatemala", true),  "Guinea"=>___("Guinea", true),  "Guinea-bissau"=>___("Guinea-bissau", true),  "Guyana"=>___("Guyana", true),  "Haiti"=>___("Haiti", true),  "Holy See (Vatican City State)"=>___("Holy See (Vatican City State)", true),  "Honduras"=>___("Honduras", true),    "Hong Kong"=>___("Hong Kong", true),  "Hungary"=>___("Hungary", true),  
+			"Iceland"=>___("Iceland", true),  "India"=>___("India", true),  "Indonesia"=>___("Indonesia", true),  "Iran, Islamic Republic of"=>___("Iran, Islamic Republic of", true),  
+			"Iraq"=>___("Iraq", true),  "Ireland"=>___("Ireland", true),  "Israel"=>___("Israel", true),    "Italy"=>___("Italy", true),  "Jamaica"=>___("Jamaica", true),  "Japan"=>___("Japan", true),  "Jordan"=>___("Jordan", true),  "Kazakhstan"=>___("Kazakhstan", true),  "Kenya"=>___("Kenya", true),  "Kiribati"=>___("Kiribati", true),  "Korea, Dem. People's Rep."=>___("Korea, Dem. People\'s Rep.", true),  "Korea, Republic of"=>___("Korea, Republic of", true),    "Kuwait"=>___("Kuwait", true),  "Kyrgyzstan"=>___("Kyrgyzstan", true),  "Laos"=>___("Laos", true),  "Latvia"=>___("Latvia", true),  "Lebanon"=>___("Lebanon", true),  "Lesotho"=>___("Lesotho", true),  "Liberia"=>___("Liberia", true),  "Libyan Arab Jamahiriya"=>___("Libyan Arab Jamahiriya", true),  "Liechtenstein"=>___("Liechtenstein", true),    "Lithuania"=>___("Lithuania", true),  "Luxembourg"=>___("Luxembourg", true),  "Macao"=>___("Macao", true),  "Macedonia"=>___("Macedonia", true),  "Madagascar"=>___("Madagascar", true),  "Malawi"=>___("Malawi", true),  "Malaysia"=>___("Malaysia", true),  "Maldives"=>___("Maldives", true),  "Mali"=>___("Mali", true),    "Malta"=>___("Malta", true),  "Marshall Islands"=>___("Marshall Islands", true),  "Martinique"=>___("Martinique", true),  "Mauritania"=>___("Mauritania", true),  "Mauritius"=>___("Mauritius", true),  "Mayotte"=>___("Mayotte", true),  "Mexico"=>___("Mexico", true),  "Micronesia, Federated States of"=>___("Micronesia, Federated States of", true),  "Moldova, Republic of"=>___("Moldova, Repubc of", true),    "Monaco"=>___("Monaco", true),  "Mongolia"=>___("Mongolia", true),  "Montserrat"=>___("Montserrat", true),  "Morocco"=>___("Morocco", true),  "Mozambique"=>___("Mozambique", true),  "Myanmar"=>___("Myanmar", true),  "Namibia"=>___("Namibia", true),  "Nauru"=>___("Nauru", true),  "Nepal"=>___("Nepal", true),    "Netherlands"=>___("Netherlands", true),  "Netherlands Antilles"=>___("Netherlands Antilles", true),  "New Caledonia"=>___("New Caledonia", true),  "New Zealand"=>___("New Zealand", true),  "Nicaragua"=>___("Nicaragua", true),  "Niger"=>___("Niger", true),  "Nigeria"=>___("Nigeria", true),  "Niue"=>___("Niue", true),  "Norfolk Island"=>___("Norfolk Island", true),    "Northern Mariana Islands"=>___("Northern Mariana Islands", true),  "Norway"=>___("Norway", true),  "Oman"=>___("Oman", true),  "Pakistan"=>___("Pakistan", true),  "Palau"=>___("Palau", true),  "Palestine"=>___("Palestine", true),  "Panama"=>___("Panama", true),  "Papua New Guinea"=>___("Papua New Guinea", true),  "Paraguay"=>___("Paraguay", true),    "Peru"=>___("Peru", true),  "Philippines"=>___("Philippines", true),  "Pitcairn"=>___("Pitcairn", true),  "Poland"=>___("Poland", true),  "Portugal"=>___("Portugal", true),  "Puerto Rico"=>___("Puerto Rico", true),  "Qatar"=>___("Qatar", true),  "Reunion"=>___("Reunion", true),  "Romania"=>___("Romania", true),    "Russian Federation"=>___("Russian Federation", true),  "Rwanda"=>___("Rwanda", true),  "Saint Helena"=>___("Saint Helena", true),  "Saint Kitts and Nevis"=>___("Saint Kitts and Nevis", true),  "Saint Lucia"=>___("Saint Lucia", true),  "Saint Pierre and Miquelon"=>___("Saint Pierre and Miquelon", true),  "St. Vincent"=>___("St. Vincent", true),  "Samoa"=>___("Samoa", true),  "San Marino"=>___("San Marino", true),    "Sao Tome and Principe"=>___("Sao Tome and Principe", true),  "Saudi Arabia"=>___("Saudi Arabia", true),  "Senegal"=>___("Senegal", true),  "Serbia and Montenegro"=>___("Serbia and Montenegro", true),  "Seychelles"=>___("Seychelles", true),  "Sierra Leone"=>___("Sierra Leone", true),  "Singapore"=>___("Singapore", true),  "Slovakia"=>___("Slovakia", true),  "Slovenia"=>___("Slovenia", true),    "Solomon Islands"=>___("Solomon Islands", true),  "Somalia"=>___("Somalia", true),  "South Africa"=>___("South Africa", true),  "Spain"=>___("Spain", true),  "Sri Lanka"=>___("Sri Lanka", true),  "Sudan"=>___("Sudan", true),  "Suriname"=>___("Suriname", true),  "Svalbard and Jan Mayen"=>___("Svalbard and Jan Mayen", true),    "Swaziland"=>___("Swaziland", true),  
+			"Sweden"=>___("Sweden", true),  "Switzerland"=>___("Switzerland", true),  "Syrian Arab Republic"=>___("Syrian Arab Republic", true),  "Taiwan"=>___("Taiwan", true),  "Tajikistan"=>___("Tajikistan", true),  "Tanzania, United Republic of"=>___("Tanzania, United Republic of", true),  "Thailand"=>___("Thailand", true),  "Timor-leste"=>___("Timor-leste", true),    "Togo"=>___("Togo", true),  "Tokelau"=>___("Tokelau", true),  "Tonga"=>___("Tonga", true),  "Trinidad and Tobago"=>___("Trinidad and Tobago", true),  "Tunisia"=>___("Tunisia", true),  "Turkey"=>___("Turkey", true),  "Turkmenistan"=>___("Turkmenistan", true),  "Turks and Caicos Islands"=>___("Turks and Caicos Islands", true),  "Tuvalu"=>___("Tuvalu", true),    "Uganda"=>___("Uganda", true),  "Ukraine"=>___("Ukraine", true),  "United Arab Emirates"=>___("United Arab Emirates", true),  "United Kingdom"=>___("United Kingdom", true),  "United States"=>___("United States", true),  "US Minor"=>___("US Minor", true),  "Uruguay"=>___("Uruguay", true),  "Uzbekistan"=>___("Uzbekistan", true),  "Vanuatu"=>___("Vanuatu", true),    "Venezuela"=>___("Venezuela", true),  "Viet Nam"=>___("Viet Nam", true),  "Virgin Islands, British"=>___("Virgin Islands, British", true),  "Virgin Islands, U.S."=>___("Virgin Islands, U.S.", true),  "Wallis and Futuna"=>___("Wallis and Futuna", true),  "Western Sahara"=>___("Western Sahara", true),  "Yemen"=>___("Yemen", true),  "Zambia"=>___("Zambia", true),  "Zimbabwe"=>___("Zimbabwe", true));
+		
+
+function langList($countries) {
+	asort($countries);
+	$langList = "";
+		foreach($countries as $key => $dispCountries) {
+	 	$langList .= "[\"" . $key . "\",\"" . $dispCountries . "\"], ";
+	 	} 
+	return substr($langList, 0, -2); }	//deletes the last komma at the end of the list and returns the list
+			
+			echo $javascript->codeBlock("
+			 new Ajax.InPlaceCollectionEditor('user_country', '/users/update', { collection:[" . langList($countries) . "], callback: function(form, value) { return 'id=".$user['id']."&country=' + encodeURIComponent(value) }})
+			"); }
+		?>
+		<?php endif;?>
+
+		<?php if ($isAdmin) : ?>
+		<?php if(!empty($user['bmonth'])): ?>
+		<b><?php ___('Birth Date'); ?>:</b>
+		<table>
+		<tr>
+		<td>
+		<div id="bmonth"><?php e($user['bmonth']);?></div>
+		<?php if ($isMe || $isAdmin)
+			echo $javascript->codeBlock("
+			 new Ajax.InPlaceEditor('bmonth', '/users/update', { callback: function(form, value) { return 'id=".$user['id']."&bmonth=' + encodeURIComponent(value) }})
+			");
+		?>
+		</td>
+		<?php endif;?>
+
+		<?php if (!empty($user['byear'])): ?>
+		<td>/</td>
+		<td>
+		<div id="byear"><?php e($user['byear']);?></div>
+		<?php if ($isMe || $isAdmin)
+			echo $javascript->codeBlock("
+			 new Ajax.InPlaceEditor('byear', '/users/update', { callback: function(form, value) { return 'id=".$user['id']."&byear=' + encodeURIComponent(value) }})
+			");
+		?>
+		</td>
+		</tr>
+		</table>
+		<?php endif;?>
+		<?php endif;?>
+	  </p>
+
+
+		<?php if ($isMe || $isAdmin):?>
+			<a onclick="document.getElementById('user_icon').style.display='block'; return false;" href="#"><?php ___('change picture'); ?></a>
+			<form id="user_icon" style="display:none" action="<?php echo $html->url('/users/updatepic/')?><?php e($user['id'])?>" method="post" enctype='multipart/form-data'>
+			<input name='user_icon' size="10" type='file'/>
+			<input value="<?php ___('update'); ?>" type="submit" class="button">
+			</form>
+				<br />
+			<a onclick="document.getElementById('user_pass').style.display='block'; return false;" href="#"><?php ___('change password'); ?></a>
+			<form id="user_pass" style="display:none" action="<?php echo $html->url('/users/updatepass/')?><?php e($user['id'])?>" method="post" enctype='multipart/form-data'>
+			<?php if(!$isAdmin) :?>
+			<?php ___('Old Password'); ?>: <input name='password_old' size="18" type='password'/>
+			<br>
+			<?php endif;?>
+			<?php ___('New Password'); ?>: <input name='password_new' size="18" type='password'/>
+			<br>
+			<?php ___('Confirm Password'); ?>: <input name='password_confirm' size="18" type='password'/>
+			<br>
+			<input value="<?php ___('update'); ?>" type="submit" class="button">
+			</form>
+			
+			<br>			
+			<a onclick="document.getElementById('user_email').style.display='block'; return false;" href="#"><?php ___('change email'); ?></a>
+			<form id="user_email" style="display:none" action="<?php echo $html->url('/users/updateemail/')?><?php e($user['id'])?>" method="post" enctype='multipart/form-data'>
+			<?php if(!$isAdmin) :?>
+			<?php ___('Your Password'); ?>: <input name='current_password' size="18" type='password'/>
+			<br>
+			<?php endif;?>
+			<?php ___('New Email'); ?>: <input name='new_email' size="18" type='email'/>
+			<br>
+			<input value="<?php ___('update'); ?>" type="submit" class="button">
+			</form>
+		<?php endif;?>
+
+		<?php if ($isLoggedIn && $isAdmin):?>
+		<p><a onclick="document.getElementById('user_notify').style.display='block'; return false;" href="#"><?php ___('send notification'); ?></a></p>
+		<form id="user_notify" style="display:none" action="/users/notify/<?php e($user['id'])?>" method="post" enctype='multipart/form-data'>
+
+		<?php ___('Custom notification'); ?>: <input name='custom_message' size="18" type='text'/>
+		<br>
+		<input value="<?php __('send'); ?>" type="submit" class="button">
+		</form>
+		<?php endif;?>
+
+		<?php if ($isLoggedIn && !$isMe):?>
+			<div class="mod_title">
+				<?php if ($isMyFriend):?>
+				<a/><?php e($urlname); echo " "; ___('is on your list of friends'); ?></a>
+
+				<?php else:?>
+
+				<div id="divFriendReq">
+				<?php if (1 || !$friendDeclined): ?>
+				<a onclick="document.getElementById('form_addfriend').style.display='block'; return false;" href="#"><?php ___('add to friends'); ?></a>
+				<form id="form_addfriend" style="display:none" method="post" action="/relationships/request?type=friend">
+				<?php if (0 &&  $friendPending): ?>
+				<span style="color:red"><?php ___('friend request pending'); ?></span>
+				<?php else: ?>
+				<input type="hidden" name="friend-id" value="<?php e($user['id'])?>"/>
+				<p><?php e($user['username'])?> <?php ___('will be notified'); ?></p>
+				<?php echo $ajax->submit('OK', array("class"=>"button", "url"=>"/relationships/request?type=friend", "update"=>"divFriendReq")); ?>
+				<?php endif; ?>
+				<?php endif; ?>
+				</form>
+				</div>
+
+				<?php endif;?>
+			</div>
+		<?php endif;?>
+		<?php
+			if ($isAdmin) {
+				echo "<p>";
+				echo "<a href='mailto:" . $user['email'] ."'>"; ___('e-mail'); echo"</a>, ";
+				echo $user['gender']? $user['gender'] : 'no gender';
+				echo ", signed up on: " . $user['created'];
+				echo "from IP: " . long2ip($user['ipaddress']);
+				echo "</p>";
+			}
+		?>
+    </div>
+
+	<?php if (0 && $isMe && count($theme_requests) > 0): ?>
+	<div class="sidecontainer highlight">
+	  <h4><?php ___('You were invited to these galleries:'); ?></h4>
+      <ul class="sidelist">
+
+			<?php foreach ($theme_requests as $theme):
+			$theme_request_id = $theme['ThemeRequest']['id'];
+			$theme = $theme['Theme'];
+			$theme_id = $theme['id'];
+			$theme_url = "/galleries/view/".$theme_id;
+			$theme_name = $theme['name'];
+			$theme_icon = getThemeIcon($theme_id);
+			$theme_name_s = $theme_name;
+			$theme_name_s = $theme_name;
+			if (strlen($theme_name) > 17) {
+				$theme_name_s = substr($theme_name,0,16) . "&#0133;";
+			}
+			?>
+			<li><a href="<?php echo $html->url($theme_url)?>">
+            <?php echo $html->image($theme_icon,array('width'=>'43','height'=>'32'))?><?php echo $theme_name_s?>
+			
+			</a></li>
+			<li id="greq-<?php e($theme_request_id)?>">
+			<?php //echo $ajax->link("[join]", '#', array("style"=>"text-decoration:none", "url"=>"/requests/accept?type=join&rid=$theme_request_id", "update"=>"greq-".$theme_request_id, "condition"=>"checkLogin()"), NULL, false); ?>
+			<?php echo $ajax->link(___("[thanks for letting me know]", true), '#', array("style"=>"text-decoration:none", "url"=>"/requests/decline?type=join&rid=$theme_request_id", "update"=>"greq-".$theme_request_id, "condition"=>"checkLogin()"), NULL, false); ?></li>
+			<?php endforeach;?>
+      </ul>
+    </div>
+	<?php endif; ?>
+	
+	<?php 
+		if ($isMe || $isAdmin) {
+			$user_id = $user['id'];
+			echo $this->renderElement('users/comment_list_wrapper', Array('user_id' => $user_id, 'option' => 'projects', 'comment_count' => $comment_count)); 
+		}
+	?>
+	
+	<?php 
+		if ($isMe || $isAdmin) {
+			$user_id = $user['id'];
+			echo $this->renderElement('users/ignore_list_wrapper', Array('user_id' => $user_id, 'ignore_count' => $ignore_count)); 
+		}
+	?>
+	
+    <?php if($isAdmin): ?>
+	<div class="sidecontainer">
+		<?php
+			$user_id = $user['id'];
+			e($this->renderElement('admin/admin_comment', array('karma_ratings' => $karma_ratings, 'comment' => $admin_comment, 'user_id' => $user_id)));
+		?>
+	</div>
+    <div class="sidecontainer">
+      <h4><?php ___('Shariables'); ?></h4>
+	  	<?php if (empty($myShariables)) :?>
+		<div><?php if ($isMe) ___('You have no'); else  {echo $urlname . " " . ___('has no', true); ___('Shariables');} ?>.</div>
+		<?php else:?>
+		<ul class="sidelist">
+			<?php
+			foreach ($myShariables as $shariable):
+			$shariable = $shariable['Shariable'];
+			$shariable_id = $shariable['id'];
+			$shariable_url = "/shariables/".$shariable_id;
+			$shariable_name = $shariable['name'];
+			$shariable_name_s = $shariable_name;
+			if (strlen($shariable_name) > 17) {
+				$shariable_name_s = substr($shariable_name,0,16) . "&#0133;";
+			}
+			$shariable_value = $shariable['value'];
+
+			?>
+			<li id="shariable-<?php e($shariable_id)?>">
+			<table>	<tr><td><?php e($shariable_name_s); ?>: </td><td><div id="shariable_value-<?php e($shariable_id); ?>"><?php e($shariable_value); ?></div></td><td>
+			<?php if ($isAdmin || $isMe)
+			      {
+			      	echo $ajax->editor("shariable_value-".$shariable_id, "/shariables/write_ajax/$shariable_id", Array("callback"=>"return 'value=' + encodeURIComponent(value)"));
+				echo $ajax->link("(x)", '#', array("url"=>"/shariables/delete_ajax/".$shariable_id, "update"=>"shariable-".$shariable_id, "condition"=>"incrementNewShariableCount()"), NULL, false);
+				}
+			?>
+			</td></tr></table>
+			</li>
+			<?php endforeach;?>
+		</ul>
+		<?php endif;?>
+		      <br>
+		      <div id="newShariableDiv">
+    	  	      	   <a id="newShariableLink" href="#" onclick="document.getElementById('new_shariable').style.display='block'; return false;" style="display:<?php if(($isAdmin || $isMe) && $shariables_left>0) echo "block"; else echo "none"; ?>"><?php ___('Add a new shariable'); ?> (<text id="newShariableCount"><?php e($shariables_left); ?></text> left)</a>
+		      </div>
+	  	      <form id="new_shariable" style="display:none" action="<?php echo $html->url('/shariables/create/')?><?php e($user['username'])?>" method="post" enctype='multipart/form-data'>
+	  	      <?php ___('Name'); ?>: <input name='shariable_name' size="18" type='text'/>
+		      <br>
+		      <?php ___('Value'); ?>: <input name='shariable_value' size="18" type='text'/>
+		      <br>
+		      <input value="<?php ___('create'); ?>" type="submit" class="button">
+	  	      </form>
+    </div>
+    <?php endif; ?>
+
+	<div class="sidecontainer">
+	  <h4>
+	  <?php
+		$nf = count($friends);
+		if ($nf == 0) {
+			___('No friends yet.');
+		}
+		elseif($nf == 1) {
+			___('1 friend');
+		}
+		else {
+			printf(___('%s recent friends', true), $nf);
+		}
+		?>
+	  </h4>
+      <ul class="sidelist">
+		<?php
+	  	foreach ($friends as $friend):
+		$relationship_id = $friend['Relationship']['relationship_type_id'];
+		$rel_id = $friend['Relationship']['id'];
+		$friend = $friend['Friend'];
+		if (empty($friend['id'])) continue;
+		$friend_id = $friend['id'];
+		$friend_name = $friend['username'];
+		$friend_urlname = $friend['urlname'];
+		$friend_url= "/users/".$friend_urlname;
+		$buddy_icon = getBuddyIconBySize($friend['id'], 'mini', $content_status);
+		$friend_name_s = $friend_name;
+		if (strlen($friend_name) > 16) {
+			$friend_name_s = substr($friend_name,0,14) . "&#0133;";
+		}
+		?>
+        <li id="rel-<?php e($relationship_id)?>">
+        <a href="<?php echo $html->url($friend_url)?>"><?php echo $html->image($buddy_icon,array('alt'=>$friend_name,'width'=>'28','height'=>'28'))?><?php e($friend_name_s)?></a>
+        
+		<?php
+		if ($isAdmin || $isMe)
+		 
+		//echo "<a href='/users/removefriend/$rel_id'>[x]</a>\n";
+		?>
+		<a href="<?php echo $html->url('/users/removefriend/')?><?php echo $rel_id?>">[x]</a>
+		</li>
+        <?php endforeach; ?>
+      </ul>
+	  <?php if ($showmorefriends): ?>
+  	   <p class="more"><a href="<?php echo $html->url('/users/showfriends/')?><?php e($user['id']); ?>"><?php ___('See more');?></a> </p>
+	  <?php endif; ?>
+ </div>
+
+
+<?php if($content_status == 'all'): ?>
+    <div class="sidecontainer">
+      <h4><?php ___('Galleries'); ?></h4>
+	  	<?php if (empty($themes)) :?>
+		<div><?php if ($isMe) ___("You have not created any Galleries."); else printf(___('%s has not created any Galleries', true), $urlname); ?></div>
+		<?php else:?>
+		<ul class="sidelist">
+			<?php
+			foreach ($themes as $theme):
+			$theme_id = $theme['Gallery']['id'];
+			$gallery_owner = $theme['Gallery']['user_id'];
+			$theme_url = "/galleries/view/".$theme_id;
+			$theme_name = $theme['Gallery']['name'];
+			$theme_icon = $theme['Gallery']['icon_src'];
+			$theme_name_s = $theme_name;
+			if ($gallery_owner == $user['id']) {
+				$owned = true;
+			} else {
+				$owned = false;
+			}
+			if (strlen($theme_name) > 17) {
+				$theme_name_s = substr($theme_name,0,16) . "&#0133;";
+			}
+
+			?>
+			<li id="gallery-<?php e($theme_id)?>">
+			<a href="<?php echo $html->url($theme_url)?>"><?php echo $html->image($theme_icon,array('alt'=>$theme_name,'width'=>'43','height'=>'32'))?><?php e($theme_name_s)?></a>
+			
+			</li>
+			<?php endforeach;?>
+		</ul>
+		<?php endif;?>
+		<?php if ($isMe) { ?>
+		<div>
+		<?php ___('Do you want to')?> <a href="<?php echo $html->url('/galleries/')?>"><?php ___('browse')?></a> or <a href="<?php echo $html->url('/galleries/create')?>"><?php ___('create')?></a> <?php ___('a gallery?')?>
+		</div>
+		
+		<?php } ?>
+	   
+	   <p class="more"><a href="<?php echo $html->url('/users/showgalleries/')?><?php e($user['id']); ?>"><?php ___('See more');?></a> </p>
+    </div>
+<?php endif; ?>
+  </div>
+  <!-- ////// End User sidebar ////// -->
+  <!-- |||||| Begin content area ||||||| -->
+<div id="usermain">
+	<div class="mystuff_container">
+	<div id="ajax_pagination">
+    <!-- ::: Begin projects ::: -->
+		<div class="mystuff_header">
+			<h3><?php if ($isMe) ___("My Projects"); else {printf(___("%s's Projects", true), $user['username']);} ?></h3>
+		</div>
+		<?php
+			e($this->renderElement('user_projects', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $projects, 'feed_link'=>$feed_link)));
+		?>
+	</div>
+	</div>
+	
+	<div class="mystuff_container">
+	<div id="ajax_pagination_secondary">
+    <!-- ::: Begin projects ::: -->
+		<div class="mystuff_header">
+			<h3><?php if ($isMe) ___("My Favorites"); else {printf(___("%s's Favorites", true), $user['username']);} ?></h3>
+		</div>
+		<?php
+			e($this->renderElement('user_favorites', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $favorites)));
+		?>
+	</div>
+	</div>
+	<!-- ::: End projects ::: -->
+  </div>
+  <!-- ////// End main content ////// -->

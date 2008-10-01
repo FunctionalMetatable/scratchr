@@ -1,0 +1,13 @@
+<h1 class="gallery_name"><?php ___('Your Scratch Gallery'); ?></h1>
+<ul class="gallery_box">
+<?php
+  foreach($thumbnails as $thumbnail) {
+      echo "<li>"."\n";
+      echo "<a class=\"gallery_element\" href=\"#\">";
+      echo $html->image($thumbnail, array("alt"=>"scratch","class"=>"gallery_element_std"));
+      echo $html->image($thumbnail, array("alt"=>"scratch","class"=>"gallery_element_preview"));
+      echo "</a>";
+      echo "\n"."</li>";
+  }
+?>      
+</ul>

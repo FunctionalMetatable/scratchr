@@ -1,0 +1,67 @@
+
+<!-- note: this whole thing, including getThumbs should probably be client side javascript-->
+<?php
+    
+// TODO: cache so that calls to $this->controller are not made 
+// again if user is browsing same project namespace (i.e. same project owner)
+// or no uploads have occured during browsing
+
+// solutions to not retriving thumbnails each time:
+//
+// cache(cakephp view cache), place stuff in session/cookie,
+// the $thumbnails array actually contains the pid for al
+// projects by the user, so you should be able simply implode
+// array=>string and count the number of commas before you get to
+// you get to the pid file, you can also store the array in session
+// variable
+
+$thumbnails = null;
+// if (isset($this->Session->read("Thumbnails.$pid")); // use javascript/cookies instead
+// if (!isset($thumbnail_index)) $thumbnails = $this->controller->getThumbs($urlname, 'mini', $pid);
+$thumbnails = $this->controller->getThumbs($urlname, 'mini', $pid);
+
+$msg_header = ___("More projects from") . " $urlname";
+$project_view_div = "\'TheAdPlayer\'";
+$project_thumb_prev_div = "\'PrevVideo\'";
+$project_thumb_next_div = "\'NextVideo\'";
+$curProjectIndex = $thumbnails['pid_index'];
+
+e($javascript->codeBlock("
+    // if (!projectSetComponent) skip cache check for now
+    projectSetComponent = new projectSet($project_view_div, 'projectSetComponent', $curProjectIndex);
+    // onLoadFunctionList.push(function() { })
+"));
+
+?>
+
+<br class="SpaceEm">
+<div class="ContextBox">
+    <h2 class="ContextHeader"><?php ___('More projects by'); ?> </h2>
+    <p class="PopTags"></p>
+      <div class="PrevNext">
+          <div class="PrevVideo">
+            <a href="<?php echo $html->url('projects/$urlname/'.$pid)?>"
+                onclick"return false;"
+                onmouseover="projectSetComponet.showPreviewImage(this.href.value); return false;"
+                class="VideoLink">
+               <?php echo $html->image('/scratchweb2_files/trampolin-thumb.png',array('alt'=>'name','title'=>'name','class'=>'ThumbnailSingleImage'))?>
+            </a>
+          </div>
+	      <div class="NextVideo">
+            <a href="<?php echo $html->url('projects/$urlname/'.$pid)?>"
+                onclick="return false;"
+                onmouseover="projectSetComponent.showPreviewImage(this.href.value); return false;"
+                class="VideoLink">
+				<?php echo $html->image('/scratchweb2_files/cleo-thumb.png',array('alt'=>'name','title'=>'name','class'=>'ThumbnailSingleImage'))?>
+                
+            </a>
+          </div>
+	   </div>
+	<p></p>
+    <p style="clear:both">
+	<a class="ProjectInfoText" onmouseover="projectSetComponent.readPrev();" return false;" href="#"> <?php ___('prev'); ?></a>
+    <a style="margin-left:80px;" class="ProjectInfoText" href="/projects/$urlname"> <?php ___('browse'); ?> </a>
+    <a style="margin-left:70px" onmouseover="projectSetComponent.readNext();" class="ProjectInfoText" href="#"> <?php ___('next'); ?> </a>
+    </p>
+</div>
+

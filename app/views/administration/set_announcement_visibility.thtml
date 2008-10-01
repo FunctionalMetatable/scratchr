@@ -1,0 +1,4 @@
+<?php
+	$params = array('isAnnouncementOn', $isAnnouncementOn);
+	e($this->renderElement('admin/announcement_toggle'));
+?>

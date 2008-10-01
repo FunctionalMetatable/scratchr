@@ -1,0 +1,31 @@
+<div id="ajax_pagination">
+<div class="fullcontent">
+	<h3><?php if ($isMe) ___("My Friends"); else {printf(___("%s's Friends", true), $user['User']['username']);} ?></h3>
+	<?php 
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination'); 
+	?>
+	<?php
+	  	foreach ($friends as $friend) {
+			$relationship_id = $friend['Relationship']['id'];
+			$friend = $friend['Friend'];
+			if (empty($friend['id'])) continue;
+			$friend_id = $friend['id'];
+			$friend_name = $friend['username'];
+			$friend_urlname = $friend['urlname'];
+			$friend_url= "/users/".$friend_urlname;
+			$buddy_icon = getBuddyIconBySize($friend['id'], 'mini', $content_status);
+			$friend_name_s = $friend_name;
+			if (strlen($friend_name) > 10) {
+				$friend_name = substr($friend_name,0,9) . "&#0133;";
+			}
+		
+		echo "<div class='mystuff_friend_thumb'>"; echo" <a href='"; echo "$friend_url"; echo "'><img src='"; echo "$buddy_icon"; echo "' title='$friend_name' alt='$friend_name' width='40' height='40'></a>\n";
+				echo "<h5><a href='$friend_url'>"; echo "$friend_name"; echo "</a></h5>\n";
+				if ($isAdmin || $isMe) 
+					echo "<a href='/users/removefriend/$relationship_id'>[x]</a>\n";
+		echo "</div>\n";
+		}
+		?>
+</div>
+</div>

@@ -1,0 +1,39 @@
+<?php
+		$rank_id = $rank['KarmaRank']['id'];
+		$level = $rank['KarmaRank']['rank'];
+		$rank_name = $rank['KarmaRank']['name'];
+		$canComment = $rank['KarmaRank']['canComment'];
+		$canTag = $rank['KarmaRank']['canTag'];
+		$canUpload = $rank['KarmaRank']['canUpload'];
+		$rating_cap = $rank['KarmaRank']['rating_cap'];
+		
+		echo "\t<div class='admin_leftcolumn'>\n";
+			echo "\t<div class='admin_leftcolumn'>\n";
+				echo "<span id='rank_name_$rank_id'>$rank_name</span>\n";
+				echo $ajax->editor("rank_name_$rank_id", "/administration/edit_rank_name/$rank_id", 
+					Array("callback"=>"return 'rank_name=' + encodeURIComponent(value);", 
+					"rows" => 2, "cols" => 20));
+			echo "\t</div>";
+		
+			echo "\t<div class='admin_rightcolumn'>\n";
+				echo "<span> $rating_cap </span>\n";
+			echo "\t</div>\n";
+		echo "\t</div>";
+		
+		echo "\t<div class='admin_rightcolumn'>\n";
+			echo "\t<div class='admin_leftcolumn'>\n";
+				echo "<span>"; 
+				echo "<div id='rank_permissions_wrapper'>";
+					echo $this->renderElement('admin/rank_permissions', Array('rank' => $rank));
+				echo "</div>";
+				echo "</span>";
+			echo "\t</div>";
+		
+			echo "\t<div class='admin_rightcolumn'>\n";
+			?>
+				<a href="<?php echo $html->url('/administration/remove_karma_rank/'.$level)?>">remove</a>
+				
+			<?php
+			echo "\t</div>\n";
+		echo "\t</div>\n";
+?>

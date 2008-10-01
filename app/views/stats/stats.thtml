@@ -1,0 +1,807 @@
+<!-- |||||| Begin content area ||||||| -->
+<div id="main">
+  
+  <?php 
+  //$session->flash(FLASH_ERROR_KEY);
+  $session->flash(FLASH_NOTICE_KEY);
+  ?>
+  
+  <?php
+	if($isAdmin):
+  ?>
+
+  <!-- Display top projects by comments -->
+  <table><tr><td><h1>Top <?php echo $N; ?> Projects By Comments</h1></td><td><?php $csv_url = $projects_by_comments[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php e($csv_url); ?>">CSV</a>]</td></tr></table>
+  <?php
+	if($projects_by_comments!=null):
+	foreach($projects_by_comments as $project):
+
+            $pid = $project['Project']['id'];
+            $urlname = $project['User']['urlname'];
+            $project_url = "/projects/view/$urlname/$pid";
+	    $project_name = htmlspecialchars($project['Project']['name']);
+            $comments = $project['Project']['count_comments'];
+
+  ?>
+	<div>
+	<b><a href="<?php echo $html->url($project_url)?>"><?=e($project_name)?></a></b><br/>
+		<div>
+			<span class="grayText">Comments: </span><?=e($comments)?><br>
+		</div>
+	</div>
+
+  <?php
+	endforeach;
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display top projects by downloads -->
+  <table><tr><td><h1>Top <?php echo $N; ?> Projects By Downloads</h1></td><td><?php $csv_url = $projects_by_downloads[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <?php
+	if($projects_by_downloads!=null):
+	foreach($projects_by_downloads as $project):
+
+            $pid = $project['Project']['id'];
+            $urlname = $project['User']['urlname'];
+            $project_url = "/projects/view/$urlname/$pid";
+	    $project_name = htmlspecialchars($project['Project']['name']);
+            $downloads = $project['Project']['count_downloads'];
+
+  ?>
+	<div>
+	<b><a href="<?php echo $html->url($project_url)?>"><?=e($project_name)?></a></b><br/>
+		<div>
+			<span class="grayText">Downloads: </span><?=e($downloads)?><br>
+		</div>
+	</div>
+
+  <?php
+	endforeach;
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display top taggers -->
+  <table><tr><td><h1>Top <?php echo $N; ?> Taggers</h1></td><td><?php $csv_url = $taggers[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <?php
+	if($taggers!=null):
+	foreach($taggers as $tagger):
+
+            $uid = $tagger['User']['id'];
+            $urlname = $tagger['User']['urlname'];
+            $tagger_url = "/users/view/$urlname";
+	    $tagger_username = $tagger['User']['username'];
+            $tags = $tagger['User']['count_tags'];
+
+  ?>
+	<div>
+	<b><a href="<?php echo $html->url($tagger_url)?>"><?=e($tagger_username)?></a></b><br/>
+		<div>
+			<span class="grayText">Tags: </span><?=e($tags)?><br>
+		</div>
+	</div>
+
+  <?php
+	endforeach;
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display top downloaders -->
+  <table><tr><td><h1>Top <?php echo $N; ?> Downloaders</h1></td><td><?php $csv_url = $downloaders[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <?php
+	if($downloaders!=null):
+	foreach($downloaders as $downloader):
+
+            $uid = $downloader['User']['id'];
+            $urlname = $downloader['User']['urlname'];
+            $downloader_url = "/users/view/$urlname";
+	    $downloader_username = $downloader['User']['username'];
+            $downloaders = $downloader['User']['count_downloaders'];
+
+  ?>
+	<div>
+	<b><a href="<?php echo $html->url($downloader_url)?>"><?=e($downloader_username)?></a></b><br/>
+		<div>
+			<span class="grayText">Downloads: </span><?=e($downloaders)?><br>
+		</div>
+	</div>
+
+  <?php
+	endforeach;
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display top pcommenters -->
+  <table><tr><td><h1>Top <?php echo $N; ?> Project Commenters</h1></td><td><?php $csv_url = $pcommenters[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <?php
+	if($pcommenters!=null):
+	foreach($pcommenters as $pcommenter):
+
+            $uid = $pcommenter['User']['id'];
+            $urlname = $pcommenter['User']['urlname'];
+            $pcommenter_url = "/users/$urlname";
+	    $pcommenter_username = $pcommenter['User']['username'];
+            $pcommenters = $pcommenter['User']['count_pcommenters'];
+
+  ?>
+	<div>
+	<b><a href="<?php echo $html->url($pcommenter_url)?>"><?=e($pcommenter_username)?></a></b><br/>
+		<div>
+			<span class="grayText">Project comments: </span><?=e($pcommenters)?><br>
+		</div>
+	</div>
+
+  <?php
+	endforeach;
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display top tcommenters -->
+  <table><tr><td><h1>Top <?php echo $N; ?> Gallery Commenters</h1></td><td><?php $csv_url = $tcommenters[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <?php
+	if($tcommenters!=null):
+	foreach($tcommenters as $tcommenter):
+
+            $uid = $tcommenter['User']['id'];
+            $urlname = $tcommenter['User']['urlname'];
+            $tcommenter_url = "/users/view/$urlname";
+	    $tcommenter_username = $tcommenter['User']['username'];
+            $tcommenters = $tcommenter['User']['count_tcommenters'];
+
+  ?>
+	<div>
+	<b><a href="<? echo $html->url($tcommenter_url)?>"><?=e($tcommenter_username)?></a></b><br/>
+		<div>
+			<span class="grayText">Gallery comments: </span><?=e($tcommenters)?><br>
+		</div>
+	</div>
+
+  <?php
+	endforeach;
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display top spriters -->
+  <table><tr><td><h1>Top <?php echo $N; ?> Contributors to Total Sprites</h1></td><td><?php $csv_url = $spriters[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <?php
+	if($spriters!=null):
+	foreach($spriters as $spriter):
+
+            $uid = $spriter['User']['id'];
+            $urlname = $spriter['User']['urlname'];
+            $spriter_url = "/users/view/$urlname";
+	    $spriter_username = $spriter['User']['username'];
+            $sprites = $spriter['User']['count_sprites'];
+
+  ?>
+	<div>
+	<b><a href="<?php echo $html->url($spriter_url)?>"><?=e($spriter_username)?></a></b><br/>
+		<div>
+			<span class="grayText">Total sprites: </span><?=e($sprites)?><br>
+		</div>
+	</div>
+
+  <?php
+	endforeach;
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display top scripters -->
+  <table><tr><td><h1>Top <?php echo $N; ?> Contributors to Total Scripts</h1></td><td><?php $csv_url = $scripters[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <?php
+	if($scripters!=null):
+	foreach($scripters as $scripter):
+
+            $uid = $scripter['User']['id'];
+            $urlname = $scripter['User']['urlname'];
+            $scripter_url = "/users/view/$urlname";
+	    $scripter_username = $scripter['User']['username'];
+            $scripts = $scripter['User']['count_scripts'];
+
+  ?>
+	<div>
+	<b><a href="<? echo $html->url($scripter_url)?>"><?=e($scripter_username)?></a></b><br/>
+		<div>
+			<span class="grayText">Total scripts: </span><?=e($scripts)?><br>
+		</div>
+	</div>
+
+  <?php
+	endforeach;
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display top flaggers -->
+  <table><tr><td><h1>Top <?php echo $N; ?> Flaggers</h1></td><td><?php $csv_url = $flaggers[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <?php
+	if($flaggers!=null):
+	foreach($flaggers as $flagger):
+
+            $uid = $flagger['User']['id'];
+            $urlname = $flagger['User']['urlname'];
+            $flagger_url = "/users/view/$urlname";
+	    $flagger_username = $flagger['User']['username'];
+            $flaggers = $flagger['User']['count_flaggers'];
+
+  ?>
+	<div>
+	<b><a href="<?php echo $html->url($flagger_url)?>"><?=e($flagger_username)?></a></b><br/>
+		<div>
+			<span class="grayText">Flags: </span><?=e($flaggers)?><br>
+		</div>
+	</div>
+
+  <?php
+	endforeach;
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display top lovers -->
+  <table><tr><td><h1>Top <?php echo $N; ?> Lovers</h1></td><td><?php $csv_url = $lovers[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <?php
+	if($lovers!=null):
+	foreach($lovers as $lover):
+
+            $uid = $lover['User']['id'];
+            $urlname = $lover['User']['urlname'];
+            $lover_url = "/users/view/$urlname";
+	    $lover_username = $lover['User']['username'];
+            $lovers = $lover['User']['count_lovers'];
+
+  ?>
+	<div>
+	<b><a href="<?php echo $html->url($lover_url)?>"><?=e($lover_username)?></a></b><br/>
+		<div>
+			<span class="grayText">Love it's: </span><?=e($lovers)?><br>
+		</div>
+	</div>
+
+  <?php
+	endforeach;
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display top users by friends -->
+  <table><tr><td><h1>Top <?php echo $N; ?> Users By Friends</h1></td><td><?php $csv_url = $users_by_friends[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <?php
+	if($users_by_friends!=null):
+	foreach($users_by_friends as $user):
+
+            $pid = $user['User']['id'];
+            $urlname = $user['User']['urlname'];
+            $user_url = "/users/view/$urlname";
+	    $username = $user['User']['username'];
+            $friends = $user['User']['count_friends'];
+
+  ?>
+	<div>
+	<b><a href="<?php echo $html->url($user_url)?>"><?=e($username)?></a></b><br/>
+		<div>
+			<span class="grayText">Friends: </span><?=e($friends)?><br>
+		</div>
+	</div>
+
+  <?php
+	endforeach;
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total projects by day -->
+  <table><tr><td><h1>Total Projects By Day</h1></td><td><?php $csv_url = $total_projects_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_projects_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total projects: <b><?php e($count); ?></b></td>	
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total projects -->
+  <table><tr><td><h1>Total Projects</h1></td></tr></table>
+  <?php
+	if($total_projects!=null):
+  ?>
+	<div>
+	<b>Total projects: </b><?php e($total_projects); ?>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total pcomments by day -->
+  <table><tr><td><h1>Total Project Comments By Day</h1></td><td><?php $csv_url = $total_pcomments_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_pcomments_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total project comments: <b><?php e($count); ?></b></td>	
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total pcomments -->
+  <table><tr><td><h1>Total Project Comments</h1></td></tr></table>
+  <?php
+	if($total_pcomments!=null):
+  ?>
+	<div>
+	<b>Total project comments: </b><?php e($total_pcomments); ?>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total tcomments by day -->
+  <table><tr><td><h1>Total Gallery Comments By Day</h1></td><td><?php $csv_url = $total_tcomments_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_tcomments_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total gallery comments: <b><?php e($count); ?></b></td>	
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total tcomments -->
+  <table><tr><td><h1>Total Gallery Comments</h1></td></tr></table>
+  <?php
+	if($total_tcomments!=null):
+  ?>
+	<div>
+	<b>Total gallery comments: </b><?php e($total_tcomments); ?>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total pcommenters by day -->
+  <table><tr><td><h1>Total Project Commenters By Day</h1></td><td><?php $csv_url = $total_pcommenters_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_pcommenters_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total project commenters: <b><?php e($count); ?></b></td>	
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total pcommenters -->
+  <table><tr><td><h1>Total Project Commenters</h1></td></tr></table>
+  <?php
+	if($total_pcommenters!=null):
+  ?>
+	<div>
+	<b>Total project commenters: </b><?php e($total_pcommenters); ?>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total tcommenters by day -->
+  <table><tr><td><h1>Total Gallery Commenters By Day</h1></td><td><?php $csv_url = $total_tcommenters_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_tcommenters_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total gallery commenters: <b><?php e($count); ?></b></td>	
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total tcommenters -->
+  <table><tr><td><h1>Total Gallery Commenters</h1></td></tr></table>
+  <?php
+	if($total_tcommenters!=null):
+  ?>
+	<div>
+	<b>Total gallery commenters: </b><?php e($total_tcommenters); ?></b>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total tags by day -->
+  <table><tr><td><h1>Total Tags By Day</h1></td><td><?php $csv_url = $total_tags_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php e($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_tags_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total tags: <b><?php e($count); ?></b></td>	
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total tags -->
+  <table><tr><td><h1>Total Tags</h1></td></tr></table>
+  <?php
+	if($total_tags!=null):
+  ?>
+	<div>
+	<b>Total tags: </b><?php e($total_tags); ?>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total taggers by day -->
+  <table><tr><td><h1>Total Taggers By Day</h1></td><td><?php $csv_url = $total_taggers_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_taggers_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total taggers: <b><?php e($count); ?></b></td>	
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total taggers -->
+  <table><tr><td><h1>Total Taggers</h1></td></tr></table>
+  <?php
+	if($total_taggers!=null):
+  ?>
+	<div>
+	<b>Total taggers: </b><?php e($total_taggers); ?>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total sprites by day -->
+  <table><tr><td><h1>Total Sprites By Day</h1></td><td><?php $csv_url = $total_sprites_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_sprites_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total sprites: <b><?php e($count); ?></b></td>
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total sprites -->
+  <table><tr><td><h1>Total Sprites</h1></td></tr></table>
+  <?php
+	if($total_sprites!=null):
+  ?>
+	<div>
+	<b>Total sprites: </b><?php e($total_sprites); ?>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total scripts by day -->
+  <table><tr><td><h1>Total Scripts By Day</h1></td><td><?php $csv_url = $total_scripts_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_scripts_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total scripts: <b><?php e($count); ?></b></td>
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total scripts -->
+  <table><tr><td><h1>Total Scripts</h1></td></tr></table>
+  <?php
+	if($total_scripts!=null):
+  ?>
+	<div>
+	<b>Total scripts: </b><?php e($total_scripts); ?>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total flags by day -->
+  <table><tr><td><h1>Total Flags By Day</h1></td><td><?php $csv_url = $total_flags_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_flags_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total flags: <b><?php e($count); ?></b></td>	
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total flags -->
+  <table><tr><td><h1>Total Flags</h1></td></tr></table>
+  <?php
+	if($total_flags!=null):
+  ?>
+	<div>
+	<b>Total flags: </b><?php e($total_flags); ?>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total loves by day -->
+  <table><tr><td><h1>Total Love It's By Day</h1></td><td><?php $csv_url = $total_loves_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_loves_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total Love It's: <b><?php e($count); ?></b></td>
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total loves -->
+  <table><tr><td><h1>Total Love It's</h1></td></tr></table>
+  <?php
+	if($total_loves!=null):
+  ?>
+	<div>
+	<b>Total Love It's: </b><?php e($total_loves); ?>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display total friendships by day -->
+  <table><tr><td><h1>Total Friendships By Day</h1></td><td><?php $csv_url = $total_friendships_byday[0]['linktocsv']; ?>&nbsp;&nbsp;[<a href="<?php echo $html->url($csv_url); ?>">CSV</a>]</td></tr></table>
+  <table width="50%">
+  <?php
+	foreach($total_friendships_byday as $day):
+	$date = $day['date'];
+	$count = $day['count'];
+  ?>
+	
+	<tr>
+	<td><?php e($date); ?></td><td>
+	<td>Total friendships: <b><?php e($count); ?></b></td>
+	</tr>
+
+  <?php
+	endforeach;
+  ?>
+  </table>
+
+  <br>
+
+  <!-- Display total friendships -->
+  <table><tr><td><h1>Total Friendships</h1></td></tr></table>
+  <?php
+	if($total_friendships!=null):
+  ?>
+	<div>
+	<b>Total Friendships: </b><?php e($total_friendships); ?>
+	</div>
+
+  <?php
+	else:
+		echo "<br>";
+	endif;
+  ?>
+
+  <br>
+
+  <!-- Display tags -->
+  <table><tr><td><h1>Tags</h1></td></tr></table>
+
+   <div id="tagcloud_big">
+   <p align="justify">
+<?php e($tagcloud->getTagCloud($tags_cloud, '/tags', 'PopTag', 50, 'style',', ')); ?>
+   </p>
+</div>
+
+  <br>
+
+  <?php
+	else:
+  ?>
+  <font color='red' size='4'>Please login as an administrator.</font>
+  <?php
+  	endif;
+  ?>
+
+</div>

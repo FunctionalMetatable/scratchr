@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<?php
+	echo $this->renderElement('superheader');
+?>
+
+<title>Scratch 	| <?php ___('Project'); ?> | <?php echo $project['Project']['name'] ?></title>
+
+<?php
+echo $javascript->link('prototype.js');
+echo $javascript->link('scriptaculous.js');
+echo $javascript->link('plugins.js');
+echo $javascript->link('scratchr.js?v=1.2');
+echo $javascript->link('projectbox.js');
+echo $javascript->link('project_comment.js');
+
+echo $javascript->link('charcount.js');
+echo $javascript->link('jquery.js');
+echo $javascript->link('ajax.js');
+echo $html->css('global');
+
+?>
+
+<!-- |||||| IE- only stylesheet in conditional comment ||||||| -->
+<!--[if IE]>
+<link href="/css/global_ie.css" rel="stylesheet" type="text/css">
+
+<![endif]-->
+<!--[if IE 6]>
+<link href="/css/ie6.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/js/ie_hacks.js"></script>
+<![endif]-->
+<?php
+
+if ($isLoggedIn) {
+	
+    $areyousure = ___('Are you sure you are reporting the right project for the right reason?', true); 
+ $pleaseexplain = ___("Please explain more about why you think it\'s inapprorpiate.", true);
+     $have2desc = ___("You have to describe why you\'re reporting a project before you can report it!", true);
+    e($javascript->codeBlock("
+			
+    function checkLogin(elid) {
+		if(elid) {
+			if (document.getElementById(elid).value)
+				return true;
+			else
+				return false;
+		} else {
+				return true;
+		}
+    }
+	
+	function changeLoveItImage(loveit) {
+		var imgLoveIt = document.getElementById('img_loveit');
+		if (loveit)
+			imgLoveIt.src = '/img/star.gif';
+		else 
+			imgLoveIt.src = '/img/star_bg.gif';
+	}
+	
+	function changeLoveItImage1(loveit) {
+		var imgLoveIt = document.getElementById('lovelink');
+		if (loveit){
+			imgLoveIt.className = 'loveyes';
+			//imgLoveIt.innerHTML = 'I love it!';
+		}
+		else 
+			imgLoveIt.className = 'love';
+	}
+	
+	function changeLoversCount(loveit) {
+		var loversCountHidden = document.getElementById('lovers-count-hidden');
+		var loversCount = document.getElementById('lovers-count');
+		var loversMsg = document.getElementById('lovers-msg');
+		if (loveit)
+			loversCount.firstChild.nodeValue = parseInt(loversCount.firstChild.nodeValue) + 1;
+		else
+			loversCount.firstChild.nodeValue = parseInt(loversCount.firstChild.nodeValue) - 1;
+	}
+	
+
+	function confirmFlagging(text){
+		if (checkLogin()) {
+			if (!text.blank())
+			{
+				if (text.length > 7) {
+					if(confirm(\"$areyousure\")){
+						return true;
+					}
+				}
+				else {
+					alert(\"$pleaseexplain\");
+					return false;
+				}
+			}
+			else
+			{
+				alert(\"$have2desc\");
+				return false;
+			}
+		}
+		return false;
+	}
+			
+    "));
+
+} else {
+
+    $want2report = ___('Do you want to report this project as not appropriate for the Scratch community?', true);
+    $pleaselogin = ___('Please login.', true);
+    e($javascript->codeBlock("
+
+
+	function confirmFlagging(){
+		if (checkLogin()) {
+			if(confirm(\"$want2report\")) {
+				return true;
+			}
+		}
+		return false;
+	}
+			
+    function checkLogin() {
+        alert(\"$pleaselogin\");
+        return false;
+    }
+	
+    "));
+}
+
+if (isset($head)) echo $head->print_registered();
+?>
+</head>
+<body onload="initProjectbox(); initScratchPlayer();">
+	<div id="overlay">
+	</div>
+	<div id="errorbox">
+		<?php
+            e($ajax->div("error_notification"));
+
+            e($ajax->divEnd("error_notification"));
+        ?>
+	</div>
+<!-- |||||| Begin main container ||||||| -->
+<div id="container">
+
+
+<!-- |||||| Begin header ||||||| -->
+<?php
+if ($isLoggedIn)
+    echo $this->renderElement('header_loggedin');
+else {
+    echo $this->renderElement('header_default');
+}
+
+?>
+<!-- ////// End header ////// -->
+
+
+<?php echo $content_for_layout?>
+
+
+<?php echo $this->renderElement('footer'); ?>
+<?php
+	echo $this->renderElement('ajax_indicator');
+?>
+</body>
+</html>

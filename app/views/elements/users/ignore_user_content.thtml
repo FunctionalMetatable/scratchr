@@ -1,0 +1,37 @@
+<div class="fullcontent">
+	<div class="top_header">
+		<h3> User Ignore List </h3> <br/>
+		<h5> Comments, projects and galleries of the users you ignore will no longer appear to you when you browse the site </h5>
+	</div>
+	<div id="ignore_user_content">
+		<form id="ignore_user_form" action="<?php echo $html->url("/users/add_ignore_user/".$user_id)?>" method="post">
+			<p>Username: <br/><textarea id='blacklist_username' name="blacklist_username" cols="60" rows="2" tabindex="1"></textarea></p>
+			<p>Reason: <br/><textarea id='blacklist_reason' name="blacklist_reason" cols="60" rows="4" tabindex="2"></textarea></p>
+			<?php 
+				e($ajax->submit('Ignore', array('id' => 'ignore_user_submit', 
+					'class'=>'button', 'url' => "/users/add_ignore_user/$user_id", 
+					'update' => 'ignore_user_wrapper',
+					"loading" => "document.getElementById('admin_banip_ip').disabled = true;", 
+					"complete" => "document.getElementById('admin_banip_ip').disabled = false;")));
+			?>
+		</form>
+	</div>
+	<?php if($isError): ?>
+		<div id="ignore_user_error">
+			<?php
+				$error = $errors[0];
+				echo "<h5> $error </h5>";
+			?>
+		</div>
+	<?php endif; ?>
+</div>
+<div class="fullcontent">
+	<div class="top_header">
+		<h5> Ignored Users </h5>
+	</div>
+	<div id="ignore_user_results">
+		<?php
+			echo $this->renderElement('users/ignore_list', Array('data' => $data));
+		?>
+	</div>
+</div>

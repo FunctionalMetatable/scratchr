@@ -1,0 +1,25 @@
+<?php
+		$event_id = $event['KarmaEvent']['id'];
+		$event_name = $event['KarmaEvent']['name'];
+		$event_value = $event['KarmaEvent']['effect'];
+		$event_description = $event['KarmaEvent']['description'];
+
+		echo "\t<div class='admin_leftcolumn'>\n";
+			echo "\t<div class='admin_leftcolumn'>\n";
+				echo "<span id='event_$event_id'>$event_name</span>\n";
+				echo $ajax->editor("event_$event_id", "/administration/edit_event_name/$event_id", 
+					Array("callback"=>"return 'event_name=' + encodeURIComponent(value);", 
+					"rows" => 2, "cols" => 20));
+			echo "\t</div>";
+		
+			echo "\t<div class='admin_rightcolumn'>\n";
+				echo $event_value;
+			echo "\t</div>\n";
+		echo "\t</div>";
+		
+		echo "\t<div class='admin_rightcolumn'>\n";
+			echo "\t<div class='admin_leftcolumn'>\n";
+				echo $event_description;
+			echo "\t</div>";
+		echo "\t</div>\n";
+?>

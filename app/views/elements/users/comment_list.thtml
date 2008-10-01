@@ -1,0 +1,80 @@
+<div id="user_comment_list">
+<?php		
+	$pagination->setPaging($paging);
+	echo $this->renderElement('pagination'); 
+	
+	if ($option == 'projects') {
+		foreach ($data as $comment) {
+			$commenter_id = $comment['User']['id'];
+			$commenter_urlname = $comment['User']['urlname'];
+			$commenter_username = $comment['User']['username'];
+			$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $content_status);
+			$commenter_url = "/users/view/".$commenter_urlname;
+			$comment_type = isset($comment['Pcomment']);
+			$comment_id = ($comment_type) ? $comment['Pcomment']['id']:$comment['id'];
+			$comment_content = ($comment_type) ? $comment['Pcomment']['content']:$comment['content'];
+			$timestamp = ($comment_type) ? $comment['Pcomment']['timestamp']:$comment['timestamp'];
+			$visible = ($comment_type) ? $comment['Pcomment']['visibility']:$comment['visibility'];
+			$project_url = $comment['Project']['username'];
+			$project_id = $comment['Project']['id'];
+			$visibility = $comment['Pcomment']['comment_visibility'];
+			if (empty($project_url)) {
+				$comment_deleted = true;
+			} else {
+				$comment_deleted = false;
+			}
+			
+			if ($visibility == 'visible') {
+			?>
+				<div class="comment">
+					<h5>
+						<?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
+						<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
+						<?php echo friendlyDate($timestamp)?>
+					</h5>
+					<p><?php echo $comment_content?></p>
+					<?php if ($comment_deleted == false) {?>
+					<p align="right">
+						<a href="<?php echo $html->url('/projects/'.$project_url)?>/<?php echo $project_id?>"><?php ___('Go To Project')?></a>
+					</p>
+					<?php }?>
+				</div>
+				<?php
+			}
+		}
+	} elseif ($option == "galleries") {
+		foreach ($data as $comment) {
+			$commenter_id = $comment['User']['id'];
+			$commenter_urlname = $comment['User']['urlname'];
+			$commenter_username = $comment['User']['username'];
+			$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $content_status);
+			$commenter_url = "/users/view/".$commenter_urlname;
+			$comment_id = $comment['Gcomment']['id'];
+			$comment_content = $comment['Gcomment']['content'];
+			$timestamp = $comment['Gcomment']['timestamp'];
+			$visible = $comment['Gcomment']['visibility'];
+			$visibility = $comment['Gcomment']['comment_visibility'];
+			$gallery_url = $comment['Gallery']['username'];
+			$gallery_id = $comment['Gallery']['id'];
+			
+			if ($visibility == 'visible') {
+			?>
+				<div class="comment">
+					<h5>
+						<?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
+						<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
+						<?php echo friendlyDate($timestamp)?>
+					</h5>
+					<p><?php echo $comment_content?></p>
+					<p align="right">
+						<a href="<?php echo $html->url('/galleries/view/'.$gallery_id)?>"><?php ___('Go To Gallery')?></a>
+					</p>
+				
+				</div>
+				
+			<?php	
+			}
+		}
+	}
+?>
+</div>

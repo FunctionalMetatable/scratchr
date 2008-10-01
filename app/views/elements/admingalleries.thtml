@@ -1,0 +1,41 @@
+<?php
+	$pagination->setPaging($paging);
+	$prev = $pagination->prevPage("Prev",false, null, "prevlink");
+	$next = $pagination->nextPage("Next",false, null, "nextlink");
+	$pages = $pagination->pageNumbers(" ", null, "", "");
+	
+	echo "<div>\n";
+	echo "         <span>"; echo "$prev  $pages  $next"; echo "</span>\n";
+	echo "</div>\n";
+			
+	foreach ($data as $gallery):
+		$gallery_id = $gallery['Gallery']['id'];
+		$gallery_name = $gallery['Gallery']['name'];
+		$gallery_description = $gallery['Gallery']['description'];
+		$gallery_creator = $gallery['User']['username'];
+		$gallery_created = $gallery['Gallery']['timestamp'];
+	
+	echo "<div class='gallerythumb clearme'>\n";
+    	echo "\t<div class='admin_leftcolumn'>\n";
+    		echo "\t\t<span>Name:";
+    		echo " $gallery_name"; echo "</span><br/>\n";
+    		echo "\t\t<span>Creator:";
+    		echo " $gallery_creator"; echo "</span><br/>\n";
+    		echo "\t\t<span>Created:";
+    		echo " $gallery_created"; echo "</span>\n";
+    	echo "\t</div>";
+    	echo "\t<div class='admin_rightcolumn'>\n";
+    	    echo "\t\t<span>Description:";
+    	    echo " $gallery_description" ; 
+    	    echo "\t\t</span><br/>\n";
+    		echo "\t</div>\n";
+			echo "\t\t<span>";
+			e($ajax->link("ClubIt", '#', 
+							array('url'=>'/administration/clubGallery/' . $gallery_id, 'update'=>'void'), NULL, false));
+			echo " | ";
+			e($ajax->link("FeatureIt", '#', 
+							array('url'=>'/administration/featureGallery/' . $gallery_id, 'update'=>'void'), NULL, false));
+			echo "</span>\n";
+	echo "</div>\n";
+	endforeach;	
+?>

@@ -1,0 +1,57 @@
+<?php
+	echo "<div id='ajax_pagination_tertiary'>\n";
+	echo "<div class='gallerypopup'>\n";
+	echo "<div class='gallery_header'>\n";
+	echo "<h5>";
+	___('Click on a Project to Add to Gallery');
+	echo "</h5>\n";
+	echo "</div>\n";
+	
+	$pagination->setPaging($paging_secondary);
+	echo $this->renderElement('pagination_secondary'); 
+	
+	echo "<div id='gallery_projects'>\n";
+	foreach ($data as $project):
+		$pid = $project['Project']['id'];
+		$urlname = $user_url;
+		$owner_url = "/users/".$urlname;
+		$owner_username = $user_name;
+		$project_name = htmlspecialchars($project['Project']['name']);
+		$project_id = $project['Project']['id'];
+		$project_url = "/projects/view/$urlname/$pid";
+		$thumbnail_src = getThumbnailImg($urlname, $pid);
+		if (strlen($project_name) >= 15) {
+			$project_name = substr($project_name,0,20) . " ...";
+		}
+		$exists = $project['GalleryProject']['exists'];
+		
+			
+		if ($exists == false) {
+			e($ajax->link("<div class='gallery_addproject_item'>
+								<div class='gallery_addproject_img'>
+									<img class='clean_img' src='/img/blank.gif' width='13' height='13'></img>
+								</div>
+								<div class='gallery_addproject_text'>
+									<h6>$project_name</h6>
+								</div>
+							</div>", '#', 
+							array('url'=>'/galleries/addmyproject/' . $gallery_id . '/' . $pid . '/' . $page, 'update'=>'gallery_addproject', 
+							'condition'=>'checkLogin()'), NULL, false));
+		} else {
+			e($ajax->link(" <div class='gallery_addproject_item'>
+								<div class='gallery_addproject_img'>
+									<img class='clean_img' src='/img/checkmark.gif' width='13' height='13'></img>
+								</div>
+								<div class='gallery_addproject_text'>
+									<h6>$project_name</h6>
+								</div>
+							</div>", '#', 
+							array('url'=>'/galleries/addmyproject/' . $gallery_id . '/' . $pid . '/' . $page, 'update'=>'gallery_addproject', 
+							'condition'=>'checkLogin()'), NULL, false));
+		}
+
+	endforeach;
+	echo "</div>\n";
+	echo "</div>\n";
+	echo "</div>\n";
+?>

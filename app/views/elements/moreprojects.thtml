@@ -1,0 +1,25 @@
+	<ul class="projectlist">
+		<?php
+		foreach ($user_projects as $user_project):
+		$user_project_name = htmlspecialchars($user_project['Project']['name']);
+		$views = $user_project['Project']['views'];
+		$user_project_id = $user_project['Project']['id'];
+		$user_project_url = "/projects/".$urlname."/".$user_project_id;
+		$mini_project_thumb = getThumbnailImg($urlname, $user_project_id, 'mini');
+		if (strlen($user_project_name) > 15) {
+			$user_project_name = substr($user_project_name,0,13) . "&#0133;";
+		}
+		?>
+		<li> <a href="<?php echo $html->url($user_project_url)?>">
+		<?php echo $html->image($mini_project_thumb,array('title'=>$user_project_name,'alt'=>$user_project_name,'width'=>'90','height'=>'68'))?>
+		</a><a href="<?php echo $html->url($user_project_url)?>"><?php e($user_project_name)?></a><br>
+		  <?php e($views)?> <?php ___('views'); ?> </li>
+		<?php endforeach; ?>
+	</ul>
+	  
+	<div class="project_pagination_container">
+		<?php 
+			$pagination->setPaging($paging);
+			e($this->renderElement('pagination')); 
+		?>
+	</div>

@@ -1,0 +1,46 @@
+<div class="mystuff_content">
+<div class="pagination_container">
+	<?php 
+		$pagination->setPaging($paging_secondary);
+		echo $this->renderElement('pagination_secondary'); 
+	?>
+</div>
+<?php if ($isMe || $isAdmin): ?>
+	<div class="mystuff_project_action">
+	<form id="removeFavorites" action="<?php echo $html->url('/users/removefavorites')?>" method="post">
+		<input type="hidden" class="button" name="UID" value="<?php e($user['id'])?>">
+		<input type="submit" class="button" <?php echo 'onclick="if (confirm(' . "'" . ___('Are you sure you want to delete the project(s) from your favorites?', true) . "'" . ')) return true; return false;"'; ?> value="<?php ___('remove selected favorites'); ?>">
+	</form>
+	</div>
+<?php endif;?>
+<div class="mystuff_projects">
+<?php foreach($data as $favorite): ?>
+	<?php
+		$favorite_id = $favorite['Favorite']['id'];
+		$project = $favorite['Project'];
+		$project_name = htmlspecialchars($project['name']);
+		$pid = $project['id'];
+		$owner = $project['User'];
+		$owner_urlname = $owner['urlname'];
+		$owner_username = $owner['username'];
+		$project_thumbnail = getThumbnailImg($owner_urlname, $pid, 'mini', true);
+		$project_url = "/projects/".$owner_urlname."/".$pid;
+		$project_owner_url = "/users/".$owner_urlname;
+		if (strlen($project_name) >= 17) {
+			$project_name = substr($project_name,0,17) . "&#0133;";
+		}
+	?>
+	<div class="mystuff_thumb"> <a href="<?php echo $html->url($project_url)?>">
+	<?php echo $html->image($project_thumbnail,array('title'=>htmlspecialchars($project['name']),'alt'=>htmlspecialchars($project['name']),'width'=>'148','height'=>'111'))?>
+	
+	</a>
+		<h6><a href="<?php echo $html->url($project_url)?>"><?php e($project_name)?></a></h6>
+		<p><?php ___('by'); ?><a href="<?php echo $html->url($project_owner_url)?>"> <?php e($owner_username)?></a></p>
+	
+		<?php if ($isMe || $isAdmin):?>
+			<input type="checkbox" onclick="toggleActive(<?php echo "'" . $pid . '_' . $favorite_id . "'"; ?>, 'removeFavorites');"/>
+		<?php endif;?>
+	</div>
+<?php endforeach; ?>
+</div>
+</div>

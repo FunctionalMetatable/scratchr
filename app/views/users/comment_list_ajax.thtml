@@ -1,0 +1,3 @@
+<?php
+	echo $this->renderElement('users/comment_list_content', Array('data' => $final_comments, 'option' => $option));
+?>

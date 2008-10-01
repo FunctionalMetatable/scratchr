@@ -1,0 +1,22 @@
+
+<rss version="2.0">
+  <channel> 
+    <title>Top Remixed Projects Feed</title> 
+    <link><?php echo $rss_link; ?></link> 
+    <description>Top Remixed Projects Feed</description> 
+    <language>en-us</language> 
+    <pubDate><?php echo date("D, j M Y H:i:s", gmmktime()) . ' GMT';?></pubDate> 
+    <docs></docs> 
+    <generator>CakePHP</generator> 
+    <managingEditor>Han and Andres</managingEditor> 
+    <webMaster>genghisu</webMaster> 
+    <?php foreach ($projects as $project): ?> 
+    <item> 
+      <title><?php echo htmlspecialchars($project['Project']['name']); ?></title> 
+      <link><?php echo $project['Project']['link']; ?></link> 
+      <description><?php echo htmlspecialchars($project['Project']['description']); ?></description> 
+	  <imagelink><?php echo $project['Project']['image_link']; ?></imagelink>
+    </item> 
+    <?php endforeach; ?> 
+  </channel> 
+</rss> 

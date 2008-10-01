@@ -1,0 +1,311 @@
+<!-- |||||| Begin content area ||||||| -->
+<a name="main">
+  <div id="main">
+
+<!-- ::: Begin intro (logged out) ::: -->
+    <div id="intro">
+      <div class="step"><a href="/howto"><img src="/img/gr_step1.gif" alt="scratchr blocks" width="103" height="61"></a>
+        <p><?php ___('Snap together blocks'); ?></p>
+      </div>
+      <div class="step"><a href="/channel/recent"><img src="/img/gr_cat.png" title="scratch mascot" alt="scratch mascot" width="63" height="66" class="stepimg"></a>
+        <p class="right"><?php ___('to create <br> stories, games <br> and animations');?></p>
+      </div>
+      <div class="step"><a href="/share"><img src="/img/gr_step3.gif" alt="Share"></a>
+        <p><?php ___('and share your creations on the web');?></p>
+      </div>
+    </div>
+<!-- ::: End intro  ::: -->
+
+
+    <div id="NewestProjects" class="container">
+      <h3><?php ___('Newest Projects');?></h3>
+		<?php
+		/**
+		 * Populate new projects
+		 */
+		foreach ($newprojects as $new):
+		$pid = $new['Project']['id'];
+		$owner = htmlspecialchars($new['User']['urlname']);
+		$project_link = "/projects/".$owner."/".$pid;
+		$thumbnail_src = getThumbnailImg($owner, $pid);
+		$user_link = "/users/".$owner;
+		$project_name = htmlspecialchars($new['Project']['name']);
+		$project_name_s = (strlen($project_name) >= MAX_LENGTH_PNAME_HOME) ? substr($project_name,0,15) . "&#0133;" : $project_name;
+		?>
+		<div class="thumb">
+		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
+		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
+		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
+		</div>
+		<?php endforeach; ?>
+      <p class="more"><a href="/channel/recent"><?php ___('See more');?></a> </p>
+    </div>
+
+    <div id="FeaturedProjects" class="container">
+      <h3><?php ___('Featured Projects');?></h3>
+		<?php
+		/**
+		 * Populate featured projects
+		 */
+		foreach ($featuredprojects as $featured):
+		$pid = $featured['Project']['id'];
+		$owner = $featured['Project']['User']['urlname'];
+		$project_link = "/projects/".$owner."/".$pid;
+		$thumbnail_src = getThumbnailImg($owner, $pid);
+		$user_link = "/users/".$owner;
+		$project_name = htmlspecialchars($featured['Project']['name']);
+		$project_name_s = $project_name;
+		if (strlen($project_name) > MAX_LENGTH_PNAME_HOME) {
+			$project_name_s = substr($project_name,0,15) . "&#0133;";
+		}
+		?>
+		<div class="thumb">
+		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<? e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
+		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
+		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
+		</div>
+		<?php endforeach; ?>
+      <p class="more"><a href="/channel/featured"><?php ___('See more');?></a> </p>
+    </div>
+
+    <div id="TopRemixedLately" class="container">
+      <h3><?php ___('Top Remixed Lately')?></h3>
+		<?php
+		/**
+		 * Populate top remixed projects
+		 */
+		foreach ($topremixed as $topremix):
+		$pid = $topremix['Project']['id'];
+		$owner = $topremix['User']['urlname'];
+		$project_link = "/projects/".$owner."/".$pid;
+		$thumbnail_src = getThumbnailImg($owner, $pid);
+		$user_link = "/users/".$owner;
+		$project_name = htmlspecialchars($topremix['Project']['name']);
+		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ?  substr($project_name,0,15) . "&#0133;" : $project_name;
+		?>
+		<div class="thumb">
+		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
+		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
+		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
+		</div>
+		<?php endforeach; ?>
+      <p class="more"><a href="/channel/remixed"><?php ___('See more');?></a> </p>
+    </div>
+
+	<div id="SurpriseProjects" class="container">
+      <h3><?php ___('Surprise Projects');?></h3>
+		<?php
+		/**
+		 * Populate random projects
+		 */
+		foreach ($toprandoms as $toprandom):
+		$pid = $toprandom['Project']['id'];
+		$owner = $toprandom['User']['urlname'];
+		$project_link = "/projects/".$owner."/".$pid;
+		$thumbnail_src = getThumbnailImg($owner, $pid);
+		$user_link = "/users/".$owner;
+		$project_name = htmlspecialchars($toprandom['Project']['name']);
+		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ? substr($project_name,0,15) . "&#0133;" : $project_name;
+		?>
+		<div class="thumb">
+		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
+		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
+		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
+		</div>
+		<?php endforeach; ?>
+      <p class="more"><a href="/channel/recent"><?php ___('See more');?></a> </p>
+    </div>
+
+    <div id="TopLovedLately" class="container">
+      <h3><?php ___('Top Loved Lately');?></h3>
+		<?php
+		/**
+		 * Populate top loved projects
+		 */
+		foreach ($toploved as $toplove):
+		$pid = $toplove['Project']['id'];
+		$owner = $toplove['User']['urlname'];
+		$project_link = "/projects/".$owner."/".$pid;
+		$thumbnail_src = getThumbnailImg($owner, $pid);
+		$user_link = "/users/".$owner;
+		$project_name = htmlspecialchars($toplove['Project']['name']);
+		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ? substr($project_name,0,15) . "&#0133;" : $project_name;
+		?>
+		<div class="thumb">
+		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
+		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
+		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
+		</div>
+		<?php endforeach; ?>
+      <p class="more"><a href="/channel/toploved"><?php ___('See more');?></a> </p>
+    </div>
+
+	 <div class="container" id=TopDownloadedLately">
+      <h3><?php ___('Top Downloaded Lately')?></h3>
+		<?php
+		/**
+		 * Populate top loved projects
+		 */
+		foreach ($topdownloaded as $topdownload):
+			$pid = $topdownload['Project']['id'];
+			$owner = $topdownload['User']['urlname'];
+			$project_link = "/projects/".$owner."/".$pid;
+			$thumbnail_src = getThumbnailImg($owner, $pid);
+			$user_link = "/users/".$owner;
+			$project_name = htmlspecialchars($topdownload['Project']['name']);
+			$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ? substr($project_name,0,15) . "&#0133;" : $project_name;
+			?>
+			<div class="thumb">
+			  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
+			  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
+			  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
+			</div>
+		<?php endforeach; ?>
+    </div>
+
+    <div id="TopViewedLately" class="container">
+      <h3><?php ___('Top Viewed Lately')?></h3>
+		<?php
+		/**
+		 * Populate top viewed projects
+		 */
+		foreach ($topviewed as $topview):
+		$pid = $topview['Project']['id'];
+		$owner = $topview['User']['urlname'];
+		$project_link = "/projects/".$owner."/".$pid;
+		$thumbnail_src = getThumbnailImg($owner, $pid);
+		$user_link = "/users/".$owner;
+		$project_name = htmlspecialchars($topview['Project']['name']);
+		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ?  substr($project_name,0,15) . "&#0133;" : $project_name;
+		?>
+		<div class="thumb">
+		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
+		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
+		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
+		</div>
+		<?php endforeach; ?>
+      <p class="more"><a href="/channel/topviewed"><?php ___('See more');?></a> </p>
+    </div>
+
+  </div>
+<!-- ////// End main content ////// -->
+
+
+<!-- |||||| Begin sidebar ||||||| -->
+  <div id="sidebar">
+
+<div id="somewhere_else"></div>
+    <div id="download">
+      <h2><?php ___('Download Scratch'); ?> 1.3</h2> <p><a href="/download"><img src="/img/download_scratch.gif" alt="Download Scratch 1.3" width="74" height="32"></a><?php printf(___('Get the %slatest version of Scratch%s for<br /> Windows or Mac.', true), '<a href="/download">', '</a>');?></p>
+    </div>
+
+
+	    <div id="conference" class="sidecontainer">
+      <h4><?php ___('Scratch@MIT Conference'); ?></h4>
+      <ul class="sidelist">
+				<li><?php ___('Educators, researchers, and other members of the worldwide Scratch community gathered for three days.'); ?>
+      <p class="more"><a href="/conference"><?php ___('See what happened');?></a> </p>
+				</li>
+      </ul>
+     </div>
+
+    <div  id="club" class="sidecontainer">
+	<?php
+		$club_name = htmlspecialchars($scratch_club['name']);
+		$club_name_s = (strlen($club_name) > 23) ? substr($club_name,0,23) . "&#0133;" : $club_name ;
+	?>
+      <h4><?php ___('Scratch Design Studio');?></h4>
+      <h5><a href="/galleries/view/<?php e($scratch_club['id']) ?>"><?php e($club_name_s)?></a></h5>
+      <p><a href="/galleries/view/<?php e($scratch_club['id']) ?>"><img src="<?php e($scratch_club['icon_src']); ?>" title="<?php e($club_name)?>" alt="<?php e($club_name)?>" width="90" height="68"></a><?php e($scratch_club['description'])?></p>
+      <p class="more"><a href="/galleries/browse/clubbed"><?php ___('See more');?></a> </p>
+    </div>
+
+	<div id="FeaturedGalleries" class="sidecontainer">
+      <h4><?php ___('Featured Galleries');?></h4>
+      <ul class="sidelist">
+        <?php
+		/**
+		 * Populate featured themes
+		 */
+		foreach ($featuredthemes as $theme):
+		$theme_id = $theme['Gallery']['id'];
+		$theme_icon = $theme['Gallery']['icon_src'];
+		$theme_url = "/galleries/view/".$theme_id;
+		$theme_name = htmlspecialchars($theme['Gallery']['name']);
+		$theme_name_s = (strlen($theme_name) >= 14)  ? substr($theme_name,0,14) . "&#0133;" : $theme_name;
+		?>
+		<li><img src="<?php e($theme_icon)?>" title="<?php e($theme_name)?>" alt="<?php e($theme_name)?>" width="43" height="32"><a href="<?php e($theme_url)?>"><?php e($theme_name_s)?></a></li>
+        <?php endforeach;?>
+        <li><a href="#"></a></li>
+      </ul>
+      <p class="more"><a href="/galleries"><?php ___('See more');?></a> </p>
+    </div>
+
+
+    <div  id="div" class="sidecontainer">
+      <h4><?php ___('Popular Tags');?></h4>
+
+
+          <p class="tags" align="justify">
+<?php 
+e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null, 2, 6)); 
+?>
+</p>
+
+      <p class="more"><a href="/tags"><?php ___('See more');?></a> </p>
+    </div>
+
+
+    <div id="RecentVisitors" class="sidecontainer">
+      <h4><?php ___('Recent Visitors') ?></h4>
+      <ul class="sidelist">
+        <?php
+		/**
+		 * Populate recent visitors
+		 */
+		foreach ($recentvisitors as $visitor):
+		$username = $visitor['User']['urlname'];
+		$user_id = $visitor['User']['id'];
+		$buddy_icon = getBuddyIconBySize($user_id, 'mini', $content_status);
+		$user_link = "/users/".$username;
+		$username = (strlen($username) > 10)? substr($username,0,10) . "&#0133;" : $username;
+		?>
+		<li><a href="<?php e($user_link)?>"><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php e($username)?></a></li>
+        <?php endforeach;?>
+      </ul>
+    </div>
+
+	 <div id="lego" class="sidecontainer">
+      <h4><?php ___('LEGO&reg; images');?></h4>
+	<p><a href="/pages/imagepack"><img src="/img/pages/imgpk/lego/doctor2.gif" height="68" title="LEGO images" alt="LEGO images" align="right"></a><?php ___('The LEGO Company donated images for use in Scratch projects.');?> <a href="/pages/imagepack"><?php ___('Read more');?></a>.</p>
+	</div>
+
+    <div id="NewestMembers" class="sidecontainer">
+      <h4><?php ___('Newest Members');?> </h4>
+      <ul class="sidelist">
+		<?php
+		/**
+		 * Populate newest members
+		 */
+		foreach ($newmembers as $member):
+		$username = $member['User']['urlname'];
+		$user_id = $member['User']['id'];
+		$buddy_icon = getBuddyIconBySize($user_id, 'mini', $content_status);
+		$user_link = "/users/".$username;
+		$username = (strlen($username) > 23)? substr($username,0,23) . "&#0133;" : $username;
+		?>
+		<li><a href="<?php e($user_link)?>"><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php e($username)?></a></li>
+		<?php endforeach;?>
+      </ul>
+    </div>
+
+	    <div id="stats" class="sidecontainer">
+      <h4><?php ___('Stats');?></h4>
+      <ul class="sidelist">
+				<li><?php printf(___("There are %s projects%s with a total of %s scripts and %s sprites created by %s contributors of our %s registered members. That's a lot of Scratch-ing!", true), "<a href='/channel/recent'>" . $totalprojects, "</a>", $totalscripts, $totalsprites, $totalcreators, $totalusers); ?></li>
+      </ul>
+    </div>
+
+  </div>
+<!-- ////// End main sidebar ////// -->
+</a>

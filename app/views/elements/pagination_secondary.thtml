@@ -1,0 +1,18 @@
+<div id='pagination_secondary' class='pagination'>
+<?php
+    if($pagination->setPaging($paging_secondary)):
+    $leftArrow = "<<  ";
+    $rightArrow = "  >>";
+	
+    $prev = $pagination->prevPage($leftArrow,false);
+    $prev = $prev?$prev:$leftArrow;
+    $next = $pagination->nextPage($rightArrow,false);
+    $next = $next?$next:$rightArrow;
+
+    $pages = $pagination->pageNumbers(" | ");
+
+    echo $pagination->result()."<br>";
+	echo $pages;
+    endif;
+?>
+</div>

@@ -1,0 +1,23 @@
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	</div>
+	<div id="admin_project_content">	
+		<div>
+			<div>
+				<span>Sort By: </span>
+				<span><a <?php if ($option == "created") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/usort/created')?>">Creation Date</a> | </span>
+				<span><a <?php if ($option == "name") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/usort/name')?>">Name</a> | </span>
+				<span><a <?php if ($option == "country") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/usort/country')?>">Country</a> </span>|
+				<span><a <?php if ($option == "birth") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/usort/birth')?>">Date of Birth</a> </span>
+			</div><br/>
+		<div>
+	<?php
+		 e($ajax->div("admin_project_list"));
+         	e($this->renderElement('adminusers', array('data'=> $data)));
+         e($ajax->divEnd("admin_project_list"));
+    ?>	 
+    </div>	
+</div>

@@ -1,0 +1,59 @@
+	<table id="exSubNavTable">
+	</table>
+
+	<div id="exRelatedDiv" style="display: block;">
+
+        <?php
+			$pagination->setPaging($paging);
+
+			echo $this->renderElement('pagination');
+        ?>
+
+		<div id="side_results" class="exploreContent" name="side_results" onscroll="render_full_side()" >
+
+        <?php
+            
+            foreach ($data as $project):
+            //list($mini_img_src, $medium_img_src) = getThumbnailSrcs($project['Thumbnail']);
+            
+            $views = $project['Project']['views'];
+            $pid = $project['Project']['id'];
+            $projectref = "/projects/view/$urlname/$pid";
+            $mini_img_src = getThumbnailImg($urlname, $pid, 'mini');
+            $medium_img_src = getThumbnailImg($urlname, $pid, 'medium');?>
+            
+            <div class="vWatchEntry">
+            <table>
+            <tr><td>
+            <div class="img">
+                <a href="<?php echo $html->url($projectref)?>">
+				<?php echo $html->image('$mini_img_src',array('class'=>'vimgSm','width'=>'133','height'=>'100'))?>
+				</a>
+            </div>
+            </td>
+            <td>
+            <div class="title"><b>
+                <a href="<?php echo $html->url($projectref)?>"><?php e($project['Project']['name'])?></a></b><br/>
+            </div>
+
+            <div class="facets">
+                <span class="grayText"> <?php ___('Views'); ?> :</span><?=e($views)?>
+            </div><!--</div>-->
+            </td></tr>
+            </table>
+            </div>
+
+        <?php endforeach;?>
+	
+	</div>
+
+    <?php
+        $prev = $pagination->prevPage(___("Prev", true),false,"exploreBody");
+        $prev = $prev?$prev:___("Prev", true);
+        $next = $pagination->nextPage(___("Next", true),false,"exploreBody");
+        $next = $next?$next:___("Next", true);
+        echo "<div id=\"pagination\"><table class=\"showingTable\"><tr><td class=\"smallText\">$results</td><td align=\"right\" class=\"smallText\">$prev $next</td></tr></table></div>";
+    ?>
+			
+    </div> <!-- end exRelatedDiv -->
+

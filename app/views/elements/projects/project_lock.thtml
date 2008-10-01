@@ -1,0 +1,15 @@
+<?php
+	if ($isLocked) {
+		echo "<h5>";
+			echo $ajax->link("enable commenting and tagging", 
+			'#', array("url"=>"/projects/lock/$pid/unlock", "update"=>"lockDiv",
+			"condition"=>"checkLogin()", "style"=>"color:#aaa"), NULL, false);
+		echo"</h5>";
+	} else {
+		echo "<h5>";
+			echo $ajax->link("disable commenting and tagging", 
+			'#', array("url"=>"/projects/lock/$pid/lock", "update"=>"lockDiv",
+			"condition"=>"checkLogin()", "style"=>"color:#aaa"), NULL, false);
+		echo"</h5>";
+	}
+?>

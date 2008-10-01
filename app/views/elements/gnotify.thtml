@@ -1,0 +1,5 @@
+<?php if ($isLoggedIn && $notify_gcomment):?>
+<h6> <?php echo $ajax->link(___("Stop sending me messages", true), '#', array("url"=>"/notifications/ungnotify", "update"=>"gnotifyDiv"), NULL, false); ?> <?php echo " " . ___('when someone leaves a comment on one of my galleries.'); ?></h6>
+<?php else:?>
+<h6><?php echo $ajax->link(___("I want to get a message", true), '#', array("url"=>"/notifications/gnotify", "update"=>"gnotifyDiv"), NULL, false); ?> <?php echo " " .  ___('when someone leaves a comment on one of my galleries.'); ?></h6>
+<?php endif;?>

@@ -1,0 +1,39 @@
+<?php
+	if ($mode == "name") {
+		echo "<div id='signup_info_name' class='signup_info'>\n";
+			___('Do not use your full name. Minimum 3 characters');
+		echo "</div>\n";
+	} elseif ($mode == "password") {
+		echo "<div id='signup_info_password' class='signup_info'>\n";
+			___('Must be at least 6 characters');
+		echo "</div>\n";
+	} elseif ($mode =="confirmation") {
+		echo "<div id='signup_info_confirmation' class='signup_info'>\n";
+			___('Type in your password for verification');
+		echo "</div>\n";
+	} elseif ($mode == "birthdate") {
+//		echo "<div id='signup_info_birthdate' class='signup_info'>\n";
+//			___('We cannot collect personally identifiable information from people under 13 years old');
+//		echo "</div>\n";
+	} elseif ($mode == "email") {
+		echo "<div id='signup_info_email' class='signup_info'>\n";
+			___('A valid email is required to recover a lost password.');
+		echo "</div>\n";
+	} elseif ($mode == "gender") {
+//		echo "<div id='signup_info_gender' class='signup_info'>\n";
+//			___('Please select your gender');
+//		echo "</div>\n";
+	} elseif ($mode == "country") {
+//		echo "<div id='signup_info_country' class='signup_info'>\n";
+//			___('Please select your country');
+//		echo "</div>\n";
+	} elseif ($mode == "city") {
+		echo "<div id='signup_info_city' class='signup_info'>\n";
+			___('only displayed for members older than 18.');
+		echo "</div>\n";
+	} elseif ($mode == "state") {
+		echo "<div id='signup_info_state' class='signup_info'>\n";
+			___('only displayed for members 18 or older.');
+		echo "</div>\n";
+	}
+?>

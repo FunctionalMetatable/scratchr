@@ -1,0 +1,72 @@
+<div id="ajax_pagination">
+<div class="fullcontent">
+
+	<?php if($isLogged): ?>
+   <h2><?php ___('Explore or')?> <a href="<?php echo $html->url('/galleries/create')?>"><?php ___('create a new gallery')?></a></h2>
+   <?php endif; ?>
+   
+   <?php if(!$isLogged): ?>
+   <h2><?php __('Explore'); ?></h2>
+   <?php endif; ?>
+   
+   <div id="gallery_menu">
+	<?php
+		if ($option == "newest") {
+			?>
+            <a href="<?php echo $html->url(array('controller'=>'galleries','action'=>'browse/newest'))?>"><span class="button2_selected"><?php ___('recently changed');?></span></a>
+            
+            <?
+			
+		} 
+		else 
+		{
+		?>	
+			<a href="<?php echo $html->url(array('controller'=>'galleries','action'=>'browse/newest'))?>"><span class="button2"><?php ___('recently changed');?></span></a>
+			
+		<?php
+		}
+		if ($option == "clubbed") {
+			?>
+            <a href="<?php echo $html->url(array('controller'=>'galleries','action'=>'browse/clubbed'))?>"><span class="button2_selected"><?php ___('design studios');?></span></a>
+            
+            <?
+			
+		} 
+		else 
+		{
+		?>	
+			 <a href="<?php echo $html->url(array('controller'=>'galleries','action'=>'browse/clubbed'))?>"><span class="button2"><?php ___('design studios');?></span></a>
+            
+			
+		<?php
+		}
+		
+		if ($option == "feature") {
+			?>
+            <a href="<?php echo $html->url(array('controller'=>'galleries','action'=>'browse/feature'))?>"><span class="button2_selected"><?php ___('featured');?></span></a>
+            
+            <?
+			
+		} 
+		else 
+		{
+		?>	
+			 <a href="<?php echo $html->url(array('controller'=>'galleries','action'=>'browse/feature'))?>"><span class="button2"><?php ___('featured');?></span></a>
+            
+			
+		<?php
+		}
+		
+		
+		
+		
+	?>
+	
+   </div>
+   <div id="gallery_tag_cloud">
+   </div>
+</div>
+<div id="pagination_page">
+	<?php e($this->renderElement('galleryexplorer', array('option' => $option, 'data' => $data))); ?>
+</div>
+</div>

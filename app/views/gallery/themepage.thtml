@@ -1,0 +1,238 @@
+ <?php 
+	if ($user_status == "normal") {
+		$user_locked = 0;
+	} else {
+		$user_locked = 1;
+	}
+?>
+<!-- |||||| Begin content area ||||||| -->
+<div id="main">
+<div class="container">
+  <h3><?php ___('Newest Projects in'); ?> <span id="gallery_title"><?php e(htmlspecialchars($theme['name']))?></span></h3>
+	<?php if ($isThemeOwner || $isAdmin) echo $ajax->editor("gallery_title", "/galleries/name/".$theme_id, Array("callback"=>"return 'name=' + encodeURIComponent(value)")); ?>
+
+	<div id="gallery_view_menu">
+	<?php ___('Sort by'); ?>:
+	<?php
+		$pagination->setPaging($paging);
+		if ($option == "creator") {
+		?>
+			<a href="<?php echo $html->url('/galleries/view/')?><?php echo $theme_id?>/creator/asc" class="selected_gallery_sortoption"><?php echo ___('creator')?></a>&nbsp;|&nbsp;
+			
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/galleries/view/')?><?php echo $theme_id?>/creator/asc" ><?php echo ___('creator')?></a>&nbsp;|&nbsp;
+			
+		<?php
+		}
+		
+		if ($option == "title") {
+		?>
+			<a href="<?php echo $html->url('/galleries/view/')?><?php echo $theme_id?>/title/asc" class="selected_gallery_sortoption"><?php echo ___('title')?></a>&nbsp;|&nbsp;
+			
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/galleries/view/')?><?php echo $theme_id?>/title/asc" ><?php echo ___('title')?></a>&nbsp;|&nbsp;
+			
+		<?php
+		}
+		
+		if ($option == "created") {
+		?>
+			<a href="<?php echo $html->url('/galleries/view/')?><?php echo $theme_id?>/created/asc" class="selected_gallery_sortoption"><?php echo ___('creation date')?></a>&nbsp;|&nbsp;
+			
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/galleries/view/')?><?php echo $theme_id?>/created/asc" ><?php echo ___('creation date')?></a>&nbsp;|&nbsp;
+			
+		<?php
+		}
+		
+		if ($option == "added") {
+		?>
+			<a href="<?php echo $html->url('/galleries/view/')?><?php echo $theme_id?>/added/asc" class="selected_gallery_sortoption"><?php echo ___('addition date')?></a>&nbsp;|&nbsp;
+			
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/galleries/view/')?><?php echo $theme_id?>/added/asc" ><?php echo ___('addition date')?></a>&nbsp;|&nbsp;
+			
+		<?php
+		}
+		
+		
+	?>
+	</div>
+	
+	<div id="ajax_pagination">
+	<div class="pagination">
+		<?php 
+			$pagination->setPaging($paging);
+			echo $this->renderElement('pagination');
+		?>
+	</div>
+	
+	<a href="<?php echo $html->url($feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe'); ?></a>
+	
+	<div id="gallery_view_projects">
+	<?php
+	foreach ($theme_projects as $project):
+		$pid = $project['Project']['id'];
+		$urlname = htmlspecialchars($project['Project']['User']['urlname']);
+		$owner_url = "/users/".$urlname;
+		$owner_username = htmlspecialchars($project['Project']['User']['username']);
+		$project_name = htmlspecialchars($project['Project']['name']);
+		$project_id = $project['Project']['id'];
+		$project_url = "/projects/$urlname/$pid";
+		$thumbnail_src = getThumbnailImg($urlname, $pid);
+		$ignored = $project['GalleryProject']['ignored'];
+		if ($session_username == $owner_username) {
+			$isProjectOwner = true;
+		} else {
+			$isProjectOwner = false;
+		}
+		if (strlen($project_name) >= 15) {
+			$project_name = substr($project_name,0,13) . "&#0133;";
+		}
+	?>
+	<?php if($ignored && !$isProjectOwner): ?>
+		<div class="ignored_thumb">
+			Project not displayed. Posted by a muted account.
+		</div>
+	<?php endif; ?>
+	<?php if(!$ignored || $isProjectOwner): ?>
+		<div class="thumb">
+		<a href="<?php echo $html->url($project_url)?>">
+		<?php echo $html->image($thumbnail_src,array('title'=>htmlspecialchars($project['Project']['name']),'alt'=>htmlspecialchars($project['Project']['name']),'width'=>'148','hight'=>'111'))?>
+		</a>
+		  
+		  <h6><a href="<?php echo $html->url($project_url)?>"><?php e($project_name)?></a></h6>
+		  <p><?php ___('by'); ?><a href="<?php echo $html->url($owner_url)?>"> <?php
+		if (isset($owner_username{16})){
+			$owner_username = substr($owner_username, 0, 13)."&#0133;";
+		}; 
+ e($owner_username)?></a> 
+		  <?php if ($isThemeOwner || $isProjectOwner || $isAdmin): ?>
+		  | <a href="<?php echo $html->url('/galleries/removeproject/')?><?php e($theme_id) ?>/<?php e($project_id)?>">[x]</a></p>
+		  <?php endif; ?>
+		</div>
+	<?php endif; ?>
+	<?php endforeach; ?>
+	</div>
+	</div>
+</div>
+
+<?php if ($isAdmin): ?>
+	<div id="adminActions"/>
+	  <?php e($this->renderElement('gallery/gallery_admin_actions', array('admin_name'=> $admin_name, 'flags' => $flags, 'gallery_id' => $gallery_id)));?>
+	</div>
+<?php endif;?>
+	  
+<!-- ::: Begin comments ::: -->
+<div id="comments" class="container">
+  <h3><?php ___('Comments'); ?></h3>
+    <?php 
+	     if (!$isLogged) {
+			echo "<h5>You need to be logged in to post comments</h5>";
+		 } elseif($user_locked) {
+			echo "<h5>Your account has been locked and you can no longer post comments</h5>";
+		 }
+	?>
+  <?php if(!$user_locked): ?>
+	<h4><?php ___('Add a Comment'); ?> </h4>
+	<form id="tcomment" action="/galleries/comment/<?php e($theme['id'])?>" method="post">
+		<p><textarea name="tcomment_textarea" id="tcomment_textarea"  cols="55" rows="3"></textarea>
+<div id="counter-tcomment_textarea"></div></p>
+		<?php echo $ajax->submit(___('Add', true), 
+		array('id' => 'tcomment_submit', "condition"=>"(checkAll('tcomment_textarea', $user_locked))", 
+		"loading" => "document.getElementById('tcomment_submit').disabled = true;",
+		"class"=>"button","url"=>"/galleries/comment/".$theme['id'], 
+		"update"=>"theme_comment_list", "complete" => "document.getElementById('tcomment_textarea').value = ''; document.getElementById('tcomment_submit').disabled = false;"));?>
+ </form>
+	<?php endif; ?>
+	<div id="ajax_pagination_secondary">
+	<?php
+		e($ajax->div("theme_comment_list"));
+			e($this->renderElement('discusslist', array('comments'=>$theme_comments, 'page'=>$page)));
+		e($ajax->divEnd("theme_comment_list"));
+	?>
+	</div>
+
+</div>
+<!-- ::: End comments ::: -->
+
+</div>
+ <!-- ////// End main content ////// -->
+
+
+
+<!-- |||||| Begin sidebar ||||||| -->
+<div id="sidebar">
+
+	<!-- ::: Begin info ::: -->
+    <div class="sidecontainer">
+	  <?php
+		$gallery_icon_src = $gallery['Gallery']['icon_src'];
+	  ?>
+	  <?php echo $html->image($gallery_icon_src,array('title'=>htmlspecialchars($theme['name']),'alt'=>htmlspecialchars($theme['name']),'width'=>'90','height'=>'90'))?>
+	  
+
+
+	<?php if ($isThemeOwner || $isAdmin): ?>
+		<p><a onclick="document.getElementById('gallery_icon').style.display='block'; return false;" href="#"><?php ___('change picture'); ?></a></p>
+		<form id="gallery_icon" style="display:none" action="<?php echo $html->url('/galleries/updatepic/')?><?php e($theme_id)?>" method="post" enctype='multipart/form-data'>
+		<input name='gallery_icon' size="10" type='file'/>
+		<input value=<?php ___('update'); ?> type="submit" class="button">
+		</form>
+	<?php endif?>
+
+
+	<h5><?php ___('Gallery owner'); ?>: <a href="<?php echo $html->url('/users/')?><?php e($theme_owner['urlname'])?>"><?php e($theme_owner['username'])?>
+	<?php echo $html->image(getBuddyIconBySize($theme_owner['id'],'mini', $content_status),array('title'=>$theme_owner['username'],'alt'=>$theme_owner['username'],'width'=>'28','height'=>'28'))?>
+	</a></h5>
+	<?php echo "<p> <strong>"; ___('Created'); echo "</strong>: $actual_creation_date " . ___("ago", 'false') . "</p>"; ?>
+
+	<?php if ($isAdmin): ?>
+	<p>
+	<div id="adminActions_secondary"/>
+	<?php e($this->renderElement('theme_admin_actions'));?>
+	</div>
+	</p>
+	<br>
+	<?php endif;?>
+	</div>
+    <!-- ::: End info ::: -->
+
+	<!--- Gallery Management --->
+	<?php if($isLogged): ?>
+	<div class="sidecontainer">
+		<div id="action_wrapper">
+			<?php
+				echo $this->renderElement('gallery/user_actions');
+			?>
+		</div>
+	</div>
+	<?php endif; ?>
+	<!--- End Gallery Management --->
+
+	<!-- ::: Begin notes ::: -->
+    <div class="sidecontainer">
+		<h4><?php ___('Gallery description'); ?></h4>
+		<p id="gdesc">
+			<?php
+			$notes = htmlspecialchars($theme['description']);
+			$pattern = '/[\n\r]/';
+			$rep = '<br>';
+			echo preg_replace($pattern, $rep, $notes);
+			?>
+		</p>
+		<?php if ($isThemeOwner || $isAdmin) echo $ajax->editor("gdesc", "/galleries/describe/".$theme_id, Array("callback"=>"return 'description=' + encodeURIComponent(value)", "rows" => 4, "cols" => 20)); ?>
+    </div>
+	<!-- ::: End note ::: -->
+	
+	
+</div>
+<!-- ////// End main sidebar ////// -->

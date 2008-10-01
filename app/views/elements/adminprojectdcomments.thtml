@@ -1,0 +1,36 @@
+<?php 
+	foreach($data as $comment) {
+	$commenter_id = $comment['User']['id'];
+	$commenter_urlname = $comment['User']['urlname'];
+	$commenter_username = $comment['User']['username'];
+	$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $content_status);
+	$commenter_url = "/users/".$commenter_urlname;
+	$comment_type = isset($comment['Pcomment']);
+	$comment_id = ($comment_type) ? $comment['Pcomment']['id']:$comment['id'];
+	$comment_content = ($comment_type) ? $comment['Pcomment']['content']:$comment['content'];
+	$timestamp = ($comment_type) ? $comment['Pcomment']['timestamp']:$comment['timestamp'];
+	$visible = ($comment_type) ? $comment['Pcomment']['visibility']:$comment['visibility'];
+	
+	$commented = false;
+	
+	if ($visible == 0) {
+	?>
+		<div class="comment">
+			
+				<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
+				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
+				<?php echo friendlyDate($timestamp);?>
+				</h5>
+				<p><?php echo $comment_content;?></p>
+				<p align="right">
+				<?php
+				echo "(" . $ajax->link("Restore", '#', array("url"=>"/administration" . "/" . "undeletecomment" . "/" . $project_id . "/" . $comment_id . "/" . "dcomments", "update"=>"admin_project_comments", "condition"=>1), NULL, false) . ")";
+				?>
+				</p>
+		</div>
+		
+		
+	<?php	
+	}
+	}
+?>

@@ -1,0 +1,34 @@
+<?php
+	if ($removed) {
+	} else {
+		$gallery_tag_id = $tag['GalleryTag']['id'];
+		$tag_name = $tag['Tag']['name'];
+		$tag_id = $tag['Tag']['id'];
+		$tag_url = "/tags/".$tag_name;
+		$flagged = $tag['GalleryTag']['flagged'];
+		$tagged = $tag['GalleryTag']['tagged'];
+		$tag_size = $tag['GalleryTag']['size'];
+		
+		echo "<span class='tag_size_$tag_size'><a href='$tag_url'>$tag_name</a></span>";
+			if ($isAdmin || $isMine) {
+				echo $ajax->link("[x]", '#', 
+					array("url"=>"/galleries/deltag/$gallery_id/$gallery_tag_id", 
+					"title" => ___("delete this tag?", true), "update"=>"tag-".$gallery_tag_id, 
+					"condition"=>"checkLogin()"), NULL, false); 
+			}
+			if (!$tagged) {
+				echo "<span>";
+					e($ajax->link('[+]', '#', array("url"=>"/galleries/upgradeTag/$gallery_tag_id", 
+					"title" => ___("affirm this tag?", true),
+					"update"=>"tag-$gallery_tag_id"), NULL, false));
+				echo "</span>";
+			}
+			if (!$flagged) {
+				echo "<span>";
+				e($ajax->link('[flag]', '#', array("url"=>"/galleries/markTag/$gallery_tag_id", 
+					"title" => ___("flag this tag?", true),
+					"update"=>"tag-$gallery_tag_id"), NULL, false));
+				echo "</span>";
+			}
+	}
+?>

@@ -1,0 +1,154 @@
+<?php 
+	foreach($comments as $comment) {
+		$commenter_id = $comment['User']['id'];
+		$commenter_urlname = $comment['User']['urlname'];
+		$commenter_username = $comment['User']['username'];
+		$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $content_status);
+		$commenter_url = "/users/view/".$commenter_urlname;
+		$comment_type = isset($comment['Gcomment']);
+		$comment_id = $comment['Gcomment']['id'];
+		$pre_content = $comment['Gcomment']['content'];
+		$comment_content = $pre_content;
+		$timestamp = $comment['Gcomment']['timestamp'];
+		$mark_address = '/galleries/' . 'markcomment/' . $gallery_id . '/' . $comment_id . '/1';
+		$replies_address = '/galleries/display_replies/' . $comment_id . '/' . $comment_level;
+		$reply_address = '/galleries/show_comment_reply/$comment_id/$comment_level';
+		$commented = false;
+		$date = friendlyDate($timestamp);
+		
+		if (isset($comment['Gcomment']['replies'])) {
+			$replies = $comment['Gcomment']['replies'];
+		} else {
+			$replies = 0;
+		}
+		
+		if ($comment_type && $isLogged) {
+			$commented = $comment['Gcomment']['commented'];
+			$ignored = $comment['Gcomment']['ignored'];
+		} else {
+			$commented = false;
+			$ignored = $comment['Gcomment']['ignored'];
+		}
+		
+		$comment_owner_id = $comment['User']['id'];
+		if ($comment_owner_id == $loggedInUID) {
+			$isCommentOwner = true;
+		} else {
+			$isCommentOwner = false;
+		} 
+		
+		if ($ignored && !$isCommentOwner) {
+			echo "<div id='$comment_id' class='comment_$comment_level'>\n";
+			?>	
+				<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
+				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
+				
+				<?php
+				if ($date == "Now") {
+				} else {
+					printf(___('%s ago', true), friendlyDate($timestamp)); 
+				}
+				echo "</h5><p>Comment not displayed. Posted by a muted account.</p>
+			</div>";
+		}	elseif (!$commented) {
+			echo "<div id='$comment_id' class='comment_$comment_level'>\n";	
+				?>
+			<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
+				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
+			<?php
+			if ($date == "Now") {
+			} else {
+				printf(___('%s ago', true), friendlyDate($timestamp)); 
+			}
+			echo "</h5><p>$comment_content</p>";
+			
+			
+			echo "<span class='flag_comment'>";
+				if ($isLogged) {
+					if ($comment_level <= 1) {
+						$form_id = "gallery_comment_reply_input_" . $comment_id;
+						echo "(" . "<a href='#' id='reply_hide_link_$comment_id' onclick='showReplyBox($comment_id, 0); addGalleryCharCounter($comment_id); return false;'>reply</a>" . ")";
+						echo " | ";
+				
+						if ($replies > 0) {
+							echo "<span id='view_hide_link_frame_$comment_id' class='visible_element'>";
+							echo "(" . $ajax->link(___("view all replies", true), '#', 
+								array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
+									"id"=>"view_hide_link_$comment_id",
+									"complete"=>"showReplyList($comment_id);",
+									"condition"=>"checkLogin()"), 
+									NULL, false) . ")";
+							echo " | ";
+							echo "</span>";
+						} else {
+							echo "<span id='view_hide_link_frame_$comment_id' class='hidden_element'>";
+							echo "(" . $ajax->link(___("view all replies", true), '#', 
+								array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
+									"id"=>"view_hide_link_$comment_id",
+									"complete"=>"showReplyList($comment_id);",
+									"condition"=>"checkLogin()"), 
+									NULL, false) . ")";
+							echo " | ";
+							echo "</span>";
+						}
+					}
+				
+					echo "(" . $ajax->link(___("flag as inappropriate", true), '#', 
+							array("url"=>$mark_address, 
+							"update"=>"$comment_id", "condition"=>"hideComment($comment_id)"), 
+							"Are you sure?", false) . ")";
+					
+				echo " | ";	
+					
+				if ($isAdmin || $isThemeOwner)
+						e($ajax->link("(x)", '#', 
+							array("url"=>"/galleries/delete_comment/$gallery_id/$comment_id", 
+							"update"=>"$comment_id", 
+								"condition"=>"checkLogin()"), NULL, false));
+					echo "</p>\n";
+				} else {
+						if ($replies > 0) {
+							echo "<span id='view_hide_link_frame_$comment_id' class='visible_element'>";
+							echo "(" . $ajax->link(___("view all replies", true), '#', 
+								array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
+									"id"=>"view_hide_link_$comment_id",
+									"complete"=>"showReplyList($comment_id);"), 
+									NULL, false) . ")";
+							echo "</span>";
+						} else {
+							echo "<span id='view_hide_link_frame_$comment_id' class='hidden_element'>";
+							echo "(" . $ajax->link(___("view all replies", true), '#', 
+								array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
+									"id"=>"view_hide_link_$comment_id",
+									"complete"=>"showReplyList($comment_id);"), 
+									NULL, false) . ")";
+							echo "</span>";
+						}
+				}
+				echo "</span>";
+
+			
+			echo "<div id='reply_to_$comment_id' class='comment_reply_main'>";
+				echo $this->renderElement('gallery/comment_reply_form', Array('comment_id' => $comment_id, 'comment_level' => $comment_level));
+			echo "</div>\n";
+			
+			echo "<div id='reply_list_$comment_id' class='comment_reply_main'>";
+			echo "</div>\n";
+			
+			echo "</div>\n";
+
+		} else {
+			echo "<div id='$comment_id' class='comment_$comment_level'>\n";	
+			?>
+				<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
+				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
+				<?php
+				if ($date == "Now") {
+				} else {
+					printf(___('%s ago', true), friendlyDate($timestamp)); 
+				}
+				echo "</h5><p>You have flagged this comment</p>
+			</div>";
+		}
+	}
+?>

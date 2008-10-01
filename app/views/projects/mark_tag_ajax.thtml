@@ -1,0 +1,34 @@
+<?php
+	if ($removed) {
+	} else {
+		$project_tag_id = $tag['ProjectTag']['id'];
+		$tag_name = $tag['Tag']['name'];
+		$tag_id = $tag['Tag']['id'];
+		$tag_url = "/tags/".$tag_name;
+		$flagged = $tag['ProjectTag']['flagged'];
+		$tagged = $tag['ProjectTag']['tagged'];
+		$tag_size = $tag['ProjectTag']['size'];
+		
+		echo "<span class='tag_size_$tag_size'><a href='$tag_url'>$tag_name</a></span>";
+			if ($isAdmin || $isMine) {
+				echo $ajax->link("[x]", '#', 
+					array("url"=>"/projects/".$urlname."/".$pid."/deltag?tag=".$tag_id, 
+					"title" => ___("delete this tag?", true), "update"=>"tag-".$tag_id, 
+					"condition"=>"checkLogin()"), NULL, false);
+			}
+			if (!$tagged) {
+				echo "<span>";
+					e($ajax->link('[+]', '#', array("url"=>"/projects/upgradeTag/$project_tag_id/normal", 
+					"title" => ___("affirm this tag?", true),
+					"update"=>"tag-$tag_id"), NULL, false));
+				echo "</span>";
+			}
+			if (!$flagged) {
+				echo "<span>";
+					e($ajax->link('[flag]', '#', array("url"=>"/projects/markTag/$project_tag_id/normal", 
+					"title" => ___("flag this tag?", true),
+					"update"=>"tag-$tag_id"), NULL, false));
+				echo "</span>";
+			}
+	}
+?>

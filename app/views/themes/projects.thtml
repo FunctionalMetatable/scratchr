@@ -1,0 +1,61 @@
+
+
+<div class="fullcontent">
+
+   <h2>Explore Projects in <?php e($theme['Theme']['name'])?></h2>
+
+	<table width="100%">
+	<tr>
+	<td>
+	<p>
+	sort by:
+	<?php
+	$pagination->setPaging($paging);
+    e($sortByName = $pagination->sortBy("name", "title", "Project")." ");
+    e($sortByLoveit = $pagination->sortBy("loveit", "lovers", "Project")." ");
+    e($sortByViews = $pagination->sortBy("views", "views", "Project")." ");
+    e($sortByCreated = $pagination->sortBy("created", "creation date", "Project")." ");
+	?>
+	</p>
+	</td>
+	
+	<?php
+	$prev = $pagination->prevPage("Prev",false, null, "prevlink");
+	$next = $pagination->nextPage("Next",false, null, "nextlink");
+	$pages = $pagination->pageNumbers(" ", null, "", "");
+	?>
+	
+	<td align="right"><p class="pagination"><?php echo "$prev  $pages  $next" ?></p></td>
+	</tr>
+	</table>		
+	
+	
+	<?php
+		foreach ($theme_projects as $theme_project):
+		$project = $theme_project['Project'];
+		$project_name = htmlspecialchars($project['name']);
+		$owner = $project['User'];
+		$views = $project['views'];
+		$pid = $project['id'];
+		$urlname = $owner['urlname'];
+		$username = $owner['username'];
+		$project_url = "/projects/view/$urlname/$pid";
+		$project_desc = $project['description'];
+		$lovers = $project['loveit'];
+		$mini_img_src = getThumbnailImg($urlname,$pid);?>
+		<div class="gallerythumb clearme">
+		<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('alt'=>$project_name,'title'=>$project_name,'width'=>'148','height'=>'111'))?> </a> 
+
+			<h3><a href="<?php echo $html->url($project_url)?>"><?php e($project_name)?> </a></h3>			
+			<p><strong>By: </strong><a href="<?php echo $html->url($urlname)?>"><?php e($username)?></a></p>
+			<p><strong>Views:</strong> <?php e($views)?> | <strong>LoveIt's</strong>: <?php e($lovers)?> </p>
+			<p><strong>Description</strong>: <?php e($project_desc)?></p>
+		</div>
+   	<?php endforeach;?>	
+   
+   
+   	<table width="100%">
+	<td align="right"><p class="pagination"><?php echo "$prev  $pages  $next" ?></p></td>
+	</tr>
+	</table>
+</div>

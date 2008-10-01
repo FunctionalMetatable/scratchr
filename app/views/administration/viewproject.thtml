@@ -1,0 +1,61 @@
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	</div>
+	<div id="admin_project_content">	
+		<div id="admin_project_details">
+		<?php
+			$project_name = htmlspecialchars($project['Project']['name']);
+			$project_loves = $project['Project']['loveit'];
+			$project_flags = $project['Project']['flagit'];
+			$project_created = $project['Project']['created'];
+			$project_modified = $project['Project']['modified'];
+			$project_favorites = $project['Project']['num_favoriters'];
+			$project_creator = htmlspecialchars($project['User']['username']);
+			$project_views = $project['Project']['views'];
+			$project_id = $project['Project']['id'];
+			$project_url = "/projects/$project_creator/$project_id";
+			$project_safe_level = $project['Project']['status'];
+		
+			echo "<div class='gallerythumb clearme'>\n";
+    		echo "\t<div class='admin_leftcolumn'>\n";
+			?>
+			<span>Name: <a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></span><br />
+    		
+    		<?php
+			echo "\t\t<span>Loves:";
+    		echo "$project_loves"; echo "</span><br/>\n";
+    		echo "\t\t<span>Flags:";
+    		echo "$project_flags"; echo "</span><br/>\n";
+    		echo "\t\t<span>Favorites:";
+    		echo "$project_favorites"; echo "</span><br/>\n";
+			echo "\t\t<span>Status: ";
+    		echo "$project_safe_level"; echo "</span><br/>\n";
+			echo "\t\t<span>Last Reviewed:";
+    		echo "$reviewer_name"; echo "</span><br/>\n";
+    		echo "\t</div>";
+			
+			
+    		echo "\t<div class='admin_rightcolumn'>\n";
+    	    echo "\t\t<span>Creator:";
+    	    echo " $project_creator" ; 
+    	    echo "\t\t</span><br/>\n";
+    		echo "\t\t<span> Creation Date: ";
+    		echo "$project_created"; 
+    		echo "\t\t</span><br/>\n";
+    		echo "\t\t<span> Last Modified: ";
+    		echo "$project_modified"; echo "</span>\n";
+    		echo "\t\t<span><br/>\n";
+			?>
+			<a href="<?php echo $html->url('/administration/deleteproject/'.$project_id)?>">Delete</a> |
+			<a href="<?php echo $html->url('/administration/censorproject/'.$project_id)?>">Censor</a>
+    		
+    		<?php
+			echo "\t</div>\n";
+			echo "</div>\n";
+		?>
+		</div>
+    </div>	
+</div>

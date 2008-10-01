@@ -1,0 +1,39 @@
+<div class="fullcontent">
+	<h2>Scratchr Administration Home</h2>
+    <h5>Select from the following tools</h5>
+	
+	<div class="gallerythumb clearme"> 
+    <a href="/administration/ban_ip"></a>
+	<h3><a href="<?php echo $html->url('/administration/ban_ip')?>"> Ban IP </a></h3>			
+	</div>
+	
+	<div class="gallerythumb clearme"> 
+    <a href="/administration/ban_user"></a>
+	<h3><a href="<?php echo $html->url('/administration/ban_user')?>"> Ban User </a></h3>			
+	</div>
+	
+	<div class="gallerythumb clearme"> 
+    <a href="/administration/rss_feeds"></a>
+	<h3><a href="<?php echo $html->url('/administration/rss_feeds')?>"> RSS Feeds </a></h3>			
+	</div>
+	
+	<div class="gallerythumb clearme"> 
+    <a href="/administration/set_announcements"></a>
+	<h3><a href="<?php echo $html->url('/administration/set_announcements')?>"> Announcement Tool </a></h3>			
+	</div>
+	
+	<div class="gallerythumb clearme"> 
+    <a href="/administration/search"></a>
+	<h3><a href="<?php echo $html->url('/administration/search')?>"> Search </a></h3>			
+	</div>
+	
+	<div class="gallerythumb clearme"> 
+    <a href="/administration/karma"></a>
+	<h3><a href="<?php echo $html->url('/administration/karma')?>"> Karma Settings </a></h3>			
+	</div>
+	
+	<div class="gallerythumb clearme"> 
+    <a href="/administration/predefined_tags"></a>
+	<h3><a href="<?php echo $html->url('/administration/predefined_tags')?>"> Admin Tags </a></h3>			
+	</div>
+</div>

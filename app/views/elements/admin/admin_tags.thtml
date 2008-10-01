@@ -1,0 +1,66 @@
+<?php
+	if (empty($errors)) {
+		$isError = false;
+	} else {
+		$isError = true;
+	}
+?>
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+<div class="fullcontent">
+	<div id="admin_project_header">
+		<h3>Admin Tags: </h3> 
+	</div>
+	<div id="admin_project_content">	
+	<form id="admin_tags_input" action="<?=e("/administration/add_admin_tag/$mode")?>" method="post">
+		<p>
+		<div id="gallery_menu">
+			<?php
+				if ($mode == 'active') {
+					e($ajax->link("<span class='button2_selected'>Active Tags</span>		", '#', 
+									array('url'=>'/administration/predefined_tags_ajax/active', 'update'=>'admin_tags_wrapper'), NULL, false));
+				} else {
+					e($ajax->link("<span class='button2'>Active Tags</span>		", '#', 
+										array('url'=>'/administration/predefined_tags_ajax/active', 'update'=>'admin_tags_wrapper'), NULL, false));
+				}
+				if ($mode == 'inactive') {
+					e($ajax->link("<span class='button2_selected'>Inactive Tags</span>		", '#', 
+										array('url'=>'/administration/predefined_tags_ajax/inactive', 'update'=>'admin_tags_wrapper'), NULL, false));
+				} else {
+					e($ajax->link("<span class='button2'>Inactive Tags</span>		", '#', 
+										array('url'=>'/administration/predefined_tags_ajax/inactive', 'update'=>'admin_tags_wrapper'), NULL, false));
+				}
+			?>
+		</div>
+		<textarea id='data[Admin][tag]' name="data[Admin][tag]" cols="60" rows="2"></textarea></p>
+		<p>
+			<?php 
+				e($ajax->submit('Add', 
+					array('id' => 'admin_tag_add', 
+					'class'=>'button', 
+					'url' => "/administration/add_admin_tag/$mode", 
+					'update' => 'admin_tags_wrapper',
+					"loading" => "document.getElementById('data[Admin][tag]').disabled = true;", 
+					"complete" => "document.getElementById('data[Admin][tag]').disabled = false;")));
+			?>
+		</p>
+	</form>
+    </div>
+	<?php if($isError): ?>
+		<div id="ignore_user_error">
+			<?php
+				$error = $errors[0];
+				echo "<h5> $error </h5>";
+			?>
+		</div>
+	<?php endif; ?>
+</div>
+<div class="fullcontent">
+	<h5> Tags </h5>
+	<div id="admin_tags_list">
+		<?php
+			echo $this->renderElement('admin/admin_tags_list');
+		?>
+	</div>
+</div>

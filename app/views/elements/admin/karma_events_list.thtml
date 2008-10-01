@@ -1,0 +1,23 @@
+<?php
+	echo "\t<div class='admin_leftcolumn'>\n";
+			echo "\t<div class='admin_leftcolumn'>\n";
+				echo "<h6><span> Name </span></h6>\n";
+			echo "\t</div>";
+			
+			echo "\t<div class='admin_rightcolumn'>\n";
+				echo "<h6><span> Value </span></h6>\n";
+			echo "\t</div>\n";
+	echo "\t</div>";
+		
+	echo "\t<div class='admin_rightcolumn'>\n";
+		echo "\t<div class='admin_leftcolumn'>\n";
+			echo "<h6><span> Description </span></h6>\n";
+		echo "\t</div>";;
+	echo "\t</div>\n";
+		
+	foreach($data as $event) {
+		echo "<div class='gallerythumb clearme'>\n";
+			echo $this->renderElement('admin/karma_event', Array('event'=> $event));
+		echo "</div>\n";
+	}
+?>

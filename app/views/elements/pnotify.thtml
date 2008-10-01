@@ -1,0 +1,5 @@
+<?php if ($isLoggedIn && $notify_pcomment):?>
+<h6><?php echo $ajax->link(___("Stop sending me messages", true), '#', array("url"=>"/notifications/unpnotify", "update"=>"pnotifyDiv"), NULL, false); echo "&nbsp;"; ___('when someone leaves a comment on one of my projects.'); ?> </h6>
+<?php else:?>
+<h6><?php echo $ajax->link(___("I want to get a message", true), '#', array("url"=>"/notifications/pnotify", "update"=>"pnotifyDiv"), NULL, false); ___('when someone leaves a comment on one of my projects!'); ?> </h6>
+<?php endif;?>

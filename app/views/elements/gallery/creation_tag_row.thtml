@@ -1,0 +1,10 @@
+<div class="gallery_create_tag_row">
+	<?php
+		$tag_name = $tag['Tag']['name'];
+		$admin_tag_id = $tag['AdminTag']['id'];
+		$checkbox_id = "data[Tags][tag_" . $admin_tag_id . "]";
+		$field_name = "Gallery/" . $admin_tag_id;
+		echo $form->checkbox($field_name, null, Array('id' => $checkbox_id, "class"=>"gallery_create_checkbox"));
+		echo "<span> $tag_name </span>";
+	?>
+</div>

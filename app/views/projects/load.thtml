@@ -1,0 +1,6 @@
+<div id="projectload">
+	<applet id="ProjectApplet" style="display:block" code="ScratchApplet" codebase="/static/misc/" archive="ScratchApplet.jar" height="387" width="482">
+		<param name="project" value="../..<?php e(getBinary($urlname, $pid)); ?>">
+	</applet>
+  <p>&nbsp;</p>
+</div>

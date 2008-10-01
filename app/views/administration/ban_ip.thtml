@@ -1,0 +1,33 @@
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	<h3> Ip Ban </h3>
+	</div>
+	<div id="admin_project_content">
+	<form id="admin_banip" action="<?=e("/administration/add_ban_ip")?>" method="post">
+		<p>IP: <br/><textarea id='admin_banip_ip' name="admin_banip_ip" cols="60" rows="2" tabindex="1"></textarea></p>
+		<p>Reason: <br/><textarea id='admin_banip_reason' name="admin_banip_reason" cols="60" rows="4" tabindex="2"></textarea></p>
+		<?php 
+			e($ajax->submit('Ban', array('id' => 'admin_banip_submit', 
+			'class'=>'button', 'url' => "/administration/add_ban_ip", 
+			'update' => 'admin_banlist_results',
+			"loading" => "document.getElementById('admin_banip_ip').disabled = true;", 
+			"complete" => "document.getElementById('admin_banip_ip').disabled = false; document.getElementById('admin_banip').reset()")));
+		?>
+	</form>
+    </div>
+	
+</div>
+<div class="fullcontent">
+
+	
+	<div id="admin_banlist_results">
+		<div id='ajax_pagination'>
+		<?php
+			echo $this->renderElement('admin/ip_list', Array('data' => $data));
+		?>
+		</div>
+	</div>
+</div>

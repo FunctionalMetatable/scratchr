@@ -1,0 +1,13 @@
+<form id="a_1" action="<?=e("/administration/set_announcements/")?>" method="post">
+			<p><textarea id='a_1_textarea' name="a_1_textarea" cols="70" rows="2"><?php e($a_1); ?></textarea></p>	
+			<br/>
+			<p><textarea id='a_2_textarea' name="a_2_textarea" cols="70" rows="2"><?php e($a_2); ?></textarea></p>
+			<br/>		
+			<p><textarea id='a_3_textarea' name="a_3_textarea" cols="70" rows="2"><?php e($a_3); ?></textarea></p>
+			<br/>
+		<?php 
+			e($ajax->submit('Update Announcements', array('id' => 'announcement_update', 
+				'class'=>'button', 'url' => "/administration/update_announcements", 
+				'update' => 'announcement_list')));
+		?>
+</form>

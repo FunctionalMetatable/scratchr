@@ -1,0 +1,27 @@
+<?php
+    $isAjax = $this->controller->RequestHandler->isAjax();
+
+    if ($already_bookmark || ($isLoggedIn && $isAjax)) {
+        e($html->link(___("In your stuff", true), "",
+            array("class"=>"ProjectInfoText", "onclick"=>"return false;")));
+        
+    } else {
+        
+    e($html->link(___("Add to My Stuff", true), "/projects/$urlname/$pid#",
+        array("id"=>"bookmark",
+            "class"=>"ProjectInfoText",
+            "onclick"=>"
+               if (checkLogin()) {
+                   document.getElementById('bookmarkSubmit').click();
+               }
+               return false;")));
+
+    e($ajax->form("/projects/$urlname/$pid/bookmark", "post",
+        array("update"=>"BookmarkContainer","style"=>"display:none;", "name"=>"bookmarkForm")));
+    e($html->hidden("Bookmark/project_id", array("value"=>$pid)));
+    e($html->hidden("Bookmark/user_id", array("value"=>$loggedInUID)));
+    e($html->submit("bookmark", array("name"=>"bookmark_submit","id"=>"bookmarkSubmit")));
+    e("\n</form>\n");
+
+    }
+?>

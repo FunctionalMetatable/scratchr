@@ -1,0 +1,23 @@
+<?php
+	$pagination->setPaging($paging);
+	$prev = $pagination->prevPage("Prev",false, null, "prevlink");
+	$next = $pagination->nextPage("Next",false, null, "nextlink");
+	$pages = $pagination->pageNumbers(" ", null, "", "");
+	
+	echo "<div>\n";
+	echo "         <span>"; echo "$prev  $pages  $next"; echo "</span>\n";
+	echo "</div>\n";
+			
+	foreach ($data as $tag):
+		$tag_name = $tag['Tag']['name'];
+	
+	echo "<div class='gallerythumb clearme'>\n";
+    	echo "\t<div class='admin_leftcolumn'>\n";
+    		echo "\t\t<span>Name:";
+    		echo "$tag_name"; echo "</span><br/>\n";
+    	echo "\t</div>";
+    	echo "\t<div class='admin_rightcolumn'>\n";
+    	echo "\t</div>\n";
+	echo "</div>\n";
+	endforeach;	
+?>

@@ -1,0 +1,4 @@
+<?php
+    $params = array('user_name' => $user_name, 'user_url' => $user_url, 'data' => $data, 'gallery_id' => $gallery_id, 'gallery_name'=> $gallery_name, 'page'=>$page);
+    e($this->renderElement('galleryaddproject', $params));
+?>

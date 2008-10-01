@@ -1,0 +1,15 @@
+<?php
+    $params = array('data' => $data, 'project_id' => $project_id);
+    if ($option == "comments") {
+         	e($this->renderElement('adminprojectcomments', $params));
+       }
+    if ($option == "dcomments") {
+         	e($this->renderElement('adminprojectdcomments', $params));
+     }
+    if ($option == "fcomments") {
+         	e($this->renderElement('adminprojectfcomments', $params));
+    }
+	if ($option == "administration") {
+		e($this->renderElement('adminprojectadmins', $params));
+	}
+?>

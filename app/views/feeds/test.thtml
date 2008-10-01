@@ -1,0 +1,21 @@
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"> 
+  <channel> 
+    <title>The Title of My Awesome Feed</title> 
+    <link>http://www.example.org/</link> 
+    <description>The description of my awesome feed.</description> 
+    <language>en-us</language> 
+    <pubDate><?php echo date("D, j M Y H:i:s", gmmktime()) . ' GMT';?></pubDate> 
+    <docs>http://blogs.law.harvard.edu/tech/rss</docs> 
+    <generator>CakePHP</generator> 
+    <managingEditor>editor@example.com</managingEditor> 
+    <webMaster>webmaster@example.com</webMaster> 
+    <?php foreach ($projects as $project): ?> 
+    <item> 
+      <title><?php echo $project['Project']['name']; ?></title> 
+      <link>http://www.example.com/projects/view/<?php echo $project['Project']['id']; ?></link> 
+      <description><?php echo $project['Project']['description']; ?></description> 
+      <guid>http://www.example.com/projects/view/<?php echo $project['Project']['id']; ?></guid> 
+    </item> 
+    <?php endforeach; ?> 
+  </channel> 
+</rss> 

@@ -1,0 +1,67 @@
+
+
+<div class="fullcontent">
+
+   <h2>Explore Galleries</h2>
+
+	<?php if ($isLoggedIn):?>
+		<p><h3><?php ___('Do you want to') ?><a href="<?php echo $html->url('/galleries/create')?>"><?php ___('create a new gallery')?></a>?</h3></p>
+	<?php endif;?>
+	
+	
+	<?php 
+//	$session->flash(FLASH_ERROR_KEY);
+	$session->flash(FLASH_NOTICE_KEY);
+	?>
+	
+	
+	<table width="100%">
+	<tr>
+	<td>
+	<p>
+	Sort by:
+	<?php
+	$pagination->setPaging($paging);
+	e($sortByName = $pagination->sortBy("name", "title")." ");
+	e($sortByID = $pagination->sortBy("id", "creation date")." ");
+	e($sortByNumProjects = $pagination->sortBy("total_projects", "number of projects"));
+	?>
+	</p>
+	</td>
+	
+	<?php
+	$prev = $pagination->prevPage("Prev",false, null, "prevlink");
+	$next = $pagination->nextPage("Next",false, null, "nextlink");
+	$pages = $pagination->pageNumbers(" ", null, "", "");
+	?>
+	
+	<td align="right"><p class="pagination"><?php echo "$prev  $pages  $next" ?></p></td>
+	</tr>
+	</table>		
+	
+	
+	<?php
+		foreach ($data as $theme):
+		$theme = $theme['Theme'];
+		$theme_name = $theme['name'];
+		$theme_id = $theme['id'];
+		$theme_totalProjects = $theme['total_projects'];
+		$theme_icon_src = getThemeIcon($theme_id);
+		$theme_url = "/galleries/$theme_id";
+		$theme_desc = $theme['description'];
+	?>
+	<div class="gallerythumb clearme"> 
+	<a href="<?php echo $html->url($theme_url)?>"><?php echo $html->image($theme_icon_src,array('alt'=>$theme_name,'title'=>$theme_name,'width'=>'148','height'=>'111'))?> </a> 
+	
+		<h3><a href="<?php echo $html->url($theme_url)?>"><?php e($theme_name)?> </a></h3>
+		<p> <strong>Description</strong>: <?php e($theme_desc)?></p>
+		<p> <strong>Number of Projects: </strong><?php e($theme_totalProjects);?></p>
+	</div>
+   	<?php endforeach;?>	
+   
+   
+   	<table width="100%">
+	<td align="right"><p class="pagination"><?php echo "$prev  $pages  $next" ?></p></td>
+	</tr>
+	</table>
+</div>

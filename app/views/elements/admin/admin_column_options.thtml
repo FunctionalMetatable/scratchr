@@ -1,0 +1,74 @@
+ <div id="gallery_menu">
+	Within - <?php
+		if ($option == "users") {
+		?>
+		<span><?php echo "Users";?></span>
+		<?php
+			
+		} else {
+		?>
+			<a href="<?php echo $html->url('/administration/search/users')?>"><span><?php echo "Users";?></span></a>
+			
+		<?php
+		}
+		echo " | ";
+		if ($option == "projects") {
+		?>
+		<span><?php echo "Projects";?></span>
+		<?php
+			
+		} else {
+		?>
+			<a href="<?php echo $html->url('/administration/search/projects')?>"><span><?php echo "Projects";?></span></a>
+			
+		<?php
+		}
+				
+		echo " | ";
+		
+		if ($option == "galleries") {
+		?>
+		<span><?php echo "Galleries";?></span>
+		<?php
+			
+		} else {
+		?>
+			<a href="<?php echo $html->url('/administration/search/galleries')?>"><span><?php echo "Galleries";?></span></a>
+			
+		<?php
+		}
+		
+	?>
+</div>
+<div id="gallery_menu">
+	Using - 
+	<?php if($option == "users"): ?>
+        <select name="column">
+          <option value="Name">Name</option>
+          <option value="Email">Email</option>
+		  <option value="Birth Date">Birth Date</option>
+		  <option value="Country">Country</option>
+        </select>
+	<?php endif; ?>
+	<?php if($option == "projects"): ?>
+        <select name="column">
+          <option value="Name">Name</option>
+		  <option value="Creator">Creator</option>
+		  <option value="Status">Status</option>
+        </select>
+	<?php endif; ?>
+	<?php if($option == "galleries"): ?>
+        <select name="column">
+          <option value="Name">Name</option>
+		  <option value="Creator">Creator</option>
+		  <option value="Status">Status</option>
+        </select>
+	<?php endif; ?>
+	<?php if($option == "comments"): ?>
+		<select name="column">
+		  <option value="Name">Name</option>
+		  <option value="Creator">Creator</option>
+		  <option value="Visibility">Status</option>
+		</select>
+	<?php endif; ?>
+</div>

@@ -1,0 +1,332 @@
+<?php //print_r($data)?>
+<div id="ajax_pagination">
+<div class="fullcontent">
+	<div class="top_header">
+	<h2><?php echo ___('Explore Projects', true) . " " . ___($heading, true);?></h2>
+	<h3>
+	
+	<?php printf(___('Do you want to know how to %supload your project%s?', true), '<a href="/share">', '</a>'); ?>
+	</h3>
+	</div>
+	
+    <div id="gallery_menu">
+	<?php
+		if ($option == "recent") {
+		?>
+			<a href="<?php echo $html->url('/channel/recent')?>"><span class="button2_selected"><?php ___('newest');?></span></a>
+			
+		<?php
+		} else {?>
+		<a href="<?php echo $html->url('/channel/recent')?>"><span class="button2"><?php ___('newest');?></span></a>
+			
+		<?php
+		}
+		
+		if ($option == "featured") {
+		?>
+			<a href="<?php echo $html->url('/channel/featured')?>"><span class="button2_selected"><?php ___('featured');?></span></a>
+			
+		<?php
+		} else {?>
+		<a href="<?php echo $html->url('/channel/featured')?>"><span class="button2"><?php ___('featured');?></span></a>
+			
+		<?php
+		}
+		
+		if ($option == "topviewed") {
+		?>
+			<a href="<?php echo $html->url('/channel/topviewed')?>"><span class="button2_selected"><?php ___('top viewed');?></span></a>
+			
+		<?php
+		} else {?>
+		<a href="<?php echo $html->url('/channel/topviewed')?>"><span class="button2"><?php ___('top viewed');?></span></a>
+			
+		<?php
+		}
+		if ($option == "toploved") {
+		?>
+			<a href="<?php echo $html->url('/channel/toploved')?>"><span class="button2_selected"><?php ___('top loved');?></span></a>
+			
+		<?php
+		} else {?>
+		<a href="<?php echo $html->url('/channel/toploved')?>"><span class="button2"><?php ___('top loved');?></span></a>
+			
+		<?php
+		}
+		if ($option == "remixed") {
+		?>
+			<a href="<?php echo $html->url('/channel/remixed')?>"><span class="button2_selected"><?php ___('top remixed');?></span></a>
+			
+		<?php
+		} else {?>
+		<a href="<?php echo $html->url('/channel/remixed')?>"><span class="button2"><?php ___('top remixed');?></span></a>
+			
+		<?php
+		}
+		
+		
+		
+		
+		
+		
+	?>
+   </div>
+   
+   	<?php
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination');
+	?>
+	
+	<?php
+		if ($option == "featured") {
+		?>
+			<div class="mystuff_project_action">
+			<a href="<?php echo $html->url($featured_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
+			
+			
+			</div>
+			
+		<?php
+		}
+		if ($option == "recent") {
+		?>
+			<div class="mystuff_project_action">
+			<a href="<?php echo $html->url($newest_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
+			
+			
+			</div>
+			
+		<?php
+		}
+		
+		if ($option == "topviewed") {
+		?>
+			<div class="mystuff_project_action">
+			<a href="<?php echo $html->url($topviewed_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
+			
+			
+			</div>
+			
+		<?php
+		}
+		
+		if ($option == "toploved") {
+		?>
+			<div class="mystuff_project_action">
+			<a href="<?php echo $html->url($toploved_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
+			
+			
+			</div>
+			
+		<?php
+		}
+		if ($option == "remixed") {
+		?>
+			<div class="mystuff_project_action">
+			<a href="<?php echo $html->url($remixed_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
+			
+			
+			</div>
+			
+		<?php
+		}
+		
+	
+	?>
+	
+	<?php
+		if ($option == "featured") {
+	
+			foreach ($data as $featured) {
+				$project = $featured['Project'];
+				$views = $project['views'];
+				$pid = $project['id'];
+				$urlname = $project['User']['urlname'];
+				$username = htmlspecialchars($project['User']['username']);
+				$project_url = "/projects/".$urlname."/".$pid;
+				$project_desc = htmlspecialchars($project['description']);
+				$lovers = $project['loveit'];
+				$project_name = htmlspecialchars($project['name']);
+				 $mini_img_src = getThumbnailImg($urlname,$pid);
+				
+				$expand = false;
+				if (strlen($project_desc) >= 300) {
+					$project_desc = substr($project_desc,0,300) . " ... ";
+					$expand = true;
+				}
+				?>
+				<div id="<?php echo $pid?>" class="gallerythumb clearme">
+				<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
+				<h3><a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></h3>
+				<p><strong><?php ___('By');?>: </strong><a href="<?php echo $html->url('/users/'.$username)?>"><?php echo $username?></a></p>
+				<p><strong><?php ___('Views');?></strong>: <?php echo $views?>|<strong><?php ___("LoveIt's");?></strong>: <?php echo $lovers?></p>
+				<p><strong><?php ___('Description');?></strong>: <?php echo $project_desc?>
+				<?php 
+				if ($expand) {
+								e($ajax->link(___("show more", true), '#', 
+									array("url"=>"/projects/expandDescription/$pid/0",
+										"update"=>"$pid"), NULL, false));
+							}
+				
+				
+				?>
+				</p>
+				</div>
+				<?php
+
+
+				
+			}
+		} elseif ($option == "remixed") {
+			foreach ($data as $project) {
+				$views = $project['Project']['views'];
+				$pid = $project['Project']['id'];
+				$urlname = $project['User']['urlname'];
+				$username = htmlspecialchars($project['User']['username']);
+				$project_url = "/projects/$urlname/$pid";
+				$project_desc = htmlspecialchars($project['Project']['description']);
+				$lovers = $project['Project']['loveit'];
+				$mini_img_src = getThumbnailImg($urlname,$pid);
+				$project_name = htmlspecialchars($project['Project']['name']);
+				$expand = false;
+				$remixes = $project['Project']['remixes'];
+				$ignored = $project['Project']['ignored'];
+				if (strlen($project_desc) >= 300) {
+					$project_desc = substr($project_desc,0,300) . " ... ";
+					$expand = true;
+				}
+				
+				if ($ignored) {
+					echo "<div id='$pid' class='gallerythumb clearme'>\n";
+						echo "<h4> Project not displayed. Posted by a muted account. </h4>";
+					echo "</div>\n";
+				} else {
+					echo "<div id='$pid' class='gallerythumb clearme'>\n";
+					?>
+						<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
+				<h3><a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></h3>
+				<p><strong><?php ___('By');?>: </strong><a href="<?php echo $html->url('/users/'.$username)?>"><?php echo $username?></a></p>
+						
+						
+						
+						
+						<?php		
+								echo "<p>\n"; 
+								if ($views == 0) {
+									echo "<strong>"; 
+										___('Views');
+									echo ":</strong> 0";
+								} else { 
+									echo "<strong>"; 
+										___('Views');
+									echo ":</strong> $views";
+								}
+								
+								if ($lovers == 0) {
+								} else {
+									echo "<strong>"; 
+									echo " | "; ___("LoveIt's");
+									echo "</strong>: $lovers";
+								}
+								
+								if ($remixes == 0) {
+								} else {
+									echo "<strong>"; 
+									echo " | "; ___("Remixes");
+									echo "</strong>: $remixes";
+								}
+								
+								echo "</p>";
+								
+								if ($project_desc == "") {
+								
+								} else {
+									echo "<p><strong>"; 
+									___('Description');
+									echo "</strong>: $project_desc";
+								}
+							
+								if ($expand) {
+									e($ajax->link(___("show more", true), '#', 
+										array("url"=>"/projects/expandDescription/$pid/0",
+											"update"=>"$pid"), NULL, false));
+								}
+							echo "</p>";
+					echo "</div>\n";
+				}
+			}
+		} else {
+			foreach ($data as $project) {
+				$views = $project['Project']['views'];
+				$pid = $project['Project']['id'];
+				$urlname = $project['User']['urlname'];
+				$username = htmlspecialchars($project['User']['username']);
+				$project_url = "/projects/$urlname/$pid";
+				$project_desc = htmlspecialchars($project['Project']['description']);
+				$lovers = $project['Project']['loveit'];
+				$mini_img_src = getThumbnailImg($urlname,$pid);
+				$project_name = htmlspecialchars($project['Project']['name']);
+				$expand = false;
+				$ignored = $project['Project']['ignored'];
+				if (strlen($project_desc) >= 300) {
+					$project_desc = substr($project_desc,0,300) . " ... ";
+					$expand = true;
+				}
+
+				if ($ignored) {
+					echo "<div id='$pid' class='gallerythumb clearme'>\n";
+						echo "<h4> Project not displayed. Posted by a muted account. </h4>";
+					echo "</div>\n";
+				} else {
+					echo "<div id='$pid' class='gallerythumb clearme'>\n";
+					?>
+						<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
+				<h3><a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></h3>
+				<p><strong><?php ___('By');?>: </strong><a href="<?php echo $html->url('/users/'.$username)?>"><?php echo $username?></a></p>
+								
+					<?php			
+								echo "<p>\n"; 
+								if ($views == 0) {
+									echo "<strong>"; 
+										___('Views');
+									echo ":</strong> 0";
+								} else { 
+									echo "<strong>"; 
+										___('Views');
+									echo ":</strong> $views";
+								}
+								
+								if ($lovers == 0) {
+								} else {
+									echo "<strong>"; 
+									echo " | "; ___("LoveIt's");
+									echo "</strong>: $lovers";
+								}
+								echo "</p>";
+								
+								if ($project_desc == "") {
+								
+								} else {
+									echo "<p><strong>"; 
+									___('Description');
+									echo "</strong>: $project_desc";
+								}
+							
+								if ($expand) {
+									e($ajax->link(___("show more", true), '#', 
+										array("url"=>"/projects/expandDescription/$pid/0",
+											"update"=>"$pid"), NULL, false));
+								}
+							echo "</p>";
+					echo "</div>\n";
+				}
+			}
+		}
+	?>
+</div>
+   	<?php
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination');
+	?>
+	
+</div>

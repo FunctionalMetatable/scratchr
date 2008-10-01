@@ -1,0 +1,21 @@
+<?php 
+	foreach($data as $flagger) {
+	$flagger_id = $flagger['User']['id'];
+	$flagger_name = $flagger['User']['username'];
+	$flagger_urlname = $flagger['User']['urlname'];
+	$flagger_username = $flagger['User']['username'];
+	$flagger_reasons = $flagger['Flagger']['reasons'];
+	$flagger_icon = getBuddyIconBySize($flagger_id, 'mini', $content_status);
+	$flagger_url = "/users/".$flagger_urlname;
+	?>
+		<div class="comment">
+			
+				<h5><?php echo $html->image($flagger_icon,array('alt'=>$flagger_username,'width'=>'28','height'=>'28'))?>
+				<a href="<?php echo $html->url($flagger_url)?>"><?php echo $flagger_username?></a>
+				</h5>
+				<strong>Reasons: </strong><?php echo $flagger_reasons?>
+		</div>
+		
+	<?php	
+	}
+?>

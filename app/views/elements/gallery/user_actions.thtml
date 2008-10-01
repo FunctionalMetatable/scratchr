@@ -1,0 +1,59 @@
+<?php if ($isThemeOwner || $isAdmin): ?>
+	<div id="addprojectmember">
+		<?php e($ajax->link("<span class='button2'>" . ___('add my projects', true) . "</span>", '#', array('url'=>'/galleries/addprojectmember/' . $gallery_id, 'update'=>'gallery_addproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
+	</div>
+	<div class="themeaction">
+		<a href="<?php echo $html->url('/galleries/setpermissions/')?><?php e($gallery_id)?>"><span class="button2"><?php ___('change who can add projects'); ?></span></a>
+	</div>
+	<div id="removeprojectmember">
+		<?php e($ajax->link("<span class='button2'>" . ___('remove my projects', true) . "</span>", '#', array('url'=>'/galleries/removeprojectmember/' . $gallery_id, 'update'=>'gallery_removeproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
+	</div>
+	<div class="themeaction">
+		<a <?php echo 'onclick="if (confirm(' . "'" . ___('Are you sure you want to delete this gallery?', true) . "'" . ')) return true; return false;"'; ?> href="<?php echo $html->url('/galleries/delete/')?><?php e($gallery_id)?>"><span class="button2"><?php ___('delete this gallery'); ?></span></a>
+	</div>
+<?php elseif ($isThemeMember || $isFriend): ?>
+	<?php if ($membership_type <= 2 || $isPublic || $isFriend): ?>
+		<div id="addprojectmember">
+			<?php e($ajax->link("<span class='button2'>" . ___('add my projects', true) . "</span>", '#', array('url'=>'/galleries/addprojectmember/' . $gallery_id, 'update'=>'gallery_addproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
+		</div>
+		<div id="removeprojectmember">
+			<?php e($ajax->link("<span class='button2'>" . ___('remove my projects', true) . "</span>", '#', array('url'=>'/galleries/removeprojectmember/' . $gallery_id, 'update'=>'gallery_removeproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
+		</div>
+	<?php elseif($membership_type == 3): ?>
+		<?php ___("You have bookmarked this gallery, but you don't have permission to modify its contents"); ?>
+	<?php endif; ?>
+<?php elseif($isPublic): ?>
+		<div id="addprojectmember">
+			<?php e($ajax->link("<span class='button2'>" . ___('add my projects', true) . "</span>", '#', array('url'=>'/galleries/addprojectmember/' . $gallery_id, 'update'=>'gallery_addproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
+		</div>
+		<div id="removeprojectmember">
+			<?php e($ajax->link("<span class='button2'>" . ___('remove my projects', true) . "</span>", '#', array('url'=>'/galleries/removeprojectmember/' . $gallery_id, 'update'=>'gallery_removeproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
+		</div>
+		<div class="themeaction">
+			<?php
+				if ($membership_type == 3) {
+					echo ___("You have bookmarked this gallery");
+				} else {
+					$bookmark_link = "/galleries/bookmark/$gallery_id";
+						echo $ajax->link("<span class='button2'>" . ___('bookmark gallery', true) . "</span>", '#', 
+						array("url"=>$bookmark_link, "update"=>"action_wrapper", 
+								"id"=>"bookmark_link"), 
+								NULL, false);
+				}
+			?>
+		</div>
+<?php else: ?>
+		<div class="themeaction">
+			<?php
+				if ($membership_type == 3) {
+					echo ___("You have bookmarked this gallery, but you don't have permission to modify its contents");
+				} else {
+					$bookmark_link = "/galleries/bookmark/$gallery_id";
+						echo $ajax->link("<span class='button2'>" . ___('bookmark gallery', true) . "</span>", '#', 
+						array("url"=>$bookmark_link, "update"=>"action_wrapper", 
+								"id"=>"bookmark_link"), 
+								NULL, false);
+				}
+			?>
+		</div>
+<?php endif; ?>

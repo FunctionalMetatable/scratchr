@@ -1,0 +1,29 @@
+<div id="admin_user_comment" class="mystuff_admin_comment">
+	<h4><?php ___('Administration'); ?></h4>  
+	<form id="pcomment" action="<?=e("/administration/add_admin_comment/$user_id")?>" method="post">
+	<p><textarea id='apcomment_textarea' name="apcomment_textarea" cols="21" rows="3"><?php e($comment) ?></textarea></p>			
+	<?php 
+		e($ajax->submit('Comment', array('id' => 'apcomment_submit', 
+		 'class'=>'button', 'url' => "/administration/add_admin_comment/$user_id", 
+		'update' => 'admin_user_comment',
+		"loading" => "document.getElementById('apcomment_submit').disabled = true;", 
+		"complete" => "document.getElementById('apcomment_submit').disabled = false;")));
+	?>
+	<br/>
+	</form>
+	 <a href="<?php echo $html->url('/administration/viewuser/')?><?php echo $user_id?>">View Details</a>
+	
+	<br/>
+	<?php
+		$project_rating = $karma_ratings['KarmaRating']['project_rating'];
+		$gallery_rating = $karma_ratings['KarmaRating']['gallery_rating'];
+		$comment_rating = $karma_ratings['KarmaRating']['comment_rating'];
+		echo "<h5>Karma Ratings</h5><br/>";
+		echo "Project Rating: $project_rating";
+		echo "<br/>";
+		echo "Gallery Rating: $gallery_rating";
+		echo "<br/>";
+		echo "Comment Rating: $comment_rating";
+		echo "<br/>";
+	?>
+</div>

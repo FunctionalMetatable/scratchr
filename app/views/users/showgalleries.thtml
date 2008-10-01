@@ -1,0 +1,127 @@
+<div id="ajax_pagination">
+<div class="fullcontent">
+	<h3><?php if ($isMe) ___("My Galleries"); else {printf(___("%s's Galleries", true), $user['User']['username']);} ?></h3>
+	<div id="gallery_menu">
+	<?php
+		$user_id = $user['User']['id'];
+		if ($option == "all") {
+		?>
+		<a href="<?php echo $html->url('/users/showgalleries/')?><?php echo $user_id?>/all"><span class="button2_selected"><?php ___('all my galleries'); ?></span></a>
+			
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/users/showgalleries/')?><?php echo $user_id?>/all"><span class="button2"><?php ___('all my galleries'); ?></span></a>
+			
+		<?php
+		}
+		if ($option == "owned") {
+		?>
+			<a href="<?php echo $html->url('/users/showgalleries/')?><?php echo $user_id?>/owned"><span class="button2_selected"><?php ___('created by me'); ?></span></a>
+		<?php	
+		} else {
+		?>
+			<a href="<?php echo $html->url('/users/showgalleries/')?><?php echo $user_id?>/owned"><span class="button2"><?php ___('created by me'); ?></span></a>
+			
+		<?php
+		}
+		if ($option == "memberof") {
+		?>
+			<a href="<?php echo $html->url('/users/showgalleries/')?><?php echo $user_id?>/memberof"><span class="button2_selected"><?php ___('others shared with me'); ?></span></a>
+		<?php	
+		} else {
+		?>
+			<a href="<?php echo $html->url('/users/showgalleries/')?><?php echo $user_id?>/memberof"><span class="button2"><?php ___('others shared with me'); ?></span></a>
+			
+		<?php
+		}
+		
+		if ($option == "bookmarked") {
+		?>
+			<a href="<?php echo $html->url('/users/showgalleries/')?><?php echo $user_id?>/bookmarked"><span class="button2_selected"><?php ___('bookmarked'); ?></span></a>
+		<?php	
+		} else {
+		?>
+			<a href="<?php echo $html->url('/users/showgalleries/')?><?php echo $user_id?>/bookmarked"><span class="button2"><?php ___('bookmarked'); ?></span></a>
+			
+		<?php
+		}
+		if ($option == "contributed") {
+		?>
+			<a href="<?php echo $html->url('/users/showgalleries/')?><?php echo $user_id?>/contributed"><span class="button2_selected"><?php ___('contains my projects'); ?></span></a>
+		<?php	
+		} else {
+		?>
+			<a href="<?php echo $html->url('/users/showgalleries/')?><?php echo $user_id?>/contributed"><span class="button2"><?php ___('contains my projects'); ?></span></a>
+			
+		<?php
+		}
+		
+		
+		
+		
+		
+   ?>
+   </div>
+	<?php 
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination'); 
+	?>
+	<?php
+		foreach ($galleries as $membership) {
+			$gallery = $membership['Gallery'];
+			$gallery_id = $gallery['id'];
+			$gallery_owner = $gallery['user_id'];
+			$gallery_url = "/galleries/view/".$gallery_id;
+			$gallery_name = $gallery['name'];
+			$gallery_icon = $gallery['icon_src'];
+			$gallery_name_s = $gallery_name;
+			$user_id = $user['User']['id'];
+			$isOwned = $gallery_owner == $loggedInUID;
+			
+			if ($user_id == $gallery_owner) {
+				$owned = true;
+			} else {
+				$owned = false;
+			}
+			if (strlen($gallery_name) > 16) {
+				$gallery_name = substr($gallery_name,0,16) . "&#0133;";
+			}
+			if (strlen($gallery_name) == 0) {
+				$gallery_name = "...";
+			}
+		?>
+		
+		<div class="mystuff_gallery_thumb">
+			<a href="<?php echo $html->url($gallery_url)?>"><?php echo $html->image($gallery_icon,array('title'=>$gallery_name,'alt'=>$gallery_name,'width'=>'60','height'=>'40'))?></a>
+			<?php
+				if ($owned) 
+				{
+				?>
+				<h3><a href="<?php echo $html->url($gallery_url)?>" class="gallery_name_italic"><?php echo "$gallery_name";?></a></h3>
+				<?php
+				}
+				else
+				{
+				?>
+				<span>
+				<h3><a href="<?php echo $html->url($gallery_url)?>" class="gallery_name"><?php echo "$gallery_name";?></a></h3>
+				<?php
+				
+				}
+				if($isMe)
+				{
+				?>
+				<a href="<?php echo $html->url('/users/removegallery/'.$gallery_id)?>/<?php echo $option?>">[x]</a></span>
+				<?
+				
+				}
+			?>
+		
+		</div>
+		
+		<?php
+		}
+	?>
+</div>
+</div>

@@ -1,0 +1,15 @@
+<?php
+	if ($isLocked) {
+		echo "<h5>";
+		echo $ajax->link("Unlock Project", 
+		'#', array("url"=>"/projects/lock/$pid/$user_id", "update"=>"flagDiv",
+		"condition"=>"checkLogin()", "style"=>"color:#aaa"), NULL, false);
+		echo"</h5>";
+	} else {
+		echo "<h5>";
+		echo $ajax->link("Lock Project", 
+		'#', array("url"=>"/projects/".$urlname."/".$pid."/flag", "update"=>"flagDiv",
+		"condition"=>"checkLogin()", "style"=>"color:#aaa"), NULL, false);
+		echo"</h5>";
+	}
+?>

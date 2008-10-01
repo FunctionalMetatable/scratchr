@@ -1,0 +1,173 @@
+<Script Language=JavaScript>
+
+var topic = new Array();
+topic[1] = "<?php print(TOPIC1); ?>";
+topic[2] = "<?php print(TOPIC2); ?>";
+topic[3] = "<?php print(TOPIC3); ?>";
+topic[4] = "<?php print(TOPIC4); ?>";
+topic[5] = "<?php print(TOPIC5); ?>";
+topic[6] = "<?php print(TOPIC6); ?>";
+topic[7] = "<?php print(TOPIC7); ?>";
+topic[8] = "<?php print(TOPIC8); ?>";
+
+var subtopic = new Array();
+subtopic[1] = "<?php print(SUBTOPIC1); ?>";
+subtopic[2] = "<?php print(SUBTOPIC2); ?>";
+subtopic[3] = "<?php print(SUBTOPIC3); ?>";
+
+function selectTopic(isList){
+txtIndex = isList.selectedIndex;
+if(txtIndex==0)
+{
+document.getElementById('questionform').style.display="none";
+document.getElementById('subtopicsdiv').style.display="none";
+}
+else if(txtIndex==9)
+{
+document.getElementById('questionform').style.display="none";
+document.getElementById('technicalquestiondiv').style.display="block";
+}
+else
+{
+document.getElementById('topicinput').value = topic[txtIndex];
+document.getElementById('questionform').style.display="block";
+document.getElementById('technicalquestiondiv').style.display="none";
+document.getElementById('subtopicsdiv').style.display="none";
+}
+}
+
+function selectSubtopic(isList){
+txtIndex = isList.selectedIndex;
+if(txtIndex==0)
+{
+document.getElementById('questionform').style.display="none";
+}
+else
+{
+document.getElementById('topicinput').value = subtopic[txtIndex];
+document.getElementById('questionform').style.display="block";
+document.getElementById('technicalquestiondiv').style.display="none";
+}
+}
+
+function showSubtopics()
+{
+document.getElementById('subtopicsdiv').style.display="block";
+}
+
+</Script>
+
+<div class="fullcontent">
+  <h2><?php ___('Contact Us'); ?></h2>
+  <h3><?php printf(___('Did you try posting your question on the %sforums%s?', true), '<a href="/forums">', '</a>');?> </h3>
+  <br />
+  <h3> <?php ___('Or contact us directly'); ?>:</h3>
+
+<?php if (isset($succes)){ ?>
+	 <p>
+	 <?php echo $html->image('/img/contact_thanks.png')?>
+	 </p> 
+<?php }else{?>
+<?php if (isset($error)){?> 
+	  <p><h2><?php echo($error) ?></h2></p>
+	  <p><?php ___('Not working for you? scratch-feedback@media.mit.edu'); ?></p>
+<?}?>
+
+<div id="main">
+
+<p>
+        <select id="topic_select" name="topic_select" onchange="selectTopic(this);">
+          <option selected><?php ___('Select one of the following options:'); ?></option>
+          <option><?php ___('Lost password'); ?></option>
+	  <option><?php ___('Account issues'); ?></option>
+	  <option><?php ___('Permission to use Scratch for...'); ?></option>
+          <option><?php ___('Questions from educators'); ?></option>
+          <option><?php ___('Sponsoring / Partnering'); ?></option>
+          <option><?php ___('Inappropriate behavior'); ?></option>
+          <option><?php ___('Scratch Sensor Board'); ?></option>
+          <option><?php ___('Other'); ?></option>
+          <option><?php ___('Technical questions'); ?></option>
+	</select>
+</p>
+<div id="technicalquestiondiv" style="display:none">
+<p>
+<?php ___('We strongly recommend to post your question to the on-line forums where not only the Scratch Team can help you but also the online community at large. Do you want to post your question on the forums?'); ?>
+</p>
+<input type="submit" value="Yes" onClick="window.location = '<?php print($redirect_technicalquestion); ?>'"/>
+<input type="submit" value="No" onClick="showSubtopics()"/>
+</div>
+
+<div id="subtopicsdiv" style="display:none">
+<p>
+     <select id="subtopic_select" name="subtopic_select" onchange="selectSubtopic(this);">
+          <option selected><?php ___('Subtopics'); ?></option>
+          <option><?php ___('Installation'); ?></option>
+	  <option><?php ___('Uploading'); ?></option>
+	  <option><?php ___('Other'); ?></option>
+     </select>
+</p>
+</div>
+
+	 <form method="post" enctype="multipart/form-data" action="<?php echo $html->url('/contact/us/')?>">
+<div id="questionform" style="display:none">
+	<input id="topicinput" type="hidden" name="data[Page][cc_topic]" value="">
+<p>
+	<?php ___('Name'); ?>:	<input type="text" name="data[Page][name]" size="25" /> 
+</p>
+<p>
+	<?php ___('Email'); ?>:	 <input type="text" name="data[Page][email]" size="25" />
+</p>
+
+<p>
+	<?php ___('Subject'); ?>:	 <input type="text" name="data[Page][subject]" size="25" />
+</p>
+
+<p>
+   <?php ___('Message'); ?>:<br /><textarea name="data[Page][message]" cols="40" rows="10"></textarea>
+   
+   
+</p>
+<p>
+<?php echo recaptcha_get_html(CAPTCHA_PUBLICKEY);  ?>
+</p>
+<p >
+<input type="submit" value="<?php ___('Send email')?>" />
+   
+</p>
+</div>
+</form>
+</div>
+<?php }?>
+</div>
+
+<Script Language=JavaScript>
+
+var selected_topic = "<?php echo $selected_topic; ?>";
+var index_selected_topic = topic.indexOf(selected_topic);
+if(selected_topic=="")
+{
+	index_selected_topic = 0;
+}
+if(index_selected_topic!=-1)
+{
+	var topic_select = document.getElementById("topic_select");
+	topic_select[index_selected_topic].selected = true;
+	selectTopic(topic_select);
+}
+else
+{
+	var topic_select = document.getElementById("topic_select");
+	topic_select[9].selected = true;
+	showSubtopics();
+
+	index_selected_subtopic = subtopic.indexOf(selected_topic);
+	if(index_selected_subtopic!=-1)
+	{
+		var subtopic_select = document.getElementById("subtopic_select");
+		subtopic_select[index_selected_subtopic].selected = true;
+		selectSubtopic(subtopic_select);
+	}
+}
+</Script>
+
+<!--- End Content --->

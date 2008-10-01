@@ -1,0 +1,85 @@
+<div class="fullcontent">
+	<h2><?php ___('Who can add projects to'); ?> <a href="<?php echo $html->url('/galleries/view/')?><?php e($gallery_id)?>"><?php e($gallery_name)?></a>?</h2>
+</div>
+<div id="gallery_permission_content">
+	<?php
+	$gallery_type = $gallery['Gallery']['type'];
+	echo "\t<div id='gallery_permission_predefined'>\n";
+			echo "\t\t<div class='gallery_permission_option'>\n";
+			?>
+			<a href="<?php echo $html->url('/galleries/predefinepermissions/'.$gallery['Gallery']['id'])?>/self">
+			
+			
+			<?php
+			if ($gallery_type == 1) {
+				echo "<span class='button2_selected'>" . ___('only me', true) . "</span></a>\n";
+			} else {
+				echo "<span class='button2'>" . ___('only me', true) . "</span></a>\n";
+			}
+			echo "\t\t</div>\n";
+			echo "\t\t<div class='gallery_permission_option'>\n";
+			?>
+			
+			<a href="<?php echo $html->url('/galleries/predefinepermissions/'.$gallery['Gallery']['id'])?>/everyone">
+			<?php
+			if ($gallery_type == 0) {
+				echo "<span class='button2_selected'>" . ___('everyone', true) . "</span></a>\n";
+			} else {
+				echo "<span class='button2'>" . ___('everyone', true) . "</span></a>\n";
+			}
+			echo "\t\t</div>\n";
+			echo "\t\t<div class='gallery_permission_option'>\n";
+			?>
+			<a href="<?php echo $html->url('/galleries/predefinepermissions/'.$gallery['Gallery']['id'])?>/friends">
+			
+			<?php
+			if ($gallery_type == 3) {
+				echo "<span class='button2_selected'>" . ___('all my friends', true) . "</span></a>\n";
+			} else {
+				echo "<span class='button2'>" . ___('all my friends', true) . "</span></a>\n";
+			}
+			echo "\t\t</div>\n";
+			
+			echo "\t\t<div class='gallery_permission_option'>\n";
+			?>
+			<a href="<?php echo $html->url('/galleries/predefinepermissions/'.$gallery['Gallery']['id'])?>/byinvite">
+			
+
+			<?php
+			if ($gallery_type == 4) {
+				echo "<span class='button2_selected'>" . ___('some of my friends', true) . "</span></a>\n";
+			} else {
+				echo "<span class='button2'>" . ___('some of my friends', true) . "</span></a>\n";
+			}
+			echo "\t\t</div>\n";
+			echo "\t</div>\n";
+	?>
+	<?php if($gallery_type == 4): ?>
+		<div id='gallery_permission_advanced'>
+			<?php 
+				e($ajax->div("gallery_users_ajax"));
+					e($this->renderElement('gallerypermissionusers', array('members'=> $members, 'friends'=> $friends, 'gallery_id' => $gallery_id)));
+				e($ajax->divEnd("gallery_users_ajax"));
+			?>
+		</div>
+	<?php endif; ?>
+</div>
+<!-- 
+<div class="gallery_content">
+	<h5>Find User (type user name and click search)</h5>
+	<h6>Once you have found the user you are looking for, click on his or her portrait to add them to your gallery</h6>
+	<?php
+		echo "<div class='gallery_permissions_search'>\n";
+			echo "<form action='psort' method='POST' accept-charset='UTF-8' name='downform' id='downform'>";
+			echo $html->input('Filter/key', array('type'=>'text', 'size'=>'24'));
+			echo "<div >";
+			echo "   <input type='submit' class='button' value='search'>";
+			echo "</form>";
+			echo "</div>\n";
+		echo "</div>\n";
+	?>
+	<div class="gallery_permissions_results">
+	
+	</div>
+</div>
+-->

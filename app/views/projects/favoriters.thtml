@@ -1,0 +1,58 @@
+<div class="fullcontent">
+  
+	 
+	<table width="100%">
+	<tr>
+	<td>
+	<p>
+	<?php ___('sort by'); ?>:
+	<?php
+	$pagination->setPaging($paging);
+    e($sortByName = $pagination->sortBy("username", ___("name", true), "User")." ");
+	?>
+	</p>
+	</td>
+	
+	<?php
+		$prev = $pagination->prevPage(___("Prev", true),false, null, "prevlink");
+		$next = $pagination->nextPage(___("Next", true),false, null, "nextlink");
+		$pages = $pagination->pageNumbers(" ", null, "", "");
+	?>
+	
+	<td align="right"><p class="pagination"><?php echo "$prev  $pages  $next" ?></p></td>
+	</tr>
+	</table>
+
+
+	<table cellspacing="10">
+	<?php
+	$count = 1; 
+	$length = count($favoriters);
+	foreach ($favoriters as $user):
+		$user = $user['User'];
+		$urlname = $user['urlname'];
+		$username = $user['username'];
+		$user_ref = "/users/".$urlname;
+		$buddyicon = getBuddyIconBySize($user['id'],'med', $content_status);
+		if ($count%5 == 1) {
+			echo "<tr>";
+		}
+	?>	
+		
+		<td align="center"><a href="<?php echo $html->url($user_ref); ?>">
+		<?php echo $html->image($buddyicon,array('title'=>$username,'alt'=>$username,'width'=>'90','height'=>'90'))?>
+		<br><h5><?php e($username); ?></h5></a></td>
+	
+		<?php if ($count%5 == 0 || $count == $length) echo "</tr>";
+			$count = $count + 1;
+			endforeach; ?>
+	</table>
+
+  
+   	<table width="100%">
+	<td align="right"><p class="pagination"><?php echo "$prev  $pages  $next" ?></p></td>
+	</tr>
+	</table>	
+</div>
+
+

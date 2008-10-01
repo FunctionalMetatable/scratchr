@@ -1,0 +1,57 @@
+<?php
+	echo "<div class='gallerypopup'>\n";
+	echo "<h5>";
+	echo "</h5>\n";
+	___('Click on a Project to Add to Gallery');
+
+	/*
+	$pagination->setPaging($paging);
+	$prev = $pagination->prevPage("Prev",false, null, "prevlink");
+	$next = $pagination->nextPage("Next",false, null, "nextlink");
+	$pages = $pagination->pageNumbers(" ", null, "", "");
+
+	echo "<div class='gallery_pagination'>\n";
+		echo "<div>\n";
+		echo "         <span class='pagination'>"; echo "$prev  $pages  $next"; echo "</span>\n";
+		echo "</div>\n";
+	echo "</div>\n";
+	*/
+
+	echo "</div>\n";
+
+
+	echo "<div id='gallery_projects'>\n";
+	foreach ($data as $project):
+		$pid = $project['Project']['id'];
+		$urlname = $user_url;
+		$owner_url = "/users/".$urlname;
+		$owner_username = $user_name;
+		$project_name = htmlspecialchars($project['Project']['name']);
+		$project_id = $project['Project']['id'];
+		$project_url = "/projects/view/$urlname/$pid";
+		$thumbnail_src = getThumbnailImg($urlname, $pid);
+		if (strlen($project_name) >= 15) {
+			$project_name = substr($project_name,0,16) . " ...";
+		}
+
+		echo "<div class='addtogalleryitem'>\n";
+			e($ajax->link("<img src='$thumbnail_src' alt='$project_name' width='148' height='111'><h6>$project_name</h6>", '#',
+			array('url'=>'/galleries/removemyproject/' . $gallery_id . '/' . $pid,
+			'update'=>'gallery_removeproject',
+			'condition'=>'checkLogin()'), NULL, false));
+		echo "</div>\n";
+	endforeach;
+	echo "</div>\n";
+
+	if (empty($data)):
+		e("<div class='addtogalleryitem'>");
+			e("<p>\n");
+			e("<h5>"); ___('You have no projects in'); e($gallery_name! "</h5>");
+			e("<p>\n");
+		echo "</div>\n";
+	endif;
+
+	echo "<div class='gallery_popup_button'>\n";
+		echo "<div id='removebutton' class='gallery_centered_button'>"; ___('Accept'); echo "</div></a>\n";
+	echo "</div>\n";
+?>

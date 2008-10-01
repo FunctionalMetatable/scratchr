@@ -1,0 +1,210 @@
+<?php $head->register_js("FormManager.js") ?>
+
+<?php $head->register_jsblock("
+  window.onload = function() {
+    setupDependencies('downform'); //name of form(s). Seperate each with a comma (ie: 'weboptions', 'myotherform' )
+	document.getElementsByTagName('input')[2].focus();
+	changeEmailVis();
+  };
+
+	function comparePassword() {
+		var password = ".'$F'."('UserPassword');
+		var password2 = ".'$F'."('UserPassword2');
+	}
+	function formAct(bool) {
+		if(bool == undefined) bool = true;
+		if(bool == true) $('signups').style.visibility='visible';
+		else $('signups').style.visibility='hidden';
+	}
+ ");
+?>
+
+
+<!-- |||||| Begin main content area ||||||| -->
+<div class="fullcontent" id="SignUpForm">
+  <form action="signup" method="POST" accept-charset="UTF-8" name="downform" id="downform">
+  <div class="signup_header">
+	<h3><?php ___('Create an account'); ?></h3>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][username]"><?php ___('Username'); ?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php 
+				echo $form->text
+					('User/username', array('type'=>'text', 'size'=>'30', 
+					'onkeyup'=> '', 
+					'onblur'=> '', 'maxlength' => '20')); 
+			?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "name"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "name"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][password]"><?php ___('Password'); ?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php 
+				echo $form->text('User/password', 
+					array('type'=>'password', 'size'=>'30', 
+					'onkeyup'=>'')); 
+			?> 
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "password"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "password"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][password2]"><?php ___('Confirm Password'); ?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php 
+				echo $form->text('User/password2', 
+					array('type'=>'password', 'size'=>'30', 
+					'onkeyup'=>'')); 
+			?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "confirmation"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "confirmation"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][bmonth]"><?php ___('Birth date'); ?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php $currmonth = date('m') + 0; echo "<input name='currmonth' type='hidden' "  . " value='$currmonth'>"; ?>
+			<?php echo "<input name='curryear' type='hidden' "  . " value='" . date('Y') . "'>"; ?>
+			
+			<?php 
+				echo $form->select('User/bmonth', 
+					$months, null, array('onChange'=>'changeEmailVis(); return false;'), null, false) ; 
+			?>	
+			<?php
+				echo $form->select('User/byear', 
+					$years, null, array('onChange' => 'changeEmailVis(); return false;'), null, false);
+			?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "birthdate"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "birthdate"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label id="email_default" for="data[User][email]"><?php ___('Email');?>*</label>
+			<label id="email_under_13" for="data[User][email]" style='display:none'><?php ___('Email of Parent or Guardian');?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php echo $form->text('User/email', array('type'=>'text', 'size'=>'40')); ?> 
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "email"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "email"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][gender]"><?php ___('Gender');?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php echo $form->select('User/gender', $genders, null, null, null, false ); ?> 
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "gender"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "gender"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][country]"><?php ___('Country');?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php
+				echo $form->select('User/country', $countries, null, array('id' => 'UserCountry'), null, false);
+			?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "country"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "country"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][state]"><?php ___('State/Province');?></label>
+		</div>
+		<div class="signup_input">
+			<?php
+				echo $form->select('User/state', $states, null, 
+					array("class" =>"DEPENDS ON UserCountry BEING United States"), null, false);
+				echo $form->text('User/province', array('type'=>'text', "size" =>"30", 
+					"class" => "CONFLICTS WITH UserCountry BEING United States")); 
+			?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "state"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][city]"><?php ___('City');?></label>
+		</div>
+		<div class="signup_input">
+			<?php
+				echo $form->text('User/city', array('type'=>'text', 'size'=>'30'));
+			?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "city"));
+	?>
+  </div>
+  <div class="signup_row">
+	<div class="signup_label">
+	</div>
+	<div class="signup_input">
+		<input type="submit" class="button" value="<?php ___('sign up'); ?>" id="signups">
+	</div>
+  </div>
+  </form>
+</div>
+<!-- ////// End main content ////// -->
+

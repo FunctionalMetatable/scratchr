@@ -1,0 +1,93 @@
+
+<br class='SpaceEm'/><br class='SpaceEm'/>
+<div class='UploadNow'>
+<h2 style='clear: left' class='FormHead'><?php ___('It\'s great that you\'re sharing your project!'); ?>  </h2>
+<p class='CTABullet'><?php printf(___('Did you know you can also upload your project right from Scratch? Click %shere%s to see how.', true), '<a href="/help">', '</a>'); ?> </p>
+<p class='CTABullet'><?php ___('Oh and don\'t worry, you can always make changes later or remove your project from Scratchr.'); ?></p>
+<p class='CTABullet'>&nbsp; </p>
+
+
+<?php
+$session->flash(FLASH_ERROR_KEY);
+$session->flash(FLASH_NOTICE_KEY);
+?>
+
+
+<form class='UploadForm' action='<?php echo $html->url('/projects/upload')?>' method='post' enctype='multipart/form-data'>
+<fieldset>
+<h4>
+<div id='UploadFormDiv'><span class='MidAlign'>
+
+<p class='UploadText'><?php ___('Scratch File (optional)'); ?></p>
+</span><span class='MidAlign'><div class='UploadBox'><input name='binary_file' type='file' class='UploadInput'/></div></span>
+
+
+<br class='ClearEm' /><br class='SpaceEm' />
+<span class='MidAlign'>
+<p class='UploadText'><?php ___('Mini Thumbnail Image (optional)'); ?></p>
+</span><span class='MidAlign'><div class='UploadBox'><input name='thumbnail_image' type='file' class='UploadInput'/></div></span>
+
+<br class='ClearEm' /><br class='SpaceEm' />
+<span class='MidAlign'>
+<p class='UploadText'><?php ___('Large Preview Image (optional)'); ?></p>
+</span><span class='MidAlign'><div class='UploadBox'><input name='preview_image' type='file' class='UploadInput'/></div></span>
+
+<br class='ClearEm' /><br class='SpaceEm' /><span class='MidAlign'><p class='UploadText'><?php ___('Title');?></p></span><span class='MidAlign'><input name='project_name' id='vititle' type='text' value=<?php ___('Your project title:'); ?> class='UploadInput'/>
+</span>
+
+<br class='ClearEm' /><br class='SpaceEm' /><span class='MidAlign'><p class='UploadText'><?php ___('Description');?></p></span><span class='MidAlign'><textarea name='project_description' class='UploadTextarea'><?php ___('Write a little bit about your project'); ?>:</textarea>
+</span>
+<br class='ClearEm' /><br class='SpaceEm' /><span class='MidAlign'><p class='UploadText'><?php ___('Tags'); ?><br/>
+</p>
+</span><span class='MidAlign'><textarea name='project_tags' class='UploadTextarea'></textarea></span>
+<br class='ClearEm' /><br class='SpaceEm' /><span class='MidAlign'>
+
+<p class='UploadText'><?php ___('Gallery'); ?></p>
+</span><span class='MidAlign'><a name='chanz'><select class='UploadSelect' name='vchannel[]'>
+  <option value="0">- <?php ___('Select a Gallery?'); ?> -</option>
+  <option value="17"><?php ___('Comming soon'); ?></option>
+</select></a><br/>
+</span>
+
+<br class='ClearEm' /><br class='SpaceEm' />
+
+<span class='MidAlign'>
+<p class='UploadText'><?php ___('Visibility'); ?></p>
+</span><span class='MidAlign'><select class='UploadSelect' name='cc_id'>
+  <option value="1"><?php ___('Everyone can see it'); ?></option>
+  <option value="2"><?php ___('Only my friends can see it'); ?></option>
+  <option value="3"><?php ___('For my eyes only'); ?></option>
+</select>
+</span>
+<br class='ClearEm' /><br class='SpaceEm' /><span class='MidAlign'>
+
+<p class='UploadText'><?php ___('Commenting'); ?></p>
+</span><span class='MidAlign'><select class='UploadSelect' name='cc_id'>
+  <option value="1"><?php ___('Everyone can comment'); ?></option>
+  <option value="2"><?php ___('Only my friends can comment'); ?></option>
+  <option value="3"><?php ___('Only I can comment'); ?></option>
+</select>
+</span>
+
+<br class='ClearEm' /><br class='SpaceEm' /><span class='MidAlign'>
+
+<p class='UploadText'><?php ___('Tagging'); ?></p>
+</span><span class='MidAlign'><select class='UploadSelect' name='cc_id'>
+  <option value="1"><?php ___('Everyone can tag it'); ?></option>
+  <option value="2"><?php ___('Only my friends can tag it'); ?></option>
+  <option value="3"><?php ___('Only I can tag it'); ?></option>
+</select>
+</span>
+<br>
+
+<br />
+
+<p class='ClearEm' /><input class='button' type='submit' value=<?php ___('Upload'); ?> 
+
+</div>
+</h4>
+</fieldset>
+</form>
+</div>
+
+<br>

@@ -1,0 +1,42 @@
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	<h3> Karma Settings </h3>
+	</div>
+	<div id="admin_project_content">
+		<span>Offset: <?php e($current_offset); ?></span> <br/>
+		<span>Spread: <?php e($current_spread); ?></span>
+    </div>
+	<div id="admin_project_content">
+		<a href="<?php echo $html->url('/administration/increase_spread')?>"> Increase Spread </a>
+		|
+		<a href="<?php echo $html->url('/administration/decrease_spread')?>"> Decrease Spread </a>
+    </div>
+	<div id="admin_project_content">
+		<a href="<?php echo $html->url('/administration/increase_offset')?>"> Increase Offset </a>
+		|
+		<a href="<?php echo $html->url('/administration/decrease_offset')?>"> Decrease Offset </a>
+    </div>
+</div>
+<div class="fullcontent">
+	<div class="top_header">
+	<h5> Karma Ranks </h5>
+	</div>
+	<div id="admin_banlist_results">
+		<?php
+			echo $this->renderElement('admin/karma_rank_list', Array('data' => $karma_ranks));
+		?>
+	</div>
+</div>
+<div class="fullcontent">
+	<div class="top_header">
+	<h5> Karma Events </h5>
+	</div>
+	<div id="admin_banlist_results">
+		<?php
+			echo $this->renderElement('admin/karma_events_list', Array('data' => $karma_events));
+		?>
+	</div>
+</div>

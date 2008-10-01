@@ -1,0 +1,24 @@
+<div class="fullcontent">
+	<h2>Manage Comments</h2>
+    <h5><a href="<?php echo $html->url('/administration/index')?>"> Home </a> | <a href="<?php echo $html->url('/administration/projects')?>"> Projects </a> | <a href="<?php echo $html->url('/administration/users')?>"> Users </a> | <a href="<?php echo $html->url('/administration/comments')?>"> Comments </a> | <a href="<?php echo $html->url('/administration/galleries')?>"> Galleries </a> | <a href="<?php echo $html->url('/administration/tags')?>"> Tags </a> </h5>
+</div>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	</div>
+	<div id="admin_project_content">	
+		<div>
+			<div>
+				<span>Sort By: </span>
+				<span><a <?php if ($option == "created") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/csort/created')?>">Creation Date</a> | </span>
+				<span><a <?php if ($option == "creator") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/csort/creator')?>">Creator</a> | </span>
+				<span><a <?php if ($option == "project") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/csort/project')?>">Project</a> | </span>
+				<span><a <?php if ($option == "content") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/csort/content')?>">Content</a></span>
+			</div><br/>
+		<div>
+	<?php
+		 e($ajax->div("admin_project_list"));
+         	e($this->renderElement('admincomments', array('data'=> $data)));
+         e($ajax->divEnd("admin_project_list"));
+    ?>	 
+    </div>	
+</div>

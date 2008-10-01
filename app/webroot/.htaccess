@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+	RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^static/projects/.+/([0-9]+)_(sm|med).png$ static/icons/project/default_$2.jpg [QSA,L]
+	
+    
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^static/projects/.+/([0-9]+).sb$ static/misc/default.sb [QSA,L]
+	
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^static/icons/gallery/(.*)$ static/icons/gallery/default.jpg [QSA,L]
+
+	 RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^static/icons/buddy/([0-9]*)_(sm|med).jpg$ static/icons/buddy/default_$2.jpg [QSA,L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^static/icons/buddy/([0-9]*)_(sm|med).png$ static/icons/buddy/default_$2.jpg [QSA,L]
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+	
+</IfModule>
