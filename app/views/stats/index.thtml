@@ -1,0 +1,9 @@
+<!-- |||||| Begin content area ||||||| -->
+<div id="main">
+  
+  Please click <a href="<?php echo $html->url('/stats/display')?>">here</a> for Scratch statistics. On any page, you can set variables for number of items and date range like this:<br>
+  http://scratch.mit.edu/stats/NUMBEROFITEMS/FROMDATE/TODATE<br>
+  The format for FROMDATE and TODATE is: YYYY-MM-DD
+  Any variable you leave blank indicates that you want to see all items in that parameter.
+
+</div>

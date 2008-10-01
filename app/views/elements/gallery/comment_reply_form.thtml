@@ -1,0 +1,22 @@
+<div id="gallery_comment_reply_frame_<?php e($comment_id) ?>" class="gallery_comment_reply_frame">
+	<div class="gallery_comment_reply_main">
+	<h5> Comment Reply </h5>
+	<form id="gallery_comment_reply_form_<?php e($comment_id); ?>" action="<?php echo $html->url('/galleries/comment_reply/')?><?php e($comment_id); echo "/" . $comment_level; ?>" method="post">
+		<?php if ($comment_level == 0): ?>
+		<p><textarea name="gallery_comment_reply_input_<?php e($comment_id) ?>" id="gallery_comment_reply_input_<?php e($comment_id) ?>"  cols="55" rows="3"></textarea></p>
+		<?php endif; ?>
+		<?php if ($comment_level > 0): ?>
+		<p><textarea name="gallery_comment_reply_input_<?php e($comment_id) ?>" id="gallery_comment_reply_input_<?php e($comment_id) ?>"  cols="50" rows="3"></textarea></p>
+		<?php endif; ?>
+		<?php 
+			echo $ajax->submit(___('Reply', true), 
+				array('id' => 'gallery_comment_reply_submit_' . $comment_id, 
+				"loading" => "disableReply($comment_id);",
+				"class"=>"button",
+				"url"=>"/galleries/comment_reply/$comment_id/$comment_level", 
+				"update"=>"reply_list_$comment_id", 
+				"complete" => "showReplyBox($comment_id, true);"));
+		?>
+	</form>
+	</div>
+</div>

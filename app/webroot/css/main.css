@@ -1,0 +1,1663 @@
+.style1 {font-size: 16px}
+.style2 {font-size: 18px}
+.style3 {font-size: 20px}
+.style4 {font-size: 22px}
+.style5 {font-size: 24px}
+.style6 {font-size: 26px}
+.style7 {font-size: 28px}
+.style8 {font-size: 30px}
+
+body {
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+	padding-top: 6px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: white;
+}
+#body-encapsulator {
+	width: 890px;
+	margin: 0 auto;
+	text-align: left;
+	background-color: #FFF; 
+	border: none;
+	padding: 0;
+}
+.NetworkMessage {
+	/*background: url(/images/nm_bg.gif);
+	background-repeat: repeat-x;*/
+	background-color: #0084FF;
+	border: 2px dashed #0056C0;
+	height: 27px !important; height: 40px;
+	width: 850px;
+	margin: 0;
+	padding: 0;
+	padding-top: 3px !important; padding-top: 6px;
+	margin-bottom: 6px;
+	text-align: center;
+	font: 12px arial;
+	color: #ddd;
+}
+.UimgSmallBox {
+	height: 25px;
+	width: 25px;
+	background: url(/images/users/uimg_small.png);
+	margin: 0;
+	padding: 0;
+}
+.NetMessageLink {
+	color: white;
+	font-size: 14px;
+	text-decoration: none;
+	border-bottom: 2px dashed;
+}
+.ToolChest {
+	width: 640px;
+	font: 10px arial;
+}
+a.TextPara {
+	text-decoration: none;
+	color: #0056C0;
+}
+.ProfInput {
+	border: 1px dotted #ccc;
+	font: 12pt arial;
+	height: 20px;
+	width: 300px;
+}
+.ProfInput:hover {
+	border: 1px solid #ccc;
+}
+.ProfTextarea {
+	border: 1px dotted #ccc;
+	font: 12pt arial;
+	height: 75px;
+	width: 300px;
+	padding-bottom: 10px;
+}
+.ProfTextarea:hover {
+	border: 1px solid #ccc;
+}
+.ProfileInput {
+	float: left;
+}
+.HelpBox {
+	height: 26px;
+	width: 28px;
+	cursor: help;
+	background-color: #fff;
+	color: #0056C0;
+	border: 1px dotted #0056C0;
+	font: 20px arial;
+	font-weight: bold;
+	float: right;
+	text-align: center;
+}
+.HelpLinks {
+	cursor: help;
+	color: #0056C0;
+	text-decoration: none;
+}
+.HelpLinks:hover {
+	border-bottom: 1px dotted #0056C0;
+}
+.SmallHelpBox {
+	height: 14px;
+	width: 16px;
+	cursor: help;
+	background-color: #fff;
+	color: #0056C0;
+	border: 1px dotted #0056C0;
+	font: 11px arial;
+	font-weight: bold;
+	float: right;
+	clear: right;
+	text-align: center;
+}
+.SmallHelpLinks {
+	cursor: help;
+	color: #0056C0;
+	text-decoration: none;
+}
+.SmallHelpLinks:hover {
+	border-bottom: 1px dotted #0056C0;
+}
+.AlertsLabel {
+	width: 320px;
+	height: 20px;
+	font: 12pt arial;
+	font-weight: bold;
+	float: left;
+}
+.ProfileLabel {
+	width: 200px;
+	height: 40px;
+	font: 12pt arial;
+	font-weight: bold;
+	float: left;
+}
+.StatHead {
+	font: 12pt arial;
+	font-weight: bold;
+	margin: 4px;
+}
+.StatBoxHide {
+	font-size: 1px;
+	height: 1px;
+	width: 220px;
+}
+.StatBoxLoad {
+	font: 12px arial;
+	height: 16px;
+	width: 220px;
+}
+.StatBoxLoaded {
+	font: 12px arial;
+	height: 160px;
+	width: 220px;
+	overflow: auto;
+}
+.StatShowLink {
+	cursor: help;
+	text-decoration: none;
+	color: #0056C0;
+	border-bottom: 1px dashed #0056C0;
+}
+.StatUrl {
+	padding-left: 6px;
+	width: 160px; 
+	overflow: hidden; 
+	text-overflow: ellipsis;
+	font: 8pt arial;
+	float: left;
+}
+.StatLink {
+	color: #0056C0;
+	text-decoration: none;
+}
+.StatLink:hover {
+	border-bottom: 1px dashed #0056C0;
+}
+
+.StatNum {
+	font-weight: bold;
+	padding-left: 5px;
+	font: 9pt arial;
+	float: left;
+}
+a.TextPara:hover {
+	border-bottom: 1px dashed #0056C0;
+}
+.ToolBoxL {
+	float: left;
+	background: #e6e6e6;
+	border: 2px dashed #ccc;
+	width: 300px !important; width: 312px;
+	height: 150px;
+	padding: 4px;
+}
+.ToolCTAContainer {
+	font: 24px arial;
+	font-weight: bold;
+	letter-spacing: -0.06em;
+}
+.ToolBoxR {
+	float: right;
+	background: #e6e6e6;
+	border: 2px dashed #ccc;
+	width: 300px !important; width: 312px;
+	height: 150px;
+	padding: 4px;
+}
+.ToolBoxText {
+	float: left;
+	background: #e6e6e6;
+	border: 2px dashed #ccc;
+	width: 625px !important; width: 637px;
+	padding: 4px;
+}
+.ToolBoxL:hover {
+	background: #f6f6f6;
+}
+ .ToolBoxR:hover {
+	background: #f6f6f6;
+}
+.ToolText {
+	font: 12px arial;
+}
+.ToolLaunch {
+	font: 14px arial;
+	font-weight: bold;
+	color: #0056C0;
+	padding: 6px;
+	text-align: center;
+	text-decoration: none;
+}
+.ToolHead {
+	font: 24px arial;
+	font-weight: bold;
+	text-align: center;
+	letter-spacing: -0.05em
+}
+.CommentLink {
+	text-decoration: none;
+	color: #0056C0;
+}
+.CommentLink:hover {
+	border-bottom: 1px dashed #0056C0;
+}
+.RateThis {
+	font: 12px Arial;
+}
+fieldset {
+	border: 2px dashed #ccf;
+	background-color: #ddf;
+	font: 10px arial;
+	padding-top: 10px;
+	padding-bottom: 20px;
+}
+.RatImg {
+	cursor: pointer;
+}
+#pBarImg {
+	position: absolute;
+	z-index: 99;
+	display: inline;
+}
+#pBarHolder {
+	position: absolute;
+	z-index: 99;
+}
+.BetaText {
+	font: 14px Arial;
+	color: #0056C0;
+	font-weight: bold;
+	vertical-align: top;
+	letter-spacing: -0.03em;
+}
+.TextContainer {
+	clear: both;
+	width: 850px;
+}
+.TextPara {
+	font: 16px Arial;
+}
+.TextBigLine {
+	font: 20px arial;
+	text-align: center;
+	font-weight: bold;
+}
+.TextList {
+	margin-left: 24px;
+}
+.TextListItem {
+	font: 16px Arial;
+	letter-spacing: -0.01em;
+}
+.LinkUser {
+	text-decoration: none;
+	color: #0056C0;
+}
+.LinkUser:hover {
+	border-bottom: 1px dashed #0056C0;
+}
+#overTop {
+	position: absolute;
+	overflow: hidden;
+	width: 1px;
+	text-align: center;
+	background-color: #ccf;
+	white-space: nowrap;
+	filter: alpha(opacity=60);
+	-moz-opacity: 0.6;
+	height: 38px;
+	font-size: 8pt;
+	z-index: 100;
+}
+.Hidden {
+	display: none;
+}
+.UploadContainer {
+	display: block;
+}
+.UploadBar {
+	display: block;
+	height: 38px;
+	width: 308px;
+}
+.TagEditTextarea {
+	font: 14px arial;
+	width: 175px;
+	height: 50px;
+	border: 1px solid #ccc;
+}
+.TagEditContainer {
+	font: 14px arial;
+	font-weight: bold;
+}
+a.TagEditContainer {
+	color: #0056C0;
+	text-decoration: none;
+}
+a.TagEditContainer:hover {
+	color: #0056C0;
+	border-bottom: 1px dashed #0056C0;
+}
+.CommEditTextarea {
+	font: 14px arial;
+	width: 340px;
+	height: 150px;
+	border: 1px solid #ccc;
+}
+.UserCommEditTextarea {
+	font: 11px arial;
+	width: 240px;
+	height: 120px;
+	border: 1px solid #ccc;
+}
+.CommEditContainer {
+	font: 14px arial;
+	font-weight: bold;
+	text-align: left;
+	clear: left;
+}
+a.CommEditContainer {
+	color: #0056C0;
+	text-decoration: none;
+}
+a.CommEditContainer:hover {
+	color: #0056C0;
+	border-bottom: 1px dashed #0056C0;
+}
+.LrgVideoTag {
+	font: 14px arial;
+}
+a.LrgVideoTag {
+	color: #0056C0;
+	text-decoration: none;
+}
+a.LrgVideoTag:hover {
+	color: #0056C0;
+	border-bottom: 1px dashed #0056C0;
+}
+.VideoHeaderInfo {
+	margin-top: 4px;
+	margin-bottom: 4px;
+	font: 14px arial;
+	text-align: right;
+}
+a.VideoTag {
+	color: #0056C0;
+	text-decoration: none;
+}
+a.VideoTag:hover {
+	color: #0056C0;
+	border-bottom: 1px dashed #0056C0;
+}
+legend {
+	border: 2px dashed #ccf;
+	padding: 4px;
+	font: 20px arial;
+	font-weight: bold;
+	letter-spacing: -0.04em;
+	background-color: white;
+}
+.LoginBox {
+	padding:0;
+	margin:0;
+	padding-bottom: 6px;
+}
+.UploadBox {
+	padding:0;
+	margin:0;
+	padding-bottom: 6px;
+}
+.LoginInput {
+	width: 250px;
+	margin: 0;
+	padding: 0;
+	font: 20px Arial;
+	height: 30px;
+	float: left;
+	border: 1px solid #ccc;
+	letter-spacing: -0.04em;
+}
+.UploadSelect {
+	width: 250px;
+	margin: 0;
+	padding: 0;
+	font: 20px Arial;
+	height: 30px;
+	/*float: left;*/
+	border: 1px solid #ccc;
+	letter-spacing: -0.04em;
+}
+.UploadInput {
+	width: 250px;
+	margin: 0;
+	padding: 0;
+	font: 20px Arial;
+	height: 30px;
+	float: left;
+	border: 1px solid #ccc;
+	letter-spacing: -0.04em;
+}
+.UploadTextarea {
+	width: 250px;
+	margin: 0;
+	padding: 0;
+	font: 20px Arial;
+	height: 125px;
+	float: left;
+	border: 1px solid #ccc;
+	letter-spacing: -0.04em;
+}
+.LoginText {
+	font: 20px Arial;
+	letter-spacing: -0.04em;
+	width: 150px;
+	float: left;
+	text-align: right;
+	padding: 0;
+	padding-bottom: 8px;
+	padding-right: 8px;
+	margin: 0;
+}
+.LoginTextFull {
+	font: 22px Arial;
+	font-weight: bold;
+	letter-spacing: -0.04em;
+	float: left;
+	text-align: left;
+	padding: 0;
+	padding-bottom: 8px;
+	padding-right: 8px;
+	margin: 0;
+}
+.UploadText {
+	font: 20px Arial;
+	letter-spacing: -0.04em;
+	width: 150px;
+	float: left;
+	text-align: right;
+	padding: 0;
+	padding-bottom: 8px;
+	padding-right: 8px;
+	margin: 0;
+}
+.ContextHeader {
+	margin: 0;
+	padding: 0px;
+	font: 20px arial;
+	font-weight: bold;
+	text-align: left;
+	letter-spacing: -0.04em;
+}
+
+.SignUpNow {
+	clear: both;
+	width: 582px !important; width: 590px;
+	padding-left: 10px;
+}
+.SignIn {
+	clear: both;
+	width: 700px !important; width: 710px;
+	padding-left: 10px;
+}
+.UploadNow {
+	clear: both;
+	width: 582px !important; width: 590px;
+	padding-left: 10px;
+
+}
+.SignUpText {
+	font: 20px arial;
+	font-weight: bold;
+	text-align: left;
+	letter-spacing: -0.04em;
+}
+.UploadText {
+	font: 20px arial;
+	font-weight: bold;
+	text-align: left;
+	letter-spacing: -0.04em;
+}
+.SmallUploadText{
+	font: 10px arial;
+	font-weight: normal;
+	text-align: left;
+	letter-spacing: -0.04em;
+}
+.MessagingContainer {
+	clear: both;
+	width: 900px;
+	height: 145px;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+.TopHeader {
+	vertical-align: middle;
+    padding-left:10px;
+	width: 870px;
+}
+.ToolSubHead {
+	font: 20px arial;
+	font-weight: bold;
+}
+.ToolSubSubHead {
+	font: 14px arial;
+	font-weight: bold;
+}
+.ToolOptText {
+	width: 130px;
+	float: left;
+}
+.ToolOpts {
+	float: left;
+}
+.HiddenTool {
+	margin: 0;
+	padding: 0;
+	display: none;
+}
+.VisibleTool {
+	display: block;
+	margin: 0;
+	padding: 0;
+	/*padding-left: 16px;*/
+}
+.ToolHolster {
+	clear: both;
+	font: 12px arial;
+}
+.ToolHolsterText {
+	font: 12px arial;
+}
+.ToolHeader {
+	vertical-align: middle;
+	width: 560px;
+}
+.LogoContainer {
+	float: left;
+	border: 0;
+}
+.CommentContainer {
+	float: left;
+	clear: left;
+	font: 14px Arial;
+	width: 335px;
+	padding: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-bottom: 10px;
+}
+.UserCommentContainer {
+	float: left;
+	clear: left;
+	font: 14px Arial;
+	width: 255px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-bottom: 10px;
+}
+#LogoObject {
+	border: 0;
+}
+.TopCTAContainer {
+	float: right;
+	padding: 0px;
+	margin: 0px;
+	vertical-align: middle;
+	width: 500px;
+}
+.PackageText {
+	font: 24px arial;
+	font-weight: bold;
+	letter-spacing: -0.08em;
+	margin: 0px;
+	padding: 0px;
+	text-align: left;
+}
+.TopLevelText {
+	font: 24px arial;
+	text-indent: 2px;
+	letter-spacing: -0.08em;
+	margin: 0px;
+	padding: 0px;
+	text-align: right;
+}
+.HelpText {
+	font: 24px arial;
+	text-indent: 2px;
+	letter-spacing: -0.08em;
+	margin: 0px;
+	padding: 0px;
+
+
+}
+.MessagingMain {
+	font: 24px arial;
+	font-weight: bold;
+	letter-spacing: -0.06em;
+	margin: 0px;
+	padding: 0px;
+	width: 500px;
+}
+.MessagingSecondary {
+	font: 18px arial;
+	letter-spacing: -0.04em;
+	margin: 0px;
+	padding-top: 2px;
+	padding-bottom: 8px;
+}
+.TopLevelLinks {
+	color: #0056C0;
+	text-decoration: none;
+	font-weight: bold;
+}
+.UserLevelLinks {
+	color: #0056C0;
+	text-decoration: none;
+	font-weight: bold;
+}
+.UserLevelLinks:hover {
+	border-bottom: 2px dashed #0056C0;
+}
+.UserLevelContainer {
+	margin: 0;
+	text-align: right;
+	font: 14px arial;
+	letter-spacing: -0.02em;
+}
+.TopLevelLinks:hover {
+	color: #0085FF;
+	border-bottom: 2px dashed #0085FF;
+}
+.ContextContainer {
+	float: left;
+	height: 100%;
+	padding-left: 12px;
+	font-size: 10px;
+	white-space: normal;
+	
+}
+.PopTags {
+	margin: 0;
+	padding: 4px;
+	font: 12px arial;
+	text-align: justify;
+}
+.PopTag {
+	color: #0056C0;
+	text-decoration: none;
+}
+.PopTag:hover {
+	color: #0085FF;
+	border-bottom: 1px dashed #0085FF;
+}
+.RecentUploaders {
+	margin: 0;
+	padding: 4px;
+	font: 12px arial;
+	text-align: justify;
+}
+.RecentVisitors {
+	margin: 0;
+	padding: 4px;
+	font: 12px arial;
+	text-align: justify;
+}
+.ContextMore {
+	text-align: right;
+	font: 18px arial;
+	padding-bottom: 0;
+	padding-right: 4px;
+	margin-bottom: 0;
+}
+a.ContextMore {
+	color: #0056C0;
+	text-decoration: none;
+}
+a.ContextMore:hover {
+	border-bottom: 1px dashed #0056C0;
+	text-decoration: none;
+}
+.UserInfoText {
+	margin: 0;
+	padding: 0;
+	margin-left: 4px;
+	margin-bottom: 4px;
+}
+a.UserInfoText {
+	color: #0056C0;
+	text-decoration: none;
+}
+a.UserInfoText:hover {
+	border-bottom: 1px dashed #0056C0;
+}
+.VisitorLink {
+	font: 14px Arial;
+	letter-spacing: -0.02em;
+	text-decoration: none;
+	color: #0056C0;
+}
+.VisitorLink:hover {
+	border-bottom: 1px dashed #0056C0;
+}
+.VisitorInfo {
+	padding: 0;
+	margin: 0;
+	margin-left: 8px;
+}
+.CommentBody {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	margin-left: 8px;
+	margin-top: 4px;
+	margin-right: 4px;
+	margin-bottom: 8px;
+}
+.ContentContainer {
+	float: left;
+	width: 600px;
+	text-align: center;
+	white-space: normal;
+	padding-left: 4px;
+}
+.MagicContainer {
+clear: both;
+	width: 880px;
+	height: 70px;
+}
+.MaxSize {
+	font: 14px arial;
+	font-weight: bold;
+	letter-spacing: -0.02em;
+}
+.FunctionContainer {
+	float: left;
+	width: 600px;
+}
+.SearchContainer {
+	float:right;
+	vertical-align: baseline;
+}
+.SearchHead {
+	padding: 0;
+	margin: 0;
+	font: 24px arial;
+	font-weight: bold;
+	letter-spacing: -0.06em;
+}
+.SearchBar {
+	margin: 0;
+	padding: 0;
+	height: 32px;
+	vertical-align: bottom;
+	float:left;
+}
+.TheEditBar {
+	margin: 0;
+	padding: 0;
+	vertical-align: bottom;
+}
+.NoStyles {
+	margin: 0;
+	padding: 0;
+}
+.BotAlign {
+	vertical-align: bottom;
+}
+.MidAlign {
+	vertical-align: bottom;
+}
+.PageButton {
+	vertical-align: bottom;
+	cursor: pointer;
+}
+.LoginContainer {
+	vertical-align: middle;
+	height: 80px;
+}
+.ComingSoon {
+	font: 30px arial;
+	letter-spacing: -0.08em;
+}
+.ComingSoonText {
+	font: 14px arial;
+	letter-spacing: -0.01em;
+	font-weight: bold;
+}
+.AyeLigned {
+	vertical-align: middle;
+}
+.HintSearch {
+	text-decoration: none;
+	font: 11px arial;
+	color: blue;
+}
+.HintSearch:hover {
+	color: white;
+	background-color: blue;
+}
+.SearchInput {
+	width: 130px;
+	margin: 0;
+	padding: 0;
+	font: 20px Arial;
+	height: 28px;
+	float: left;
+	display: inline;
+	border: 1px solid #ccc;
+	letter-spacing: -0.04em;
+}
+.SearchSubmit {
+	width: 75px;
+	height: 30px !important; height: 30px;
+	float: left;
+	font: 20px Arial;
+	display: inline;
+	font-weight: bold;
+	letter-spacing: -0.04em;
+	border: 1px solid #ccc;
+	padding: 0;
+	background-color: #eee;
+	margin: 0;
+	cursor: pointer;
+}
+.Submit {
+	width: 65px;
+	height: 32px !important; height: 30px;
+	float: left;
+	font: 20px Arial;
+	display: inline;
+	font-weight: bold;
+	letter-spacing: -0.04em;
+	border: 1px solid #ccc;
+	padding: 0;
+	background-color: #eee;
+	margin: 0;
+	cursor: pointer;
+}
+.SubmitNoWidth {
+	height: 32px !important; height: 30px;
+	font: 20px Arial;
+	display: inline;
+	font-weight: bold;
+	letter-spacing: -0.04em;
+	border: 1px solid #ccc;
+	padding: 0;
+	background-color: #eee;
+	margin: 0;
+	cursor: pointer;
+}
+.EditDescr {
+	font: 13px arial;
+	width: 220px;
+	letter-spacing: -0.02em;
+	text-align: left;
+	padding: 0;
+	margin: 0;
+	height: 150px;
+	width: 200px;
+
+}
+.BigSubmit {
+	width: 80px;
+	height: 32px !important; height: 30px;
+	float: left;
+	font: 20px Arial;
+	display: inline;
+	font-weight: bold;
+	letter-spacing: -0.04em;
+	border: 1px solid #ccc;
+	padding: 0;
+	background-color: #eee;
+	margin: 0;
+
+	cursor: pointer;
+}
+.VideoTitle {
+	clear: left;
+	font: 24px arial;
+	font-weight: bold;
+	letter-spacing: -0.06em;
+	padding:0;
+	padding-left: 6px;
+	text-align: left;
+	width: 250px;
+	margin:0;
+}
+.EditTitle {
+	font: 22px arial;
+	font-weight: bold;
+	letter-spacing: -0.06em;
+	padding:0;
+	text-align: left;
+	width: 350px;
+	margin:0;
+}
+#ContentContainer {
+	white-space: normal;
+}
+.MasterContainer {
+	width: 870px;
+    padding-left:10px;
+	clear: both;
+	/*white-space: nowrap;*/
+}
+
+.ContextBox {
+	font: 12px arial;
+	margin: 0px;
+	letter-spacing: -0.02em;
+	border: 2px dashed #D8D801;
+	background-color: #ffb;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 250px;
+}
+
+.ContextBoxTags {
+    font: 12px arial;
+    margin: 0px;
+    letter-spacing: 0.02em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 670px;
+    padding-left: 10px;
+}
+
+.ContextBoxBlue {
+	font: 12px arial;
+	margin: 0px;
+	letter-spacing: -0.02em;
+	border: 2px dashed #ccf;
+	background-color: #ddf;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 250px;
+}
+.ContextChoice {
+	text-decoration: none;
+	cursor: pointer;
+	color: 	#0056C0;
+}
+.ContextChoice:hover {
+	border-bottom: 1px dashed #0056C0;
+}
+.ContextChosen {
+	text-decoration: none;
+	cursor: pointer;
+	color: 	#0085FF;
+	font-weight: bold;
+}
+.ContextChosen:hover {
+	border-bottom: 1px dashed #0085FF;
+}
+.HeaderSeperator {
+	width: 100%;
+	clear: both;
+	border: 0;
+	border-bottom: 2px dashed #eee;
+}
+.ContentBoxLeft {
+	width: 153px;
+	height: 150px;
+	background: url(/images/gui/wf_content_bg.gif);
+	background-repeat: repeat-x;
+	background-color: #e7e7e7;
+	float: left;
+	border-left: 2px dashed #ddd;
+	border-right: 2px dashed #ddd;
+	text-align: center;
+	margin-top: 4px;
+	font: 11px arial;
+}
+.ContentBox {
+	width: 300px;
+	height: 150px;
+	background-repeat: repeat-x;
+	background-color: #e7e7e7;
+	float: left;
+	border-right: 2px dashed #ddd;
+	text-align: center;
+	margin-top: 4px;
+	font: 11px arial;
+}
+
+.ClearEm {
+	clear: both;
+}
+.SpaceEm {
+	height: 10px;
+	font-size: 10px;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	line-height: 10px;
+}
+.TextMessage {
+	float: left;
+	font: 32px arial;
+	font-weight: bold;
+	letter-spacing: -0.06em;
+	width: 582px !important; width: 590px;
+	text-align: left;
+	margin: 0px;
+	padding: 0px;
+	padding-left: 8px;
+	padding-top: 8px;
+	height: 140px;
+	line-height: 40px;
+	vertical-align: middle;
+}
+
+.CTAMessage {
+	margin: 0px;
+	float: left;
+	white-space: normal;
+	padding: 0;
+	background-color: #ddf;
+	border: 2px dashed #ccf;
+	text-align: center;
+	width: 250px;
+}
+.CTAHead {
+	padding: 4px 0 0 4px;
+	margin: 0;
+	font: 24px arial;
+	font-weight: bold;
+	letter-spacing: -0.06em;
+	text-align: left;
+}
+.CTABullet {
+	padding: 0 0 8px 0;
+	margin: 0;
+	font: 18px arial;
+	text-indent: 12px;
+	text-align: left;
+	letter-spacing: -0.04em;
+
+}
+.CTAContainer {
+	text-align: center;
+	margin: 0px;
+	align: center;
+}
+h3 {
+	font: 20px arial;
+	font-weight: bold;
+	letter-spacing: -0.04em;
+}
+h4 {
+	font: 14px arial;
+}
+li {
+	font: 14px arial;
+}
+.FunctionHead {
+	padding: 0;
+	margin: 0;
+	font: 24px arial;
+	font-weight: bold;
+	text-indent: 10px;
+	letter-spacing: -0.06em;
+}
+.FunctionLink {
+	text-decoration: none;
+	cursor: pointer;
+	color: 	#0056C0;
+}
+.FunctionLink:hover {
+	border-bottom: 2px dashed #0056C0;
+}
+.FunctionActive {
+	text-decoration: none;
+	cursor: pointer;
+	color: 	#0085FF;
+	font-weight: bold;
+}
+.FunctionActive:hover {
+	border-bottom: 2px dashed #0085FF;
+}
+.FunctionButtons {
+	padding: 0;
+	margin: 0;
+	font: 20px arial;
+	text-indent: 20px;
+	letter-spacing: -0.04em;
+}
+.ContentSeperator {
+	width: 572px;
+	clear: both;
+	background-color: #fff;
+	border: 0;
+	height: 2px;
+	line-height: 2px;
+	margin: 0 !important; margin: -7px 0 -7px 0;
+	padding: 0px;
+	border-bottom: 2px dashed #ddd;
+}
+.PrevVideo {
+	width: 120px;
+	height: 110px;
+	text-align: center;
+	float: left;
+}
+.NextVideo {
+	width: 120px;
+	height: 110px;
+	text-align: center;
+	float: right;
+}
+.VideoData {
+	margin: 0;
+	padding: 0;
+	padding-left: 6px;
+	padding-bottom: 6px;
+}
+.ContentLink {
+	color: #0056C0;
+	text-decoration: none;
+}
+.ContentLink:hover {
+	color: #0085FF;
+	border-bottom: 1px dashed #0085FF;
+}
+.UserLink {
+	color: #0056C0;
+	text-decoration: none;
+}
+.UserLink:hover {
+	color: #0085FF;
+	border-bottom: 1px dashed #0085FF;
+}
+.ThumbnailImage {
+	border: 2px dotted #ccc;
+}
+.ThumbnailImage:hover {
+	border: 2px dotted #fff;
+}
+.ThumbnailDetailImage {
+	width: 133px;
+	height: 100px;
+	vertical-align: bottom;
+	border: 2px dotted #ccc;
+	margin-top: 19px;
+}
+.ThumbnailDetailImage:hover {
+	border: 2px dotted #fff;
+}
+.ThumbnailSingleImage {
+	width: 133px;
+	height: 100px;
+	vertical-align: bottom;
+	border: 2px dotted #ccc;
+}
+.ThumbnailSingleImageThemes {
+	width: 133px;
+	height: 100px;
+	vertical-align: bottom;
+}
+
+.ThumbnailContainer {
+	float: left;
+	width: 345px;
+	height: 145px;
+	vertical-align: middle;
+	padding-left: 8px !important; padding-left: 3px;
+	padding-top: 4px;
+}
+.uThumbnailContainer {
+	float: left;
+	width: 160px;
+	height: 145px;
+	vertical-align: middle;
+	padding-left: 8px !important; padding-left: 3px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+.UserDetailArea {
+	font: 14px arial;
+	vertical-align: middle;
+}
+.ConversationContainer {
+	clear: both;
+}
+.CommentsContainer {
+	float: left;
+	width: 350px;
+	text-align: left;
+	overflow: hidden;
+}
+.TagsContainer {
+	float: left;
+	width: 200px;
+	text-align: left;
+	font: 14px arial;
+	overflow: hidden;
+}
+.ShareAreaOff {
+	display: none;
+	height: 40px;
+	width: 240px;
+	font: 12px Arial;
+}
+.ShowShare {
+	font: 12px Arial;
+	cursor: help;
+	color: #0056c0;
+	text-decoration: none;
+	border-bottom: 1px dotted;
+}
+.FormHead {
+	font: 30px Arial;
+	letter-spacing: -0.08em;
+	font-weight: bold;
+}
+.MailOn {
+	background-color: #fff;
+	border: 1px solid #bbb;
+	display: block;
+	height: 70px;
+	width: 240px;
+	overflow: hidden;
+	font: 12px Arial;
+}
+.Bloq {
+	display: block;
+}
+.ShareAreaOn {
+	background-color: #ddd;
+	border: 1px solid #bbb;
+	display: block;
+	height: 70px;
+	width: 240px;
+	overflow: hidden;
+	font: 12px Arial;
+}
+.VideoCredits {
+	float: left;
+	font: 13px arial;
+	width: 480px;
+	letter-spacing: -0.02em;
+	text-align: left;
+	padding: 0;
+	margin: 0;
+}
+.VideoPlayer {
+	clear: left;
+	float: left;
+	width: 330px;
+	height: 306px;
+	background-color: #e6e6e6;
+	border: 2px dashed #ccc;
+	padding: 0;
+	padding-right: 6px;
+	margin: 0;
+	text-align: center;
+	font: 12px Arial;
+}
+.TheAdPlayer {
+	clear: left;
+	float: left;
+	width: 480px;
+	height: 360px;
+	background-color: white;
+	padding-right: 6px;
+	margin: 0;
+	text-align: center;
+	font: 12px Arial;
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+}
+.ReportBox {
+	width: 210px;
+	background-color: #e6e6e6;
+	border: 2px dashed #ccc;
+	padding: 5px;
+	margin: 0;
+	font: 12px Arial;
+}
+.BigVideoPlayer {
+	clear: left;
+	width: 810px;
+	background-color: #e6e6e6;
+	border: 2px dashed #ccc;
+	padding: 0;
+	padding-right: 6px;
+	margin: 0;
+}
+.VideoObject {
+	width: 330px;
+	height: 286px;
+	background-color: #e6e6e6;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+.BigVideoObject {
+	width: 810px;
+	height: 666px;
+	background-color: #e6e6e6;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+.DetailsContainer {
+	float: left;
+	white-space: normal;
+}
+.FootLink {
+	font: 14px Arial;
+	color: #0056C0;
+	text-decoration: none;
+}
+.FootLink:hover {
+	color: #0085FF;
+	border-bottom: 1px dashed #0085FF;
+}
+.ContentDetailsBox {
+	width: 600px;
+	white-space: normal;
+	background: url(/images/gui/wf_content_bg.gif);
+	background-repeat: repeat-x;
+	background-color: #fff;
+	border-right: 2px dashed #ddd;
+	border-top: 2px dashed #ddd;
+	border-left: 2px dashed #ddd;
+	text-align: left;
+	height: 150px;
+	font: 11px arial;
+	overflow: hidden;
+}
+.HotDetailsBox {
+	width: 600px;
+	white-space: normal;
+	/*background: url(/images/gui/wf_content_bg.gif);
+	background-repeat: repeat-x;*/
+	background-color: #fff;
+	border-right: 2px dashed #ddd;
+	border-top: 2px dashed #ddd;
+	border-left: 2px dashed #ddd;
+	text-align: left;
+	height: 180px;
+	font: 11px arial;
+	overflow: hidden;
+}
+.HotDetailsHeader {
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	height: 5px;
+}
+.HotDetailsBoxThemes {
+	width: 600px;
+	white-space: normal;
+	/*background: url(/images/gui/wf_content_bg.gif);
+	background-repeat: repeat-x;*/
+	background-color: #EEE;
+	border-right: 2px dashed #ddd;
+	border-top: 2px dashed #ddd;
+	border-left: 2px dashed #ddd;
+	text-align: left;
+	font: 11px arial;
+	overflow: hidden;
+}
+.FeatureBox {
+	width: 600px;
+	/*background: url(../wf_content_bg.gif);*/
+	background-repeat: repeat-x;
+	background-color: #fff;
+	border-right: 2px dashed #ddd;
+	border-top: 2px dashed #ddd;
+	border-left: 2px dashed #ddd;
+	text-align: left;
+	font: 11px arial;
+	overflow: hidden;
+}
+.uContentDetailsBox {
+	width: 600px;
+	white-space: normal;
+	background: url(/images/gui/wf_content_bg.gif);
+	background-repeat: repeat-x;
+	background-color: #fff;
+	border-right: 2px dashed #ddd;
+	border-top: 2px dashed #ddd;
+	border-left: 2px dashed #ddd;
+	text-align: left;
+	height: 160px;
+	font: 11px arial;
+	overflow: hidden;
+}
+.uDetailedContentArea {
+	margin: 0;
+	padding: 0;
+	width: 400px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: normal;
+}
+.uContentTitle {
+	float: left;
+	width: 90px;
+	font: 14px arial;
+	font-weight: bold;
+	padding-bottom: 10px;
+}
+.uContentStuff {
+	float: left;
+	font: 14px arial;
+	width: 200px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-bottom: 10px;
+}
+.DetailedContentArea {
+	margin: 0;
+	padding: 0;
+	width: 215px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: normal;
+}
+.CopyBox {
+	clear: both;
+	font: 12px arial;
+	text-align: left;
+	padding-left: 6px;
+}
+.ContentArea {
+	margin: 0;
+	padding: 0;
+}
+.Button {
+	float: left;
+	width: 20%;
+	text-align: center;
+	height: 30px;
+	font: 24px arial;
+	color: #000;
+	padding-top: 2px;
+	letter-spacing: -0.07em;
+	background: url(/images/gui/wf_utabg.gif);
+	background-repeat: no-repeat;
+	background-position: center;
+	cursor: pointer;
+}
+.ActiveButton {
+	float: left;
+	width: 20%;
+	text-align: center;
+	height: 30px;
+	font: 24px arial;
+	font-weight: bold;
+	letter-spacing: -0.02em;
+	color: #fff;
+	padding-top: 1px;
+	background: url(/images/gui/wf_tabg.gif);
+	background-repeat: no-repeat;
+	background-position: center;
+	cursor: pointer;
+}
+.ButtonBar {
+	width: 100%;
+}
+/*=====================================*/
+.leftShoe {
+	float: left;
+	width: 100px;
+	height: 250px;
+}
+.centerShoe {
+	float: left;
+	width: 350px;
+	height: 250px;
+	background-color: black;
+	font: 14px arial;
+	font-weight: bold;
+	color: white;
+	background-repeat: no-repeat;
+	background-position: center center;
+	text-align: center;
+}
+#centeryText {
+	padding-top: 65px;
+	font: 24px arial;
+	font-weight: bold;
+	text-align: center;
+	letter-spacing: -0.04em;
+}
+.adDescr {
+	background: white;
+	color: black;
+	padding: 6px;
+	font: 14px arial;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+	width: 220px;
+	margin: 0px;
+	margin-left: 100px;
+	margin-top: 180px;
+	-moz-opacity: 0.75;
+	opacity: 0.75;
+}
+.rightShoe {
+	float: left;
+	width: 100px;
+	height: 250px;
+}
+.bottomShoe {
+	width: 550px;
+	float: left;
+}
+.smallThumb {
+	float:left;
+	width: 50px;
+	height: 50px;
+	cursor: pointer;
+}
+.RevenueBox {
+	margin: 0px;
+	clear: both;
+	white-space: normal;
+	padding: 0;
+	background-color: #ddf;
+	border: 2px dashed #ccf;
+	text-align: center;
+	width: 574px;
+}
+.AccountSubmit {
+	width: 80px;
+	height: 32px !important; height: 30px;
+	font: 20px Arial;
+	display: inline;
+	font-weight: bold;
+	letter-spacing: -0.04em;
+	border: 1px solid #ccc;
+	padding: 0;
+	background-color: #eee;
+	margin: 0;
+
+	cursor: pointer;
+}
+.AccountDetails {
+	border: 2px dashed #ddd;
+	background-color: #eee;
+	width: 574px;
+	white-space: normal;
+	display: none;
+}
+.AccountSummary {
+	border: 2px dashed #ddd;
+	background-color: #eee;
+	width: 574px;
+	white-space: normal;
+	padding: 5px;
+	text-align: left;
+}
+.AccountSummaryText {
+	font: 20px Arial;
+	letter-spacing: -0.04em;
+	width: 400px;
+	float: left;
+	text-align: left;
+	padding: 0;
+	padding-bottom: 8px;
+	padding-right: 8px;
+	margin: 0;
+}
+.AdPlayerText {
+	font: 12px Arial;
+	letter-spacing: -0.04em;
+	width: 150px;
+	float: left;
+	text-align: right;
+	padding: 0;
+	padding-bottom: 8px;
+	padding-right: 8px;
+	margin: 0;
+}.seeMore {
+	text-align: right;
+	vertical-align: top;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	color: #000099;
+	background-color: #FFFFFF;
+}
+a.seeMore:link {
+	text-decoration: none;
+}
+a.seeMore:hover {
+	border-bottom-style: dotted;
+}
+
+/* flash messages */
+.message {
+    width:300px;
+    font-size:14px;
+    border: solid 1px #c9b484;
+    border-top:0px;
+    padding:12px;
+    color:#000;
+    background-color:#fff9d9;
+    text-align:center;
+}
+
+#noticeMessage {
+    background-color:#fff9d9;
+}
+
+#errorMessage {
+    background-color:red;
+}

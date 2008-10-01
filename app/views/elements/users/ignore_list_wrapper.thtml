@@ -1,0 +1,9 @@
+<div class="sidecontainer highlight">
+	  <h4><?php ___('Ignore List'); ?></h4>
+      <?php 
+		printf(___('You have %s users on your ignore list', true), $ignore_count); 
+	  ?>
+	  <br/>
+	  <a href="<?php echo $html->url('/users/ignore_user/')?><?php echo $user_id; ?>"><?php ___('Edit My Ignore List'); ?></a>
+</div>
+	

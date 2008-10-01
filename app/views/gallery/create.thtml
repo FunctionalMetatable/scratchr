@@ -1,0 +1,14 @@
+<?php $head->register_jsblock("
+	function init() {
+//		document.getElementsByTagName('input')[0].focus();
+	}
+	window.onload = init;
+");
+?>
+<!-- |||||| Begin main content area ||||||| -->
+<div id="main">
+	<?php
+		echo $this->renderElement('gallery/create');
+	?>
+</div>
+<!-- ////// End main content ////// -->

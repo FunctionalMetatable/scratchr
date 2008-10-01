@@ -1,0 +1,3 @@
+<?php
+	echo $this->renderElement('admin/karma_rank.thtml', Array('rank'=>$rank));
+?>

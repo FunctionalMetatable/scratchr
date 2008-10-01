@@ -1,0 +1,35 @@
+<div id='ajax_pagination'>
+<div class="fullcontent">
+	<div class="top_header">
+		<h5> Comment List </h5>
+	</div>
+	<div id="comment_list_menu" class="standard_menu">
+		<?php if ($option == "projects") { ?>
+		<a href="<?php echo $html->url('/users/comment_list/')?><?php echo $user_id?>/projects" ><span class="button2_selected"><?php ___('project comments')?></span></a>
+				
+			<?php
+			} 
+			else 
+			{
+			?>
+			<a href="<?php echo $html->url('/users/comment_list/')?><?php echo $user_id?>/projects" ><span class="button2"><?php ___('project comments')?></span></a>
+				
+			<?php
+			}
+			if ($option == "galleries") {?>
+			
+				<a href='<?php echo $html->url('/users/comment_list/')?><?php echo $user_id?>/galleries'><span class='button2_selected'><?php ___('gallery comments')?> </span></a>
+			<?php
+			} else {?>
+				<a href='<?php echo $html->url('/users/comment_list/')?><?php echo $user_id?>/galleries'><span class='button2'><?php ___('gallery comments')?> </span></a>
+			<?php
+			}
+		?>
+	</div>
+	<div id="comment_list_results">
+			<?php
+				echo $this->renderElement('users/comment_list', Array('data' => $final_comments, 'option' => $option));
+			?>
+	</div>
+</div>
+</div>

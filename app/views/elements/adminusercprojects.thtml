@@ -1,0 +1,46 @@
+<?php			
+	$pagination->setPaging($paging);
+	echo $this->renderElement('pagination'); 
+	
+	foreach ($data as $project):
+		$project_name = $project['Project']['name'];
+		$project_loves = $project['Project']['loveit'];
+		$project_flags = $project['Project']['flagit'];
+		$project_created = $project['Project']['created'];
+		$project_modified = $project['Project']['modified'];
+		$project_favorites = $project['Project']['num_favoriters'];
+		$project_creator = $project['User']['username'];
+		$project_views = $project['Project']['views'];
+		$project_id = $project['Project']['id'];
+		$project_url = "http://scratch.mit.edu/projects/$project_creator/$project_id";
+	
+		echo "<div class='gallerythumb clearme'>\n";
+    	echo "\t<div class='admin_leftcolumn'>\n";
+		?>
+    		<span>Name: <a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></span><br />
+			
+    		<?php
+			echo "\t\t<span>Loves:";
+    		echo "$project_loves"; echo "</span><br/>\n";
+    		echo "\t\t<span>Flags:";
+    		echo "$project_flags"; echo "</span><br/>\n";
+    		echo "\t\t<span>Favorites:";
+    		echo "$project_favorites"; echo "</span>\n";
+    	echo "\t</div>";
+    	echo "\t<div class='admin_rightcolumn'>\n";
+    	    echo "\t\t<span>Creator:";
+    	    echo " $project_creator" ; 
+    	    echo "\t\t</span><br/>\n";
+    		echo "\t\t<span> Creation Date: ";
+    		echo "$project_created"; 
+    		echo "\t\t</span><br/>\n";
+    		echo "\t\t<span> Last Modified: ";
+    		echo "$project_modified"; echo "</span>\n";
+    		echo "\t\t<span><br/>\n";
+			?>
+    		<a href="<?php echo $html->url('/administration/viewproject/'.$project_id)?>">View Details</a>
+    		<?php
+			echo "\t</div>\n";
+	echo "</div>\n";
+	endforeach;	
+?>

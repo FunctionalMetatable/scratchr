@@ -1,0 +1,97 @@
+  <div id="header" class="clearme">
+    <div id="logo">
+<?php
+if(isset($ishomepage) && $ishomepage) {
+?>
+      <h1><a href="<?php echo $html->url('/holidaylogos')?>"><?php ___('Scratch')?></a></h1>
+	  
+<?php
+} else {
+?>
+         <h1><a href="<?php echo $html->url('/')?>"><?php ___('Scratch')?></a></h1>
+		
+<?php
+}
+?>
+      <h2><?php ___('imagine'); ?> &bull; <?php ___('program'); ?> &bull; <?php ___('share'); ?></h2>
+    </div>
+<!-- |||||| Begin main menu ||||||| -->
+    <ul id="nav" class="clearme">
+	
+
+      <li id="langselect">
+        <select name="lang" onchange="location = this.options[this.selectedIndex].value;">
+          <option><?php ___('Language'); ?></option>
+          <option value="/lang/de-de">Deutsch</option>
+          <option value="/lang/en-us">English</option>	
+          <option value="/lang/es-es">Español</option>
+          <option value="/lang/fr-fr">Français</option>
+		  <option value="/lang/ita">Italiano</option>
+		  <option value="/lang/kor">한국어</option>
+		  <option value="/lang/pol">Polski </option>
+		  <option value="/lang/pt-br">Português-Br</option>
+		  <option value="/lang/ru">Русский</option>
+		  <option value="/lang/tur">Türkçe</option>
+		  <option value="/lang/zh-tw">漢字</option>
+        </select>
+        </select>
+      </li>
+	
+		
+      <li <?php if ($active_tab == "home"):?> id="active" <?php endif;?>><a href="<?php echo $html->url('/')?>"><?php ___('home'); ?></a></li>
+      <li <?php if ($active_tab == "projects"):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'channel','action'=>'recent'))?>"><?php ___('projects'); ?></a></li>
+      <li <?php if ($active_tab == "galleries"):?> id="active" <?php endif;?>><a href="<?php echo $html->url('/galleries/')?>"><?php ___('galleries'); ?></a></li>
+      <li <?php if ($this_controller_here === "http://scratch.wik.is/Support/"):?> id="active" <?php endif;?>><a href="http://scratch.wik.is/Support/"><?php ___('support'); ?></a></li>
+      
+	  <?php if (!$isBanned): ?>
+			<li <?php if ($this_controller_here === "/forums"):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'forums'))?>"><?php ___('forums'); ?></a></li>
+	  <?php endif; ?>
+      <li <?php if ($this_controller_here === "/about"):?> id="active" <?php endif;?>><a href="<?php echo $html->url('/about')?>"><?php ___('about'); ?></a></li>
+      <li <?php if ($this_controller_here === "/users/".$loggedInUrlname):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'users','action'=>'view'))?><?php echo '/'?><?php e($loggedInUrlname)?>"><?php ___('my stuff');?></a></li>
+    </ul>
+<!-- ////// End main menu ////// -->
+    <div id="userbar"><?php ___('Welcome,'); ?> <strong><a href="<?php echo $html->url('/users/')?><?php e($loggedInUrlname)?>"><?php
+	if(isset($loggedInUrlname{14})){
+		e(substr($loggedInUrlname, 0, 11)."...");
+	}
+	else{ e($loggedInUrlname); } ?></a></strong> | <a href="<?php echo $html->url('/logout')?>"><?php ___('Logout'); ?></a></div>
+
+    <div id="searchbar">
+<!-- Google CSE Search Box Begins  -->
+<form action="http://sharandeep.scratchr.org/pages/results" id="cse-search-box">
+  <div>
+    <input type="hidden" name="cx" value="010101365770046705949:gg_q9cry0mq" />
+    <input type="hidden" name="cof" value="FORID:11" />
+    <input type="text" name="q" size="20" />
+    <input type="hidden" name="safe" value="active" />
+    <input type="submit" class="search" name="sa" value=<?php ___('search'); ?> />
+  </div>
+</form>
+<!-- Google CSE Search Box Ends -->
+   </div>
+
+<?php //if(!$isBanned): ?>
+<!--<div style="float:left;">
+<div id="notificationcontainer" style="display:<?php if($notify_count) echo 'block'; else echo 'none'; ?>;">-->
+<?php 
+	/*if($this->controller->countNotifications()==1) 
+	{
+		printf(___('You have %s message', true), '<a href="/notifications"><b id="notificationscount">' . $notify_count); echo "</b> </a>"; } 
+	else {
+		printf(___('You have %s messages', true), '<a href="/notifications"><b id="notificationscount">' . $notify_count); echo "</b> </a>"; 
+	}*/ 
+?>
+
+<!--</div>
+</div>
+--><? //endif; ?>
+
+<?php
+	if($isAnnouncementOn) {
+		echo "<div id='announcement'>";
+		e($announcement);
+		echo "</div>";
+	}
+?>
+
+</div>

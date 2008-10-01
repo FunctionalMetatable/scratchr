@@ -1,0 +1,8 @@
+<div class="sidecontainer highlight">
+	  <h4><?php ___('Comment List'); ?></h4>
+      <?php 
+		printf(___('You have %s comments', true), $comment_count); 
+	  ?>
+	  <br/>
+	  <a href="<?php echo $html->url('/users/comment_list/')?><?php echo $user_id; ?>/<?php echo $option ?>"><?php ___('View Comment List'); ?></a>
+</div>

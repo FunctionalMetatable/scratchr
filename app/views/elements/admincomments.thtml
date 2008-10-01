@@ -1,0 +1,65 @@
+<?php
+	$pagination->setPaging($paging);
+	$prev = $pagination->prevPage("Prev",false, null, "prevlink");
+	$next = $pagination->nextPage("Next",false, null, "nextlink");
+	$pages = $pagination->pageNumbers(" ", null, "", "");
+	
+	echo "<div>\n";
+	echo "         <span>"; echo "$prev  $pages  $next"; echo "</span>\n";
+	echo "</div>\n";
+			
+	foreach ($data as $comment):
+		$comment_id = $comment['Pcomment']['id'];
+		$comment_created = $comment['Pcomment']['timestamp'];
+		$comment_content = $comment['Pcomment']['content'];
+		$comment_project = $comment['Project']['name'];
+		$comment_creator = $comment['User']['username'];
+		$comment_visibility = $comment['Pcomment']['visibility'];
+		$comment_url = $comment['Pcomment']['urlname'];
+		$project_id = $comment['Project']['id'];
+		$project_creator = "Andres";
+		$project_url = "/projects/view/$comment_url/$project_id";
+		$creator_url = "/users/view/$comment_creator";
+		if ($comment_visibility) {
+			$status = "Normal";
+		} else {
+			$status = "Deleted";
+		}
+	
+	echo "<div class='gallerythumb clearme'>\n";
+    	echo "\t<div class='admin_leftcolumn'>\n";
+    		echo "\t\t<span>Project: <a href='";
+    		e ($project_url);
+    		echo "'> $comment_project "; echo "</a></span><br/>\n";
+    		echo "\t\t<span>Creator:";
+			?>
+    		<a href="<?php echo $html->url($creator_url)?>"><?php $comment_creator?></a>
+			
+			<?php
+    		echo "</span><br/>\n";
+    		echo "\t\t<span>Created:";
+    		echo " $comment_created"; echo "</span><br/>\n";
+    	echo "\t</div>";
+    	echo "\t<div class='admin_rightcolumn'>\n";
+    	    echo "\t\t<span>Content:";
+    	    echo " $comment_content" ; 
+    	    echo "\t\t</span><br/>\n";
+    	     echo "\t\t<span>Status:";
+    	    echo " $status" ; 
+    	    echo "\t\t</span><br/>\n";
+    	    if ($comment_visibility) {
+			?>
+    	    	<a href="<?php echo $html->url('/administration/cdeletecomment/'.$comment_id)?>/<?php echo $option?>">Delete</a>
+				
+    			<?php
+				echo "\t</div>\n";
+    		} else {
+			?>
+    			<a href="<?php echo $html->url('/administration/cundeletecomment/'.$comment_id)?>/<?php echo $option?>">Restore</a>
+				
+    		<?php	
+				echo "\t</div>\n";
+    		}
+	echo "</div>\n";
+	endforeach;	
+?>

@@ -1,0 +1,94 @@
+<div id="ajax_pagination">
+<div class="fullcontent">
+   <div class="top_header"><h3><?php printf(___('Galleries Tagged with "%s"', true), $tag_name); ?></h3></div>
+   <div id="gallery_menu">
+	Sort By - <?php
+		if ($option == "projects") {
+		?>
+			<a href="<?php echo $html->url('/tags/view_galleries/'.$tag_name)?>/projects"><span class="button2_selected"><?php ___('size')?></span></a>
+			
+		
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/tags/view_galleries/'.$tag_name)?>/projects"><span class="button2"><?php ___('size')?></span></a>
+			
+		<?php
+		}
+		
+		if ($option == "changed") {
+		?>
+			<a href="<?php echo $html->url('/tags/view_galleries/'.$tag_name)?>/changed"><span class="button2_selected"><?php ___('creation date')?></span></a>
+			
+		
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/tags/view_galleries/'.$tag_name)?>/changed"><span class="button2"><?php ___('creation date')?></span></a>
+			
+		<?php
+		}
+		
+		if ($option == "title") {
+		?>
+			<a href="<?php echo $html->url('/tags/view_galleries/'.$tag_name)?>/title"><span class="button2_selected"><?php ___('title')?></span></a>
+			
+		
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/tags/view_galleries/'.$tag_name)?>/title"><span class="button2"><?php ___('title')?></span></a>
+			
+		<?php
+		}
+	
+	?>
+   </div>
+	<?php 
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination'); 
+	?>
+	<?php
+		foreach ($tag_galleries as $tag_gallery) {
+			$theme = $tag_gallery['Gallery'];
+			$theme_name = $theme['name'];
+			$theme_id = $theme['id'];
+			$theme_totalProjects = $theme['total_projects'];
+			$theme_icon_src = $theme['icon_src'];
+			$theme_url = "/galleries/view/$theme_id";
+			$theme_desc = $theme['description'];
+			$creation_date = $theme['timestamp'];
+			$actual_creation_date = friendlyDate($creation_date);
+			$ignored = $theme['ignored'];
+			$expand = false;
+			if (strlen($theme_desc) >= 300) {
+				$theme_desc = substr($theme_desc,0,300) . " ... ";
+				$expand = true;
+			}
+			
+			if (!$ignored) {
+			?>
+				<div id=$theme_id class="gallerythumb clearme">
+					<a href="<?php echo $html->url($theme_url)?>"><?php echo $html->image($theme_icon_src,array('title'=>$theme_name,'alt'=>$theme_name,'width'=>'148','height'=>'111'))?></a>
+					<h3><a href="<?php echo $html->url($theme_url)?>"><?php echo "$theme_name";?></a></h3>
+					<p><strong><?php ___('Created')?></strong>: <?php echo $actual_creation_date?></p>
+					<p><strong><?php ___('Description')?></strong>: <?php echo $theme_desc?>
+				
+					<?php
+					if ($expand) {
+							e($ajax->link(___("show more", true), '#', 
+								array("url"=>"/tags/expandGalleryDescription/$theme_id",
+								"update"=>"$theme_id"), NULL, false));
+						}
+					echo "</p>\n";
+					echo "<p> <strong>"; ___('Number of Projects'); echo ": </strong>$theme_totalProjects</p>\n";
+				echo "</div>\n";
+			} else {
+				echo "<div id='$theme_id' class='gallerythumb clearme'>";
+					echo "<h4> Gallery not displayed. Posted by a muted account. </h4>";
+				echo "</div>\n";
+			}
+		}
+	?>
+</div>
+</div>

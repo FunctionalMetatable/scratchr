@@ -1,0 +1,94 @@
+
+  <div id="header" class="clearme">
+    <div id="logo">
+<?php
+if(isset($ishomepage) && $ishomepage) {
+?>
+      <h1><a href="<?php echo $html->url('/holidaylogos')?>"><?php ___('Scratch')?></a></h1>
+	  
+<?php
+} else {
+?>
+         <h1><a href="<?php echo $html->url('/')?>"><?php ___('Scratch')?></a></h1>
+		
+<?php
+}
+?>
+
+      <h2><?php ___('imagine'); ?> &bull; <?php ___('program'); ?> &bull; <?php ___('share'); ?></h2>
+    </div>
+<!-- |||||| Begin main menu ||||||| -->
+    <ul id="nav" class="clearme">
+	<li><a href="#main" class="hidden"><?php ___('Skip Navigation'); ?> </a></li>
+
+
+      <li id="langselect">
+        <select name="lang" onchange="location = this.options[this.selectedIndex].value;">
+          <option><?php ___('Language'); ?></option>
+          <option value="/lang/de-de">Deutsch</option>
+          <option value="/lang/en-us">English</option>	
+          <option value="/lang/es-es">Español</option>
+          <option value="/lang/fr-fr">Français</option>
+		  <option value="/lang/ita">Italiano</option>
+		  <option value="/lang/kor">한국어</option>
+		  <option value="/lang/pol">Polski </option>
+		  <option value="/lang/pt-br">Português-Br</option>
+		  <option value="/lang/ru">Русский</option>
+		  <option value="/lang/tur">Türkçe</option>
+		  <option value="/lang/zh-tw">漢字</option>
+        </select>
+      </li>
+	
+	 
+      <li <?php if ($active_tab == "home"):?> id="active" <?php endif;?>>
+	  
+	  <a href=<?php echo $html->url('/')?>><?php ___('home'); ?></a>
+	  </li>
+      <li <?php if ($active_tab == "projects"):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'channel','action'=>'recent'))?>"><?php ___('projects'); ?></a></li>
+      <li <?php if ($active_tab == "galleries"):?> id="active" <?php endif;?>><a href="<?php echo $html->url('/galleries/')?>"><?php ___('galleries'); ?></a></li>
+      <li <?php if ($this_controller_here === "http://scratch.wik.is/Support/"):?> id="active" <?php endif;?>><a href="http://scratch.wik.is/Support/"><?php ___('support'); ?></a></li>
+	 <?php if (!$isBanned): ?>
+		<li <?php if ($this_controller_here === "/forums"):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'forums'))?>"><?php ___('forums'); ?></a></li>
+	  <?php endif; ?>
+	  <li <?php if ($this_controller_here === "/about"):?> id="active" <?php endif;?>><a href="<?php echo $html->url('/about')?>"><?php ___('about'); ?></a></li>
+      <li <?php if ($this_controller_here === "/login"):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'users','action'=>'login'))?>"><?php ___('my stuff'); ?></a></li>
+    </ul>
+<!-- ////// End main menu ////// -->
+	
+     <div id="userbar"><?php printf(___('%sLogin%s or %sSignup%s for an account', true), '<a href="/login" onclick="return(showLogin())">', '</a>', '<a href="/signup">', '</a>'); ?></div>
+	
+    <div id="searchbar">
+<!-- Google CSE Search Box Begins  -->
+<form action="http://sharandeep.scratchr.org/pages/results" id="cse-search-box">
+  <div>
+    <input type="hidden" name="cx" value="010101365770046705949:gg_q9cry0mq" />
+    <input type="hidden" name="cof" value="FORID:11" />
+    <input type="text" name="q" size="20" />
+    <input type="hidden" name="safe" value="active" />
+    <input type="submit" class="search" name="sa" value="<?php ___('search'); ?> "/>
+  </div>
+</form>
+<!-- Google CSE Search Box Ends -->
+</div>
+	
+<div style="float:left;">
+<div id="logincontainer" style="display:none;">
+
+	<form  name="logs" action="<?php echo $html->url(array('controller'=>'users','action'=>'login'))?>" method="POST" accept-charset="UTF-8">
+	<?php ___('username'); ?>:<input id="UserInput" type="text" name="User" value="" size="12">
+	<?php ___('password'); ?>:<input type="password" name="Pass" value="" size="12">
+	<input type="hidden" name="refer" value="<?php echo str_replace("%2F", "/", urlencode($_SERVER['REQUEST_URI'])); ?>">
+	<input type="submit" class="button" value="<?php ___('log in'); ?>">
+	</form>
+	</div>
+	</div>
+	
+<?php
+	if($isAnnouncementOn) {
+		echo "<div id='announcement'>";
+		e($announcement);
+		echo "</div>";
+	}
+?>
+</div>
+  

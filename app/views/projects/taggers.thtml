@@ -1,0 +1,30 @@
+<div class="fullcontent">
+  
+    <h2><?php e(count($tags))?> <?php ___('taggers'); ?></h2>
+
+	<table cellspacing="10">
+	<?php // todo: really need to create helper class for stuff like this
+	$count = 1; 
+	$length = count($tags);
+	foreach ($tags as $tag):
+		$user = $tag['User'];
+		$urlname = $user['urlname'];
+		$username = $user['username'];
+		$user_ref = "/users/".$urlname;
+		$buddyicon = getBuddyIconBySize($user['id'],'med', $content_status);
+		if ($count%5 == 1) 
+			echo "<tr>";?>	
+		
+		<td align="center">
+		<a href="<?php echo $html->url($user_ref)?>">
+		<?php echo $html->image($buddyicon,array('alt'=>$username,'width'=>'90','height'=>'90'))?>
+		<br>
+		<h5><?php e($username)?></h5></a>
+		</td>
+		
+		<?php if ($count%5 == 0 || $count == $length) echo "</tr>";
+			$count = $count + 1;
+			endforeach; ?>
+	</table>
+</div>
+

@@ -1,0 +1,3 @@
+<?php
+	echo $this->renderElement('gallery/reply_list', Array('comments' => $comments, 'comment_level' => $comment_level, 'gallery_id' => $gallery_id));
+?>

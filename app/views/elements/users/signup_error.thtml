@@ -1,0 +1,69 @@
+<?php
+	if ($mode == "name") {
+		if (isset($errors['name_length'])) {
+			echo "<div id='signup_error_name' class='signup_error'>\n";
+				echo $errors['name_length'];
+			echo "</div>\n";
+		} elseif (isset($errors['name_taken'])) {
+			echo "<div id='signup_error_name' class='signup_error'>\n";
+				echo $errors['name_taken'];
+			echo "</div>\n";
+		} elseif (isset($errors['name_invalid'])) {
+			echo "<div id='signup_error_name' class='signup_error'>\n";
+				echo $errors['name_invalid'];
+			echo "</div>\n";
+		} elseif (isset($errors['name_characters'])) {
+			echo "<div id='signup_error_name' class='signup_error'>\n";
+				echo $errors['name_characters'];
+			echo "</div>\n";
+		}
+	}
+	
+	if ($mode == "password") {
+		if (isset($errors['password_length'])) {
+			echo "<div id='signup_error_password' class='signup_error'>\n";
+				echo $errors['password_length'];
+			echo "</div>\n";
+		}
+	}
+	
+	if ($mode == "confirmation") {
+		if (isset($errors['password_confirmation'])) {
+			echo "<div id='signup_error_confirmation' class='signup_error'>\n";
+				echo $errors['password_confirmation'];
+			echo "</div>\n";
+		}
+	}
+	
+	if ($mode == "email") {
+		if (isset($errors['email_invalid'])) {
+			echo "<div id='signup_error_email' class='signup_error'>\n";
+				echo $errors['email_invalid'];
+			echo "</div>\n";
+		}
+	}
+	
+	if ($mode == "birthdate") {
+		if (isset($errors['birthdate_invalid'])) {
+			echo "<div id='signup_error_birthdate' class='signup_error'>\n";
+				echo $errors['birthdate_invalid'];
+			echo "</div>\n";
+		}
+	}
+	
+	if ($mode == "gender") {
+		if (isset($errors['gender_empty'])) {
+			echo "<div id='signup_error_gender' class='signup_error'>\n";
+				echo $errors['gender_empty'];
+			echo "</div>\n";
+		}
+	}
+	
+	if ($mode == "country") {
+		if (isset($errors['country_empty'])) {
+			echo "<div id='signup_error_country' class='signup_error'>\n";
+				echo $errors['country_empty'];
+			echo "</div>\n";
+		}
+	}
+?>

@@ -1,0 +1,19 @@
+<?php if ($option == "projects"): ?>
+		<div class="mystuff_header">
+		<h3><?php if ($isMe) ___("My Projects"); else {printf(___("%s's Projects", true), $user['username']);} ?></h3>
+		</div>
+	<? endif; ?>
+	<?php if ($option == "favorites"): ?>
+		<div class="mystuff_header">
+		<h3><?php if ($isMe) ___("My Favorites"); else {printf(___("%s's Favorites", true), $user['username']);} ?></h3>
+		</div>
+	<? endif; ?>
+	<?php
+		if ($option == "projects") {
+			e($this->renderElement('user_projects', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $data)));
+		}
+		if ($option == "favorites") {
+		
+			e($this->renderElement('user_favorites', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $data)));
+		}
+?>

@@ -1,0 +1,13 @@
+/*----------------Gallery------------------*/
+
+/**-------Loading-------**/
+#loadingDiv {
+	display: none;
+}
+#loadingImage {
+	
+}
+/**------GalleryPage-----**/
+.selected_gallery_sortoption {
+	font-weight: bold;
+}

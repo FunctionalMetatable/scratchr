@@ -1,0 +1,38 @@
+<div class="pagination">
+	<?php 
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination');
+	?>
+</div>
+	
+<div id="gallery_view_projects">
+	<?php
+	foreach ($gallery_projects as $project):
+		$pid = $project['Project']['id'];
+		$urlname = $project['Project']['User']['urlname'];
+		$owner_url = "/users/view/".$urlname;
+		$owner_username = htmlspecialchars($project['Project']['User']['username']);
+		$project_name = htmlspecialchars($project['Project']['name']);
+		$project_id = $project['Project']['id'];
+		$project_url = "/projects/view/$urlname/$pid";
+		$thumbnail_src = getThumbnailImg($urlname, $pid);
+		if ($session_username == $owner_username) {
+		$isProjectOwner = true;
+	} else {
+		$isProjectOwner = false;
+	}
+	if (strlen($project_name) >= 15) {
+		$project_name = substr($project_name,0,13) . " ...";
+	}
+	?>
+	<div class="thumb">
+	<a href="<?php echo $html->url(project_url)?>"><?php echo $html->image($thumbnail_src,array('alt'=>$project_name,'width'=>'148','148'=>'111'))?></a>
+	  
+	  <h6><a href="<?php echo $html->url($project_url)?>"><?php e($project_name)?></a></h6>
+	  <p><?php ___('by'); ?><a href="<?php echo $html->url($owner_url)?>"> <?php e($owner_username)?></a>
+	  <?php if ($isThemeOwner || $isProjectOwner || $isAdmin): ?>
+	 	| <a href="<?php echo $html->url('/galleries/removeproject/')?><?php e($theme_id) ?>/<?php e($project_id)?>">[x]</a></p>
+	  <?php endif; ?>
+	</div>
+	<?php endforeach; ?>
+</div>

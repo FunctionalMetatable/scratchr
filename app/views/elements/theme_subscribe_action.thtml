@@ -1,0 +1,10 @@
+<form method="post" action="">
+<input type="hidden" value="<?php e($theme_id)?>" name="theme-id"/>
+<?php 
+if ($isThemeMember) {
+	echo $ajax->submit(___('unsubscribe', true), array("class"=>"button", "url"=>"/galleries/"."unsubscribe", "update"=>"subscribeAction", "condition"=>"checkLogin()")); 
+} else {
+	echo $ajax->submit(___('subscribe', true), array("class"=>"button", "url"=>"/galleries/"."subscribe", "update"=>"subscribeAction", "condition"=>"checkLogin()")); 
+}
+?>
+</form>

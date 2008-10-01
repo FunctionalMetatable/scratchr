@@ -1,0 +1,48 @@
+<div class="fullcontent">
+	<h2><?php ___('Remove your projects from'); ?> <a href="<?php echo $html->url('/galleries/view/')?><?php e($gallery_id)?>"><?php e($gallery_name)?></a></h2>
+	<h5><?php ___('Click on a project to remove it!'); ?></h5>
+</div>
+<div class="fullcontent">
+	<?php
+	$pagination->setPaging($paging);
+	$prev = $pagination->prevPage(___("Prev", true),false, null, "prevlink");
+	$next = $pagination->nextPage(___("Next", true),false, null, "nextlink");
+	$pages = $pagination->pageNumbers(" ", null, "", "");
+	echo "<div>\n";
+	echo "<div class='admin_pagination'>\n";
+		echo "<div>\n";
+		echo "         <span class='pagination'>"; echo "$prev  $pages  $next"; echo "</span>\n";
+		echo "</div>\n";
+	echo "</div>\n";
+	echo "<br\>\n";
+	
+	echo "<div>\n";
+	foreach ($data as $project):
+	$pid = $project['Project']['id'];
+	$urlname = $user_url;
+	$owner_url = "/users/".$urlname;
+	$owner_username = $user_name;
+	$project_name = htmlspecialchars($project['Project']['name']);
+	$project_id = $project['Project']['id'];
+	$project_url = "/projects/view/$urlname/$pid";
+	$thumbnail_src = getThumbnailImg($urlname, $pid);
+	if (strlen($project_name) >= 15) {
+		$project_name = substr($project_name,0,13) . " ...";
+	}
+	?>
+	<div class="addtogalleryitem"> 
+	  <a href="<?php echo $html->url('/galleries/removemyproject/')?><?php e($gallery_id)?>/<?php e($pid)?>">
+	  <?php echo $html->image($thumbnail_src,array('alt'=>$project_name,'width'=>'148','height'=>'111')) ?>
+	  </a>
+	  <h6><a href="<?php echo $html->url('/galleries/removemyproject/')?><?php e($gallery_id)?>/<?php e($pid)?>"><?php e($project_name)?></a></h6>
+	</div>
+	<?php endforeach; ?>
+	</div>
+	<?php if (empty($data)):?>
+		<div class="addtogalleryitem">
+			<p>
+			<h5> <?php ___('You have no projects in'); ?> <?php echo($gallery_name);?>! </h5>
+			</p>
+		</div>
+	<?php endif; ?>
+</div>

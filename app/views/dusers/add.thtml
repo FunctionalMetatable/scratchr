@@ -1,0 +1,219 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title><?php ___('Scratch Download Form'); ?></title>
+<?php echo $html->css('global')?>
+
+<!-- |||||| IE- only stylesheet in conditional comment ||||||| -->
+<!--[if IE]>
+<link href="/css/global_ie.css" rel="stylesheet" type="text/css">
+<![endif]-->
+</head>
+<body>
+<!-- |||||| Begin main container ||||||| -->
+<div id="container">
+<!-- |||||| Begin header ||||||| -->
+<div id="header" class="clearme">
+<div id="logo">
+<h1><a href="http://scratch.mit.edu/">Scratch</a></h1>
+</div>
+</div>
+<!-- ////// End header ////// -->
+<!-- |||||| Begin content area ||||||| -->
+<div class="fullcontent">
+<h2><?php ___('Download Scratch'); ?></h2>
+<p><?php ('The Lifelong Kindergarten Group at the MIT Media Lab is happy to make <a href="http://scratch.mit.edu/">Scratch</a> available as a free download. It is currently available for Mac OSX and Windows, with a Linux version coming soon (see <a href="http://scratch.mit.edu/forums/viewtopic.php?id=286">system requirements</a>).'); ?></p>
+<p><?php ___('Fill out the optional form below to get updates about Scratch. To get to the download page, click the button at the bottom of the form.'); ?></p>
+      <br>
+      <form action ="<?php echo $html->url('/dusers/add')?>" method="post"  >
+</p>
+<table cellspacing="0" cellpadding="4" width="610">
+                    <tbody>
+                          <tr bgcolor="#e0e0e0">
+                            <td width="258">
+                                <?php ___('E-mail Address:'); ?></td>
+                          <td width="334">
+				<input name="data[Duser][email]"  type="text" value="" id="DuserEmail" /> 
+                <?php ___('Skip if under  age  13'); ?></td>
+                        </tr>
+  <tr>
+                            <td>
+                                <?php ___('School or Organization'); ?>:&nbsp;</td>
+
+                            <td>
+				<input name="data[Duser][organization]"  type="text" value="" id="DuserOrganization" /> 
+                                &nbsp;&nbsp;
+                            </td>
+                      </tr>
+
+                 <tr bgcolor="#e0e0e0">
+
+                            <td>
+                                <?php ___('City'); ?>:&nbsp;</td>
+                            <td>
+				<input name="data[Duser][city]"  type="text" value="" id="DuserCity" /> 
+                                &nbsp;&nbsp;
+                            </td>
+                      </tr>
+                        <tr>
+
+                            <td>
+                                <?php ___('State/Province'); ?>:</td>
+                            <td>
+				<input name="data[Duser][state]"  type="text" value="" id="DuserState" /> 
+                <!--
+                                <select name="data[Duser][state]" id="DuserState">
+                                    <option value="" selected="selected"></option>
+                                    <option value="AL">Alabama</option>
+                                    <option value="AK">Alaska</option>
+
+                                    <option value="AZ">Arizona</option>
+                                    <option value="AR">Arkansas</option>
+                                    <option value="CA">California</option>
+                                    <option value="CO">Colorado</option>
+                                    <option value="CT">Connecticut</option>
+                                    <option value="DE">Delaware</option>
+
+                                    <option value="DC">D.C.</option>
+                                    <option value="FL">Florida</option>
+                                    <option value="GA">Georgia</option>
+                                    <option value="HI">Hawaii</option>
+                                    <option value="ID">Idaho</option>
+                                    <option value="IL">Illinois</option>
+
+                                    <option value="IN">Indiana</option>
+                                    <option value="IA">Iowa</option>
+                                    <option value="KS">Kansas</option>
+                                    <option value="KY">Kentucky</option>
+                                    <option value="LA">Louisiana</option>
+                                    <option value="ME">Maine</option>
+
+                                    <option value="MD">Maryland</option>
+                                    <option value="MA">Massachusetts</option>
+                                    <option value="MI">Michigan</option>
+                                    <option value="MN">Minnesota</option>
+                                    <option value="MS">Mississippi</option>
+                                    <option value="MO">Missouri</option>
+
+                                    <option value="MT">Montana</option>
+                                    <option value="NE">Nebraska</option>
+                                    <option value="NV">Nevada</option>
+                                    <option value="NH">New Hampshire</option>
+                                    <option value="NJ">New Jersey</option>
+                                    <option value="NM">New Mexico</option>
+
+                                    <option value="NY">New York</option>
+                                    <option value="NC">North Carolina</option>
+                                    <option value="ND">North Dakota</option>
+                                    <option value="OH">Ohio</option>
+                                    <option value="OK">Oklahoma</option>
+                                    <option value="OR">Oregon</option>
+
+                                    <option value="PA">Pennsylvania</option>
+                                    <option value="RI">Rhode Island</option>
+                                    <option value="SC">South Carolina</option>
+                                    <option value="SD">South Dakota</option>
+                                    <option value="TN">Tennessee</option>
+                                    <option value="TX">Texas</option>
+
+                                    <option value="UT">Utah</option>
+                                    <option value="VT">Vermont</option>
+                                    <option value="VA">Virginia</option>
+                                    <option value="WA">Washington</option>
+                                    <option value="WV">West Virginia</option>
+                                    <option value="WI">Wisconsin</option>
+
+                                    <option value="WY">Wyoming</option>
+                                </select>
+                                //!--->
+                          </td>
+                        </tr>
+                        <tr bgcolor="#e0e0e0">
+                            <td>
+                                <?php ___('Country'); ?>:</td>
+                            <td>
+                                <select name="data[Duser][country]" id="DuserCountry">
+<?php
+/* we replaced the former list with the endless options tags because it was hard to localize it. 
+Instead we used the same array as in the signup.thtml file (download form) and added a sort function and a foreach-loop to generate 
+the combobox-entries. */
+ $countries = array(""=>"", "Afghanistan"=>___("Afghanistan", true),  "Albania"=>___("Albania", true),  "Algeria"=>___("Algeria", true),  "American Samoa"=>___("American Samoa", true),  "Andorra"=>___("Andorra", true),    "Angola"=>___("Angola", true),  "Anguilla"=>___("Anguilla", true),  "Antarctica"=>___("Antarctica", true),  "Antigua and Barbuda"=>___("Antigua and Barbuda", true),  "Argentina"=>___("Argentina", true),  "Armenia"=>___("Armenia", true),  "Aruba"=>___("Aruba", true),  "Australia"=>___("Australia", true),  "Austria"=>___("Austria", true),    "Azerbaijan"=>___("Azerbaijan", true),  "Bahamas"=>___("Bahamas", true),  "Bahrain"=>___("Bahrain", true),  "Bangladesh"=>___("Bangladesh", true),  "Barbados"=>___("Barbados", true),  "Belarus"=>___("Belarus", true),  "Belgium"=>___("Belgium", true),  "Belize"=>___("Belize", true),  "Benin"=>___("Benin", true),    "Bermuda"=>___("Bermuda", true),  "Bhutan"=>___("Bhutan", true),  "Bolivia"=>___("Bolivia", true),  "Bosnia and Herzegovina"=>___("Bosnia and Herzegovina", true),  "Botswana"=>___("Botswana", true),  "Bouvet Island"=>___("Bouvet Island", true),  "Brazil"=>___("Brazil", true),  "British Indian Ocean Territory"=>___("British Indian Ocean Territory", true),  "Brunei Darussalam"=>___("Brunei Darussalam", true),    "Bulgaria"=>___("Bulgaria", true),  "Burkina Faso"=>___("Burkina Faso", true),  "Burundi"=>___("Burundi", true),  "Cambodia"=>___("Cambodia", true),  "Cameroon"=>___("Cameroon", true),  "Canada"=>___("Canada", true),  "Cape Verde"=>___("Cape Verde", true),  "Cayman Islands"=>___("Cayman Islands", true),  "Central African Republic"=>___("Central African Republic", true),    "Chad"=>___("Chad", true),  "Chile"=>___("Chile", true),  "China"=>___("China", true),  "Christmas Island"=>___("Christmas Island", true),  "Cocos (Keeling) Islands"=>___("Cocos (Keeling) Islands", true),  "Colombia"=>___("Colombia", true),  "Comoros"=>___("Comoros", true),  "Congo"=>___("Congo", true),  "Congo, Dem. Rep. of The"=>___("Congo, Dem. Rep. of The", true),    "Cook Islands"=>___("Cook Islands", true),  "Costa Rica"=>___("Costa Rica", true),  "Cote D'ivoire"=>___("Cote D'ivoire", true),  "Croatia"=>___("Croatia", true),  "Cuba"=>___("Cuba", true),  "Cyprus"=>___("Cyprus", true),  "Czech Republic"=>___("Czech Republic", true),  "Denmark"=>___("Denmark", true),  "Djibouti"=>___("Djibouti", true),    "Dominica"=>___("Dominica", true),  "Dominican Republic"=>___("Dominican Republic", true),  "Ecuador"=>___("Ecuador", true),  "Egypt"=>___("Egypt", true),  "El Salvador"=>___("El Salvador", true),  "Equatorial Guinea"=>___("Equatorial Guinea", true),  "Eritrea"=>___("Eritrea", true),  "Estonia"=>___("Estonia", true),  "Ethiopia"=>___("Ethiopia", true),    "Falkland Islands (Malvinas)"=>___("Falkland Islands (Malvinas)", true),  "Faroe Islands"=>___("Faroe Islands", true),  "Fiji"=>___("Fiji", true),  "Finland"=>___("Finland", true),  "France"=>___("France", true),  "French Guiana"=>___("French Guiana", true),  "French Polynesia"=>___("French Polynesia", true),  "French Southern Territories"=>___("French Southern Territories", true),  "Gabon"=>___("Gabon", true),    "Gambia"=>___("Gambia", true),  "Georgia"=>___("Georgia", true),  "Germany"=>___("Germany", true),  "Ghana"=>___("Ghana", true),  "Gibraltar"=>___("Gibraltar", true),  "Greece"=>___("Greece", true),  "Greenland"=>___("Greenland", true),  "Grenada"=>___("Grenada", true),  "Guadeloupe"=>___("Guadeloupe", true),    "Guam"=>___("Guam", true),  "Guatemala"=>___("Guatemala", true),  "Guinea"=>___("Guinea", true),  "Guinea-bissau"=>___("Guinea-bissau", true),  "Guyana"=>___("Guyana", true),  "Haiti"=>___("Haiti", true),  "Holy See (Vatican City State)"=>___("Holy See (Vatican City State)", true),  "Honduras"=>___("Honduras", true),    "Hong Kong"=>___("Hong Kong", true),  "Hungary"=>___("Hungary", true),  "Iceland"=>___("Iceland", true),  "India"=>___("India", true),  "Indonesia"=>___("Indonesia", true),  "Iran, Islamic Republic of"=>___("Iran, Islamic Republic of", true),  "Iraq"=>___("Iraq", true),  "Ireland"=>___("Ireland", true),  "Israel"=>___("Israel", true),    "Italy"=>___("Italy", true),  "Jamaica"=>___("Jamaica", true),  "Japan"=>___("Japan", true),  "Jordan"=>___("Jordan", true),  "Kazakhstan"=>___("Kazakhstan", true),  "Kenya"=>___("Kenya", true),  "Kiribati"=>___("Kiribati", true),  "Korea, Dem. People's Rep."=>___("Korea, Dem. People's Rep.", true),  "Korea, Republic of"=>___("Korea, Republic of", true),    "Kuwait"=>___("Kuwait", true),  "Kyrgyzstan"=>___("Kyrgyzstan", true),  "Laos"=>___("Laos", true),  "Latvia"=>___("Latvia", true),  "Lebanon"=>___("Lebanon", true),  "Lesotho"=>___("Lesotho", true),  "Liberia"=>___("Liberia", true),  "Libyan Arab Jamahiriya"=>___("Libyan Arab Jamahiriya", true),  "Liechtenstein"=>___("Liechtenstein", true),    "Lithuania"=>___("Lithuania", true),  "Luxembourg"=>___("Luxembourg", true),  "Macao"=>___("Macao", true),  "Macedonia"=>___("Macedonia", true),  "Madagascar"=>___("Madagascar", true),  "Malawi"=>___("Malawi", true),  "Malaysia"=>___("Malaysia", true),  "Maldives"=>___("Maldives", true),  "Mali"=>___("Mali", true),    "Malta"=>___("Malta", true),  "Marshall Islands"=>___("Marshall Islands", true),  "Martinique"=>___("Martinique", true),  "Mauritania"=>___("Mauritania", true),  "Mauritius"=>___("Mauritius", true),  "Mayotte"=>___("Mayotte", true),  "Mexico"=>___("Mexico", true),  "Micronesia, Federated States of"=>___("Micronesia, Federated States of", true),  "Moldova, Republic of"=>___("Moldova, Repubc of", true),    "Monaco"=>___("Monaco", true),  "Mongolia"=>___("Mongolia", true),  "Montserrat"=>___("Montserrat", true),  "Morocco"=>___("Morocco", true),  "Mozambique"=>___("Mozambique", true),  "Myanmar"=>___("Myanmar", true),  "Namibia"=>___("Namibia", true),  "Nauru"=>___("Nauru", true),  "Nepal"=>___("Nepal", true),    "Netherlands"=>___("Netherlands", true),  "Netherlands Antilles"=>___("Netherlands Antilles", true),  "New Caledonia"=>___("New Caledonia", true),  "New Zealand"=>___("New Zealand", true),  "Nicaragua"=>___("Nicaragua", true),  "Niger"=>___("Niger", true),  "Nigeria"=>___("Nigeria", true),  "Niue"=>___("Niue", true),  "Norfolk Island"=>___("Norfolk Island", true),    "Northern Mariana Islands"=>___("Northern Mariana Islands", true),  "Norway"=>___("Norway", true),  "Oman"=>___("Oman", true),  "Pakistan"=>___("Pakistan", true),  "Palau"=>___("Palau", true),  "Palestine"=>___("Palestine", true),  "Panama"=>___("Panama", true),  "Papua New Guinea"=>___("Papua New Guinea", true),  "Paraguay"=>___("Paraguay", true),    "Peru"=>___("Peru", true),  "Philippines"=>___("Philippines", true),  "Pitcairn"=>___("Pitcairn", true),  "Poland"=>___("Poland", true),  "Portugal"=>___("Portugal", true),  "Puerto Rico"=>___("Puerto Rico", true),  "Qatar"=>___("Qatar", true),  "Reunion"=>___("Reunion", true),  "Romania"=>___("Romania", true),    "Russian Federation"=>___("Russian Federation", true),  "Rwanda"=>___("Rwanda", true),  "Saint Helena"=>___("Saint Helena", true),  "Saint Kitts and Nevis"=>___("Saint Kitts and Nevis", true),  "Saint Lucia"=>___("Saint Lucia", true),  "Saint Pierre and Miquelon"=>___("Saint Pierre and Miquelon", true),  "St. Vincent"=>___("St. Vincent", true),  "Samoa"=>___("Samoa", true),  "San Marino"=>___("San Marino", true),    "Sao Tome and Principe"=>___("Sao Tome and Principe", true),  "Saudi Arabia"=>___("Saudi Arabia", true),  "Senegal"=>___("Senegal", true),  "Serbia and Montenegro"=>___("Serbia and Montenegro", true),  "Seychelles"=>___("Seychelles", true),  "Sierra Leone"=>___("Sierra Leone", true),  "Singapore"=>___("Singapore", true),  "Slovakia"=>___("Slovakia", true),  "Slovenia"=>___("Slovenia", true),    "Solomon Islands"=>___("Solomon Islands", true),  "Somalia"=>___("Somalia", true),  "South Africa"=>___("South Africa", true),  "Spain"=>___("Spain", true),  "Sri Lanka"=>___("Sri Lanka", true),  "Sudan"=>___("Sudan", true),  "Suriname"=>___("Suriname", true),  "Svalbard and Jan Mayen"=>___("Svalbard and Jan Mayen", true),    "Swaziland"=>___("Swaziland", true),  "Sweden"=>___("Sweden", true),  "Switzerland"=>___("Switzerland", true),  "Syrian Arab Republic"=>___("Syrian Arab Republic", true),  "Taiwan"=>___("Taiwan", true),  "Tajikistan"=>___("Tajikistan", true),  "Tanzania, United Republic of"=>___("Tanzania, United Republic of", true),  "Thailand"=>___("Thailand", true),  "Timor-leste"=>___("Timor-leste", true),    "Togo"=>___("Togo", true),  "Tokelau"=>___("Tokelau", true),  "Tonga"=>___("Tonga", true),  "Trinidad and Tobago"=>___("Trinidad and Tobago", true),  "Tunisia"=>___("Tunisia", true),  "Turkey"=>___("Turkey", true),  "Turkmenistan"=>___("Turkmenistan", true),  "Turks and Caicos Islands"=>___("Turks and Caicos Islands", true),  "Tuvalu"=>___("Tuvalu", true),    "Uganda"=>___("Uganda", true),  "Ukraine"=>___("Ukraine", true),  "United Arab Emirates"=>___("United Arab Emirates", true),  "United Kingdom"=>___("United Kingdom", true),  "United States"=>___("United States", true),  "US Minor"=>___("US Minor", true),  "Uruguay"=>___("Uruguay", true),  "Uzbekistan"=>___("Uzbekistan", true),  "Vanuatu"=>___("Vanuatu", true),    "Venezuela"=>___("Venezuela", true),  "Viet Nam"=>___("Viet Nam", true),  "Virgin Islands, British"=>___("Virgin Islands, British", true),  "Virgin Islands, U.S."=>___("Virgin Islands, U.S.", true),  "Wallis and Futuna"=>___("Wallis and Futuna", true),  "Western Sahara"=>___("Western Sahara", true),  "Yemen"=>___("Yemen", true),  "Zambia"=>___("Zambia", true),  "Zimbabwe"=>___("Zimbabwe", true));
+asort($countries);
+ foreach ($countries as $key => $value) {
+ echo "<option value=\"" . $key . "\">" . $value . "</option>\n";
+}
+?> </select></td>
+
+                        </tr>
+
+                        <tr>
+                            <td valign="top">
+                                <?php ___('Role'); ?>:</td>
+                            <td>
+				
+				<input type="hidden" name="data[Duser][role-student]"  value="0" id="DuserRole-student" /><input type="checkbox" 
+name="data[Duser][role-student]" value="1" id="DuserRole-student" /> <?php ___('Student'); ?> <br />
+				<input type="hidden" name="data[Duser][role-educator]"  value="0" id="DuserRole-educator" /><input type="checkbox" 
+name="data[Duser][role-educator]" value="1" id="DuserRole-educator" /> <?php ___('Educator'); ?> <br /> 
+				<input type="hidden" name="data[Duser][role-parent]"  value="0" id="DuserRole-parent" /><input type="checkbox" 
+name="data[Duser][role-parent]" value="1" id="DuserRole-parent" /> <?php ___('Parent'); ?> <br />
+				<input type="hidden" name="data[Duser][role-researcher]"  value="0" id="DuserRole-researcher" /><input type="checkbox" 
+name="data[Duser][role-researcher]" value="1" id="DuserRole-researcher" /> <?php ___('Researcher'); ?> <br />
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php ___('Other'); ?>:
+				<input name="data[Duser][role]"  type="text" value="" id="DuserRole" /> 
+                            </td>
+
+                        </tr>
+                       
+
+                        <tr bgcolor="#e0e0e0">
+                            <td><?php ___('Where did you hear about Scratch?'); ?></td>
+
+                            <td>
+				<textarea name="data[Duser][hearabout]"  rows="3" cols="38" id="DuserHearabout"></textarea>                            
+</td>
+                        </tr>
+						
+			
+			<tr>
+                            <td><?php ___('What interests you about Scratch?'); ?></td>
+
+                            <td>
+				<textarea name="data[Duser][interestsabout]"  rows="3" cols="38" id="DuserInterestsabout"></textarea>                            
+</td>
+                      </tr>
+						
+			
+			<tr bgcolor="#e0e0e0">
+                            <td><?php ___('Anything else you want to share about your background or related experience?'); ?></td>
+
+                            <td>
+				<textarea name="data[Duser][comment]"  rows="3" cols="38" id="DuserComment"></textarea>                            
+</td>
+                      </tr>
+                        <tr>
+                            <td>
+                                
+                            </td>
+                            <td><BR>
+                                <div align="right"><div id="button">
+                              <input type="submit" name="button" value="<?php ___('Continue to Scratch download'); ?>" /></div>
+                                  
+                          </div></td> 
+                        </tr>
+                    </tbody>
+
+    </table>
+	</form>
+
+</div>
+<?php ___('If you are having difficulties with this form, please go directly to'); ?> <a href="<?php echo $html->url('/pages/download')?>"><?php ___('Scratch download'); ?></a><BR>
+<?php ___('Please send questions to us at:'); ?> <a 
+href="mailto:scratch-feedback&#64;media.mit.edu">scratch-feedback&#64;media.mit.edu</a>.
+<!-- ////// End Content area ////// -->
+
+</div>
+</body>
+</html>
+

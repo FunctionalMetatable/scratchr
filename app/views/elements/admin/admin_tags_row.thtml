@@ -1,0 +1,36 @@
+<?php
+	$tag_name = $tag['Tag']['name'];
+	$tag_id = $tag['Tag']['id'];
+	$admin_tag_id = $tag['AdminTag']['id'];
+	$admin_name = $tag['User']['username'];
+?>
+<div class='gallerythumb clearme'>
+	<div class='admin_leftcolumn'>
+		<span><?php e($tag_name); ?></span>
+	</div>
+	<div class='admin_rightcolumn'>
+		<span>Added By: <?php e($admin_name); ?></span>
+		<br/>
+		<span>
+			<?php
+				if ($mode == "active") {
+					$inactive_link = "/administration/set_admin_tag_status/inactive/$admin_tag_id";
+					echo $ajax->link(___("Make Inactive", true), '#', 
+						array("url"=>$inactive_link, "update"=>"admin_tags_list"), NULL, false);
+				} else {
+					$active_link = "/administration/set_admin_tag_status/active/$admin_tag_id";
+					echo $ajax->link(___("Make Active", true), '#', 
+						array("url"=>$active_link, "update"=>"admin_tags_list"), NULL, false);
+				}
+			?>
+		</span>
+		|
+		<span>
+			<?php
+				$remove_link = "/administration/remove_admin_tag/$mode/$admin_tag_id";
+				echo $ajax->link(___("Remove", true), '#', 
+					array("url"=>$remove_link, "update"=>"admin_tags_list"), NULL, false);
+			?>
+		</span>
+	</div>
+</div>

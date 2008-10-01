@@ -1,0 +1,13 @@
+#header {
+	width: auto; /*needed to keep IE from throwing a horizontal scrollbar in the page */
+}
+#ajax_notification {
+     position: absolute;
+     z-index: 100;
+     overflow: hidden;
+}
+html, body {
+     height:100%;
+     overflow: hidden;
+     width:auto;
+}

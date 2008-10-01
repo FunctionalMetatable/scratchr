@@ -1,0 +1,5 @@
+<div id="ban_user_wrapper">
+	<?php
+		echo $this->renderElement('admin/ban_user_content');
+	?>
+</div>

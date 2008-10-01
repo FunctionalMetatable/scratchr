@@ -1,0 +1,94 @@
+<?php 
+$head->register_cssblock("
+.module {
+	border: 1px solid;
+	border-color:#EEE #E6E6E6 #E6E6E6 #EEE;
+	background-color:#FEFEFE;
+	margin-bottom:10px;
+	clear:both;	
+	color:#656565;
+}
+.mod_title {
+	font-size:1.2em;
+	font-weight:bold;
+	text-decoration:none;
+	color: #AAA;
+	padding:5px;
+	border-top: 1px solid #C9D9F5;
+	margin:0 0 3px 0;
+	background-color:#F6F6F6;
+}
+.mod_content {
+	padding: 3px;	
+	margin-bottom:3px;
+}
+img.bordered {
+	padding:2px;
+	border:1px solid #BBB;
+}		
+div.module {
+	text-align:center;
+	font-size:0.9em;
+	margin:0.2em 0;
+	clear:both;
+}
+
+div#users-module td {
+	text-align:center;
+	padding:2px;
+	font-size:0.8em;
+	vertical-align:bottom;
+}
+
+div#users-module {
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom:5px;
+}
+
+div#users-module td {
+width:80px;
+}
+");
+?>
+
+
+<?php
+$pagination->setPaging($paging);
+$prev = $pagination->prevPage(___("Prev", true),false);
+$prev = $prev?$prev:"Prev";
+$next = $pagination->nextPage(___("Next", true),false);
+$next = $next?$next:___("Next", true);
+$results = $pagination->result(___("Showing", true) . " ");
+?>
+
+<div class="module" id='users-module'>
+  <div id="pagination"><table class="showingTable" style="width:870px;"><tr><td class="smallText" style="text-align:left;"><?php e($results)?></td><td align="right"	class="smallText"><?php echo $prev ." | ". $next?></td></tr></table></div>	
+
+  <div class="mod_title"><?php e(count($bookmarkers))?> <?php ___('bookmarkers'); ?></div>
+  <div class="mod_content">
+	<table class="users">
+	<?php //TODO: really need to create helper class for stuff like this
+	$count = 1; 
+	$length = count($bookmarkers);
+	foreach ($bookmarkers as $user):
+	$user = $user['User'];
+	$user_urlname = $user['urlname'];
+	$user_ref = "/users/".$user_urlname;
+	$buddyicon = getBuddyIconBySize($user['id'], 'mini', $content_status);
+	if ($count%3 == 1) echo "<tr>";?>	
+		<td><a href="<?php echo $html->url($user_ref)?>">
+		<?php echo $html->image($buddyicon,array('alt'=>'user photo','class'=>'bordered','width'=>'45','height'=>'55'))?>
+	<br><?php e($user_urlname)?></a></td>
+	<?php
+		if ($count%3 == 0 || $count == $length)
+			echo "</tr>";
+		$count = $count + 1;
+		endforeach;
+	?>
+	</table>
+  </div>
+
+  <div id="pagination"><table class="showingTable" style="width:870px;"><tr><td class="smallText" style="text-align:left;"><?php e($results)?></td><td align="right" class="smallText"><?php echo $prev ." | ". $next?></td></tr></table></div>	
+</div>
+

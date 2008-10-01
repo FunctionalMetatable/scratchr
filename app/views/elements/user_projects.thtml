@@ -1,0 +1,57 @@
+<div class="mystuff_content">
+<?php if ($isMe && count($data) < 1 ): ?>
+	<div class="mystuff_header"><h3>
+	<?php ___('Learn')?>&nbsp;<a href="<?php echo $html->url('/pages/share')?>"><?php ___('how to share your projects')?></a>!
+	
+	</h3></div>
+<?php elseif(count($data) > 0):?>
+		<div class="pagination_container">
+			<?php 
+				$pagination->setPaging($paging);
+				echo $this->renderElement('pagination'); 
+			?>
+		</div>
+		<?php if ($isMe || $isAdmin): ?>
+			<div class="mystuff_project_action">
+			<form id="deleteProjects" action="<?php echo $html->url('/projects/deleteprojects')?>" method="post">
+				<input type="hidden" name="UID" value="<?php e($user['id'])?>">
+				<input type="submit" class="button" <?php echo 'onclick="if (confirm(' . "'" . ___('Are you sure you want to delete the project(s)?', true) . "'" . ')) return true; return false;"'; ?> value="<?php ___('delete selected projects'); ?>">
+			</form>
+			</div>
+		<?php endif;?>
+		<div class="mystuff_project_action">
+		<a href="<?php echo $html->url($feed_link) ?>" title="Subscribe to my feed">
+		<?php echo $html->image('/img/feed-icon.gif')?>
+			 <?php ___('Subscribe'); ?>
+		</a>
+		</div>
+		<div class="mystuff_projects">
+		<?php foreach($data as $project): ?>
+			<?php
+				$pid = $project['Project']['id'];
+				$project_name = htmlspecialchars($project['Project']['name']);
+				$project_thumbnail = getThumbnailImg($urlname, $pid, 'mini', true);
+				$project_url = "/projects/".$urlname."/".$pid;
+				$project_owner_url = "/users/".$urlname;
+				$project_totalComments = $project['Project']['totalComments'];
+				if (strlen($project_name) >= 17) {
+					$project_name = substr($project_name,0,17) . "&#0133;";
+			}
+			?>
+
+		<div class="mystuff_thumb"> 
+		<a href="<?php echo $html->url($project_url)?>">
+		<?php echo $html->image($project_thumbnail,array('title'=>htmlspecialchars($project['Project']['name']),'alt'=>htmlspecialchars($project['Project']['name']),'width'=>'148','height'=>'111'))?>
+		</a>
+		
+		<h6><a href="<?php $html->url($project_url)?>"><?php e($project_name)?></a></h6>
+		<p><?php ___('Comments'); ?>: <?php e($project_totalComments)?></p>
+
+		<?php if ($isMe || $isAdmin):?>
+			<input type="checkbox" onclick="toggleActive(<?php e($pid)?>, 'deleteProjects'); toggleProjectSelection(<?php e($pid)?>);"/>
+		<?php endif;?>
+		</div>
+		<?php endforeach; ?>
+		</div>
+<?php endif;?>
+</div>

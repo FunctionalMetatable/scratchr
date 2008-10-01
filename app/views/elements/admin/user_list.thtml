@@ -1,0 +1,28 @@
+<div>
+<?php		
+	foreach ($data as $ip) {
+		$user = $ip['User'];
+		$user_id = $user['User']['id'];
+		$user_name = $user['User']['username'];
+		$direct_address = "/users/view/$user_name";
+		$details_address = "/administration/viewuser/$user_id";
+		
+		echo "<div class='gallerythumb clearme'>\n";
+		echo "\t<div class='admin_leftcolumn'>\n";
+		?>
+		<span><a href="<?php echo $html->url($direct_address)?>">$user_name</a></span>
+		<?php
+		
+		echo "\t</div>";
+		echo "\t<div class='admin_rightcolumn'>\n";
+		echo "<span>";
+		?> 
+		<a href="<?php echo $html->url($details_address)?>">View Details</a>
+		
+		<?php
+		echo "</span>\n";
+    	echo "\t</div>\n";
+		echo "</div>\n";
+	}
+?>
+</div>

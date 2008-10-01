@@ -1,0 +1,35 @@
+<div class="fullcontent">
+	<h2><?php printf(___('Where do you want to add %s?', true), '<a href="/projects/$user_name/$project_id">$project_name</a>'); ?></h2>
+	<h5><?php ___('Click on the gallery where you want to add this project'); ?></h5>
+</div>
+<div class="fullcontent">
+	<?php
+		$pagination->setPaging($paging);
+		$prev = $pagination->prevPage(___("Prev", true),false, null, "prevlink");
+		$next = $pagination->nextPage(___("Next", true),false, null, "nextlink");
+		$pages = $pagination->pageNumbers(" ", null, "", "");
+		echo "<div>\n";
+		echo "<div class='admin_pagination'>\n";
+			echo "<div>\n";
+			echo "         <span class='pagination'>"; echo "$prev  $pages  $next"; echo "</span>\n";
+			echo "</div>\n";
+		echo "</div>\n";
+		
+		foreach ($data as $gallery):
+		$gallery = $gallery['Gallery'];
+		$gallery_name = $gallery['name'];
+		$gallery_id = $gallery['id'];
+		$gallery_totalProjects = $gallery['total_projects'];
+		$gallery_icon_src = getThemeIcon($gallery_id);
+		$gallery_url = "/galleries/view/$gallery_id";
+		$gallery_desc = $gallery['description'];
+	?>
+	<div class="addtogalleryitem"> 
+		<a href="<?php echo $html->url('/galleries/addproject/')?><?php e($gallery_id)?>/<?php e($project_id)?>">
+		<?php echo $html->image($gallery_icon_src,array('title'=>$gallery['name'],'alt'=>$gallery['name'],'width'=>'148','height'=>'111'))?>
+		</a>
+		<h3><a href="<?php echo $html->url($gallery_url)?>"><?php e($gallery_name)?> </a></h3>
+		<p> <strong><?php ___('Number of Projects'); ?>: </strong><?php e($gallery_totalProjects);?></p>
+	</div>
+	<?php endforeach; ?>
+</div>

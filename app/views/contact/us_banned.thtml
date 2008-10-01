@@ -1,0 +1,56 @@
+<div class="fullcontent">
+<h3>
+
+<?php 
+___("The Scratch Team decided to block the account or the IP address you are using.");
+?><h3>
+
+<p>
+<?php
+	if($isBanned){
+		e("Reasons: $ban_reason"); 
+	}
+?>
+</p>
+
+<h3>
+<?php
+___('Contact Us if you have any questions');
+?></h3>
+
+<?php if (isset($succes)){ ?>
+	 <p>
+	  <?php echo $html->image('/img/contact_thanks.png')?>
+	 </p> 
+<?php }else{?>
+	 <form method="post" enctype="multipart/form-data" action="<?php echo $html->url('/contact/us/')?>">
+
+<?php if (isset($error)){?> 
+	  <p><h2><?php echo($error) ?></h2></p>
+	  <p><?php ___('Not working for you? scratch-feedback@media.mit.edu'); ?></p>
+<?}?>
+
+<div id="main">
+<p>
+	<?php ___('Name'); ?>:	 <input type="text" name="data[Page][name]" size="25" /> 
+</p>
+<p>
+	<?php ___('Email'); ?>:	 <input type="text" name="data[Page][email]" size="25" />
+</p>
+
+<p>
+	<?php ___('Subject'); ?>:	  <input type="text" name="data[Page][subject]" size="25" />
+</p>
+
+<p>
+   <?php ___('Message'); ?>:<br /><textarea name="data[Page][message]" cols="40" rows="10"></textarea>
+</p>
+<p >
+<input type="submit" value="<?php ___('Send email')?>" />
+   
+</p>
+</form>
+</div>
+<?php }?>
+</div>
+<!--- End Content --->

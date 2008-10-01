@@ -1,0 +1,82 @@
+<?php
+    // TODO: global config contant for rating count in /app/bootstrap
+    // note the var $rating is used in two different context, one as the
+    // current project rating returned when the project is viewd, the other
+    // as the user provided rating for the project
+    
+    // note: corresponding defs. also found in /js/ratings.js
+    // currently, you'd have to change both to affect display correctly
+    // define("MAX_STAR_COUNT",5);
+    // define("MSG_RATING_HEADER","Project Rating");
+    // efine("MSG_RATING_SUBMIT","Thanks for rating");
+    // define("MSG_RATING_REQUEST", "Rate this project");
+
+    $isAjax = $this->controller->RequestHandler->isAjax();
+    $star_count = $rating;
+
+    if ($already_voted || ($isLoggedIn && $isAjax)) {
+
+        e("<div id=\"ratingMessage\" class=\"label\">");
+        if ($already_voted)
+            ___("Project Rating");
+        else
+            ___("Thanks for rating");
+        e("</div>\n");
+        e("<nobr>");
+        for ($index=1; $index <= $star_count; $index++)
+            e($html->image("img/star.gif", array("class"=>"rating")));
+        $no_fill_count = 5 - $star_count;
+        for ($index=1; $index <= $no_fill_count; $index++)
+            e($html->image("img/star_bg.gif", array("class"=>"rating")));
+        e("</nobr>\n");
+        e("<div class=\"rating\">$raters_count "); ___('ratings'); e("</div>");
+        if ($already_voted)
+            e("<div class=\"rating\">");  ___('You have already rated this project'); e("</div>");
+
+    } else {
+
+        e("<div id=\"ratingMessage\" class=\"label\">"); ___('Rate this project'); e("</div>\n");
+
+        e($ajax->form("/projects/$urlname/$pid/rate", "post",
+            array("update"=>"ratingDiv",
+                "style"=>"display:none;",
+                "name"=>"ratingForm",
+            )));
+        e($html->hidden("Vote/project_id", array("value"=>$pid)));
+        e($html->hidden("Vote/user_id", array("value"=>$current_user_id)));
+        e($html->hidden("Vote/rating", array("value" => "", "id"=>"rating")));
+        e("<input type=\"hidden\" name=\"raters_count\" value=\"$raters_count\"/>");
+        e($html->submit("rate", array("name"=>"rating_submit","id"=>"ratingSubmit")));
+        e("\n</form>\n");
+        
+        e($javascript->codeBlock("
+            ratingComponent = new UTRating('ratingDiv', 5, 'ratingComponent','ratingForm', 'ratingMessage', '', 'L');
+            ratingComponent.starCount=$star_count;
+            functionList.push(function() { ratingComponent.drawStars($star_count, true); });
+        "));
+        e("<div>");
+        e("<nobr>");
+
+        for ($index = 1; $index <= 5; $index++) {
+            e("<a style=\"padding:none; margin:none; decoration:none; border:none\" href=\"#\" onclick=\"if (checkLogin()) { ratingComponent.scratchrSetStars($index); document.getElementById('ratingSubmit').click();} return false;\"
+                onmouseover=\"ratingComponent.showStars($index);\"
+                onmouseout=\"ratingComponent.clearStars();\">
+                <img src=\"img/star_bg.gif\" id=\"star__$index\" class=\"rating\"
+                    style=\"border: 0px none ;\">
+                </a>");
+           
+            // links don't seem to do what i'd like them to do when using helpers
+            /* e($ajax->link($html->image("img/star_bg.gif",
+                array("id"=>"star__$index", "class"=>"rating", "style"=>"border: 0px")),
+                    "#",
+                array("onclick"=>"if (checkLogin());ratingComponent.setStars($index);",
+                    "onmouseover"=>"ratingComponent.showStars($index);",
+                    "onmouseout"=>"ratingComponent.clearStars();"),
+                null, false));
+            */
+        }
+
+        e("<div class=\"rating\">$raters_count ratings</div>");
+        e("</div>");
+    }
+?>

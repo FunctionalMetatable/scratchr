@@ -1,0 +1,11 @@
+<?php 
+		if ($isAnnouncementOn) {
+			echo "(" . $ajax->link("announcements are currently being shown", '#', 
+					array("url"=>"/administration/set_announcement_visibility/0", "update"=>"announcement_toggle"), 
+					NULL, false) . ")";
+		} else {
+			echo "(" . $ajax->link("announcements are currently hidden", '#', 
+					array("url"=>"/administration/set_announcement_visibility/1", "update"=>"announcement_toggle"), 
+					NULL, false) . ")";
+		}
+?>

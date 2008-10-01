@@ -1,0 +1,28 @@
+<?php if (count($myThemes) == 0):?>
+
+	Join a new gallery
+
+<?php else:?>
+
+	<form name="theme_select" method="post" action="<?php echo $html->url("/galleries/submitprojects/".$pid) ?>">
+	<table border=0 cellspacing=0 cellpadding=0 style="width:12ex">
+	<tr><td>
+	<font size=-1>
+	<div style="overflow-y:scroll; overflow-X:hidden;">
+	
+		<?php foreach($myThemes as $theme):?>
+			<input type="checkbox" name="<?php e($theme['id'])?>">
+			<img width="75px" height="75px" src="<?php e(getThemeIcon($theme['id']))?>"/>
+			<?php e($theme['name']) ?>
+			<br>
+		<?php endforeach;?>
+	
+	<div>
+	<input type="submit" class="button" value="Submit">
+	</font>
+	</td>
+	</tr>
+	</table>
+	</form>
+
+<?php endif;?>

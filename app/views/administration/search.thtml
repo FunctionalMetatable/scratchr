@@ -1,0 +1,30 @@
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	</div>
+	<div id="admin_project_content">	
+	<form id="admin_search" action="<?=e("/administration/execute_search/$option")?>" method="post">
+		<p><h3>Admin Search: </h3> <textarea id='admin_search_textarea' name="admin_search_textarea" cols="60" rows="2"></textarea></p>
+		<?php 
+			$params = array('option' => $option);
+			e($this->renderElement('admin/admin_column_options', $params));
+		?>
+		<br>
+		</br>
+		<?php 
+			e($ajax->submit('Search', array('id' => 'admin_search_submit', 
+			'class'=>'button', 'url' => "/administration/execute_search/$option", 
+			'update' => 'admin_search_results',
+			"loading" => "document.getElementById('admin_search_textarea').disabled = true;", 
+			"complete" => "document.getElementById('admin_search_textarea').disabled = false;")));
+	?>
+	</form>
+    </div>
+</div>
+<div class="fullcontent">
+	<h5> Results </h5>
+	<div id="admin_search_results">
+	</div>
+</div>

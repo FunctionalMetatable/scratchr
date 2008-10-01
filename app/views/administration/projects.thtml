@@ -1,0 +1,27 @@
+<div class="fullcontent">
+	<h2>Manage Projects</h2>
+	<?php
+	e($this->renderElement('admin/admin_index', Array()));
+	?>
+</div>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	</div>
+	<div id="admin_project_content">	
+		<div>
+			<div>
+				<span>Sort By: </span>
+				<span><a <?php if ($option == "created") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/psort/created')?>">Creation Date</a> | </span>
+				<span><a <?php if ($option == "creator") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/psort/creator')?>">Creator</a> | </span>
+				<span><a <?php if ($option == "flags") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/psort/flags')?>">Flags</a>  | </span>
+				<span><a <?php if ($option == "loves") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/psort/loves')?>">Loves</a>  | </span>
+				<span><a <?php if ($option == "name") echo "class = 'admin_selected_tab'"?> href="<?php echo $html->url('/administration/psort/name')?>">Name</a></span>
+			</div><br/>
+		<div>
+	<?php
+		 e($ajax->div("admin_project_list"));
+         	e($this->renderElement('adminprojects', array('data' => $data)));
+         e($ajax->divEnd("admin_project_list"));
+    ?>	 
+    </div>	
+</div>

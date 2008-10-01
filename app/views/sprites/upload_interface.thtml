@@ -1,0 +1,51 @@
+<div class="fullcontent">
+  <div class="top_header">
+	<h3><?php ___('Upload a sprite'); ?></h3>
+  </div>
+  <div id="sprite_upload_left">
+	<h5><?php ___('Guidelines'); ?></h5><br/>
+	<p><?php ___('Please only upload content that is considered appropriate as determined in the (link here)'); ?></p> <br/>
+  </div>
+  <div id="sprite_upload_right">
+    <form action="<?php echo $html->url('/sprites/handle_upload/')?>" method="POST" accept-charset="UTF-8" name="spriteuploadform" id="spriteuploadform" enctype='multipart/form-data'>
+		<div class="sprite_upload_row">
+			<label for="data[Sprite][name]">Name</label>
+			<input id="data[Sprite][name]" class="form-input" type="text" size="25" name="data[Sprite][name]" value="" onkeyup="checkSpriteName();"/>
+		</div>
+
+		<div class="sprite_upload_row">
+			<label for="data[Sprite][description]">Description</label>
+			<input id="data[Sprite][description]" class="form-input" type="text" size="25" name="data[Sprite][description]" value="" onkeyup="checkDescription();"/>
+		</div>
+		
+		<div class="sprite_upload_row">
+			<label for="sprite_icon">Image Location</label>
+			<input id="sprite_icon" class="form-input" size="25" type='file' name="sprite_icon" value="" onblur="checkSpriteImageLocation();"/>
+		</div>
+		
+		<div class="sprite_upload_row">
+			<label>Tags</label>
+			<div id="sprite_upload_tags">
+				<input id="data[Sprite][tag1]" class="form-input-narrow" type="text" size="25" name="data[Sprite][tag1]" value="" />
+				<input id="data[Sprite][tag2]" class="form-input-narrow" type="text" size="25" name="data[Sprite][tag2]" value="" />
+				<input id="data[Sprite][tag3]" class="form-input-narrow" type="text" size="25" name="data[Sprite][tag3]" value="" />
+				<input id="data[Sprite][tag4]" class="form-input-narrow" type="text" size="25" name="data[Sprite][tag4]" value="" />
+				<input id="data[Sprite][tag5]" class="form-input-narrow" type="text" size="25" name="data[Sprite][tag5]" value="" />
+				<input id="data[Sprite][tag6]" class="form-input-narrow" type="text" size="25" name="data[Sprite][tag6]" value="" />
+			</div>
+		</div>
+		
+		<div class="sprite_upload_row">
+			<label>Contributors</label>
+			<div id="sprite_upload_contributors">
+				<input id="data[Sprite][cont1]" class="form-input-narrow" type="text" size="25" name="data[Sprite][cont1]" value="" />
+				<input id="data[Sprite][cont2]" class="form-input-narrow" type="text" size="25" name="data[Sprite][cont2]" value="" />
+			</div>
+		</div>
+
+		<div class="sprite_upload_row">
+			<input type="submit" class="button" value="<?php ___('upload sprite'); ?>" id="sprite_upload">
+		</div>
+    </form>
+  </div>
+</div>

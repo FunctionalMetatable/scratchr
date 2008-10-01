@@ -1,0 +1,65 @@
+<?php
+	$sprite_name = $sprite['Sprite']['name'];
+	$sprite_id = $sprite['Sprite']['id'];
+	$sprite_icon = getSpriteIcon($sprite_id);
+	$sprite_description = $sprite['Sprite']['description'];
+	$user_locked = 0;
+?>
+<div id="main">
+    <!-- ::: Begin project ::: -->
+    <div id="sprite_image_container" class="container">
+		<h2> <?php echo "$sprite_name"; ?> </h2>
+		<?php echo $html->image($sprite_icon,array('alt'=>$sprite_name,'title'=>$sprite_name,'id'=>'sprite_image'))?>
+		</div>
+	<div class="container">
+		<h2> Comments </h2>
+	</div>
+</div>
+<div id="sidebar">
+	<div  id="sprite_download" class="sidecontainer highlight">
+      <h3>
+	  <?php echo $html->image('/img/gr_code.png',array('alt'=>'scratch code','title'=>'scratch code','width'=>'86','height'=>'50'))?>
+	  <?php ___('Download this sprite!');?></h3>
+	  <?php
+	  if($isLoggedIn) {
+		echo "" . ___("Download ", true) .  " " . 
+		"&quot; 
+		<a href='/sprites/download/" . $sprite_id . "'>" . "<strong>" . 
+		$sprite_name . "</strong></a>&quot;" . ___("and use it in your projects", true);
+		} else {
+			e("You have to be logged in to download sprites");
+		}
+	?>
+	</div>
+	<div id="sprite_info" class="sidecontainer">
+		<h3><?php ___('Sprite Notes');?> </h3>
+		<?php echo($sprite_description) ?>
+	</div>
+	<div id="sprite_tags" class="sidecontainer">
+		<h4><?php ___('Tags');?></h4>
+	    <?php
+            e($ajax->div("sprite_tag_list"));
+				e($this->renderElement('sprites/taglist', array('tags'=>$sprite_tags)));
+            e($ajax->divEnd("sprite_tag_list"));
+        ?>
+	  <br>
+		<?php if(!$user_locked): ?>
+		<h5><?php ___('Add Tags');?></h5>
+        <form id='tag' action="<?php echo $html->url("/sprites/tag/".$sprite_id)?>" method="post" onSubmit="this.tag_textarea.value='';">
+			<p>
+				<input type="text" id= 'tag_textarea' name="tag_textarea" 
+					size="30" maxlength="30" onClick="this.value == '';" 
+				></input> 
+			<?php 
+				echo $ajax->submit(___('Add', true), array("id" => 'tag_submit', 
+				"condition"=>"(checkAll('tag_textarea', $user_locked))", "class"=>"button", 
+				"url"=>"/sprites/tag/$sprite_id", "update"=>"gallery_tag_list", 
+				"loading" => "document.getElementById('tag_submit').disabled = true;", 
+				"complete" => "document.getElementById('tag_textarea').value = ''; 
+				document.getElementById('tag_submit').disabled = false;"));
+			?>
+			</p>
+        </form>
+		<?php endif; ?>
+	</div>
+</div>

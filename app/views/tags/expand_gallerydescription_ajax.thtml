@@ -1,0 +1,26 @@
+<?php
+	$gallery_name = $gallery['Gallery']['name'];
+	$gallery_id = $gallery['Gallery']['id'];
+	$gallery_totalProjects = $gallery['Gallery']['total_projects'];
+	$gallery_icon_src = $gallery['Gallery']['icon_src'];
+	$gallery_url = "/galleries/view/$gallery_id";
+	$gallery_desc = $gallery['Gallery']['description'];
+	$creation_date = $gallery['Gallery']['created'];
+	$actual_creation_date = stampToDate($creation_date);
+	$expand = false;
+	?>
+	
+					<a href="<?php echo $html->url($gallery_url)?>"><?php echo $html->image($gallery_icon_src,array('title'=>$gallery_name,'alt'=>$gallery_name,'width'=>'148','height'=>'111'))?></a>
+					<h3><a href="<?php echo $html->url($gallery_url)?>"><?php echo "$theme_name";?></a></h3>
+					<p><strong><?php ___('Created')?></strong>: <?php echo $actual_creation_date?></p>
+					<p><strong><?php ___('Description')?></strong>: <?php echo $gallery_desc?>
+	
+	<?php
+	if ($expand) {
+			e($ajax->link(___("show more", true), '#', 
+				array("url"=>"/tags/expandGalleryDescription/$gallery_id",
+				"update"=>"$gallery_id"), NULL, false));
+		}
+	echo "</p>\n";
+	echo "<p> <strong>"; ___('Number of Projects'); echo ": </strong>$gallery_totalProjects</p>\n";
+?>

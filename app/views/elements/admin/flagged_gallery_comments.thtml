@@ -1,0 +1,36 @@
+<?php
+	foreach($data as $comment) {
+		$commenter_id = $comment['User']['id'];
+		$commenter_urlname = $comment['User']['urlname'];
+		$commenter_username = $comment['User']['username'];
+		$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $content_status);
+		$commenter_url = "/users/".$commenter_urlname;
+		$comment_id = $comment['Gcomment']['id'];
+		$comment_content = $comment['Gcomment']['content'];
+		$timestamp = $comment['Gcomment']['timestamp'];
+		$visible = $comment['Gcomment']['visibility'];
+		$visibility = $comment['Gcomment']['comment_visibility'];
+		$gallery_url = $comment['Gallery']['username'];
+		$gallery_id = $comment['Gallery']['id'];
+	
+		$commented = false;
+		
+		if ($visibility == 'visible') {
+		?>
+		<div class="comment">
+				<h5>
+				<?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
+				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
+				<?php echo friendlyDate($timestamp)?>
+				</h5>
+				<p><?php echo $comment_content?></p>
+				<p align="right">
+					<a href="<?php echo $html->url('/galleries/view/'.$gallery_id)?>">Go To Gallery</a> |
+					<a href="<?php echo $html->url('/administration/userdeletecomment/'.$user_id)?>/<?php echo $comment_id?>/comments/gcomment">Delete</a>
+				</p>
+			</div>
+		<?php
+			
+		}
+	}
+?>

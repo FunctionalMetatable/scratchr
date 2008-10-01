@@ -1,0 +1,63 @@
+<!-- |||||| Begin content area ||||||| -->
+<div class="fullcontent">
+  <h2><?php ___('About Scratch');?> </h2>
+</div>
+<div id="main">
+    <p><?php ___('Scratch is a new programming language that makes it easy to create your own interactive stories, animations, games, music, and art -- and share your creations on the web.');?></p>
+    <p><?php ___('Scratch is designed to help young people (ages 8 and up) develop 21st century learning skills. As they create Scratch projects, young people learn important mathematical and computational ideas, while also gaining a deeper understanding of the process of design.');?> </p>
+<p><?php ___('Scratch is available free of charge, go to');?> <strong><a href="download"> <?php ___('Download');?></a></strong>.<br>
+	 <?php ___('Currently available for Mac OSX and Windows');?> (<a href="http://scratch.mit.edu/forums/viewtopic.php?id=286"> <?php ___('system requirements');?></a>)</p>
+
+<p><?php ___('To find more about the ideas underlying Scratch, visit our page for');?> <strong><a href="pages/educators"> <?php ___('Educators');?></a></strong>.</p></p>
+
+<p><?php ___('To learn how to use Scratch, go to');?> <strong><a href="<?php echo $html->url('/howto')?>"> <?php ___('Support');?></a></strong>.</p>
+
+<p><?php ___('To read research papers on Scratch, see');?> <strong><a href="<?php echo $html->url('/pages/research')?>"> <?php ___('Research');?> </a></strong>.</p>
+
+<p><?php ___('To find out who is working on Scratch, see the');?> <strong><a href="<?php echo $html->url('/pages/credits')?>"> <?php ___('Credits');?></a></strong>.</p>
+
+<p><?php ___('To read what people are saying about Scratch, see');?> <strong><a href="<?php echo $html->url('/pages/quotes')?>"> <?php ___('Quotes');?></a></strong>.</p>
+
+<p><?php ___('To hear the latest Scratch news stories, visit');?> <strong><a href="<?php echo $html->url('/pages/news')?>"><?php ___('News');?></a></strong>.</p>
+<p></p>
+</div>
+
+
+ <div id=sidebar>
+<!-- <img src="/img/pages/about/cat-and-code.gif" alt="cat with code" border="0"> -->
+<p>
+<!---
+<object width="230" height="129"><param name="movie" value="http://www.youtube.com/v/knFykmLljos"></param><param name="wmode" value="transparent"></param><embed src="http://www.youtube.com/v/knFykmLljos" type="application/x-shockwave-flash" wmode="transparent" width="230" height="194"></embed></object>
+//-->
+
+<embed wmode="transparent" src="http://techtv.mit.edu/scripts/flash/blipplayer.swf?autoStart=false&file=http://techtv.mit.edu/file/get/Andresmh-ScratchOverviewByGroupMembers220.flv%3Fsource%3D3" quality="high" width="230" height="180" name="movie" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></embed>
+</p>
+<?php ___('Click video above or');?> <a href="http://techtv.mit.edu/file/127"><?php ___('full screen');?></a>
+</div>
+
+<p>&nbsp;    </p>
+<div class="howto howfirst">
+<h5><?php ___('Creating with Scratch');?></h5>
+<p><a href="<?php echo $html->url('/files/Creating-with-Scratch.pdf')?>" target="_blank">
+<?php echo $html->image('/img/pages/about/creating-thumb.gif',array('width'=>'150','height'=>'194','border'=>'0','alt'=>'image of Creating handout'))?>
+</a></p>
+</div>
+<div class="howto">
+<h5><?php ___('Learning with Scratch');?></h5>
+<p><a href="<?php echo $html->url('/files/Learning-with-Scratch.pdf')?>" target="_blank">
+<?php echo $html->image('/img/pages/about/learn-thumb.gif',array('width'=>'150','height'=>'194','border'=>'0','alt'=>'image of Learning handout'))?>
+</a></p>
+</div>
+<div class="howto">
+<h5><?php ___('Programming with Scratch');?></h5>
+<p><a href="<?php echo $html->url('/files/Programming-with-Scratch.pdf')?>" target="_blank">
+<?php echo $html->image('/img/pages/about/programming-thumb.gif',array('width'=>'150','height'=>'194','border'=>'0','alt'=>'image of programming handout'))?>
+</a></p>
+</div>
+<div class="fullcontent">
+  <p><?php ___('Scratch is developed by the');?> <a href="http://llk.media.mit.edu/"><?php ___('Lifelong Kindergarten group');?> </a> <?php __('at the');?> <a href="http://www.media.mit.edu/"><?php ___('MIT Media Lab');?></a>, <?php ___('in collaboration with the UCLA Graduate School of Education and Information Studies, with financial support from the National Science Foundation, Intel Foundation, and MIT Media Lab research consortia.');?></p>
+<p></p>
+<p><a href="http://www.nsf.gov/"><?php echo $html->image('/img/pages/about/nsf-logo.gif',array('border'=>'0'))?></a>
+<?php ___('The Scratch project is based upon research supported by the National Science Foundation under grant number 0325828. Any opinions, findings, and conclusions or recommendations expressed on this site are those of the authors and do not necessarily reflect the views of the National Science Foundation.');?></p>
+</div>
+<!--- End Content --->

@@ -1,0 +1,771 @@
+/*||||||||||||||||||||||||||||||
+Scratch site styles
+Kemie Guaida 
+Dec 06
+||||||||||||||||||||||||||||||*/
+/*-------------------- basic---------------------*/ 
+body {
+	background-color: #FFFFFF;
+	color: #333333;
+	font-family: "Trebuchet MS", "Luxi Sans",Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+}
+
+td, select, input, select {
+	font: normal 1em "Trebuchet MS",  "Luxi Sans", Verdana,Helvetica, Arial, sans-serif;
+}
+
+a, a:link{
+	color: #2A54AA;
+	outline: none;
+}
+
+a:visited{
+	color: #22468C;
+}
+
+a:hover, a:visited:hover{
+	color: #3060C1;
+}
+
+a:active{
+	color: #FF9933;
+}
+
+a img{
+	border: 0;
+}
+
+p{
+	margin: 0;
+	padding: 6px 0;
+}
+
+td, th{
+	margin: 0;
+	padding: 0;
+	vertical-align: top;
+}
+
+.clearme:after {
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+
+.right{
+	text-align: right;
+}
+
+/*-------------------- headers---------------------*/ 
+h1{
+	color: #111111;
+	font-size: 1.3em;
+	font-weight: bold;
+	line-height: 1.5em;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+h2{
+	color: #222222;
+	font-size: 20px;
+	font-weight: bold;
+	line-height: 1.3em;
+	margin: 6px 0 0 0;
+	padding: 0px;
+}
+
+h3{
+	color: #333333;
+	font-size: 18px;
+	font-weight: normal;
+	margin: 5px 0 5px 0;
+	padding: 0;
+}
+
+h4{
+	font-size: 16px;
+	margin: 0;
+	padding: 0 0 5px 0px;
+}
+
+h5{
+	font-size: 14px;
+	margin: 0;
+	padding: 0 0 5px 0;
+}
+
+h6{
+	font-size: 1em;
+	margin: 0 10px;
+	padding: 0;
+}
+
+/*-------------------- forms---------------------*/ 
+form{
+	margin: 0;
+	padding: 0;
+}
+
+input, textarea{
+	background-color: #F9F9F9;
+	border: 1px solid #333333;
+	color: #666666;
+	padding: 1px 2px;
+	vertical-align: baseline;
+}
+
+input:focus, textarea:focus{
+	background-color: #FEFEFE;
+	border: 1px solid #2A54AA;
+	color: #333333;
+}
+
+input.button{
+	background-color: #4070CF;
+	background-image: url(/img/bg_button.png);
+	background-repeat: repeat-x;
+	border: 1px solid #22468C;
+	color: #FFFFFF;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 0 8px;
+}
+
+label{
+	background-color: #F9F9F9;
+	display: block;
+	float: left;
+	font-weight: bold;
+	padding: 4px;
+	width: 140px;
+}
+
+form p{
+	clear: left;
+}
+
+fieldset{
+	padding: 10px;
+}
+
+legend{
+	font-size: 16px;
+	font-weight: bold;
+}
+
+/*-------------------- layout---------------------*/ 
+#container {
+	background-color: #FFFFFF;
+	margin: 0px auto;
+	width: 780px;
+}
+
+/* only IE mac will see this */
+* html>body #container{
+	width: 800px;
+}
+
+#main {
+	float: left;
+	margin-right: 10px;
+	margin-top: 10px;
+	width: 540px;
+}
+
+.fullcontent{
+	clear: both;
+	padding: 20px 10px;
+}
+
+#header {
+	padding: 0px;
+}
+
+#sidebar {
+	float: right;
+	margin-top: 10px;
+	width: 230px;
+}
+
+#footer {
+	background-image: url(/img/bg_footer.png);
+	background-repeat: no-repeat;
+	clear: both;
+	font-size: 12px;
+	line-height: 30px;
+	padding: 0 10px;
+	text-align: center;
+	width: 100%;
+}
+
+#info{
+	color: #666666;
+	font-size: 12px;
+	line-height: 1.2em;
+	padding: 10px 20px;
+}
+
+/*-------------------- header---------------------*/ 
+#header #logo{
+	float: left;
+	width: 230px;
+}
+
+#header h1{
+	float: left;
+	margin: 0;
+	padding: 0;
+}
+
+#header h2{
+	color: #3060C1;
+	font-size: 14px;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+#header h1 a{
+	background-image: url(/img/gr_logo_scratchr.png);
+	background-repeat: no-repeat;
+	float: left;
+	height: 60px;
+	margin: 0;
+	padding: 0;
+	text-indent: -9999px;
+	width: 230px;
+}
+
+#userbar{
+	background-image: url(/img/bg_userbar.png);
+	background-repeat: no-repeat;
+	float: left;
+	font-size: 15px;
+	height: 40px;
+	line-height: 40px;
+	margin: 0 10px;
+	padding: 0 10px;
+	width: 280px;
+}
+
+#userbar a{
+	font-weight: bold;
+}
+
+#searchbar{
+	background-image: url(/img/bg_searchbar.png);
+	background-repeat: no-repeat;
+	float: left;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 10px;
+	width: 210px;
+}
+
+#searchbar input{
+	max-width: 124px;
+}
+
+/*-------------------- nav---------------------*/ 
+#nav {
+	background-color: #3060C1;
+	background-image: url(/img/bg_nav.png);
+	background-repeat: no-repeat;
+	float: right;
+	margin: 0 0 10px 0;
+	padding: 0 5px;
+	width: 530px;
+}
+
+#nav li {
+	float: left;
+	list-style-type: none;
+}
+
+#nav a{
+	border-right: 1px solid #22468C;
+	color: #E7EBF7;
+	float: left;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 26px;
+	padding: 2px 6px;
+	text-decoration: none;
+}
+
+#nav a:hover{
+	color: white;
+}
+
+#nav #langselect{
+	float: right;
+	margin-top: 2px;
+}
+
+#nav select{
+	font-size: 12px;
+}
+
+#nav #active a{
+	color: #FFC56C;
+}
+
+/*-------------------- main---------------------*/ 
+.container{
+	background-image: url(/img/bg_container.png);
+	background-repeat: no-repeat;
+	clear: both;
+	margin-bottom: 10px;
+	min-height: 80px;
+	overflow: auto;
+	padding: 5px 10px 10px 10px;
+	position: relative;
+}
+
+.more{
+	float: right;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.more a{
+	background-image: url(/img/bullet_more.gif);
+	background-position: right;
+	background-repeat: no-repeat;
+	padding-right: 18px;
+}
+
+.container .more{
+	margin-bottom: 0;
+	padding-bottom: 0;
+	position: absolute;
+	right: 10px;
+	top: 5px;
+}
+
+.thumb{
+	background-image: url(/img/bg_thumb.png);
+	background-position: bottom;
+	background-repeat: no-repeat;
+	clear: none;
+	float: left;
+	font-size: 11px;
+	line-height: 1em;
+	margin: 5px 9px 10px 10px;
+	width: 150px;
+}
+
+.thumb img{
+	border: 1px solid #666666;
+}
+
+.thumb p, .thumb h6{
+	margin: 0;
+	padding: 0 6px 5px 6px;
+}
+
+/*-------------------- sidecontainer---------------------*/ 
+.sidecontainer{
+	background-image: url(/img/bg_sidecontainer.png);
+	background-repeat: no-repeat;
+	min-height: 80px;
+	overflow: auto;
+	padding: 5px 10px 10px 10px;
+}
+
+.highlight{
+	background-image: url(/img/bg_highlight.png) !important;
+}
+
+#download{
+	background-image: url(/img/bg_downlaod.png);
+	background-repeat: no-repeat;
+	font-size: 12px;
+	height: 90px;
+	line-height: 1.2em;
+	margin-bottom: 10px;
+	padding: 10px;
+	text-align: right;
+}
+
+#download h2{
+	color: #FF8C00;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+#download img{
+	float: left;
+	margin-right: 5px;
+}
+
+.sidelist{
+	margin: 0;
+	padding: 0;
+}
+
+.sidelist li{
+	font-size: 14px;
+	list-style: none;
+	margin: 0;
+	padding: 2px 0;
+}
+
+.sidelist a, .gallerylist a:visited{
+	color: #333333;
+	font-weight: bold;
+}
+
+.sidelist a:hover{
+	color: #FF8C00;
+}
+
+.sidelist img{
+	border: 1px solid #333333;
+	margin-right: 4px;
+	vertical-align: middle;
+}
+
+#club img{
+	border: 1px solid #333333;
+	float: left;
+	margin-right: 10px;
+}
+
+.tags a, .tags a:visited{
+	color: #666666;
+	text-decoration: none;
+}
+
+.tags a:hover{
+	color: #FF8C00;
+}
+
+/*-------------------- intro---------------------*/ 
+#intro{
+	background-image: url(/img/bg_intro.png);
+	background-repeat: no-repeat;
+	font-size: 11px;
+	height: 110px;
+	margin-bottom: 10px;
+	padding: 0 9px;
+}
+
+.step{
+	color: white;
+	float: left;
+	font-weight: bold;
+	height: 90px;
+	line-height: 1.1em;
+	margin: 10px 12px;
+	position: relative;
+	text-align: center;
+	width: 150px;
+}
+
+.step img{
+	margin: 4px 6px;
+}
+
+.step p{
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	width: 144px;
+}
+
+.stepimg{
+	display: inline;
+	float: left;
+}
+
+/*-------------------- project page---------------------*/ 
+#project img, #project applet{
+	display: block;
+	margin: 0 auto;
+}
+
+#notes{
+	background-image: url(/img/bg_notes.png);
+	background-repeat: no-repeat;
+	float: left;
+	margin-right: 10px;
+	min-height: 90px;
+	padding: 5px 10px 10px 10px;
+	width: 280px;
+}
+
+#notes h3{
+	background-image: url(/img/ic_notes.png);
+	background-repeat: no-repeat;
+	line-height: 28px;
+	padding-left: 30px;
+}
+
+#notes p{
+	margin: 0 10px;
+}
+
+#projectinfo{
+	background-image: url(/img/bg_projectinfo.png);
+	background-repeat: no-repeat;
+	float: left;
+	min-height: 90px;
+	padding: 5px 10px 10px 10px;
+	width: 210px;
+}
+
+#projectinfo h3{
+	background-image: url(/img/ic_info.png);
+	background-repeat: no-repeat;
+	line-height: 28px;
+	padding-left: 30px;
+}
+
+#projectinfo h6{
+	font-weight: normal;
+	margin: -5px 0 5px 0;
+}
+
+#projectinfo img{
+	border: 1px solid #666666;
+	margin-left: 5px;
+	vertical-align: middle;
+}
+
+.love{
+	background-image: url(/img/ic_love.png);
+	background-repeat: no-repeat;
+	padding-left: 28px;
+}
+
+.loveyes{
+	background-image: url(/img/ic_loveyes.png);
+	background-repeat: no-repeat;
+	padding-left: 28px;
+}
+
+#comments{
+	clear: both;
+	width: 520px;
+}
+
+#comments h3{
+	background-image: url(/img/ic_comments.png);
+	background-repeat: no-repeat;
+	line-height: 28px;
+	padding-left: 30px;
+}
+
+#comments h3 a{
+	display: inline-block;
+	font-size: 11px;
+	font-weight: normal;
+	line-height: 28px;
+	padding-bottom: 2px;
+	padding-left: 12px;
+}
+
+.comment{
+	border-bottom: 1px solid #fff;
+	border-top: 1px solid #999999;
+	padding: 5px;
+}
+
+.comment h5 img{
+	border: 1px solid #666666;
+	margin-right: 5px;
+	vertical-align: middle;
+}
+
+.comment h5 a{
+	color: #333333;
+}
+
+.comment h5 a:hover{
+	color: #FF8C00;
+}
+
+#projectdown h3{
+	letter-spacing: -1px;
+	line-height: 1em;
+	padding-bottom: 10px;
+}
+
+#projectdown img{
+	border: none;
+	float: right;
+	margin: 0 0 0 5px;
+}
+
+.projectlist{
+	margin: 0;
+	padding: 0;
+}
+
+.projectlist li{
+	clear: left;
+	list-style: none;
+	margin: 0;
+	padding: 0 0 2px 0;
+}
+
+.projectlist img{
+	border: 1px solid #666666;
+	clear: left;
+	float: left;
+	margin-bottom: 5px;
+	margin-right: 5px;
+}
+
+.projectlist a{
+	color: #333333;
+	font-weight: bold;
+}
+
+.projectlist a:visited{
+	color: #4A4A4A;
+}
+
+.projectlist a:hover{
+	color: #FF8C00;
+}
+
+#morenotes{
+	clear: right;
+}
+
+#moreproj{
+	clear: right;
+}
+
+/*-------------------- user page ---------------------*/
+#userside{
+	float: left;
+	margin-right: 10px;
+	margin-top: 10px;
+	width: 230px;
+}
+
+#usermain {
+	float: left;
+	margin-top: 10px;
+	width: 540px;
+}
+
+#user h3{
+	line-height: 1em;
+	padding-bottom: 10px;
+}
+
+#user img{
+	border: 1px solid #666666;
+	float: right;
+	margin: 0 0 0 5px;
+}
+
+/*-------------------- howto---------------------*/ 
+.howto{
+	background-image: url(/img/bg_howto.png);
+	background-repeat: no-repeat;
+	float: left;
+	margin: 10px 0 10px 10px;
+	min-height: 120px;
+	padding: 5px 10px;
+	width: 232px;
+}
+
+.howto img{
+	display: block;
+	margin: 0 auto;
+}
+
+.howfirst{
+	clear: left;
+	margin-left: 2px !important;
+}
+
+hr{
+	background-color: #FFFFFF;
+	border: none;
+	clear: both;
+	color: white;
+	height: 1px;
+}
+
+/*-------------------- sign up---------------------*/
+.fullwidth{
+	background-image: url(/img/bg_mainfull.png);
+	background-repeat: no-repeat;
+	padding: 20px 30px !important;
+	width: 730px!important;
+}
+
+#signupform{
+	float: right;
+}
+
+#loginform {
+	float: left;
+}
+
+#loginform p.right {
+	min-width: 300px !important;
+}
+
+#signupform p.right {
+	min-width: 320px !important;
+}
+
+
+/*--------------explorer-bars-------------------*/
+.browseDiv{
+  margin-top:8px;
+  margin-bottom:8px;}
+.browseHeader{
+  background:#DFDFDF;
+  display:block;
+  height:32px;
+  overflow:hidden;}
+.browse{display:block}
+.browse *{
+  display:block;
+  height:1px;
+  overflow:hidden;
+  font-size:.01em;
+  background:#DFDFDF}
+.browse1{
+  margin-left:3px;
+  margin-right:3px;
+  padding-left:1px;
+  padding-right:1px;
+  border-left:1px solid #f1f1f1;
+  border-right:1px solid #f1f1f1;
+  background:#e7e7e7}
+.browse2{
+  margin-left:1px;
+  margin-right:1px;
+  padding-right:1px;
+  padding-left:1px;
+  border-left:1px solid #fbfbfb;
+  border-right:1px solid #fbfbfb;
+  background:#e5e5e5}
+.browse3{
+  margin-left:1px;
+  margin-right:1px;
+  border-left:1px solid #e5e5e5;
+  border-right:1px solid #e5e5e5;}
+.browse4{
+  border-left:1px solid #f1f1f1;
+  border-right:1px solid #f1f1f1}
+.browse5{
+  border-left:1px solid #e7e7e7;
+  border-right:1px solid #e7e7e7}
+.browsefg{
+  background:#DFDFDF}

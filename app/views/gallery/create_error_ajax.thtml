@@ -1,0 +1,4 @@
+<?php
+	echo $this->renderElement('gallery/create', Array('isCreated'=>$isCreated, 'errors'=>$errors, 
+																	'gallery_id'=>$gallery_id, 'gallery_name'=>$gallery_name));
+?>

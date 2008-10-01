@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<?php
+	echo $this->renderElement('superheader');
+?>
+<title>Scratch | <?php ___('Gallery'); ?> | <?php echo htmlspecialchars($theme['name']) ?></title>
+<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $html->url('/feeds/getRecentGalleryProjects/')?><?php echo $gallery_id?>">
+<?php
+
+echo $javascript->link('prototype.js');
+echo $javascript->link('scriptaculous.js');
+echo $javascript->link('scratchr.js?v=1.2');
+echo $javascript->link('hanbox.js');
+echo $javascript->link('gallery_comment.js');
+
+echo $javascript->link('charcount.js');
+echo $javascript->link('jquery.js');
+echo $javascript->link('ajax.js');
+echo $html->css('global');
+echo $html->css('gallery');
+?>
+
+
+
+
+<!-- |||||| IE- only stylesheet in conditional comment ||||||| -->
+<!--[if IE]>
+<link href="/css/global_ie.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/js/ie_hacks.js"></script>
+<![endif]-->
+<!--[if IE 6]>
+<link href="/css/ie6.css" rel="stylesheet" type="text/css">
+<![endif]-->
+<?php
+
+if ($isLoggedIn) {
+
+    e($javascript->codeBlock("
+
+    function checkLogin(elid) {
+		if(elid) {
+			if (document.getElementById(elid).value)
+				return true;
+			else
+				return false;
+		} else {
+				return true;
+		}
+    }
+
+    "));
+
+} else {
+		$pleaselogin = ___('Please login.', true);
+    e($javascript->codeBlock("
+
+    function checkLogin() {
+        alert('$pleaselogin');
+        return false;
+    }
+
+    "));
+}
+
+if (isset($head)) echo $head->print_registered();
+?>
+</head>
+<body>
+	<div id="reply_to_overlay">
+	</div>
+	<div id="reply_to_popup">
+	</div>
+	<div id="overlay">
+	</div>
+	<div id="loadingDiv">
+	</div>
+	<div id="addbox">
+		<?php
+            e($ajax->div("gallery_addproject"));
+
+            e($ajax->divEnd("gallery_addproject"));
+        ?>
+		<?php
+			echo "<div class='gallery_popup_button'>\n";
+				echo "<div id='addbutton' class='gallery_centered_button'>" . ___('Accept', true) . "</div>\n";
+			echo "</div>\n";
+		?>
+	</div>
+	<div id="removebox">
+		<?php
+            e($ajax->div("gallery_removeproject"));
+
+            e($ajax->divEnd("gallery_removeproject"));
+        ?>
+		<?php
+			echo "<div class='gallery_popup_button'>\n";
+				echo "<div id='removebutton' class='gallery_centered_button'>" . ___('Accept', true) . "</div>\n";
+			echo "</div>\n";
+		?>
+	</div>
+<!-- |||||| Begin main container ||||||| -->
+<div id="container">
+
+
+<!-- |||||| Begin header ||||||| -->
+<?php
+if ($isLoggedIn)
+    echo $this->renderElement('header_loggedin');
+else {
+    echo $this->renderElement('header_default');
+}
+
+?>
+<!-- ////// End header ////// -->
+
+
+<?php echo $content_for_layout?>
+
+<?php echo $this->renderElement('footer'); ?>
+<?php
+	echo $this->renderElement('ajax_indicator');
+?>
+</body>
+</html>

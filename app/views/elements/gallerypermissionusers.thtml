@@ -1,0 +1,57 @@
+<?php
+$gallery_type = $gallery['Gallery']['type'];
+echo "<div class='gallery_content'>\n";
+  echo "<div class='gallery_content_header'>\n";
+  echo "<h5>";
+  ___('People who can add projects to gallery (click to remove from list)');
+  echo "</h5>\n";
+	echo "</div>\n";
+	if ($gallery_type == 4 || $gallery_type == 3) {
+		foreach ($members as $member):
+			$uid = $member['id'];
+			$username = $member['username'];
+			$urlname = $member['urlname'];
+			$member_url = "/users/".$urlname;
+			$image_url = getBuddyIconBySize($uid, 'mini', $content_status);
+			$icon_url = "<img src='" . $image_url . "'" . " alt='$username' width='60' height='60'>";
+			if (strlen($username) >= 7) {
+				$username = substr($username,0,4) . "...";
+			}
+			echo "<div class='gallery_user_list'>\n"; 
+				echo $ajax->link("$icon_url", '#', array("url"=>"removegallerymember" . "/" . $gallery_id . "/" . $uid, "update"=>"gallery_users_ajax"), NULL, false);
+	  			echo "<h6><a href='#'>$username</a></h6>\n";
+			echo "\t</div>\n";
+		endforeach;
+	} elseif ($gallery_type == 0) {
+		echo "<h6>";
+		___('Status: Public (open to everyone)');
+		echo "</h6>\n";
+	} elseif ($gallery_type == 1) {
+		echo "<h6>";
+		___('Status: Private (for myself)');
+		echo "</h6>\n";
+	}
+echo "</div>\n";
+echo "<div class='gallery_content'>\n";
+	echo "<div class='gallery_content_header'>\n";
+		echo "\t<h5>";
+		___('Friends List (click to add as member)');
+		echo "</h5>\n";
+	echo "</div>\n";
+	foreach ($friends as $friend):
+		$uid = $friend['id'];
+		$username = $friend['username'];
+		$urlname = $friend['urlname'];
+		$friend_url = "/users/".$urlname;
+		$image_url = getBuddyIconBySize($uid, 'mini', $content_status);
+		$icon_url = "<img src='" . $image_url . "'" . " alt='$username' width='60' height='60'>";
+		if (strlen($username) >= 7) {
+			$username = substr($username,0,4) . "...";
+		}
+		echo "<div class='gallery_user_list'>\n"; 
+			echo $ajax->link("$icon_url", '#', array("url"=>"addgallerymember" . "/" . $gallery_id . "/" . $uid, "update"=>"gallery_users_ajax"), NULL, false);
+	  		echo "<h6><a href='#'>$username</a></h6>\n";
+		echo "\t</div>\n";
+	endforeach;
+echo "</div>\n";
+?>

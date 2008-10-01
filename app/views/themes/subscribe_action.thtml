@@ -1,0 +1,1 @@
+ <?php e($this->renderElement('theme_subscribe_action'))?>

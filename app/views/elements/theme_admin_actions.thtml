@@ -1,0 +1,14 @@
+  <form method="post" action=""/>
+	<br>
+	<input type="hidden" name="theme-id" value="<?php e($theme_id)?>"/>
+	<?php 
+		$feature_txt = ($isFeatured) ? "defeature" : "feature";
+		$club_txt = ($isClubbed) ? "declub it" : "club it";
+		$club_action = ($isClubbed) ? "declub" : "club";
+		echo $ajax->submit($feature_txt, array("class"=>"button", "url"=>"/galleries/".$feature_txt, "update"=>"adminActions_secondary")) . "<br>";
+		echo $ajax->submit($club_txt, array("class"=>"button", "url"=>"/galleries/".$club_action, "update"=>"adminActions_secondary")) . "<br>";
+	?>
+	<input type="button" class="button" onclick="if (confirm('are you sure?')) { this.form.action='/galleries/delete/<?php e($theme_id) ?>'; this.form.submit(); return true; } return false;" value="delete"/>
+	<input type="hidden" name="isClubbed" value="<?php e($isClubbed)?>"/>
+	<input type="hidden" name="isFeatured" value="<?php e($isFeatured)?>"/>
+  </form>

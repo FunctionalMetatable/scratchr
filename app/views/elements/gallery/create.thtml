@@ -1,0 +1,91 @@
+<div class="container" id="NewThemeForm">
+<?php if($isCreated): ?>
+
+	
+	<?php
+		echo "<h5>";
+		echo ___('Your gallery has been successfully created');
+		echo "</h5>";
+	?>
+		<a href="<?php echo $html->url('/galleries/view/')?><?php echo $gallery_id?>"><?php echo $gallery_name?></a>
+		
+	
+<?php endif; ?>
+<?php if(!$isCreated): ?>
+<form id="create_gallery" action="<?php echo $html->url('/galleries/handle_create/')?>" method="post" enctype='multipart/form-data'>
+<h3><?php ___('Create New Gallery'); ?></h3>
+<div class = "gallery_create_form">
+	<div class = "gallery_create_item_left">
+		<label for="create_gallery_name"><?php ___('Name'); ?></label>
+	</div>
+	<div class = "gallery_create_item_right">
+		<input name="create_gallery_name" id="create_gallery_name" type="text" size="42" value="<?php e($default_name); ?>"/>
+	</div>
+</div>
+<?php
+	if (in_array("name_taken", $errors)) {
+		echo "<div class='gallery_create_error'>";
+			echo "<p> " . __('That name has already been taken') . "</p> <br/>";
+		echo "</div>";
+	} elseif (in_array("name_inappropriate", $errors)) {
+		echo "<div class='gallery_create_error'>";
+			echo "<p> " . __('That name is inappropriate according to our Terms of Use') . "</p><br/>";
+		echo "</div>";
+	} elseif (in_array("empty_name", $errors)) {
+		echo "<div class='gallery_create_error'>";
+			echo "<p> " . __('The gallery name cannot be empty') . "</p><br/>";
+		echo "</div>";
+	}
+?>
+
+	
+<div class = "gallery_create_form">
+	<div class = "gallery_create_item_left">
+		<label for="create_gallery_description"><?php ___('Description'); ?></label>
+	</div>
+	<div class = "gallery_create_item_right">
+		<textarea name="create_gallery_description" id="create_gallery_description" cols="30" rows="3"><?php e($default_description); ?></textarea> 
+	</div>
+</div>
+<?php
+	if (in_array("description_inappropriate", $errors)) {
+		echo "<div class='gallery_create_error'>";
+			echo "<p> " . __('That description is inappropriate according to our Terms of Use') . "</p> <br/>";
+		echo "</div>";
+	} elseif (in_array("empty_description", $errors)) {
+		echo "<div class='gallery_create_error'>";
+			echo "<p> " . __('The gallery description cannot be empty') . "</p><br/>";
+		echo "</div>";
+	}
+?>
+
+<div class = "gallery_create_form">
+	<div class = "gallery_create_item_left">
+	<label for="create_gallery_permission"><?php ___('Who can add projects?'); ?></label>
+	</div>
+	<div class = "gallery_create_item_right">
+		<input class="radio_button" type="radio" name="create_gallery_permission" value=<?php ___('Self'); ?> checked><?php ___('Only Me'); ?><br/>
+		<input class="radio_button" type="radio" name="create_gallery_permission" value=<?php ___('Friends'); ?>><?php ___('My Friends'); ?><br/>
+		<input class="radio_button" type="radio" name="create_gallery_permission" value=<?php ___('Everyone'); ?>> <?php ___('Everyone'); ?> <br/>
+	</div>
+</div>
+
+<div class = "gallery_create_form">
+	<div class = "gallery_create_item_left">
+	<label for="create_gallery_permission"><?php ___('Tags'); ?></label>
+	</div>
+	<div class = "gallery_create_item_right">
+		<?php
+			echo $this->renderElement('gallery/creation_tags');
+		?>
+	</div>
+</div>
+<div class = "gallery_create_submit">
+	<?php 
+		echo $form->submit(___('Create', true), Array("class" => "button"));
+	?>
+</div>
+</table>
+</form>
+<?php endif; ?>
+</div>

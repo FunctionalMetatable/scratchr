@@ -1,0 +1,99 @@
+	<?php if (isset($head)) $head->register_css('explorer');?>
+    
+    <br class="ClearEm SpaceEm"/>
+    <div id="exploreDiv">
+	    <div class="headerRCBox">
+	    <b class="rch">
+
+	    <b class="rch1"><b></b></b>
+	    <b class="rch2"><b></b></b>
+	    <b class="rch3"></b>
+	    <b class="rch4"></b>
+	    <b class="rch5"></b>
+	    </b>
+    	    <div class="content"><span class="headerTitleLite"><?php ___('Explore More Projects'); ?></span></div>
+	    </div>
+
+	<div id="exploreBody">
+
+	<table id="exSubNavTable"><tr>
+	<td align="right"><a href="#" id="exUserLink" class="selectedNavLink eLink"><span class="smallText"><?php ___('new projects'); ?></span></a></td>
+	</tr></table>
+
+	<div id="exRelatedDiv" style="display: block;">
+
+        <?php
+        $pagination->setPaging($paging);
+        $sortBy = Array(
+            $pagination->sortBy("name", ___("sort by title", true), "Project"),
+            $pagination->sortBy("loveit", ___("sort by lovers count", true), "Project"),
+            $pagination->sortBy("created", ___("sort by creation time", true), "Project"),
+            $pagination->sortBy("timestamp", ___("sort by last modified", true), "Project")
+            );
+        $prev = $pagination->prevPage(___("Prev", true),false);
+        $prev = $prev?$prev:___("Prev",true);
+        $next = $pagination->nextPage(___("Next", true),false);
+        $next = $next?$next:___("Next",true);
+        $pages = $pagination->pageNumbers(" | ", null, "", "");
+        $results = $pagination->result(___("Showing", true) . " ");
+        echo "<div id=\"pagination\"><table class=\"showingTable\"><tr><td class=\"smallText\">$results</td><td align=\"right\" class=\"smallText\">$prev $pages $next</td></tr></table></div>";
+        ?>
+	  
+      <div id="side_results" class="exploreContent" name="side_results" onscroll="render_full_side()" >
+
+        <?php
+            foreach ($data as $project):
+            $mini_img_src = getThumbnailSrc($project['Thumbnail']);
+            
+            $views = $project['Project']['views'];
+            $pid = $project['Project']['id'];
+            $urlname = $project['User']['urlname'];
+            $projectref = "/projects/$urlname/$pid";
+            $p_desc = $project['Project']['description'];
+            $lovers = $project['Project']['loveit'];?>
+            
+            <div class="vWatchEntry">
+            <table>
+            <tr><td>
+            <div class="img">
+                <a href="<?php echo $html->url($projectref)?>">
+				<?php echo $html->image($mini_img_src,array('class'=>'vimgSm','width'=>'133','height'=>'100'))?>
+				</a>
+            </div>
+            </td>
+            <td>
+            <div class="title"><b>
+                <a href="<?php echo $html->url($projectref)?>"><?=e($project['Project']['name'])?></a></b><br/>
+            </div>
+
+            <div class="facets">
+                <span class="grayText"><?php ___('Views'); ?>: </span><?=e($views)?><br>
+                <span class="grayText"><?php ___('LoveIt\'s'); ?>: </span><?=e($lovers)?><br>
+                <span class="grayText"><?php ___('Description'); ?>: </span><?=e($p_desc)?>
+            </div>
+            </td></tr>
+            </table>
+            </div>
+        <?php endforeach;?>
+
+    </div>
+
+    <?php
+        echo "<div id=\"pagination\"><table class=\"showingTable\"><tr><td class=\"smallText\">$results</td><td align=\"right\" class=\"smallText\">$prev $pages $next</td></tr></table></div>";
+    ?>
+			
+    </div> <!-- end exRelatedDiv -->
+			
+    <div id="exPlaylistDiv"  style="display: none;">
+    <?php ___('Loading...'); ?>
+    </div> <!-- end exPlaylistDiv -->
+			
+    <div id="exUserDiv"  style="display: none">
+    <?php ___('Loading...'); ?>
+    </div> <!-- end exUserDiv -->
+		
+    </div> <!-- end exploreBody -->
+    </div> <!-- end exploreDiv -->
+
+    <br class="ClearEm SpaceEm">
+

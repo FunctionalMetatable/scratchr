@@ -1,0 +1,43 @@
+<?php if($isError): ?>
+	
+		<div id="ignore_user_error">
+			<?php
+			
+				foreach($errors as $error):
+				//$error = $errors[0];
+				echo "<h5> $error </h5>";
+				endforeach;
+			?>
+		</div>
+	<?php endif; ?>
+	<div class="top_header">
+	<h5> Banned Ips </h5>
+	</div>
+
+<div>
+<?php		
+	$pagination->setPaging($paging);
+	echo $this->renderElement('pagination'); 
+	
+	foreach ($data as $ip) {
+		$ip_id = $ip['BlockedIp']['id'];
+		$my_ip = $ip['BlockedIp']['converted_ip'];
+		$reason = $ip['BlockedIp']['reason'];
+		$remove_address = "/administration/remove_ban_ip/$ip_id";
+		
+		echo "<div class='gallerythumb clearme'>\n";
+		echo "\t<div class='admin_leftcolumn'>\n";
+		echo "<span>IP: $my_ip</span>\n";
+		echo "\t</div>";
+		echo "\t<div class='admin_rightcolumn'>\n";
+		echo "<span>Reason: $reason </span>"; echo "<br/>";
+		echo "<span>"; 
+		
+		echo "(" . $ajax->link(___("Remove", true), '#', 
+			array("url"=>$remove_address, "update"=>"admin_banlist_results"), NULL, false) . ")";
+		echo "</span>\n";
+    	echo "\t</div>\n";
+		echo "</div>\n";
+	}
+?>
+</div>

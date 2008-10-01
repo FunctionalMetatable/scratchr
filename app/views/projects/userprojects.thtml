@@ -1,0 +1,93 @@
+
+<style>
+	#themebox div{width:200px;}
+</style>
+<div id="themebox" style="display:none;position:absolute;background:#fff;border:1px solid #369;margin:-.5ex 1ex;padding:.5ex .5ex .5ex .8ex;z-index:100" onclick="endBubble(event);"></div>
+
+
+<br class="SpaceEm ClearEm">
+
+<div style="padding-left:10px" id="projects_view">
+
+<table style="width:890px">
+<tr>
+<td style="vertical-align:top;">
+<div id="current_user">
+<div class="mod_title">User Info</div>
+<?php
+___('username'); echo "<b>". $user['User']['username'] . "</b><br>";
+?>
+
+<?php if (!$isMe):?>
+<a class="PopTag" href="<?php echo $html->url('/users/')?><?php e($user['User']['urlname'])?>"><?php ___('back to user\'s scratchr page'); ?></a>
+<?php endif;?>
+
+</div>
+</td>
+
+<td align="center" style="vertical-align:top; width:640px;">
+<div class="mod_title"><?php if ($isMe) ___('My Scratch Gallery'); else { printf(___('%s\'s Scratch Gallery', true), $user['User']['urlname']);}?></div>
+
+
+<?php ___('sort by'); ?>:
+<?php
+$pagination->setPaging($paging);
+e($pagination->sortBy("name", ___("title", true), "Project")." ");
+e($pagination->sortBy("rating", ___("rating", true), "Project")." ");
+e($pagination->sortBy("views", ___("views", true), "Project")." ");
+e($pagination->sortBy("created", ___("creation date", true), "Project")." ");
+e($pagination->sortBy("timestamp", ___("last modified", true), "Project"));
+e('<br>');
+$prev = $pagination->prevPage(___("Prev", true),false);
+$prev = $prev?$prev:___("Prev", true);
+$next = $pagination->nextPage(___("Next", true),false);
+$next = $next?$next:___("Next", true);
+$pages = $pagination->pageNumbers(" | ", null, "", "");
+$results = $pagination->result(___("Showing", true)." ");
+echo "<div id=\"pagination\"><table class=\"showingTable\"><tr><td class=\"smallText\">$results</td><td align=\"right\" class=\"smallText\">$prev $pages $next</td></tr></table></div>";
+?>
+
+<?php $isMe = ($isLoggedIn && $this->controller->getLoggedInUrlname() == $urlname);?>
+
+<?php if ($isMe): ?>
+<form id="actionForm" action="<?php echo $html->url('/projects/deletemany')?>" method="post">
+	<input type="hidden" name="UID" value="<?php e($user['id'])?>">
+    <input type="submit" class="SubmitNoWidth" value="<?php ___('delete'); ?>">
+	<input type="Button" class="SubmitNoWidth" value="<?php ___('add to gallery'); ?>">
+</form>
+<br class="ClearEm SpaceEm"/>
+<?php endif;?>
+
+<?php
+//$session->flash(FLASH_ERROR_KEY);
+$session->flash(FLASH_NOTICE_KEY);
+?>
+
+<ul class="gallery_box">
+<?php foreach($projects as $project) {
+	  $pid = $project['Project']['id'];
+	  $thumbnail = getThumbnailImg($urlname, $pid, 'mini', false);
+      echo "<li class=\"gallery_set\">"."\n";
+      echo "<a class=\"gallery_element\" href=\"/projects/$urlname/$pid\">";
+      echo $html->image($thumbnail, array("id"=>"image_".$pid, "alt"=>"scratch","class"=>"gallery_element_std"));
+      echo $html->image($thumbnail, array("alt"=>"scratch","class"=>"gallery_element_preview"));
+      echo "</a>";
+	  echo "<br>";
+	  echo $project['Project']['name'] . "<br>";
+	  echo ___('views', true).": ".$project['Project']['views']."<br>";
+	  echo ___('rating', true).": ".$project['Project']['rating']."<br>";
+	  if ($isMe) {
+		echo "<div id=\"addTheme_".$pid."\">";
+			echo $ajax->linkToRemote(___('add to gallery', true),Array('url'=>'/galleries/submit/'.$pid, 'update'=>'themebox', 'loaded'=>'showThemeSubmit(event' . ', \'addTheme_' . $pid . '\')')) . "<br/>";
+		echo "</div>";
+		echo "<input type=\"checkbox\" onclick=\"toggleActive(".$pid.");\"/>";
+	  }
+	  echo "</li>";
+  }
+?>
+</ul>
+</td></tr>
+</table>
+
+<div class="user_clear" style="clear">&nbsp</div>
+</div>

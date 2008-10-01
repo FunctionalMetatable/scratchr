@@ -1,0 +1,45 @@
+<ul id="taglist">
+<?php 
+	$count=0;
+	$tagcount=count($tags);
+	foreach($tags as $tag):
+		$project_tag_id = $tag['ProjectTag']['id'];
+		$tag_name = $tag['Tag']['name'];
+		$tag_id = $tag['Tag']['id'];
+		$tag_url = "/tags/view/".$tag_name;
+		$flagged = $tag['ProjectTag']['flagged'];
+		$tagged = $tag['ProjectTag']['tagged'];
+		$tag_size = $tag['ProjectTag']['size'];
+	?>
+	<li id="tag-<?php echo $tag_id?>">
+	<span class="tag_size_<?php echo $tag_size?>"><a href="<?php echo $html->url($tag_url)?>"><?php e($tag_name)?></a></span>
+		
+			<span class='tag_actions'>
+			<?php if ($isAdmin || $isMine)
+				echo $ajax->link("[x]", '#', 
+					array("url"=>"/projects/deltag/$pid/$project_tag_id", 
+					"title" => ___("delete this tag?", true), "update"=>"tag-".$tag_id, 
+					"condition"=>"checkLogin()"), NULL, false); 
+			?>
+			<?php
+			   if ($isLogged) {
+				if (!$tagged) {
+				echo "<span>";
+					e($ajax->link('[+]', '#', array("url"=>"/projects/upgradeTag/$project_tag_id/normal", 
+					"title" => ___("affirm this tag?", true),
+					"update"=>"tag-$tag_id"), NULL, false));
+				echo "</span>";
+				}
+				if (!$flagged) {
+				echo "<span>";
+					e($ajax->link('[flag]', '#', array("url"=>"/projects/markTag/$project_tag_id/normal",
+					"title" => ___("flag this tag?", true),
+					"update"=>"tag-$tag_id"), NULL, false));
+				echo "</span>";
+				}
+				}
+			?>
+			</span>
+	</li>
+	<?php endforeach;?>
+</ul>

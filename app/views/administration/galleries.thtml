@@ -1,0 +1,29 @@
+<div class="fullcontent">
+	<h2>Manage Galleries (Under Construction) </h2>
+    <?php
+	e($this->renderElement('admin/admin_index', Array()));
+	?>
+</div>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	</div>
+	<div id="admin_project_content">	
+		<div>
+			<div>
+				<span>Sort By: </span>
+				<span><a href="<?php echo $html->url('/administration/gsort/created')?>">Creation Date</a> | </span>
+				<span><a href="<?php echo $html->url('/administration/gsort/name')?>">Name</a> | </span>
+				<span><a href="<?php echo $html->url('/administration/gsort/creator')?>">Creator</a> </span>
+			</div><br/>
+		<div>
+	<?php
+		 e($ajax->div("admin_project_list"));
+         	e($this->renderElement('admingalleries', array('data'=> $data)));
+         e($ajax->divEnd("admin_project_list"));
+    ?>	
+	<?php 
+	e($ajax->div("void"));
+	e($ajax->divEnd("void"));
+	?>
+    </div>	
+</div>

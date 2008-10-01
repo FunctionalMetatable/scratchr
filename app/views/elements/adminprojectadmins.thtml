@@ -1,0 +1,40 @@
+<div id="admin_notes_form">
+<form id="pcomment" action="<?=e("/administration/add_admin_note/$project_id/administration")?>" method="post">
+	<p><textarea id='apcomment_textarea' name="apcomment_textarea" cols="55" rows="3"></textarea></p>			
+	<?php 
+		e($ajax->submit('Add', array('id' => 'apcomment_submit', 
+		 'class'=>'button', 'url' => "/administration/add_admin_note/$project_id/administration", 
+		'update' => 'admin_project_comments',
+		"loading" => "document.getElementById('apcomment_submit').disabled = true;", 
+		"complete" => "document.getElementById('apcomment_textarea').value = ''; 
+		document.getElementById('apcomment_submit').disabled = false;")));
+	?>
+</form>
+</div>
+<div>
+<?php 
+	foreach($data as $comment) {
+		$commenter_id = $comment['User']['id'];
+		$commenter_urlname = $comment['User']['urlname'];
+		$commenter_username = $comment['User']['username'];
+		$commenter_url ="/users/".$commenter_urlname;
+		$commenter_icon = getBuddyIconBySize($commenter_id, 'mini');
+		$comment_id = $comment['Apcomment']['id'];
+		$comment_content = $comment['Apcomment']['content'];
+		$timestamp = $comment['Apcomment']['timestamp'];
+	?>
+		<div class="comment">
+			
+				<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
+				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
+				<?php echo friendlyDate($timestamp);?>
+				</h5>
+				<p><?php echo $comment_content;?></p>
+				
+		</div>
+		
+		
+	<?php
+	}
+?>
+</div>

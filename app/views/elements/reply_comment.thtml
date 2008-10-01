@@ -1,0 +1,4 @@
+		<form id="pcomment_reply" action="<?=e("/projects/comment/$urlname/$pid/$comment_id")?>" method="post">
+			<p><textarea id='pcomment_reply_textarea<?php echo $comment_id; ?>' name="pcomment_reply_textarea<?php echo $comment_id; ?>" cols="55" rows="3"></textarea></p>			
+			<?php echo $ajax->submit(___('Reply', true), array('id' => 'pcomment_reply_submit'.$comment_id, "condition"=>"(checkLogin('pcomment_reply_textarea".$comment_id."'))", "class"=>"button","url"=>"/projects/comment/$urlname/$pid/$comment_id", "update"=>"project_comment_list", "loading" => "document.getElementById('pcomment_reply_submit".$comment_id."').disabled = true;", "complete" => "document.getElementById('pcomment_reply_textarea".$comment_id."').value = ''; document.getElementById('pcomment_reply_submit".$comment_id."').disabled = false;" ));?>
+		</form>

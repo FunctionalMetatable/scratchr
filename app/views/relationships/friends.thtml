@@ -1,0 +1,80 @@
+<div class="browseDiv">
+  <b class="browse">
+  <b class="browse1"><b></b></b>
+  <b class="browse2"><b></b></b>
+  <b class="browse3"></b>
+  <b class="browse4"></b>
+  <b class="browse5"></b></b>
+  <div class="browseHeader"><h3>&nbsp;<?php ___('Explore friends'); ?></h3></div>
+  
+	<div class="browseBody">
+
+	<table width="100%">
+	<tr>
+	<td>
+	sort by:
+	<?php
+	$pagination->setPaging($paging);
+    e($sortByLastname = $pagination->sortBy("lastname", ___("last name", true), "Friend")." ");
+	e($sortByFirstname = $pagination->sortBy("firstname", ___("first name", true), "Friend")." ");
+	e($sortByUrlname = $pagination->sortBy("urlname", ___("urlname", true), "Friend"));
+	?>
+	</td>
+	
+	<?php
+	$prev = $pagination->prevPage(___("Prev", true),false);
+	$prev = $prev?$prev:___("Prev", true);
+	$next = $pagination->nextPage(___("Next", true),false);
+	$next = $next?$next:___("Next", true);
+	$pages = $pagination->pageNumbers(" | ", null, "", "");
+	$results = $pagination->result(___("Showing", true)." ");
+	?>
+	
+	<td><?php e($results)?></td>
+	<td align="right"><?php echo "$prev  $pages $next" ?></td>
+	</tr>
+	</table>
+
+
+	<div class="browseContent">
+		<?php
+			foreach ($friends as $friend):
+			$friend = $friend['Friend'];
+			$friend_urlname = $friend['urlname'];
+			$friend_username = $friend['username'];
+			$user_url = "/users/".$friend_urlname;
+			$firstname = $friend['firstname'];
+			$lastname = $friend['lastname'];
+			$buddyicon = getBuddyIconBySize($friend['id'], 'mini', $content_status);?>
+			
+			<div class="browseEntry">
+			<table><tr>
+			<td><div class="entryImg"><a href="<? echo $html->url($user_url)?>">
+			<?php echo $html->image($buddyicon,array('class'=>'vimgSm','width'=>'133','height'=>'100'))?>
+			</a></div></td>
+			<td><div class="entryTitle"><b><a href="<?php echo $html->url($user_url)?>"><? e($friend_username)?></a></b><br/></div>
+				<div class="entryProperties">
+					<span class="grayText"><?php ___('username'); ?>: </span><?php e($friend_username)?>
+				</div>
+			</td></tr>
+			</table>
+			</div>
+		<?php endforeach;?>	
+	</div>
+
+	<table width="100%">
+	<tr>
+	<td><?php ___('sort by:'); ?>
+	<?php
+	e($sortByLastname);
+	e($sortByFirstname);
+	e($sortByUrlname);
+	?>
+	</td>
+	<td><?php e($results)?></td>
+	<td align="right"><?php echo "$prev  $pages $next" ?></td>
+	</tr>
+	</table>
+	
+	</div> <!--end::browseBody-->
+</div>

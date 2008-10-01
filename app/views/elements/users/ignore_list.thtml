@@ -1,0 +1,27 @@
+<div id="ignore_user_list">
+<?php		
+	$pagination->setPaging($paging);
+	echo $this->renderElement('pagination'); 
+	
+	foreach ($data as $user) {
+		$current_id = $user['IgnoredUser']['id'];
+		$current_name = $user['User']['username'];
+		$reason = $user['IgnoredUser']['reason'];
+		$remove_address = "/users/remove_ignore_user/$user_id/$current_id";
+		
+		echo "<div class='gallerythumb clearme'>\n";
+		echo "\t<div class='admin_leftcolumn'>\n";
+		echo "<span>$current_name<span>\n";
+		echo "\t</div>";
+		echo "\t<div class='admin_rightcolumn'>\n";
+		echo "<span>Reason: $reason </span>"; echo "<br/>";
+		echo "<span>"; 
+		
+		echo "(" . $ajax->link(___("Remove", true), '#', 
+			array("url"=>$remove_address, "update"=>"ignore_user_wrapper"), NULL, false) . ")";
+		echo "</span>\n";
+    	echo "\t</div>\n";
+		echo "</div>\n";
+	}
+?>
+</div>

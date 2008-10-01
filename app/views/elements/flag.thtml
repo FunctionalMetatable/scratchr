@@ -1,0 +1,24 @@
+<?php if ($isLoggedIn && (!empty($already_flagged) || !empty($just_flagged))):?>
+
+<h5><?php ___('You flagged it!'); ?></h5>
+
+<?php elseif (!$isLoggedIn):?>
+
+<h5><?php echo $ajax->link(___("Flag as inappropriate?", true), 
+'#', array("url"=>"/projects/$urlname/$pid/flag", "update"=>"flagDiv",
+ "condition"=>"checkLogin()", "style"=>"color:#aaa"), NULL, false); ?></h5>
+
+<?php else:?>
+
+<script type="text/javascript">
+var explainFlagMsg = "<?php ___('Please explain why you think this project is inappropriate. This is required for you to flag.'); ?>";
+var explainFlagTxt = '';
+</script>
+<h5><a href="#" onclick="$('flagMessageDiv').toggle();$('loveitDiv').toggle();$('favoriteDiv').toggle();$('flagMessageDivTb').value=explainFlagMsg;return false;"><?php ___('Flag as inappropriate?'); ?></a></h5>
+<div id="flagMessageDiv" style="display:none;">
+<?php e($ajax->form("/$urlname/$pid/flag", "post", array("update"=>"flagDiv", "condition"=>"confirmFlagging($('flagMessageDivTb').getValue())"))); ?>
+	<textarea cols="55" rows="5" name="flagmsg" id="flagMessageDivTb" onClick="if(this.value==explainFlagMsg){this.value=explainFlagTxt;}"></textarea>
+	<input type="submit" value="<?php ___("Flag"); ?>" onclick="if($('flagMessageDivTb').getValue() == explainFlagMsg){$('flagMessageDivTb').value='';}"/>&nbsp;&nbsp;<a href="#" onClick="$('flagMessageDiv').toggle();$('loveitDiv').toggle();$('favoriteDiv').toggle();return false;"> <?php ___('Cancel'); ?></a>
+</form>
+</div>
+<?php endif;?>

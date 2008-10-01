@@ -1,0 +1,4 @@
+<?php
+	//echo $ajax->link(___"Click here to disable notifications when a comment is made on your projects", true), '#', array("url"=>"/notifications/unpnotify", "update"=>"pnotifyDiv"), NULL, false);
+	e($this->renderElement('pnotify'));
+?>

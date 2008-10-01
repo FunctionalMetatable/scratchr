@@ -1,0 +1,3 @@
+<h5>
+	<a href="<?php echo $html->url('/galleries/addtogallery/'.$pid) ?>"><?php ___('Add to my gallery');?></a>
+</h5>

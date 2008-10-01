@@ -1,0 +1,20 @@
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+<div class="fullcontent">
+<div id="admin_project_header">
+	<?php
+		$project_name = htmlspecialchars($project['Project']['name']);
+		$project_owner = htmlspecialchars($project['User']['username']);
+		$project_id = $project['Project']['id'];
+		$project_link = "/projects/" . $project_owner . "/" . $project_id;
+	?>
+	<h3> Reasons For Flagging <a href="<?php echo $html->url($project_link)?>"><?php echo $project_name?></a>
+	 </h3>
+</div>
+<div id="admin_project_content">
+	<?php
+		echo $this->renderElement('admin/flagger_list', Array('data' => $data));
+	?>
+    </div>
+</div>

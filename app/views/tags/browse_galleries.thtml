@@ -1,0 +1,9 @@
+<div class="fullcontent">
+   <h2><?php ___('Popular gallery tags'); ?></h2>
+   <div id="tagcloud_big">
+   <p align="justify">
+   		<?php $tag_url =  $html->url('/tags/view_galleries')?>
+		<?php e($tagcloud->getTagCloud($gallery_tags, $tag_url, 'PopTag', 50, 'style',', ')); ?>
+   </p>
+</div>
+</div>

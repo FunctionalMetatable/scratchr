@@ -1,0 +1,35 @@
+<div class="fullcontent">
+  <h2><?php ___('Contact Us | Scratch Sensor Board') ?></h2> 
+  <br />
+<?php if (isset($succes)){ ?>
+	 <p>
+	 <?php echo $html->image('/img/contact_thanks.png')?>
+	 
+	 </p> 
+<?php }else{?>
+	 <form method="post" enctype="multipart/form-data" action="<?php echo $html->url('/contact/sboard/')?>">
+
+<?php if (isset($error)){?> 
+	  <p><h2><?php echo($error) ?></h2></p>
+	  <p><?php ___('This form is not working for you? E-mail us at scratchboard@media.mit.edu'); ?></p>
+<?}?>
+
+<div id="main">
+<p>
+	<?php ___('Name'); ?>:	 <input type="text" name="data[Page][name]" size="25" />
+</p>
+<p>
+	<?php ___('Email'); ?>:	 <input type="text" name="data[Page][email]" size="25" />
+</p>
+<p>
+   <?php ___('Brief descripion of how you would like to use the board'); ?>:<br /><textarea name="data[Page][message]" cols="40" rows="10"></textarea>
+</p>
+<p >
+<input type="submit" value="<?php ___('Submit')?>" />
+   
+</p>
+</form>
+</div>
+<?php }?>
+</div>
+<!--- End Content --->

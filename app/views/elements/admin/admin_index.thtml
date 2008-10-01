@@ -1,0 +1,13 @@
+<div class="fullcontent">
+	<h2>Manage Users</h2>
+    <h5>
+	<a href="<?php echo $html->url('/administration/index')?>"> Home </a> | 
+	<a href="<?php echo $html->url('/administration/karma')?>"> Karma </a> |
+	<a href="<?php echo $html->url('/administration/ban_user')?>"> User Bans </a> |
+	<a href="<?php echo $html->url('/administration/ban_ip')?>"> IP Bans </a> |
+	<a href="<?php echo $html->url('/administration/rss_feeds')?>"> RSS Feeds </a> |
+	<a href="<?php echo $html->url('/administration/set_announcements')?>"> Announcements </a> | 
+	<a href="<?php echo $html->url('/administration/search')?>"> Search </a> |
+	<a href="<?php echo $html->url('/administration/predefined_tags')?>"> Admin Tags </a>
+	</h5>
+</div>

@@ -1,0 +1,24 @@
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	<h5> Admin RSS Feeds </h5>
+	</div>
+	<div id="admin_project_content">
+		
+		<a href="<?php echo $html->url('/feeds/getTopFlaggedProjects')?>" title="Flagged Projects (Ordered)">
+		<?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?>
+			 Flagged Projects (Unreviewed and Ordered)
+		</a>
+		<br/>	
+		<a href="<?php echo $html->url('/feeds/getNewestProjects')?>" title="Newest Projects">
+			<?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?>
+			 Newest Projects
+		</a>
+		<br/>
+		<a href="<?php echo $html->url('/feeds/getFeaturedProjects')?>" title="Featured Projects">
+			<?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?> Featured Projects
+		</a>
+    </div>
+</div>

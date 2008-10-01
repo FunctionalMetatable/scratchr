@@ -1,0 +1,54 @@
+<?php $head->register_jsblock("
+	function init() {
+		document.getElementsByTagName('input')[2].focus();
+	}
+	window.onload = init;
+");
+?>
+
+<!-- |||||| Begin main content area ||||||| -->
+<div id="main">
+<div class="container" id="loginForm">
+  <form action="login" method="POST" accept-charset="UTF-8">
+  <div class="login_header">
+    <h3><?php ___('Log in'); ?></h3>
+  </div>
+	<?php 
+		if($isLoginError) {
+			echo "<div class='login_error'>";
+				$error = $errors[0];
+				echo $error;
+			echo "</div>";
+		}
+	?>
+<!-- testing //-->	
+	<div id="login_content">
+		<div class="login_row">
+			<label for="User"><?php ___('Username'); ?>:</label>
+			<input id="UserInput" type="text" name="User" value="" size="24">
+		</div>
+		<div class="login_row">
+			<label for="Pass"><?php ___('Password'); ?>:</label>
+			<input type="password" name="Pass" value="" size="24">
+		</div>
+		<div class="login_submit">
+			<input type="submit" class="button" value="<?php ___('log in'); ?>">
+		</div>
+  </div>
+  </form>
+</div>
+</div>
+<!-- ////// End main content ////// -->
+
+
+<!-- |||||| Begin sidebar ||||||| -->
+  <div id="sidebar">
+    <div id="download">
+      <h2><?php ___('Download Scratch'); ?></h2>
+      <p>
+	  <a href="<?php echo $html->url('/download')?>"><?php echo $html->image('/img/download_scratch.gif',array('alt'=>'Download Scratch','width'=>'74','height'=>'32'))?></a>
+	  <?php ___('Get the')?>&nbsp;<a href="<?php echo $html->url('/download')?>"><?php ___('latest version of Scratch')?></a>&nbsp;<?php ___('for Windows or Mac')?>
+	  </p>
+    </div>
+  </div>
+<!-- ////// End main sidebar ////// -->

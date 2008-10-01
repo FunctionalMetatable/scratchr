@@ -1,0 +1,3 @@
+<?php
+	echo $this->renderElement('projects/reply_list', Array('comments' => $comments, 'comment_level' => $comment_level, 'project_id' => $project_id));
+?>

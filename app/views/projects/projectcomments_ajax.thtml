@@ -1,0 +1,4 @@
+<?php
+    $params = array('comments' => $comments, 'isLogged'=>$isLogged, 'urlname'=>$urlname);
+    e($this->renderElement('commentlist', $params));
+?>

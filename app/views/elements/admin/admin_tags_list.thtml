@@ -1,0 +1,5 @@
+<?php
+	foreach ($admin_tags as $tag) {
+		echo $this->renderElement('admin/admin_tags_row', Array('tag'=>$tag));
+	}
+?>

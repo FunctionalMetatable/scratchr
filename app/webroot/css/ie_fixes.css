@@ -1,0 +1,25 @@
+/* =Internet Explorer Fixes
+----------------------------------------------------------------------*/
+
+.gallery_box a.gallery_element
+{
+	position: relative;
+}
+
+.gallery_box a.gallery_element:hover
+{
+	display: block;
+	font-size: 100%;
+	z-index: 1;
+}
+
+.gallery_box a.gallery_element:hover .gallery_element_preview
+{
+	top: -38px;
+	left: -50px;
+}
+
+.gallery_box li
+{
+	position: static;
+}

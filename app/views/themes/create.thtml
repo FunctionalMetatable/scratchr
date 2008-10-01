@@ -1,0 +1,56 @@
+<?php $head->register_jsblock("
+	function init() {
+//		document.getElementsByTagName('input')[0].focus();
+	}
+	window.onload = init;
+");
+?>
+
+
+<!-- |||||| Begin main content area ||||||| -->
+<div id="main">
+<div class="container" id="NewThemeForm">
+  <form action="<?php echo $html->url('/galleries/create')?>" method="post" enctype='multipart/form-data'>
+  <h3>New Gallery</h3>
+  
+	<?php 
+//	$session->flash(FLASH_ERROR_KEY);
+	$session->flash(FLASH_NOTICE_KEY);
+	?>
+
+  <table>
+	<tr><td colspan="3"></td></tr>
+		
+	<tr>
+	<td align="right" width="30%"><label>Name:</label></td>
+	<td colspan="2" width="70%">
+	<input name="theme_name" id="User" type="text" size="24">
+	<?php echo $html->tagErrorMsg('Theme/name', 'invalid name')?>
+	</td>
+	</tr>
+		
+	<tr>
+	<td align="right"><label>Description:</label></td>
+	<td colspan="2">
+	<textarea name="theme_description" id="User" cols="17" rows="3"></textarea>
+	<?php echo $html->tagErrorMsg('Theme/description', 'invalid description')?>
+	</td>
+	</tr>    
+
+	<tr>
+	<td align="right"><label>Icon</label></td>
+	<td colspan="2">
+	<input name='icon' type='file' size="22"/>
+	</td>
+	</td>
+	</tr>  
+	
+	<tr valign="top">
+	  <td>&nbsp;</td>
+	  <td><input type="submit" class="button" value="Create"></td>
+	</tr>
+  </table>
+  </form>
+</div>
+</div>
+<!-- ////// End main content ////// -->

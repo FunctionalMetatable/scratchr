@@ -1,0 +1,81 @@
+<div class="browseDiv">
+  <b class="browse">
+  <b class="browse1"><b></b></b>
+  <b class="browse2"><b></b></b>
+  <b class="browse3"></b>
+  <b class="browse4"></b>
+  <b class="browse5"></b></b>
+  <div class="browseHeader"><h3>&nbsp;<?php ___('Explore Projects'); ?></h3></div>
+  
+	<div class="browseBody">
+	
+	<table width="100%">
+	<tr>
+	<td>
+	<?php ___('sort by'); ?>:
+	<?php
+	$pagination->setPaging($paging);
+    e($sortByName = $pagination->sortBy("name", ___("title", true), "Project")." ");
+    e($sortByViews = $pagination->sortBy("views", ___("views", true), "Project")." ");
+    e($sortByCreated = $pagination->sortBy("created", ___("creation date", true), "Project")." ");
+    e($sortByTimestamp = $pagination->sortBy("timestamp", ___("last modified", true), "Project"));
+	?>
+	</td>
+	
+	<?php
+	$prev = $pagination->prevPage(___("Prev", true),false);
+	$prev = $prev?$prev:___("Prev", true);
+	$next = $pagination->nextPage(___("Next",true),false);
+	$next = $next?$next:___("Next", true);
+	$pages = $pagination->pageNumbers(" | ", null, "", "");
+	$results = $pagination->result("Showing ");
+	?>
+	
+	<td><?php e($results)?></td>
+	<td align="right"><?php echo "$prev  $pages $next" ?></td>
+	</tr>
+	</table>
+
+
+	<div class="browseContent">
+		<?php
+            foreach ($data as $project):
+            $views = $project['Project']['views'];
+            $pid = $project['Project']['id'];
+            $urlname = $project['User']['urlname'];
+            $project_url = "/projects/$urlname/$pid";
+            $project_desc =htmlspecialchars($project['Project']['description']);
+			$project_name = htmlspecialchars($project['Project']['name']);
+            $mini_img_src = getThumbnailImg($urlname, $pid);?>
+			
+			<div class="browseEntry">
+			<table><tr>
+			<td><div class="entryImg"><a href="<? e($project_url)?>"><img class="vimgSm" width="133px" height="100px" src="<?php e($mini_img_src)?>"/></a></div></td>
+			<td><div class="entryTitle"><b><a href="<? e($project_url)?>"><?=e($project_name)?></a></b><br/></div>
+				<div class="entryProperties">
+					<span class="grayText"><?php ___('Views'); ?>: </span><?=e($views)?><br>
+					<span class="grayText"><?php ___('Description'); ?>: </span><?=e($project_desc)?>
+				</div>
+			</td></tr>
+			</table>
+			</div>
+		<?php endforeach;?>	
+	</div>
+
+	<table width="100%">
+	<tr>
+	<td><?php ___('sort by'); ?>:
+	<?php
+	e($sortByName);
+	e($sortByViews);
+	e($sortByCreated);
+	e($sortByTimestamp);
+	?>
+	</td>
+	<td><?php e($results)?></td>
+	<td align="right"><?php echo "$prev  $pages $next" ?></td>
+	</tr>
+	</table>
+	
+	</div> <!--end::browseBody-->	
+</div>

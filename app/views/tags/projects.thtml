@@ -1,0 +1,106 @@
+<div id="ajax_pagination">
+<div class="fullcontent">
+   <div class="top_header"><h3><?php printf(___('Projects Tagged with "%s"', true), $tag_name); ?></h3></div>
+   <div id="gallery_menu">
+	Sort By - <?php
+		if ($option == "views") {
+		?>
+			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/views"><span class="button2_selected"><?php ___('views')?></span></a>
+			
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/views"><span class="button2"><?php ___('views')?></span></a>
+			
+		<?php
+		}
+		if ($option == "title") {
+		?>
+			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/title"><span class="button2_selected"><?php ___('title')?></span></a>
+			
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/title"><span class="button2"><?php ___('title')?></span></a>
+			
+		<?php
+		}
+		
+		if ($option == "loveits") {
+		?>
+			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/loveits"><span class="button2_selected"><?php ___('loveits')?></span></a>
+			
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/loveits"><span class="button2"><?php ___('loveits')?></span></a>
+			
+		<?php
+		}
+		
+		if ($option == "creation") {
+		?>
+			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/creation"><span class="button2_selected"><?php ___('creation date')?></span></a>
+			
+		<?php
+		} else {
+		?>
+			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/creation"><span class="button2"><?php ___('creation date')?></span></a>
+			
+		<?php
+		}
+
+		
+	?>
+   </div>
+	<?php 
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination'); 
+	?>
+	<?php
+		foreach ($tag_projects as $tag_project):
+		$project = $tag_project['Project'];
+		$project_name = htmlspecialchars($project['name']);
+		$views = $project['views'];
+		$pid = $project['id'];
+		$urlname = $project['User']['urlname'];
+		$username = $project['User']['username'];
+		$project_url = "/projects/view/$urlname/$pid";
+		$project_desc = htmlspecialchars($project['description']);
+		$expand = false;
+		$ignored = $project['ignored'];
+		if (strlen($project_desc) >= 300) {
+			$project_desc = substr($project_desc,0,300) . " ... ";
+			$expand = true;
+		}
+
+		$lovers = $project['loveit'];
+		$mini_img_src = getThumbnailImg($urlname,$pid); 
+		
+		if ($ignored) {
+			echo "<div id='$pid' class='gallerythumb clearme'>\n";
+				echo "<h4> You have ignored the user who posted this project. </h4>";
+			echo "</div>\n";
+		}
+	?>
+		<?php if(!$ignored): ?>
+			<div id="project_<?php e($pid); ?>" class="gallerythumb clearme"> 
+			<a href="<?php echo $html->url($project_url)?>>"<?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
+			
+				<h3><a href="<?php echo $html->url($project_url) ?>"><?php e($project_name)?> </a></h3>			
+				<p><strong><?php ___('By'); ?>: </strong><a href="<?php echo $html->url('/users/view/')?><?php e($urlname)?>"><?php e($username)?></a></p>
+				<p><strong><?php ___('Views'); ?>:</strong> <?php e($views)?> | <?php ___('LoveIts'); ?>: <?php e((int)($lovers))?> </p>
+				<p><strong><?php ___('Description'); ?></strong>: <?e($project_desc)?>
+				<?php
+					if ($expand) {
+					e($ajax->link(___("show more", true), '#', 
+						array("url"=>"/tags/expandDescription/$pid",
+						"update"=>"project_$pid"), NULL, false));
+					}
+				?>
+				</p>
+			</div>
+		<?php endif; ?>
+   	<?php endforeach;?>	
+</div>
+</div>

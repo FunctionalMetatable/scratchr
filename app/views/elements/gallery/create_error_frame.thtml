@@ -1,0 +1,36 @@
+<?php
+	if ($isCreated) {
+		echo "<h5>";
+		echo ___('Your gallery has been successful created');
+		echo "</h5>";
+		foreach($errors as $error) {
+			if ($error == 'image_size') {
+				echo "<p> -" . __('The image you selected was too large to be uploaded') . "</p> <br/>";
+			}
+		}
+		?>
+		<a href="<?php echo $html->url('/galleries/view/'.$gallery_id)?>"><?php echo $gallery_name?></a>
+		
+	<?php
+	} else {
+		echo "<h5>"; 
+		echo ___('Your form has the following errors');
+		echo "</h5>";
+		foreach($errors as $error) {
+			echo "<span class='std_error'>";
+			if ($error == 'name_inappropriate') {
+				echo "<p> -" . __('That name is inappropriate according to our Terms of Use') . "</p><br/>";
+			}
+			if ($error == 'description_inappropriate') {
+				echo "<p> -" . __('That description is inappropriate according to our Terms of Use') . "</p> <br/>";
+			}
+			if ($error == 'name_taken') {
+				echo "<p> -" . __('That name has already been taken') . "</p> <br/>";
+			}
+			if ($error == 'empty_fields') {
+				echo "<p> -" . __('The gallery name and description cannot be empty') . "</p> <br/>";
+			}
+			echo "</span>";
+		}
+	}
+?>

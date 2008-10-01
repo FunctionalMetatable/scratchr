@@ -1,0 +1,21 @@
+<div>
+<?php		
+	$pagination->setPaging($paging);
+	echo $this->renderElement('pagination'); 
+	
+	foreach ($data as $flagger) {
+		$flagger_id = $flagger['Flagger']['id'];
+		$user_name= $flagger['User']['username'];
+		$reason = $flagger['Flagger']['reasons'];
+		
+		echo "<div class='gallerythumb clearme'>\n";
+		echo "\t<div class='admin_leftcolumn'>\n";
+		echo "<span>User: $user_name</span>\n";
+		echo "\t</div>";
+		echo "\t<div class='admin_rightcolumn'>\n";
+		echo "<span>Reason: $reason </span>"; echo "<br/>";
+    	echo "\t</div>\n";
+		echo "</div>\n";
+	}
+?>
+</div>
