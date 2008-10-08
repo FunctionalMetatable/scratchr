@@ -67,7 +67,7 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 	<div id="whowhen">
 	<?php echo $html->image(getBuddyIconBySize($owner_id,'mini', $content_status),array('alt'=>'user_icon','width'=>'28','height'=>'28'))?>
 	<a href="<?php echo $html->url('/users/')?><?php echo $urlname?>"><?php echo $urlname?></a>
-	<?php ___('shared it ');echo $date;___(' ago')?>
+	<?php ___('shared it ');echo $date;___(' ago')?><br />
 	
 	<?php
 	if($related_username) {
