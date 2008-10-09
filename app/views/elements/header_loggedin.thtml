@@ -69,22 +69,25 @@ if(isset($ishomepage) && $ishomepage) {
 </form>
 <!-- Google CSE Search Box Ends -->
    </div>
+   
+  
 
-<?php //if(!$isBanned): ?>
-<!--<div style="float:left;">
-<div id="notificationcontainer" style="display:<?php if($notify_count) echo 'block'; else echo 'none'; ?>;">-->
-<?php 
-	/*if($this->controller->countNotifications()==1) 
+<?php if(!$isBanned): ?>
+<div style="float:left;">
+<div id="notificationcontainer" style="display:<?php if($notify_count) echo 'block'; else echo 'none'; ?>;">
+<?php
+
+ 	if($notify_count==1) 
 	{
 		printf(___('You have %s message', true), '<a href="/notifications"><b id="notificationscount">' . $notify_count); echo "</b> </a>"; } 
 	else {
 		printf(___('You have %s messages', true), '<a href="/notifications"><b id="notificationscount">' . $notify_count); echo "</b> </a>"; 
-	}*/ 
+	} 
 ?>
 
-<!--</div>
 </div>
---><? //endif; ?>
+</div>
+<? endif; ?>
 
 <?php
 	if($isAnnouncementOn) {
