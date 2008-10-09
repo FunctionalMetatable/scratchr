@@ -37,7 +37,7 @@
 		}
 		
 		if ($ignored && !$isCommentOwner) {
-			echo "<div id='$comment_id' class='comment'>\n";	
+			echo "<div id='$comment_id' class='comment_$comment_level'>\n";	
 				echo "<h5><img src='$commenter_icon' alt='$commenter_username' width='28' height='28'> <a href='$commenter_url'>$commenter_username</a> ";
 				if ($date == "Now") {
 				} else {
@@ -46,7 +46,7 @@
 				echo "</h5><p>Comment not displayed. Posted by a muted account.</p>
 			</div>";
 		} elseif (!$commented) {
-			echo "<div id='$comment_id' class='comment'>\n";	
+			echo "<div id='$comment_id' class='comment_$comment_level'>\n";	
 
 			echo "<h5><img src='$commenter_icon' alt='$commenter_username' width='28' height='28'> <a href='$commenter_url'>$commenter_username</a>\n";
 			if ($date == "Now") {
@@ -131,7 +131,7 @@
 			echo "</div>\n";
 
 		} else {
-			echo "<div id='$comment_id' class='comment'>\n";	
+			echo "<div id='$comment_id' class='comment_$comment_level'>\n";	
 			echo "<h5><img src='$commenter_icon' alt='$commenter_username' width='28' height='28'> <a href='$commenter_url'>$commenter_username</a> ";
 			if ($date == "Now") {
 			} else {
