@@ -35,6 +35,7 @@
  */
 	
 	Router::connect('/', array('controller' => 'home', 'action' => 'index', 'home'));
+	Router::connect('/notifications', array('controller' => 'notifications', 'action' => 'index', 'home'));
 	## Download page
 	Router::connect('/download', array('controller' => 'dusers', 'action' => 'add'));
 	
