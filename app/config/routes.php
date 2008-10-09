@@ -81,7 +81,9 @@ Router::connect('/users/notify/*', array('controller' => 'users', 'action' => 'n
 Router::connect('/users/removefriend/*', array('controller' => 'users', 'action' => 'removefriend'));
 Router::connect('/users/removegallery/*', array('controller' => 'users', 'action' => 'removegallery'));
 Router::connect('/users/showfriends/*', array('controller' => 'users', 'action' => 'showfriends'));
+Router::connect('/users/renderProjects/*', array('controller' => 'users', 'action' => 'renderProjects'));
 Router::connect('/users/removefavorites', array('controller' => 'users', 'action' => 'removefavorites'));
+
 Router::connect('/users/*', array('controller' => 'users', 'action' => 'view'));
 //Router::connect('/projects/([A-Za-z0-9-_]+)/([0-9]+)/:action/', array());
 //Router::connect('/projects/([A-Za-z0-9-_]+)/([0-9]+)/:action', array('controller' => 'projects', 'action'=>$Action));
