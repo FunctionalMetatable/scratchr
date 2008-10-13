@@ -459,7 +459,7 @@ class UsersController extends AppController {
 		$this->set('age', $this->getUserAge($user_record) );
 		$this->set('isMe', $isMe);
 		$this->render('render_projects_ajax', 'ajax');
-		exit();
+		return;
 	}
 	/**
 	/* MyStuff
@@ -581,6 +581,7 @@ class UsersController extends AppController {
 				// find all themes owned by current session user
 				// where currently viewed user is not a member
 
+
 				$joinable_themes = $this->Theme->query(
 					"SELECT * FROM themes
 					WHERE (themes.user_id = ".$session_UID.")
@@ -690,6 +691,7 @@ class UsersController extends AppController {
         echo $this->User->field($form_field);
         exit();
     }
+
 
 
 	/**
