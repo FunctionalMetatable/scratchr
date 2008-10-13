@@ -85,8 +85,7 @@ Router::connect('/users/renderProjects/*', array('controller' => 'users', 'actio
 Router::connect('/users/removefavorites', array('controller' => 'users', 'action' => 'removefavorites'));
 
 Router::connect('/users/*', array('controller' => 'users', 'action' => 'view'));
-//Router::connect('/projects/([A-Za-z0-9-_]+)/([0-9]+)/:action/', array());
-//Router::connect('/projects/([A-Za-z0-9-_]+)/([0-9]+)/:action', array('controller' => 'projects', 'action'=>$Action));
+
 Router::connect('/projects/feature', array('controller' => 'projects', 'action' => 'feature'));
 Router::connect('/projects/defeature', array('controller' => 'projects', 'action' => 'defeature'));
 Router::connect('/projects/censor', array('controller' => 'projects', 'action' => 'censor'));
