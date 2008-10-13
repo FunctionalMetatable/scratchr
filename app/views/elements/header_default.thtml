@@ -25,12 +25,17 @@ if(isset($ishomepage) && $ishomepage) {
       <li id="langselect">
         <select name="lang" onchange="location = this.options[this.selectedIndex].value;">
           <option><?php ___('Language'); ?></option>
+		  <option value="/lang/ara">العربية</option>
           <option value="/lang/de-de">Deutsch</option>
           <option value="/lang/en-us">English</option>	
           <option value="/lang/es-es">Español</option>
           <option value="/lang/fr-fr">Français</option>
+		  <option value="/lang/gre">Ελληνικά</option>
+		  <option value="/lang/hun">magyar</option>
 		  <option value="/lang/ita">Italiano</option>
+		  <option value="/lang/jpn">日本語</option>
 		  <option value="/lang/kor">한국어</option>
+		  <option value="/lang/nor">norsk</option>
 		  <option value="/lang/pol">Polski </option>
 		  <option value="/lang/pt-br">Português-Br</option>
 		  <option value="/lang/ru">Русский</option>
