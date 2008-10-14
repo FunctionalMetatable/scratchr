@@ -26,7 +26,7 @@
 	}
 	?>
 	<div class="thumb">
-	<a href="<?php echo $html->url(project_url)?>"><?php echo $html->image($thumbnail_src,array('alt'=>$project_name,'width'=>'148','148'=>'111'))?></a>
+	<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($thumbnail_src,array('alt'=>$project_name,'width'=>'148','148'=>'111'))?></a>
 	  
 	  <h6><a href="<?php echo $html->url($project_url)?>"><?php e($project_name)?></a></h6>
 	  <p><?php ___('by'); ?><a href="<?php echo $html->url($owner_url)?>"> <?php e($owner_username)?></a>
