@@ -82,8 +82,8 @@ Router::connect('/users/removefriend/*', array('controller' => 'users', 'action'
 Router::connect('/users/removegallery/*', array('controller' => 'users', 'action' => 'removegallery'));
 Router::connect('/users/showfriends/*', array('controller' => 'users', 'action' => 'showfriends'));
 Router::connect('/users/renderProjects/*', array('controller' => 'users', 'action' => 'renderProjects'));
+Router::connect('/users/render_comment_list/*', array('controller' => 'users', 'action' => 'render_comment_list'));
 Router::connect('/users/removefavorites', array('controller' => 'users', 'action' => 'removefavorites'));
-
 Router::connect('/users/*', array('controller' => 'users', 'action' => 'view'));
 
 Router::connect('/projects/feature', array('controller' => 'projects', 'action' => 'feature'));
