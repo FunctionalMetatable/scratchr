@@ -100,6 +100,8 @@ Router::connect('/projects/show_comment_reply/*', array('controller' => 'project
 Router::connect('/projects/set_status/*', array('controller' => 'projects', 'action' => 'set_status'));
 Router::connect('/projects/set_attribute/*', array('controller' => 'projects', 'action' => 'set_attribute'));
 Router::connect('/projects/expandDescription/*', array('controller' => 'projects', 'action' => 'expandDescription'));
+Router::connect('/projects/deltag/*', array('controller' => 'projects', 'action' => 'deltag'));
+Router::connect('/projects/markTag/*', array('controller' => 'projects', 'action' => 'markTag'));
 
 Router::connect('/projects/:username/:id', array('controller' => 'projects', 'action' => 'view'), array(
    'pass' => array('username','id'),
