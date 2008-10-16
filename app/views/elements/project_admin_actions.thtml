@@ -13,7 +13,12 @@
 	}
 	
  ?>
- <form method="post" action=""/>
+ <style>
+ 	div.submit {
+		display:inline;
+	}
+ </style>
+ <form method="post" action="">
 	<input type="hidden" name="urlname" value="<?php e($urlname)?>"/>
 	<input type="hidden" name="pid" value="<?php e($pid)?>"/>
 	<br/>
