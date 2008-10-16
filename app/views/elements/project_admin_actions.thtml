@@ -24,7 +24,7 @@
 	<br/>
 	<?php 
 		$feature_text = ($isFeatured) ? "defeature" : "feature";
-		echo $ajax->submit($feature_text, array("class"=>"button", "url"=>"/projects/".$feature_text, "update"=>"adminActions"));
+		echo $ajax->submit($feature_text, array("class"=>"button", "url"=>"/projects/".$feature_text.'/'.$urlname, "update"=>"adminActions"));
 		echo "&nbsp;";
 	?>
 <!-- 
@@ -46,29 +46,29 @@
 	<?php
 	if ($status == 'notreviewed') {
 		e($ajax->link("<span class='button2_selected'>Unreviewed</span>		", '#', 
-							array('url'=>'/projects/set_status/' . $pid . '/notreviewed', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_status/' . $pid . '/notreviewed/'.$urlname, 'update'=>'adminActions', 
 								'condition'=>'checkLogin()'), NULL, false));
 	} else {
 		e($ajax->link("<span class='button2'>Unreviewed</span>		", '#', 
-							array('url'=>'/projects/set_status/' . $pid . '/notreviewed', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_status/' . $pid . '/notreviewed/'.$urlname, 'update'=>'adminActions', 
 								'condition'=>'checkLogin()'), NULL, false));
 	}
 	if ($status == 'safe') {
 		e($ajax->link("<span class='button2_selected'>For Everyone</span>		", '#', 
-							array('url'=>'/projects/set_status/' . $pid . '/safe', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_status/' . $pid . '/safe/'.$urlname, 'update'=>'adminActions', 
 								'condition'=>'checkLogin()'), NULL, false));
 	} else {
 		e($ajax->link("<span class='button2'>For Everyone</span>		", '#', 
-							array('url'=>'/projects/set_status/' . $pid . '/safe', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_status/' . $pid . '/safe/'.$urlname, 'update'=>'adminActions', 
 								'condition'=>'checkLogin()'), NULL, false));
 	}
 	if ($status == 'notsafe') {
 		e($ajax->link("<span class='button2_selected'>Not For Everyone</span>		", '#', 
-							array('url'=>'/projects/set_status/' . $pid . '/notsafe', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_status/' . $pid . '/notsafe/'.$urlname, 'update'=>'adminActions', 
 								'condition'=>'checkLogin()'), NULL, false));
 	} else {
 		e($ajax->link("<span class='button2'>Not For Everyone</span>		", '#', 
-							array('url'=>'/projects/set_status/' . $pid . '/notsafe', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_status/' . $pid . '/notsafe/'.$urlname, 'update'=>'adminActions', 
 								'condition'=>'checkLogin()'), NULL, false));
 	}
 	?>
@@ -100,7 +100,7 @@
 									<h6>Violent</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'violent/1', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'violent/1'.'/'.$urlname, 'update'=>'adminActions', 
 							'condition'=>'checkLogin()'), NULL, false));
 		} else {
 			e($ajax->link(" <div class='gallery_addproject_item'>
@@ -111,7 +111,7 @@
 									<h6>Violent</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'violent/0', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'violent/0'.'/'.$urlname, 'update'=>'adminActions', 
 							'condition'=>'checkLogin()'), NULL, false));
 		}
 		
@@ -124,7 +124,7 @@
 									<h6>Mildly Violent</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'm_violent/1', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'm_violent/1'.'/'.$urlname, 'update'=>'adminActions', 
 							'condition'=>'checkLogin()'), NULL, false));
 		} else {
 			e($ajax->link(" <div class='gallery_addproject_item'>
@@ -135,7 +135,7 @@
 									<h6>Mildly Violent</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'm_violent/0', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'm_violent/0'.'/'.$urlname, 'update'=>'adminActions', 
 							'condition'=>'checkLogin()'), NULL, false));
 		}
 		
@@ -148,7 +148,7 @@
 									<h6>Obscene</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'obscene/1', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'obscene/1'.'/'.$urlname, 'update'=>'adminActions', 
 							'condition'=>'checkLogin()'), NULL, false));
 		} else {
 			e($ajax->link(" <div class='gallery_addproject_item'>
@@ -159,7 +159,7 @@
 									<h6>Obscene</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'obscene/0', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'obscene/0'.'/'.$urlname, 'update'=>'adminActions', 
 							'condition'=>'checkLogin()'), NULL, false));
 		}
 		
@@ -172,7 +172,7 @@
 									<h6>Mildly Obscene</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'm_obscene/1', 'update'=>'adminActions',
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'm_obscene/1'.'/'.$urlname, 'update'=>'adminActions',
 							'condition'=>'checkLogin()'), NULL, false));
 		} else {
 			e($ajax->link(" <div class='gallery_addproject_item'>
@@ -183,7 +183,7 @@
 									<h6>Mildly Obscene</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'm_obscene/0', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'm_obscene/0'.'/'.$urlname, 'update'=>'adminActions', 
 							'condition'=>'checkLogin()'), NULL, false));
 		}
 		
@@ -196,7 +196,7 @@
 									<h6>Disrespectful</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'disrespectful/1', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'disrespectful/1'.'/'.$urlname, 'update'=>'adminActions', 
 							'condition'=>'checkLogin()'), NULL, false));
 		} else {
 			e($ajax->link(" <div class='gallery_addproject_item'>
@@ -207,7 +207,7 @@
 									<h6>Disrespectful</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'disrespectful/0', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'disrespectful/0'.'/'.$urlname, 'update'=>'adminActions', 
 							'condition'=>'checkLogin()'), NULL, false));
 		}
 		
@@ -220,7 +220,7 @@
 									<h6>Mature</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'mature/1', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'mature/1'.'/'.$urlname, 'update'=>'adminActions', 
 							'condition'=>'checkLogin()'), NULL, false));
 		} else {
 			e($ajax->link(" <div class='gallery_addproject_item'>
@@ -231,7 +231,7 @@
 									<h6>Mature</h6>
 								</div>
 							</div>", '#', 
-							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'mature/0', 'update'=>'adminActions', 
+							array('url'=>'/projects/set_attribute/' . $pid . '/' . 'mature/0'.'/'.$urlname, 'update'=>'adminActions', 
 							'condition'=>'checkLogin()'), NULL, false));
 		}
 		?>

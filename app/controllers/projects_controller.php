@@ -70,7 +70,7 @@ class ProjectsController extends AppController {
 	/**
 	 * Admin Feature a project
 	 */
-	function feature() {
+	function feature($urlname=null) {
 		$user_id = $this->getLoggedInUserID();
 
 		if (!$user_id && !$this->isAdmin()) $this->__err;
@@ -106,7 +106,7 @@ class ProjectsController extends AppController {
 		$this->ProjectFlag->set_feature_admin($flag_id, $user_id);
 		$this->set_admin_name($project_id, $user_id);
 		$this->set_admin_time($project_id, $featured_time);
-		
+		$this->set('urlname',$urlname);
 		$this->set('isFeatured', true);
 		$this->set('isCensored', $isCensored);
 		$this->set('status', $project['Project']['status']);
@@ -120,7 +120,7 @@ class ProjectsController extends AppController {
 	/**
 	 * Admin deFeature a project
 	 */
-	function defeature() {
+	function defeature($urlname=null) {
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id && !$this->isAdmin())
 			exit;
@@ -152,10 +152,10 @@ class ProjectsController extends AppController {
 		
 		$this->set_project_flag_timestamp($project_id);
 		$this->ProjectFlag->set_admin($flag_id, $user_id);
-		
+		$this->set_admin_name($project_id);
 		$this->set_admin_time($project_id);
 		$this->set('isFeatured', true);
-		
+		$this->set('urlname',$urlname);
 		$this->set('isCensored', $isCensored);
 		$this->set('status', $project['Project']['status']);
 		$this->set('flags', $final_flags);
@@ -1474,6 +1474,7 @@ class ProjectsController extends AppController {
 		} else {
 			$isCensored = false;
 		}
+		$this->set_admin_name($pid);
 		$this->set_admin_time($pid);
 		$this->set('isCensored', $isCensored);
 		$this->redirect('/projects/'. $username. '/' . $pid);
@@ -2016,7 +2017,7 @@ class ProjectsController extends AppController {
 	/	Change project safe level
 	/ 	$safe_level - see database project.safe
 	**/
-	function set_status($project_id, $safe_level) {
+	function set_status($project_id, $safe_level,$urlname=null) {
 		$user_id = $this->getLoggedInUserID();
 		$this->Project->id = $project_id;
 		$this->Project->bindUser();
@@ -2039,7 +2040,7 @@ class ProjectsController extends AppController {
 		$this->ProjectFlag->set_admin($flag_id, $user_id);
 		$this->set_admin_name($project_id, $user_id);
 		$this->set_admin_time($project_id);
-		
+		$this->set('urlname',$urlname);
 		$this->set('isCensored', $isCensored);
 		$this->set('status', $safe_level);
 		$this->set('flags', $final_flags);
@@ -2051,7 +2052,7 @@ class ProjectsController extends AppController {
 	/**
 	/* Sets the value of an attribute for a project
 	**/
-	function set_attribute($project_id, $attribute, $state) {
+	function set_attribute($project_id, $attribute, $state,$urlname=null) {
 		$this->autoRender=false;
 		$project = $this->Project->find("Project.id = $project_id");
 		$user_id = $this->getLoggedInUserID();
@@ -2075,7 +2076,7 @@ class ProjectsController extends AppController {
 		$this->ProjectFlag->set_admin($flag_id, $user_id);
 		$this->set_admin_name($project_id, $user_id);
 		$this->set_admin_time($project_id);
-		
+		$this->set('urlname',$urlname);
 		$this->set('isCensored', $isCensored);
 		$this->set('status', $project['Project']['status']);
 		$this->set('flags', $final_flags);

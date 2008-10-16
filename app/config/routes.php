@@ -86,8 +86,8 @@ Router::connect('/users/render_comment_list/*', array('controller' => 'users', '
 Router::connect('/users/removefavorites', array('controller' => 'users', 'action' => 'removefavorites'));
 Router::connect('/users/*', array('controller' => 'users', 'action' => 'view'));
 
-Router::connect('/projects/feature', array('controller' => 'projects', 'action' => 'feature'));
-Router::connect('/projects/defeature', array('controller' => 'projects', 'action' => 'defeature'));
+Router::connect('/projects/feature/*', array('controller' => 'projects', 'action' => 'feature'));
+Router::connect('/projects/defeature/*', array('controller' => 'projects', 'action' => 'defeature'));
 Router::connect('/projects/censor', array('controller' => 'projects', 'action' => 'censor'));
 Router::connect('/projects/uncensor', array('controller' => 'projects', 'action' => 'uncensor'));
 Router::connect('/projects/lock/*', array('controller' => 'projects', 'action' => 'lock'));
