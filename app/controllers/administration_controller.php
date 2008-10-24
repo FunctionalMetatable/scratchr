@@ -18,7 +18,7 @@
     
     function __err() {
         $this->render('aerror');
-        die;
+        
     }
     
     function index() { 
