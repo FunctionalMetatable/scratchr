@@ -146,13 +146,13 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 		if(!empty($relatedcount)) {
 			$relatedtxt = ", <a href='$relatedtag'>$relatedcount " . ___('remix', true);
 		 	if ($relatedcount > 1)
-				$relatedtxt .=  ___("es", true);
+				$relatedtxt = ", <a href='$relatedtag'>$relatedcount " . ___('remixes', true);
 			$relatedtxt .= '</a>';
 		}
 		if(!empty($downloadcount)) {
 			$downloadtxt = ", $downloadcount " . ___('download', true);
 		 	if ($downloadcount > 1)
-				$downloadtxt .= "s";
+				$downloadtxt = ", $downloadcount " . ___('downloads', true);
 		}
 
 		$numgals = 0;
