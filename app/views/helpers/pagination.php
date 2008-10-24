@@ -144,7 +144,8 @@ class PaginationHelper extends Helper
 **/
 	function result($t="Showing: ",$of=" of ",$inbetween="-")
 	{
-		$t = ___("Showing: ", true);
+		$t = ___("Showing", true);
+		$colon = ": "; 
 		$of= ___(" of ", true);
 		if (empty($this->_pageDetails)) { return false; }
 		if ( !empty($this->_pageDetails['pageCount']) )
@@ -153,7 +154,7 @@ class PaginationHelper extends Helper
 			{
 				$start_row = (($this->_pageDetails['page']-1)*$this->_pageDetails['show'])+1;
 				$end_row = min ((($this->_pageDetails['page'])*$this->_pageDetails['show']),($this->_pageDetails['total']));
-				$t = $t.$start_row.$inbetween.$end_row.$of.$this->_pageDetails['total'];
+				$t = $t.$colon.$start_row.$inbetween.$end_row.$of.$this->_pageDetails['total'];
 			}
 			else
 			{
