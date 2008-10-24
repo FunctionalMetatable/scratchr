@@ -297,13 +297,13 @@ ___('Download this project!');
 	$ts = $project['Project']['totalScripts'];
 	if (! empty($nos) || ! empty($ts) ) {
 		$ssmsg = "";
-		if ($nos == 1) { $ssmsg .= "(" . ___('one sprite', true) . " "; }
-		elseif ($nos > 1) { $ssmsg .= "($nos " . ___('sprites', true) . " "; }
-		else { $ssmsg .= "(" . ___('no sprites', true) . " "; }
+		if ($nos == 1) { $ssmsg .= ___('one sprite', true) . " "; }
+		elseif ($nos > 1) { $ssmsg .= "$nos " . ___('sprites', true) . " "; }
+		else { $ssmsg .= ___('no sprites', true) . " "; }
 		$ssmsg .= " " . ___('and', true);
-		if ($ts == 1) { $ssmsg .= " " . ___('one script)', true) . " "; }
-		elseif ($ts > 1) { $ssmsg .=  " $ts " . ___('scripts)', true) . " "; }
-		else { $ssmsg .= " " . ___('no scripts)', true) . " "; }
+		if ($ts == 1) { $ssmsg .= " " . ___('one script of', true) . " "; }
+		elseif ($ts > 1) { $ssmsg .=  " $ts " . ___('scripts of', true) . " "; }
+		else { $ssmsg .= " " . ___('no scripts of', true) . " "; }
 	} else {
 		$ssmsg = " ";
 	}
@@ -315,7 +315,8 @@ ___('Download this project!');
 			}else{
 			?>
 				
-				<?php ___('Download')?>&nbsp;&quot;<a href="<?php echo $html->url('/projects/'.$urlname)?>/<?php echo $project['Project']['id']?>/download"><strong><?php echo $download_project_name?> </strong></a>&quot;<?php echo $ssmsg?><?php ___('and open it in')?>
+				<?php ___('Download the ')?><?php echo $ssmsg?>&nbsp;&nbsp;&quot;<a href="<?php echo $html->url('/projects/'.$urlname)?>/<?php echo $project['Project']['id']?>/download"><strong><?php echo $download_project_name?></strong></a>&quot;&nbsp;<?php ___('and open it in')?>
+				
 				<a href="<?php echo $html->url('/download')?>">Scratch</a>
 				
 		<?
