@@ -18,7 +18,7 @@
             
             $views = $project['Project']['views'];
             $pid = $project['Project']['id'];
-            $projectref = "/projects/view/$urlname/$pid";
+            $projectref = "/projects/$urlname/$pid";
             $mini_img_src = getThumbnailImg($urlname, $pid, 'mini');
             $medium_img_src = getThumbnailImg($urlname, $pid, 'medium');?>
             
