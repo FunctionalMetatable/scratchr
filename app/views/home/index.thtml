@@ -275,11 +275,6 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
       </ul>
     </div>
 
-	 <div id="lego" class="sidecontainer">
-      <h4><?php ___('LEGO&reg; images');?></h4>
-	<p><a href="/pages/imagepack"><img src="/img/pages/imgpk/lego/doctor2.gif" height="68" title="LEGO images" alt="LEGO images" align="right"></a><?php ___('The LEGO Company donated images for use in Scratch projects.');?> <a href="/pages/imagepack"><?php ___('Read more');?></a>.</p>
-	</div>
-
     <div id="NewestMembers" class="sidecontainer">
       <h4><?php ___('Newest Members');?> </h4>
       <ul class="sidelist">
