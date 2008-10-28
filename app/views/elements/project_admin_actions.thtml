@@ -21,11 +21,9 @@
  <form method="post" action="">
 	<input type="hidden" name="urlname" value="<?php e($urlname)?>"/>
 	<input type="hidden" name="pid" value="<?php e($pid)?>"/>
-	<br/>
 	<?php 
 		$feature_text = ($isFeatured) ? "defeature" : "feature";
 		echo $ajax->submit($feature_text, array("class"=>"button", "url"=>"/projects/".$feature_text.'/'.$urlname, "update"=>"adminActions"));
-		echo "&nbsp;";
 	?>
 <!-- 
 	<input type="button" class="button" onclick="if (confirm('are you sure?')) { this.form.action='/projects/delete'; this.form.submit(); return true; } return false;" value="delete"/>&nbsp;
