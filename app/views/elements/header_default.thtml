@@ -64,7 +64,7 @@ if(isset($ishomepage) && $ishomepage) {
 	
     <div id="searchbar">
 <!-- Google CSE Search Box Begins  -->
-<form action="http://sharandeep.scratchr.org/pages/results" id="cse-search-box">
+<form action="/pages/results" id="cse-search-box">
   <div>
     <input type="hidden" name="cx" value="010101365770046705949:gg_q9cry0mq" />
     <input type="hidden" name="cof" value="FORID:11" />
