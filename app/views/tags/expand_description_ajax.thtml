@@ -3,7 +3,7 @@
 				$pid = $project['Project']['id'];
 				$urlname = $project['User']['urlname'];
 				$username = $project['User']['username'];
-				$project_url = "/projects/view/$urlname/$pid";
+				$project_url = "/projects/$urlname/$pid";
 				$project_desc = htmlspecialchars($project['Project']['description']);
 				$lovers = $project['Project']['loveit'];
 				$mini_img_src = getThumbnailImg($urlname,$pid);

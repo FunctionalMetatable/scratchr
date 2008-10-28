@@ -65,7 +65,7 @@
 		$pid = $project['id'];
 		$urlname = $project['User']['urlname'];
 		$username = $project['User']['username'];
-		$project_url = "/projects/view/$urlname/$pid";
+		$project_url = "/projects/$urlname/$pid";
 		$project_desc = htmlspecialchars($project['description']);
 		$expand = false;
 		$ignored = $project['ignored'];

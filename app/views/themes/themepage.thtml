@@ -49,7 +49,7 @@ $session->flash(FLASH_NOTICE_KEY);
 	$owner_url = "/users/view/".$urlname;
 	$owner_username = $project['User']['username'];
 	$project_name = $project['name'];
-	$project_url = "/projects/view/$urlname/$pid";
+	$project_url = "/projects/$urlname/$pid";
 	$thumbnail_src = getThumbnailImg($urlname, $pid);
 	if (strlen($project_name) >= 15) {
 		$project_name = substr($project_name,0,13) . " ...";

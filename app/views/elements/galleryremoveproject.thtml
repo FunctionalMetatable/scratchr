@@ -28,7 +28,7 @@
 		$owner_username = $user_name;
 		$project_name = htmlspecialchars($project['Project']['name']);
 		$project_id = $project['Project']['id'];
-		$project_url = "/projects/view/$urlname/$pid";
+		$project_url = "/projects/$urlname/$pid";
 		$thumbnail_src = getThumbnailImg($urlname, $pid);
 		if (strlen($project_name) >= 15) {
 			$project_name = substr($project_name,0,16) . " ...";
