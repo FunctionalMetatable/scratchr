@@ -7,7 +7,7 @@
 		$user_id = $user['User']['id'];
 		$user_name = $user['User']['username'];
 		$reason = $user['User']['reason'];
-		$direct_address = "/users/view/$user_name";
+		$direct_address = "/users/$user_name";
 		$details_address = "/administration/viewuser/$user_id";
 		$remove_address = "/administration/remove_banned_user/$user_id";
 		

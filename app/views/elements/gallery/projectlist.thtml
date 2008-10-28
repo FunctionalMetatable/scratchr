@@ -10,7 +10,7 @@
 	foreach ($gallery_projects as $project):
 		$pid = $project['Project']['id'];
 		$urlname = $project['Project']['User']['urlname'];
-		$owner_url = "/users/view/".$urlname;
+		$owner_url = "/users/".$urlname;
 		$owner_username = htmlspecialchars($project['Project']['User']['username']);
 		$project_name = htmlspecialchars($project['Project']['name']);
 		$project_id = $project['Project']['id'];

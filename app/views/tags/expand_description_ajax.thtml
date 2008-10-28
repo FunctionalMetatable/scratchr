@@ -14,7 +14,7 @@
 					<a href="<?php echo $html->url($project_url)?>>"<?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
 			
 				<h3><a href="<?php echo $html->url($project_url) ?>"><?php e($project_name)?> </a></h3>			
-				<p><strong><?php ___('By'); ?>: </strong><a href="<?php echo $html->url('/users/view/')?><?php e($urlname)?>"><?php e($username)?></a></p>
+				<p><strong><?php ___('By'); ?>: </strong><a href="<?php echo $html->url('/users/')?><?php e($urlname)?>"><?php e($username)?></a></p>
 				<p><strong><?php ___('Views'); ?>:</strong> <?php e($views)?> | <?php ___('LoveIts'); ?>: <?php e((int)($lovers))?> </p>
 				<p><strong><?php ___('Description'); ?></strong>: <?php e($project_desc)?>
 					

@@ -18,7 +18,7 @@
 
             $pid = $project['Project']['id'];
             $urlname = $project['User']['urlname'];
-            $project_url = "/projects/view/$urlname/$pid";
+            $project_url = "/projects/$urlname/$pid";
 	    $project_name = htmlspecialchars($project['Project']['name']);
             $comments = $project['Project']['count_comments'];
 
@@ -47,7 +47,7 @@
 
             $pid = $project['Project']['id'];
             $urlname = $project['User']['urlname'];
-            $project_url = "/projects/view/$urlname/$pid";
+            $project_url = "/projects/$urlname/$pid";
 	    $project_name = htmlspecialchars($project['Project']['name']);
             $downloads = $project['Project']['count_downloads'];
 
@@ -76,7 +76,7 @@
 
             $uid = $tagger['User']['id'];
             $urlname = $tagger['User']['urlname'];
-            $tagger_url = "/users/view/$urlname";
+            $tagger_url = "/users/$urlname";
 	    $tagger_username = $tagger['User']['username'];
             $tags = $tagger['User']['count_tags'];
 
@@ -105,7 +105,7 @@
 
             $uid = $downloader['User']['id'];
             $urlname = $downloader['User']['urlname'];
-            $downloader_url = "/users/view/$urlname";
+            $downloader_url = "/users/$urlname";
 	    $downloader_username = $downloader['User']['username'];
             $downloaders = $downloader['User']['count_downloaders'];
 
@@ -163,7 +163,7 @@
 
             $uid = $tcommenter['User']['id'];
             $urlname = $tcommenter['User']['urlname'];
-            $tcommenter_url = "/users/view/$urlname";
+            $tcommenter_url = "/users/$urlname";
 	    $tcommenter_username = $tcommenter['User']['username'];
             $tcommenters = $tcommenter['User']['count_tcommenters'];
 
@@ -192,7 +192,7 @@
 
             $uid = $spriter['User']['id'];
             $urlname = $spriter['User']['urlname'];
-            $spriter_url = "/users/view/$urlname";
+            $spriter_url = "/users/$urlname";
 	    $spriter_username = $spriter['User']['username'];
             $sprites = $spriter['User']['count_sprites'];
 
@@ -221,7 +221,7 @@
 
             $uid = $scripter['User']['id'];
             $urlname = $scripter['User']['urlname'];
-            $scripter_url = "/users/view/$urlname";
+            $scripter_url = "/users/$urlname";
 	    $scripter_username = $scripter['User']['username'];
             $scripts = $scripter['User']['count_scripts'];
 
@@ -250,7 +250,7 @@
 
             $uid = $flagger['User']['id'];
             $urlname = $flagger['User']['urlname'];
-            $flagger_url = "/users/view/$urlname";
+            $flagger_url = "/users/$urlname";
 	    $flagger_username = $flagger['User']['username'];
             $flaggers = $flagger['User']['count_flaggers'];
 
@@ -279,7 +279,7 @@
 
             $uid = $lover['User']['id'];
             $urlname = $lover['User']['urlname'];
-            $lover_url = "/users/view/$urlname";
+            $lover_url = "/users/$urlname";
 	    $lover_username = $lover['User']['username'];
             $lovers = $lover['User']['count_lovers'];
 
@@ -308,7 +308,7 @@
 
             $pid = $user['User']['id'];
             $urlname = $user['User']['urlname'];
-            $user_url = "/users/view/$urlname";
+            $user_url = "/users/$urlname";
 	    $username = $user['User']['username'];
             $friends = $user['User']['count_friends'];
 
