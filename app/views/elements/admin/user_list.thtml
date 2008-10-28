@@ -10,7 +10,7 @@
 		echo "<div class='gallerythumb clearme'>\n";
 		echo "\t<div class='admin_leftcolumn'>\n";
 		?>
-		<span><a href="<?php echo $html->url($direct_address)?>">$user_name</a></span>
+		<span><a href="<?php echo $html->url($direct_address)?>"><?e($user_name)?></a></span>
 		<?php
 		
 		echo "\t</div>";
