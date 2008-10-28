@@ -94,7 +94,7 @@ Class ServicesController extends Controller {
 	
 	function __setUploadErrCodes() {
 		$this->err_codes[DB_SAVE_ERROR] = "error saving to database";
-		$this->err_codes[BINARY_UPLOAD_ERROR] = "unable to upload scratch file, might be too big";
+		$this->err_codes[BINARY_UPLOAD_ERROR] = "project might be too big (maximum is 10MB).";
 		$this->err_codes[DB_SAVE_ERROR] = "unable to save info to database";
 		$this->err_codes[THUMBNAIL_UPLOAD_ERROR] = "unable to upload thumbnail file";
 	}
@@ -162,6 +162,7 @@ Class ServicesController extends Controller {
 			}
 			$project_numberOfSprites = (!empty($this->params['form']['numberOfSprites'])) ? trim($this->params['form']['numberOfSprites']) : null;
 			$project_totalScripts = (!empty($this->params['form']['totalScripts'])) ? trim($this->params['form']['totalScripts']) : null;
+			$project_scratch_version_date = (!empty($this->params['form']['version-date'])) ? trim($this->params['form']['version-date']) : null;
 			
 			if (empty($project_name)) 
 			{
@@ -198,6 +199,8 @@ Class ServicesController extends Controller {
 				$this->data['Project']['numberOfSprites'] = $project_numberOfSprites;
 			if ($project_totalScripts)
 				$this->data['Project']['totalScripts'] = $project_totalScripts;
+			if ($project_scratch_version_date)
+				$this->data['Project']['scratch_version_date'] = $project_scratch_version_date;
 
 		/* performs INET_ATON on the IP string aaa.bbb.ccc.ddd, converts to 4
 		4 byte int (long). To view in sql do 
