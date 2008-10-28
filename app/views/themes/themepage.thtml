@@ -46,7 +46,7 @@ $session->flash(FLASH_NOTICE_KEY);
 	foreach ($theme_projects as $project):
 	$pid = $project['id'];
 	$urlname = $project['User']['urlname'];
-	$owner_url = "/users/view/".$urlname;
+	$owner_url = "/users/".$urlname;
 	$owner_username = $project['User']['username'];
 	$project_name = $project['name'];
 	$project_url = "/projects/$urlname/$pid";

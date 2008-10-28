@@ -4,7 +4,7 @@
 		$commenter_urlname = $comment['User']['urlname'];
 		$commenter_username = $comment['User']['username'];
 		$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $content_status);
-		$commenter_url = "/users/view/".$commenter_urlname;
+		$commenter_url = "/users/".$commenter_urlname;
 		$comment_type = isset($comment['Gcomment']);
 		$comment_id = $comment['Gcomment']['id'];
 		$pre_content = $comment['Gcomment']['content'];

@@ -19,7 +19,7 @@
 		$project_id = $comment['Project']['id'];
 		$project_creator = "Andres";
 		$project_url = "/projects/view/$comment_url/$project_id";
-		$creator_url = "/users/view/$comment_creator";
+		$creator_url = "/users//$comment_creator";
 		if ($comment_visibility) {
 			$status = "Normal";
 		} else {

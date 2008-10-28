@@ -32,7 +32,7 @@
 		$user_id = $user['id'];
 		$user_name = $user['username'];
 		$user_urlname = $user['urlname'];
-		$user_url= "/users/view/".$user_urlname;
+		$user_url= "/users/".$user_urlname;
 		$buddy_icon = getBuddyIcon($user['id']);
 		?><li id="uid_<?php e($user_id)?>" name="<?php e($user_name)?>"><input uid="<?php e($user_id)?>" uname="<?php e($user_name)?>" type="checkbox" onclick="addPendingInvite(this, el('uid_<?php e($user_id)?>'))"><a href="<?php echo $html->url($user_url)?>">
 		<?php echo $html->image($buddy_icon,array('id'=>'uimg_'.$user_id,'width'=>'28','height'=>'28'))?>
