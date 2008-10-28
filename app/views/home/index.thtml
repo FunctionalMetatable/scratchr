@@ -200,15 +200,6 @@
     </div>
 
 
-	    <div id="conference" class="sidecontainer">
-      <h4><?php ___('Scratch@MIT Conference'); ?></h4>
-      <ul class="sidelist">
-				<li><?php ___('Educators, researchers, and other members of the worldwide Scratch community gathered for three days.'); ?>
-      <p class="more"><a href="/conference"><?php ___('See what happened');?></a> </p>
-				</li>
-      </ul>
-     </div>
-
     <div  id="club" class="sidecontainer">
 	<?php
 		$club_name = htmlspecialchars($scratch_club['name']);
@@ -255,6 +246,15 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
       <p class="more"><a href="/tags"><?php ___('See more');?></a> </p>
     </div>
 
+
+	    <div id="conference" class="sidecontainer">
+      <h4><?php ___('Scratch@MIT Conference'); ?></h4>
+      <ul class="sidelist">
+				<li><?php ___('Educators, researchers, and other members of the worldwide Scratch community gathered for three days.'); ?>
+      <p class="more"><a href="/conference"><?php ___('See what happened');?></a> </p>
+				</li>
+      </ul>
+     </div>
 
     <div id="RecentVisitors" class="sidecontainer">
       <h4><?php ___('Recent Visitors') ?></h4>
