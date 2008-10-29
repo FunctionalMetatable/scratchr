@@ -1,4 +1,4 @@
-﻿<?php if ($isLoggedIn): ?>
+<?php if ($isLoggedIn): ?>
 <style>
 #themebox1 div{width:200px;}
 #themebox2 div{width:200px;}
