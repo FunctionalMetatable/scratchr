@@ -312,9 +312,9 @@ Class ServicesController extends Controller {
 	// uses java extractor
 	function extracthistory($project_shared_id, $user_shared_id, $newproject) {
 //		$this->log("extracting for $project_shared_id, $user_shared_id");
-		$ppath = '/llk/scratchr/beta/app/webroot/static/projects/';
+		$ppath = '/llk/scratchr/production/app/webroot/static/projects/';
 		//$ppath = 'z:/scratchr/app/webroot/static/projects/';
-		$jar = "/llk/scratchr/beta/app/misc/historyextraction/ScratchAnalyzer.jar";
+		$jar = "/llk/scratchr/production/app/misc/historyextraction/ScratchAnalyzer.jar";
 		//$jar = "z:/scratchr/app/misc/historyextraction/ScratchAnalyzer.jar";
 		$jar = escapeshellcmd($jar);
         $powner = $this->User->findById($user_shared_id);
