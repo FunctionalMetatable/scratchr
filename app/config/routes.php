@@ -42,8 +42,8 @@
 	Router::connect('/login', array('controller' => 'users', 'action' => 'login'));
 	Router::connect('/signup', array('controller' => 'users', 'action' => 'signup'));
 	Router::connect('/logout', array('controller' => 'users', 'action' => 'logout'));
-	
 	Router::connect('/tags', array('controller' => 'tags', 'action' => 'index'));
+	Router::connect('/administration', array('controller' => 'administration', 'action' => 'index'));
 	Router::connect('/galleries', array('controller' => 'galleries', 'action' => 'index'));
 	Router::connect('/:pagename', array('controller' => 'pages', 'action' => 'display'), array(
    'pass' => array('pagename'),
