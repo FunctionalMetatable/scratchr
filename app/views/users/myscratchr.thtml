@@ -372,10 +372,8 @@ function langList($countries) {
         
 		<?php
 		if ($isAdmin || $isMe)
-		 
-		//echo "<a href='/users/removefriend/$rel_id'>[x]</a>\n";
+		echo "<a href='/users/removefriend/$rel_id'>[x]</a>\n";
 		?>
-		<a href="<?php echo $html->url('/users/removefriend/')?><?php echo $rel_id?>">[x]</a>
 		</li>
         <?php endforeach; ?>
       </ul>
