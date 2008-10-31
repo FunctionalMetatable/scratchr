@@ -16,7 +16,7 @@
 
 <p><?php ___('To find out who is working on Scratch, see the');?> <strong><a href="<?php echo $html->url('/pages/credits')?>"> <?php ___('Credits');?></a></strong>.</p>
 
-<p><?php ___('To read what people are saying about Scratch, see');?> <strong><a href="<?php echo $html->url('/pages/quotes')?>"> <?php ___('Quotes');?></a></strong>.</p>
+<p><?php ___('To read what people are saying about Scratch, see');?> <strong><a href="<?php echo $html->url('/quotes')?>"> <?php ___('Quotes');?></a></strong>.</p>
 
 <p><?php ___('To hear the latest Scratch news stories, visit');?> <strong><a href="<?php echo $html->url('/pages/news')?>"><?php ___('News');?></a></strong>.</p>
 <p></p>
@@ -24,15 +24,12 @@
 
 
  <div id=sidebar>
-<!-- <img src="/img/pages/about/cat-and-code.gif" alt="cat with code" border="0"> -->
 <p>
-<!---
-<object width="230" height="129"><param name="movie" value="http://www.youtube.com/v/knFykmLljos"></param><param name="wmode" value="transparent"></param><embed src="http://www.youtube.com/v/knFykmLljos" type="application/x-shockwave-flash" wmode="transparent" width="230" height="194"></embed></object>
-//-->
-
-<embed wmode="transparent" src="http://techtv.mit.edu/scripts/flash/blipplayer.swf?autoStart=false&file=http://techtv.mit.edu/file/get/Andresmh-ScratchOverviewByGroupMembers220.flv%3Fsource%3D3" quality="high" width="230" height="180" name="movie" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"></embed>
+<a href="http://vimeo.com/2102968"><?php ___('full screen');?></a>
+<object width="220" height="124">	<param name="allowfullscreen" value="true" />	<param name="allowscriptaccess" value="always" />	<param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=2102968&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=59a5d1&amp;fullscreen=1" />	<embed src="http://vimeo.com/moogaloop.swf?clip_id=2102968&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=59a5d1&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="220" height="124"></embed></object>
 </p>
-<?php ___('Click video above or');?> <a href="http://techtv.mit.edu/file/127"><?php ___('full screen');?></a>
+<a href="http://vimeo.com/2107009"><?php ___('full screen');?></a>
+<object width="220" height="165">	<param name="allowfullscreen" value="true" />	<param name="allowscriptaccess" value="always" />	<param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=2107009&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=0&amp;show_portrait=1&amp;color=ffffff&amp;fullscreen=1" />	<embed src="http://vimeo.com/moogaloop.swf?clip_id=2107009&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=0&amp;show_portrait=1&amp;color=ffffff&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="220" height="165"></embed></object>
 </div>
 
 <p>&nbsp;    </p>
