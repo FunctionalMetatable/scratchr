@@ -43,8 +43,7 @@
 		<a href="<?php echo $html->url($project_url)?>">
 		<?php echo $html->image($project_thumbnail,array('title'=>htmlspecialchars($project['Project']['name']),'alt'=>htmlspecialchars($project['Project']['name']),'width'=>'148','height'=>'111'))?>
 		</a>
-		
-		<h6><a href="<?php $html->url($project_url)?>"><?php e($project_name)?></a></h6>
+		<h6><a href="<?php e($html->url($project_url)); ?>"><?php e($project_name)?></a></h6>
 		<p><?php ___('Comments'); ?>: <?php e($project_totalComments)?></p>
 
 		<?php if ($isMe || $isAdmin):?>
