@@ -29,22 +29,32 @@ Class ChannelController extends AppController {
     }
 	
     function recent() {
-		$this->layout = 'scratchr_explorer'; 
-		$this->pageTitle = "Scratch | Newest projects";
+	$memcache = new Memcache;
+	$memcache->connect('localhost', 11211) or die ("Could not connect");
+	$prefix = MEMCACHE_PREFIX;
+
+	$this->layout = 'scratchr_explorer'; 
+	$this->pageTitle = "Scratch | Newest projects";
         $this->modelClass = "Project";
-		$options = array("sortBy"=>"created", "direction" => "DESC");
+	$options = array("sortBy"=>"created", "direction" => "DESC");
         list($order,$limit,$page) = $this->Pagination->init(null, Array(), $options);
         $this->Project->bindUser();
+
+	$final_projects = $memcache->get("$prefix-channel-recent-$limit-$page");
+        if ( $final_projects == "" ) {
+		$final_projectstmp = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+		$final_projectstmp = $this->set_projects($final_projectstmp);
+		$memcache->set("$prefix-channel-recent-$limit-$page", $final_projectstmp, false, 120) or die ("Failed to save data at the server");
+        	$this->set('data', $final_projectstmp);
+        } else {
+        	$this->set('data', $final_projects);
+        }
+
+	$newest_feed_link = "/feeds/getNewestProjects";
 		
-		$final_projects = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
-		$final_projects = $this->set_projects($final_projects);
-		
-		$newest_feed_link = "/feeds/getNewestProjects";
-		
-        $this->set('data', $final_projects);
         $this->set('heading', "new projects");
-		$this->set('option', 'recent');
-		$this->set('rss_link', $newest_feed_link);
+	$this->set('option', 'recent');
+	$this->set('rss_link', $newest_feed_link);
         $this->render('explorer');
     }
 	
@@ -67,19 +77,29 @@ Class ChannelController extends AppController {
     }
 
     function topviewed() {
-		$this->layout = 'scratchr_explorer'; 
-		$this->pageTitle = ___("Scratch | Top viewed projects", true);
+	$memcache = new Memcache;
+	$memcache->connect('localhost', 11211) or die ("Could not connect");
+	$prefix = MEMCACHE_PREFIX;
+
+	$this->layout = 'scratchr_explorer'; 
+	$this->pageTitle = ___("Scratch | Top viewed projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"views", "direction" => "DESC");
         list($order,$limit,$page) = $this->Pagination->init(null, Array(), $options);
         $this->Project->bindUser();
+
+        $final_projects = $memcache->get("$prefix-channel-topviewed-$limit-$page");
+        if ( $final_projects == "" ) {
+                $final_projectstmp = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+                $final_projectstmp = $this->set_projects($final_projectstmp);
+                $memcache->set("$prefix-channel-topviewed-$limit-$page", $final_projectstmp, false, 120) or die ("Failed to save data at the server");
+                $this->set('data', $final_projectstmp);
+        } else {
+                $this->set('data', $final_projects);
+        }
+
+	$topviewed_feed_link = "/feeds/getTopViewedProjects";
 		
-        $final_projects = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
-		$final_projects = $this->set_projects($final_projects);
-		
-		$topviewed_feed_link = "/feeds/getTopViewedProjects";
-		
-        $this->set('data', $final_projects);
         $this->set('heading', ___("top viewed", true));
 		$this->set('option', 'topviewed');
 		$this->set('rss_link', $topviewed_feed_link);
@@ -87,22 +107,34 @@ Class ChannelController extends AppController {
     }
 
     function toploved() {
-		$this->layout = 'scratchr_explorer'; 
-		$this->pageTitle = ___("Scratch | Top loved projects", true);
+	$memcache = new Memcache;
+	$memcache->connect('localhost', 11211) or die ("Could not connect");
+	$prefix = MEMCACHE_PREFIX;
+
+	$this->layout = 'scratchr_explorer'; 
+	$this->pageTitle = ___("Scratch | Top loved projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"loveit", "direction" => "DESC");
         list($order,$limit,$page) = $this->Pagination->init("loveit > 0", Array(), $options);
 		
         $this->Project->bindUser();
-      	$final_projects = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
-		$final_projects = $this->set_projects($final_projects);
+
+        $final_projects = $memcache->get("$prefix-channel-toploved-$limit-$page");
+        if ( $final_projects == "" ) {
+                $final_projectstmp = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+                $final_projectstmp = $this->set_projects($final_projectstmp);
+                $memcache->set("$prefix-channel-toploved-$limit-$page", $final_projectstmp, false, 120) or die ("Failed to save data at the server");
+                $this->set('data', $final_projectstmp);
+        } else {
+                $this->set('data', $final_projects);
+        }
+
 		
-		$toploved_feed_link = "/feeds/getTopLovedProjects";
+	$toploved_feed_link = "/feeds/getTopLovedProjects";
 			
-        $this->set('data', $final_projects);
         $this->set('heading', ___("top loved", true));
-		$this->set('option', 'toploved');
-		$this->set('rss_link', $toploved_feed_link);
+	$this->set('option', 'toploved');
+	$this->set('rss_link', $toploved_feed_link);
         $this->render('explorer');
     }
 
