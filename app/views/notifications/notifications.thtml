@@ -1,7 +1,7 @@
 
 <div class="fullcontent">
 
-<h2><?php ___('Message(s)'); ?></h2>
+<h2><?php ___('Message(s) updated every 10 minutes'); ?></h2>
 
 <div id="main">
      <?php foreach($notifications as $notification):
