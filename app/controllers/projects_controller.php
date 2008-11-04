@@ -549,7 +549,6 @@ class ProjectsController extends AppController {
 				ob_clean();
 				flush();
 				readfile($cen_file);
-				exit();
 			}
 		}else{	
 			header("Content-type: application/force-download");
@@ -564,7 +563,6 @@ class ProjectsController extends AppController {
 			ob_clean();
 			flush();
 			readfile($file);
-			exit();
 		}
 		$downloader = $this->getLoggedInUserID();
         if (!$downloader)
