@@ -17,18 +17,37 @@ class NotificationsController extends AppController {
 	* shows notifications to user
 	*/
 	function index() {
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211) or die ("Could not connect");
+		$prefix = MEMCACHE_PREFIX;
 		$user_id = $this->Session->read('User.id');
-		$notifications = $this->Notification->findAll("status='unread' AND user_id=$user_id", NULL, 'id DESC');
-		$friend_requests = $this->FriendRequest->findAll(array("to_id"=>$user_id, "FriendRequest.status"=>"pending"));
 		$user_record = $this->User->find("id = $user_id");
 		$notify_pcomment = $user_record['User']['notify_pcomment'];
 		$notify_gcomment = $user_record['User']['notify_gcomment'];
-		
-		$this->set('title', "Scratch | Messages and notifications");
-		$this->set('friend_requests', $friend_requests);
-		$this->set('notifications',$notifications);
 		$this->set('notify_pcomment', $notify_pcomment);
 		$this->set('notify_gcomment', $notify_gcomment);
+		
+
+    		$notifications = $memcache->get("$prefix-notifications-$user_id");
+		if ( $notifications == "" ) {
+			$notifications_tmp = $this->Notification->findAll("status='unread' AND user_id=$user_id", NULL, 'id DESC');
+			$memcache->set("$prefix-notifications-$user_id", $notifications_tmp, false, 600) or die ("Failed to save data at the server");
+			$this->set('notifications',$notifications_tmp);
+		} else {
+			$this->set('notifications',$notifications);
+		}
+
+    		$friend_requests = $memcache->get("$prefix-friend_requests-$user_id");
+		if ( $friend_requests == "" ) {
+			$friend_requests_tmp = $this->FriendRequest->findAll(array("to_id"=>$user_id, "FriendRequest.status"=>"pending"));
+			$memcache->set("$prefix-friend_requests-$user_id", $friend_requests_tmp, false, 600) or die ("Failed to save data at the server");
+			$this->set('friend_requests',$friend_requests_tmp);
+		} else {
+			$this->set('friend_requests',$friend_requests);
+		}
+		$memcache->close();
+
+		$this->set('title', "Scratch | Messages and notifications");
 		$this->render('notifications');
 	}
 	/* 
