@@ -60,7 +60,7 @@ if(isset($ishomepage) && $ishomepage) {
     </ul>
 <!-- ////// End main menu ////// -->
 	
-     <div id="userbar"><?php printf(___('%sLogin%s or %sSignup%s for an account', true), '<a href="/login" onclick="return(showLogin())">', '</a>', '<a href="/signup">', '</a>'); ?></div>
+     <div id="userbar"><?php printf(___('%sLogin%s or %sSignup%s for an account', true), '<a href="/login" onclick="return(showLogin())">', '</a>', '<a href="/signup">', '</a>'); ?>&nbsp;<a href="/password_recovery"><?php ___('Did you forget?')?></a></div>
 	
     <div id="searchbar">
 <!-- Google CSE Search Box Begins  -->

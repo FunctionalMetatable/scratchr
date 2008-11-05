@@ -38,7 +38,7 @@
 	Router::connect('/notifications', array('controller' => 'notifications', 'action' => 'index', 'home'));
 	## Download page
 	Router::connect('/download', array('controller' => 'dusers', 'action' => 'add'));
-	
+	Router::connect('/password_recovery', array('controller' => 'users', 'action' => 'password_recovery'));
 	Router::connect('/login', array('controller' => 'users', 'action' => 'login'));
 	Router::connect('/signup', array('controller' => 'users', 'action' => 'signup'));
 	Router::connect('/logout', array('controller' => 'users', 'action' => 'logout'));
@@ -84,6 +84,7 @@ Router::connect('/users/showfriends/*', array('controller' => 'users', 'action' 
 Router::connect('/users/renderProjects/*', array('controller' => 'users', 'action' => 'renderProjects'));
 Router::connect('/users/render_comment_list/*', array('controller' => 'users', 'action' => 'render_comment_list'));
 Router::connect('/users/loginsu/*', array('controller' => 'users', 'action' => 'loginsu'));
+Router::connect('/users/pwdreset/*', array('controller' => 'users', 'action' => 'pwdreset'));
 Router::connect('/users/removefavorites', array('controller' => 'users', 'action' => 'removefavorites'));
 
 Router::connect('/users/*', array('controller' => 'users', 'action' => 'view'));

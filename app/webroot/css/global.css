@@ -370,7 +370,7 @@ legend{
 	background-image: url(../img/bg_userbar.png);
 	background-repeat: no-repeat;
 	float: left;
-	font-size: 15px;
+	font-size: 12px;
 	height: 40px;
 	line-height: 40px;
 	margin: 0 10px;
@@ -1994,4 +1994,11 @@ hr{
 /**********Gallery Connect***************/
 .gallery_connect_button {
 	margin-right: 5px;
+}
+
+#success_msg .message{
+text-align:left;
+background:none;
+border:none;
+color:#336633;
 }
