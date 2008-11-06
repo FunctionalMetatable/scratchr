@@ -34,12 +34,13 @@ Class RelationshipsController extends AppController {
 		case 'friend':
 			$relType = $this->RelationshipType->find("name = 'friend'"); 
 			if (!empty($relType)) {
+				$created = date("Y-m-d H:i:s", time()); 
 				$relTypeID = $relType['RelationshipType']['id'];
 				if (!$this->Relationship->hasAny("user_id = ".$user_id." AND friend_id = ".$friend_id." AND relationship_type_id = ".$relTypeID)) {	
 					$this->Relationship->create();
-					$this->Relationship->save(Array("Relationship"=>Array("user_id"=>$user_id, "friend_id"=>$friend_id, "relationship_type_id"=>$relTypeID)));
+					$this->Relationship->save(Array("Relationship"=>Array("user_id"=>$user_id, "friend_id"=>$friend_id, "relationship_type_id"=>$relTypeID,'timestamp'=>$created)));
 					$this->FriendRequest->create();
-					$this->FriendRequest->save(array("FriendRequest"=>array("user_id"=>$user_id, "to_id"=>$friend_id, "status"=>"pending")));
+					$this->FriendRequest->save(array("FriendRequest"=>array("user_id"=>$user_id, "to_id"=>$friend_id, "status"=>"pending",'created_at'=>$created)));
 					//echo "friend request sent";
 				}
 			}
@@ -68,12 +69,13 @@ Class RelationshipsController extends AppController {
 		case 'friend':
 			$relType = $this->RelationshipType->find("name = 'friend'"); 
 			if (!empty($relType)) {
+				$created = date("Y-m-d H:i:s", time());
 				$relTypeID = $relType['RelationshipType']['id'];
 				if (!$this->Relationship->hasAny("user_id = ".$user_id." AND friend_id = ".$friend_id." AND relationship_type_id = ".$relTypeID)) {	
 					$this->Relationship->create();
-					$this->Relationship->save(Array("Relationship"=>Array("user_id"=>$user_id, "friend_id"=>$friend_id, "relationship_type_id"=>$relTypeID)));
+					$this->Relationship->save(Array("Relationship"=>Array("user_id"=>$user_id, "friend_id"=>$friend_id, "relationship_type_id"=>$relTypeID,'timestamp'=>$created)));
 					$this->Relationship->create();
-					$this->Relationship->save(Array("Relationship"=>Array("user_id"=>$friend_id, "friend_id"=>$user_id, "relationship_type_id"=>$relTypeID)));
+					$this->Relationship->save(Array("Relationship"=>Array("user_id"=>$friend_id, "friend_id"=>$user_id, "relationship_type_id"=>$relTypeID,'created_at'=>$created)));
 					
 					//functionality for updating GalleryMemberships
 					$from_galleries = $this->Gallery->findAll("user_id = $user_id");
