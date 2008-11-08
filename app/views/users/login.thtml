@@ -33,6 +33,7 @@
 		</div>
 		<div class="login_submit">
 			<input type="submit" class="button" value="<?php ___('log in'); ?>">
+            &nbsp;<a href="/password_recovery"><?php ___('Did you forget?')?></a>
 		</div>
   </div>
   </form>

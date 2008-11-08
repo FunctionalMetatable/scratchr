@@ -388,20 +388,12 @@ class UsersController extends AppController {
 						{
 							$username = $someone['User']['username'];
 							$useremail = $someone['User']['email'];
-							$subject = "Username information on http://scratch.mit.edu/";
-							$msg = "
-									<pre>
-									Dear User,
-		
-		
-										Your Username is:'$username'
-												
-		
-									With regard
-									scratch-feedback@media.mit.edu
-									</pre>
-							";
-							
+							$subject = ___("Username information on http://scratch.mit.edu/",true);
+							$msg = ___("Dear User ,". "\r\n",true);
+							$msg = $msg.___("Your Username is:".$username,true);
+							$msg = $msg.___("With regard". "\r\n",true);
+							$msg = $msg.___("scratch-feedback@media.mit.edu",true);
+						
 				$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
 						$this->Session->setFlash(___("Your Username has been sent to your e-mail address ".$useremail,true));	
 						
@@ -413,24 +405,23 @@ class UsersController extends AppController {
 						}	
 			}
 			//If Password recovery
-			else if (!empty($this->data['PasswordEmail'])) {
-				$someone=$this->User->findByEmail($this->data['PasswordEmail']);
+			else if (!empty($this->data['Username'])) {
+				$someone=$this->User->findByUsername($this->data['Username']);
 				if(!empty($someone))
 					{
 						$userid = $someone['User']['id'];
 						$username = $someone['User']['username'];
 						$useremail = $someone['User']['email'];
 						$password = $someone['User']['password'];
-						$subject = "Password Information on http://scratch.mit.edu/";
-						$msg ="Please click on the following link to verify your password:". "\r\n";
-						$msg = $msg."http://scratch.mit.edu/users/pwdreset/$userid/$password";
-												
+						$subject = ___("Password Information on http://scratch.mit.edu/",true);
+						$msg =___("Please click on the following link to verify your password:". "\r\n",true);
+						$msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password",true);	
 						$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
 						$this->Session->setFlash(___("Your Username has been sent to your e-mail address ".$useremail,true));	
 					}
 					else
 					{
-						array_push($errors, ___("Sorry, we don't have your email address", true));
+						array_push($errors, ___("Sorry, Username doesn't exists", true));
 					}
 			}
 			else{
@@ -448,72 +439,67 @@ class UsersController extends AppController {
 	}//function
 	
 	/***End Password recovery***/
-	
-	function pwdreset($id, $code)
-		{
-			$someone=$this->User->find("User.id =$id and User.password='$code'");
-			
-			if(!empty($someone))
-			{
-				
-						 /*******************************Random number**********************************************/
-					function random_generator($digits)
-					{
-						srand ((double) microtime() * 10000000);
-						//Array of alphabets
-						$input = array ("A", "B", "C", "D", "E","F","G","H","I","J","K","L","M","N","O","P","Q",
-						"R","S","T","U","V","W","X","Y","Z");
-
-						$random_generator="";// Initialize the string to store random numbers
-						for($i=1;$i<$digits+1;$i++)
-						{ // Loop the number of times of required digits
-
-							if(rand(1,2) == 1){// to decide the digit should be numeric or alphabet
-							// Add one random alphabet
-							$rand_index = array_rand($input);
-							$random_generator .=$input[$rand_index]; // One char is added
-
-							}
-							else
-							{
-
-								// Add one numeric digit between 1 and 10
-								$random_generator .=rand(1,10); // one number is added
-							} // end of if else
-
-						} // end of for loop
-
-						return $random_generator;
-					} // end of function
-				/******************************************************************************************/
-
-					 	$random_number= random_generator(10); 
-						 
-						 $useremail = $someone['User']['email'];
-						
-						$subject="Your Password information of scratch.mit.edu";
-						$msg=	"Your Account information is:". "\r\n";
-						$msg=$msg.	"Username:\t".$someone['User']['username']. "\r\n";
-						$msg=$msg.	"Password:\t"."$random_number". "\r\n";
-						$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
-						
-						
-            			$someone['User']['password'] = sha1("$random_number");
-						
-						$this->User->save($someone);
-						$this->Session->setFlash("A new temporary password will be sent to your e-mail address".$useremail);
-						
-						$this->redirect('/login');
-			}
-			else
-			{
-				$this->Session->setFlash('There is no any records having this information');
-				$this->redirect('/login');
-			}
+	function pwdreset($id=null, $code=null)
+	{	
+		$errors =Array();
 		
-		}//fun
+			if(!empty($this->data))
+				{
+					if(strlen($this->data['User']['password']) < 6) {
+						$this->User->invalidate('password');
+						$errors['password_length'] =  ___('Password too short', true);
+					}
+					
+					if (strcmp($this->data['User']['password'], $this->data['User']['password2']) == 0) {
+					} else {
+						$this->User->invalidate('password2');
+						$errors['password_confirmation'] = ___("Passwords don't match", true);
+						}
+						
+						$user_record=$this->User->find("User.id =$id and User.password='$code'");
+						
+					if(!empty($user_record))
+						{
+							$user_record['User']['password'] = sha1($this->data['User']['password']);
+							
+							$this->User->save($user_record);
+							$this->Session->write('User', $user_record['User']);
+							$userID = $user_record['User']['id'];
+							$statID = $this->UserStat->field("id", "user_id = $userID");
+							$time = date("Y-m-d G:i:s");
+							if ($statID) {
+							  $this->UserStat->id = $statID;
+							  $this->UserStat->saveField("lastin",$time);
+							} else {
+							  $this->UserStat->save(array('UserStat'=>array("user_id"=>$userID, "lastin"=>$time)));
+							}
+							$this->Session->setFlash(___("New password successfully saved. You are now logged in.",true));
+							$this->redirect('/users/pwdreset');
+							
+						}
+						
+						//if empty user_record
+						else
+						{
+							$this->Session->setFlash(___('There is no any records having this information',true));
+						}	
+			}
+			
+		if($id && $code)
+		{
+			$isId = true;	
+		}
+		else
+		{
+			 $isId = false;
+		}
+		
+		
+		
+	 
+	  $this->set('isId',$isId);
 
-	
+	}//function
 	/**
 	/* Ajax pagination helper
 	**/
