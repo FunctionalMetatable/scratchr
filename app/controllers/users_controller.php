@@ -411,7 +411,7 @@ class UsersController extends AppController {
 							
 							$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
 						}
-						$this->Session->setFlash(___("Your Password Information has been sent to your e-mail address ".$useremail,true));	
+						$this->Session->setFlash(___("Your Password Information has been sent to your e-mail address."true));	
 					}
 					else
 					{
@@ -439,7 +439,7 @@ class UsersController extends AppController {
 						$msg = $msg.___("scratch-feedback@media.mit.edu",true);
 						
 						$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
-						$this->Session->setFlash(___("Your Password Information has been sent to your e-mail address ".$useremail,true));	
+						$this->Session->setFlash(___("Your Password Information has been sent to your e-mail address. "true));	
 					}
 					else
 					{
