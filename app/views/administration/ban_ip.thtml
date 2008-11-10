@@ -7,8 +7,8 @@
 	</div>
 	<div id="admin_project_content">
 	<form id="admin_banip" action="<?=e("/administration/add_ban_ip")?>" method="post">
-		<p>IP: <br/><textarea id='admin_banip_ip' name="admin_banip_ip" cols="60" rows="2" tabindex="1"></textarea></p>
-		<p>Reason: <br/><textarea id='admin_banip_reason' name="admin_banip_reason" cols="60" rows="4" tabindex="2"></textarea></p>
+		<p>IP: <br/><textarea id='admin_banip_ip' name="admin_banip_ip" cols="60" rows="2" tabindex="1"><?php e($default_ip); ?></textarea></p>
+		<p>Reason: <br/><textarea id='admin_banip_reason' name="admin_banip_reason" cols="60" rows="4" tabindex="2"><?php e($default_name); ?></textarea></p>
 		<?php 
 			e($ajax->submit('Ban', array('id' => 'admin_banip_submit', 
 			'class'=>'button', 'url' => "/administration/add_ban_ip", 
