@@ -17,7 +17,7 @@
 		$project_id = $comment['Project']['id'];
 		$visibility = $comment['Pcomment']['comment_visibility'];
 		?>
-		<div class="comment">
+		<div id="<?php echo $comment_id?>" class="comment">
 			
 				<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
 				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
