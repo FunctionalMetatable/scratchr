@@ -300,62 +300,6 @@ function insertIntoUserList(uid,uname)
 	userlist.insertBefore(li, userlist.firstChild);
 }
 
-//the div which contains username recovery form
-var password_recovery_container=document.getElementById("password_recovery_container");
-var toggled_password=false;
-
-var username_recovery_container=document.getElementById("username_recovery_container");
-var toggled=false;
-
-function showUsernameRecovery(){
-if(toggled_password==true)
-{
-	Effect.Fade('password_recovery_container',{duration:.4,from: 0.9999,to: 0});
-	toggled_password=false;
-}	
-	
-if(toggled==false){//is the login form not showing?
-	//safari is picky here. The 'appear' effect doesn't work unless you set the final opacity to less than 1. 
-	Effect.Appear('username_recovery_container',{duration:.4,from: 0.0001, to: 0.9999});
-	//focus() doesn't work when the field is hidden, so we set a delay of .3 s
-	setTimeout('document.getElementById("UsernameInput").focus()',300);
-	toggled=true;
-}
-else{
-	//For some reason, Effect.toggle doesn't work when opacity is not 1
-	Effect.Fade('username_recovery_container',{duration:.4,from: 0.9999,to: 0});
-	toggled=false;
-}
-return false;
-}
-
-//the div which contains password recovery form
-var username_recovery_container=document.getElementById("username_recovery_container");
-var toggled=false;
-
-var password_recovery_container=document.getElementById("password_recovery_container");
-var toggled_password=false;
-
-function showPasswordRecovery(){
-if(toggled==true)
-{
-	Effect.Fade('username_recovery_container',{duration:.4,from: 0.9999,to: 0});
-	toggled=false;
-}
-if(toggled_password==false){//is the login form not showing?
-	//safari is picky here. The 'appear' effect doesn't work unless you set the final opacity to less than 1. 
-	Effect.Appear('password_recovery_container',{duration:.4,from: 0.0001, to: 0.9999});
-	//focus() doesn't work when the field is hidden, so we set a delay of .3 s
-	setTimeout('document.getElementById("PasswordInput").focus()',300);
-	toggled_password=true;
-}
-else{
-	//For some reason, Effect.toggle doesn't work when opacity is not 1
-	Effect.Fade('password_recovery_container',{duration:.4,from: 0.9999,to: 0});
-	toggled_password=false;
-}
-return false;
-}
 
 //the div which contains the login form
 var logincontainer=document.getElementById("logincontainer");

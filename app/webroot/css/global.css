@@ -1996,9 +1996,20 @@ hr{
 	margin-right: 5px;
 }
 
+/******************Password recovery***********/
+
 #success_msg .message{
 text-align:left;
 background:none;
 border:none;
 color:#336633;
 }
+
+.password_recover_header{
+	color: #333333;
+	font-size: 16px;
+	font-weight: normal;
+	margin: 5px 0 5px 0;
+	padding: 0;
+}
+	
