@@ -377,72 +377,98 @@ class UsersController extends AppController {
 	/**Password recovery***/
 	function password_recovery()
 	{
-		  $this->pageTitle = "Scratch | Password Recovery";
+		 $this->pageTitle = "Scratch | Password Recovery";
 		  $errors = Array();
 		  if(!empty($this->data)){
-			 //If Username recovery
-			 if (!empty($this->data['UsernameEmail'])) {
-			 $someone=$this->User->findByEmail($this->data['UsernameEmail']);
-			
-						if(!empty($someone))
-						{
-							$username = $someone['User']['username'];
-							$useremail = $someone['User']['email'];
-							$subject = ___("Username information on http://scratch.mit.edu/",true);
-							$msg = ___("Dear User ,". "\r\n",true);
-							$msg = $msg.___("Your Username is:".$username,true);
-							$msg = $msg.___("With regard". "\r\n",true);
-							$msg = $msg.___("scratch-feedback@media.mit.edu",true);
-						
-				$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
-						$this->Session->setFlash(___("Your Username has been sent to your e-mail address ".$useremail,true));	
-						
-						}
-			
-						else
-						{
-							array_push($errors, ___("Sorry, we don't have your email address", true));
-						}	
-			}
-			//If Password recovery
-			else if (!empty($this->data['Username'])) {
-				$someone=$this->User->findByUsername($this->data['Username']);
-				if(!empty($someone))
+		  	if(!empty($this->data['UsernameEmail']))
+			{
+				$isEmail =0;
+				$useremail = $this->data['UsernameEmail'];
+				if (eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $useremail)) {
+				$isEmail =1;
+				} 
+				if($isEmail ==1)
+				{
+					//submitted data is email
+					$user_records=$this->User->findAll(array('email'=>$this->data['UsernameEmail']));
+					print_r($user_records);
+					if(!empty($user_records))
 					{
-						$userid = $someone['User']['id'];
-						$username = $someone['User']['username'];
-						$useremail = $someone['User']['email'];
-						$password = $someone['User']['password'];
-						$subject = ___("Password Information on http://scratch.mit.edu/",true);
-						$msg =___("Please click on the following link to verify your password:". "\r\n",true);
-						$msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password",true);	
-						$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
-						$this->Session->setFlash(___("Your Username has been sent to your e-mail address ".$useremail,true));	
+						foreach($user_records as $user_record)
+						{
+							$userid = $user_record['User']['id'];
+							$username = $user_record['User']['username'];
+							$useremail = $user_record['User']['email'];
+							$password = $user_record['User']['password'];
+							$subject = ___("Password recovery requested",true);
+							$msg = ___("Dear User ,". "\r\n",true);
+							$msg = $msg.___("Your Username is:".$username."\r\n",true);
+							$msg =$msg.___("If it was you, and you want to confirm,Please click on the following link to recover your password:". "\r\n",true);
+							$msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password". "\r\n",true);
+							$msg =$msg.___("If not, just ignore this message.",true);
+							$msg = $msg.___("With regard". "\r\n",true);
+							$msg = $msg.___("scratch-feedback@media.mit.edu",true);	
+							echo $msg;
+							$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
+						}
+						$this->Session->setFlash(___("Your Password Information has been sent to your e-mail address ".$useremail,true));	
 					}
 					else
 					{
 						array_push($errors, ___("Sorry, Username doesn't exists", true));
 					}
+					
+					
+				}
+				else
+				{
+				  //submitted data is username
+				  $someone=$this->User->findByUsername($this->data['UsernameEmail']);
+					if(!empty($someone))
+					{
+						$userid = $someone['User']['id'];
+						$username = $someone['User']['username'];
+						$useremail = $someone['User']['email'];
+						$password = $someone['User']['password'];
+						$subject = ___("Password recovery requested",true);
+						$msg = ___("Dear User ,". "\r\n",true);
+						$msg =$msg.___("If it was you, and you want to confirm,Please click on the following link to verify your password:". "\r\n",true);
+						$msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password". "\r\n",true);
+						$msg =$msg.___("If not, just ignore this message.",true);
+						$msg = $msg.___("With regard". "\r\n",true);
+						$msg = $msg.___("scratch-feedback@media.mit.edu",true);
+						echo $msg;	
+						$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
+						$this->Session->setFlash(___("Your Password Information has been sent to your e-mail address ".$useremail,true));	
+					}
+					else
+					{
+						array_push($errors, ___("Sorry, Username doesn't exists", true));
+					}
+				}
+			
 			}
-			else{
-			array_push($errors, ___("Sorry, we don't have your email address", true));
-			}
-		}//$this->data
-		if (empty($errors)) {
+		  
+			  else
+			  {
+			  array_push($errors, ___("Enter a Username or email address.", true));
+			  }
+			}//this->data  
+		  if (empty($errors)) {
 			$isError = false;
 	  } else {
 			$isError = true;
 	  }
 	  $this->set('errors', $errors);
 	  $this->set('isError', $isError);
-		
+		  
 	}//function
-	
+
 	/***End Password recovery***/
 	function pwdreset($id=null, $code=null)
 	{	
+		$this->pageTitle = "Scratch | Password Recovery";
 		$errors =Array();
-		
 			if(!empty($this->data))
 				{
 					if(strlen($this->data['User']['password']) < 6) {
@@ -499,7 +525,7 @@ class UsersController extends AppController {
 	 
 	  $this->set('isId',$isId);
 
-	}//function
+	}//function pwdreset
 	/**
 	/* Ajax pagination helper
 	**/
