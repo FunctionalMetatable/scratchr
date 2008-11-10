@@ -391,7 +391,7 @@ class UsersController extends AppController {
 				{
 					//submitted data is email
 					$user_records=$this->User->findAll(array('email'=>$this->data['UsernameEmail']));
-					print_r($user_records);
+					
 					if(!empty($user_records))
 					{
 						foreach($user_records as $user_record)
@@ -405,10 +405,10 @@ class UsersController extends AppController {
 							$msg = $msg.___("Your Username is:".$username."\r\n",true);
 							$msg =$msg.___("If it was you, and you want to confirm,Please click on the following link to recover your password:". "\r\n",true);
 							$msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password". "\r\n",true);
-							$msg =$msg.___("If not, just ignore this message.",true);
+							$msg =$msg.___("If not, just ignore this message."."\r\n",true);
 							$msg = $msg.___("With regard". "\r\n",true);
 							$msg = $msg.___("scratch-feedback@media.mit.edu",true);	
-							echo $msg;
+							
 							$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
 						}
 						$this->Session->setFlash(___("Your Password Information has been sent to your e-mail address ".$useremail,true));	
@@ -437,7 +437,7 @@ class UsersController extends AppController {
 						$msg =$msg.___("If not, just ignore this message.",true);
 						$msg = $msg.___("With regard". "\r\n",true);
 						$msg = $msg.___("scratch-feedback@media.mit.edu",true);
-						echo $msg;	
+						
 						$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
 						$this->Session->setFlash(___("Your Password Information has been sent to your e-mail address ".$useremail,true));	
 					}
