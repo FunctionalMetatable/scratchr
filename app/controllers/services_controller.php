@@ -182,6 +182,7 @@ Class ServicesController extends Controller {
 				$project_version = ((int)$project['Project']['version']); // + 1;
 				$this->Project->id = $project_id;
 				$this->data['Project']['version'] = $project_version + 1;
+				$this->data['Project']['proj_visibility'] = "visible";
 			} 
 			else 
 			{
