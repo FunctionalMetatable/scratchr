@@ -10,6 +10,7 @@ define("DB_SAVE_ERROR", 403);
 define("BINARY_UPLOAD_ERROR", 404);
 define("THUMBNAIL_UPLOAD_ERROR", 405);
 define("UNSUPPORTED_SERVICE", 406);
+define("INVALID_PROJECT", 407);
 
 Class ServicesController extends Controller {
 	// var $components = array("Security");
@@ -21,7 +22,8 @@ Class ServicesController extends Controller {
     var $err_codes = array(
         INVALID_REQUEST => "invalid request, file might be too big",
         INVALID_USER => "invalid user",
-		UNSUPPORTED_SERVICE => "service not yet available"
+		UNSUPPORTED_SERVICE => "service not yet available",
+		INVALID_PROJECT => "project might have been censored or deleted.",
         );
 
     function beforeFilter() {
@@ -182,7 +184,15 @@ Class ServicesController extends Controller {
 				$project_version = ((int)$project['Project']['version']); // + 1;
 				$this->Project->id = $project_id;
 				$this->data['Project']['version'] = $project_version + 1;
-				$this->data['Project']['proj_visibility'] = "visible";
+				if($project['Project']['proj_visibility']=='delbyadmin' || $project['Project']['proj_visibility']=='censbyadmin' ||$project['Project']['proj_visibility']=='censbycomm')
+				{
+					$this->__failed(INVALID_PROJECT);
+				return;
+				}
+				else
+				{
+					$this->data['Project']['proj_visibility'] = "visible";
+				}	
 			} 
 			else 
 			{
