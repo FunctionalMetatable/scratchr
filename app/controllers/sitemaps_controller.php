@@ -9,8 +9,6 @@ class SitemapsController extends AppController
 	var $name = 'Sitemaps';
 	var $components = array('RequestHandler');
     var $helpers = array('Time', 'Xml');
-	
-	const CACHE_DURATION = '1 day';
 	var $is_gzipped = false;
 	
 	/**
@@ -50,7 +48,7 @@ class SitemapsController extends AppController
 			$this->render('index');
 			$output = ($this->is_gzipped) ? gzencode($this->output) : $this->output;
 			$this->output = null;
-			Cache::write('sitemap_index', $output, self::CACHE_DURATION);
+			Cache::write('sitemap_index', $output, CACHE_DURATION);
 		}
 		echo $output;
 	}
@@ -73,7 +71,7 @@ class SitemapsController extends AppController
 			}
 			$output = ($this->is_gzipped) ? gzencode($this->output) : $this->output;
 			$this->output = null;
-			Cache::write($cache_file_name, $output, self::CACHE_DURATION);
+			Cache::write($cache_file_name, $output, CACHE_DURATION);
 		}
 		echo $output;
 	}

@@ -147,6 +147,12 @@ define("SUBTOPIC1", "scrach-feedback@mit");
 define("SUBTOPIC2", "scrach-feedback@mit");
 define("SUBTOPIC3", "scrach-feedback@mit");
 
+/**
+ * Sitemap constants
+ */
+define('MAX_LINKS_PER_SITEMAP', 5000);
+define('CACHE_DURATION', '1 day');
+
  /**
   * Returns theme url for html link destination
   */
