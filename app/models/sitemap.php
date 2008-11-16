@@ -7,8 +7,7 @@
 class Sitemap extends AppModel
 {
 	var $useTable = false;
-	const MAX_LINKS_PER_SITEMAP = 5000;
-  
+	
 	/**
 	* Returns number of user sitemap files
 	* counts total number of visible users and then divides it by max links allowed per sitemap
@@ -22,7 +21,7 @@ class Sitemap extends AppModel
 								'conditions' => array('User.status' => 'normal'),
 								'recursive' => -1)
 							);
-		return ceil($total / self::MAX_LINKS_PER_SITEMAP);
+		return ceil($total / MAX_LINKS_PER_SITEMAP);
 	}
 	
 	/**
@@ -36,7 +35,7 @@ class Sitemap extends AppModel
 		$this->User =& ClassRegistry::init('User');
 		return $this->User->find('all', array(
 				'conditions' => array(),
-				'limit' => self::MAX_LINKS_PER_SITEMAP, 'offset' => $index * self::MAX_LINKS_PER_SITEMAP,
+				'limit' => MAX_LINKS_PER_SITEMAP, 'offset' => $index * MAX_LINKS_PER_SITEMAP,
 				'fields' => array('User.username', 'User.created'),  'order' => 'created DESC',
 				'conditions' => array('User.status' => 'normal'),
 				'recursive' => -1
@@ -56,7 +55,7 @@ class Sitemap extends AppModel
 								'conditions' => array('Project.proj_visibility' => 'visible'),
 								'recursive' => -1)
 							);
-		return ceil($total / self::MAX_LINKS_PER_SITEMAP);
+		return ceil($total / MAX_LINKS_PER_SITEMAP);
 	}
 	
 	/**
@@ -69,7 +68,7 @@ class Sitemap extends AppModel
 		App::import('Model', 'Project');
 		$this->Project =& ClassRegistry::init('Project');
 		return $this->Project->find('all', array( 
-				'limit' => self::MAX_LINKS_PER_SITEMAP, 'offset' => $index * self::MAX_LINKS_PER_SITEMAP,
+				'limit' => MAX_LINKS_PER_SITEMAP, 'offset' => $index * MAX_LINKS_PER_SITEMAP,
 				'fields' => array('Project.id', 'Project.user_id', 'Project.modified', 'User.username'), 
 				'conditions' => array('Project.proj_visibility' => 'visible'),
 				'order' => 'modified DESC', 'recursive' => 1
@@ -86,7 +85,7 @@ class Sitemap extends AppModel
 		App::import('Model', 'Tag');
 		$this->Tag =& ClassRegistry::init('Tag');
 		$total = $this->Tag->find('count', array('recursive' => -1));
-		return ceil($total / self::MAX_LINKS_PER_SITEMAP);
+		return ceil($total / MAX_LINKS_PER_SITEMAP);
 	}
 	
 	/**
@@ -99,7 +98,7 @@ class Sitemap extends AppModel
 		App::import('Model', 'Tag');
 		$this->Tag =& ClassRegistry::init('Tag');
 		return $this->Tag->find('all', array( 
-				'limit' => self::MAX_LINKS_PER_SITEMAP, 'offset' => $index * self::MAX_LINKS_PER_SITEMAP,
+				'limit' => MAX_LINKS_PER_SITEMAP, 'offset' => $index * MAX_LINKS_PER_SITEMAP,
 				'fields' => array('Tag.name', 'Tag.timestamp'), 
 				'order' => 'Tag.timestamp DESC', 'recursive' => -1
 		));
@@ -118,7 +117,7 @@ class Sitemap extends AppModel
 						'conditions' => array('Gallery.visibility' => 'visible'),
 						'recursive' => -1)
 					);
-		return ceil($total / self::MAX_LINKS_PER_SITEMAP);
+		return ceil($total / MAX_LINKS_PER_SITEMAP);
 	}
 	
 	/**
@@ -131,7 +130,7 @@ class Sitemap extends AppModel
 		App::import('Model', 'Gallery');
 		$this->Gallery =& ClassRegistry::init('Gallery');
 		return $this->Gallery->find('all', array( 
-				'limit' => self::MAX_LINKS_PER_SITEMAP, 'offset' => $index * self::MAX_LINKS_PER_SITEMAP,
+				'limit' => MAX_LINKS_PER_SITEMAP, 'offset' => $index * MAX_LINKS_PER_SITEMAP,
 				'fields' => array('Gallery.id', 'Gallery.modified'), 
 				'conditions' => array('Gallery.visibility' => 'visible'),
 				'order' => 'Gallery.modified DESC', 'recursive' => -1
