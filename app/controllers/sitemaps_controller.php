@@ -61,7 +61,7 @@ class SitemapsController extends AppController
 	* string {.gz}	optional, present when gzipped version of the sitemap is requierd
 	*/
 	function get() {
-		preg_match( '/sitemap_(?<type>\w+)_(?<index>\d+).\w+/', $this->params['url']['url'], $matches );
+		preg_match( '/sitemap_(?P<type>\w+)_(?P<index>\d+).\w+/', $this->params['url']['url'], $matches );
 		$cache_file_name = 'sitemap_' . $matches['type'] .'_' . $matches['index'] . ($this->is_gzipped ? '_gz' : '');
 		$output = Cache::read($cache_file_name);
 		if(empty($output)) {
