@@ -16,15 +16,22 @@ class SitemapsController extends AppController
 	*/
 	function beforeFilter() {
 		Configure::write ('debug', 0);
-		if($this->params['url']['ext'] == 'gz') {
-			$this->is_gzipped   = true;
-			$this->viewPath .= '/xml';
-			$this->layoutPath = 'xml';
+		//we are not using Router::parse extension as it creates issue with scratch uploading
+		preg_match('/\.([0-9a-zA-Z]*)$/', $this->params['url']['url'], $ext);
+		$ext = $ext[1];
+		if($ext == 'xml') {
+			$this->RequestHandler->respondAs('text/xml');
 		}
-		if($this->params['url']['ext'] != 'txt') {
-			$this->RequestHandler->respondAs('xml', array('index' => 1));
+		else if($ext == 'gz') {
+			$this->RequestHandler->respondAs('application/x-gzip');
+			$this->is_gzipped   = true;
+		}
+		else if($ext == 'txt') {
+			$this->RequestHandler->respondAs('txt');
 		}
 		
+		$this->viewPath .= '/xml';
+		$this->layoutPath = 'xml';
 		$this->autoRender = false;
 	}
 	
