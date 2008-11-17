@@ -28,46 +28,33 @@
  * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
  * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+	
+//top level pages
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
  * its action called 'display', and we pass a param to select the view file
  * to use (in this case, /app/views/pages/home.thtml)...
  */
+Router::connect('/', array('controller' => 'home', 'action' => 'index', 'home'));
+Router::connect('/notifications', array('controller' => 'notifications', 'action' => 'index', 'home'));
+Router::connect('/download', array('controller' => 'dusers', 'action' => 'add'));
+Router::connect('/password_recovery', array('controller' => 'users', 'action' => 'password_recovery'));
+Router::connect('/login', array('controller' => 'users', 'action' => 'login'));
+Router::connect('/signup', array('controller' => 'users', 'action' => 'signup'));
+Router::connect('/logout', array('controller' => 'users', 'action' => 'logout'));
+Router::connect('/tags', array('controller' => 'tags', 'action' => 'index'));
+Router::connect('/administration', array('controller' => 'administration', 'action' => 'index'));
+Router::connect('/galleries', array('controller' => 'galleries', 'action' => 'index'));
+Router::connect('/sitemap_(.*)_(.*).xml', array('controller' => 'sitemaps', 'action' => 'get'));
+Router::connect('/sitemap_(.*)_(.*).xml.gz', array('controller' => 'sitemaps', 'action' => 'get'));
+Router::connect('/sitemap.xml', array('controller' => 'sitemaps', 'action' => 'index'));
+Router::connect('/sitemap.xml.gz', array('controller' => 'sitemaps', 'action' => 'index'));
+Router::connect('/robots.txt', array('controller' => 'sitemaps', 'action' => 'robots'));
 	
-	Router::connect('/', array('controller' => 'home', 'action' => 'index', 'home'));
-	Router::connect('/notifications', array('controller' => 'notifications', 'action' => 'index', 'home'));
-	## Download page
-	Router::connect('/download', array('controller' => 'dusers', 'action' => 'add'));
-	Router::connect('/password_recovery', array('controller' => 'users', 'action' => 'password_recovery'));
-	Router::connect('/login', array('controller' => 'users', 'action' => 'login'));
-	Router::connect('/signup', array('controller' => 'users', 'action' => 'signup'));
-	Router::connect('/logout', array('controller' => 'users', 'action' => 'logout'));
-	Router::connect('/tags', array('controller' => 'tags', 'action' => 'index'));
-	Router::connect('/administration', array('controller' => 'administration', 'action' => 'index'));
-	Router::connect('/galleries', array('controller' => 'galleries', 'action' => 'index'));
-	Router::connect('/:pagename', array('controller' => 'pages', 'action' => 'display'), array(
-   'pass' => array('pagename'),
-	   array('pagename'=>'([A-Za-zs]+)')   
-));
-
-
-
-	Router::connect('/pages/:pagename', array('controller' => 'pages', 'action' => 'display'), array(
-   'pass' => array('pagename'),
-	   array('pagename'=>'([A-Za-zs]+)')   
-));
-
-
-	
-/**
- * ...and connect the rest of 'Pages' controller's urls.
- */
-	//Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
-	
-	/* Routes the language controller */
+// Routes the language controller
 Router::connect('/lang/*', array('controller' => 'p28n', 'action' => 'change'));
-# routing of user controllers 
 
+// User pages
 Router::connect('/users/update', array('controller' => 'users', 'action' => 'update'));
 Router::connect('/users/updatepic/*', array('controller' => 'users', 'action' => 'updatepic'));
 Router::connect('/users/showgalleries/*', array('controller' => 'users', 'action' => 'showgalleries'));
@@ -86,9 +73,9 @@ Router::connect('/users/render_comment_list/*', array('controller' => 'users', '
 Router::connect('/users/loginsu/*', array('controller' => 'users', 'action' => 'loginsu'));
 Router::connect('/users/pwdreset/*', array('controller' => 'users', 'action' => 'pwdreset'));
 Router::connect('/users/removefavorites', array('controller' => 'users', 'action' => 'removefavorites'));
-
 Router::connect('/users/*', array('controller' => 'users', 'action' => 'view'));
 
+// Project pages
 Router::connect('/projects/feature/*', array('controller' => 'projects', 'action' => 'feature'));
 Router::connect('/projects/defeature/*', array('controller' => 'projects', 'action' => 'defeature'));
 Router::connect('/projects/censor', array('controller' => 'projects', 'action' => 'censor'));
@@ -107,33 +94,34 @@ Router::connect('/projects/deltag/*', array('controller' => 'projects', 'action'
 Router::connect('/projects/markTag/*', array('controller' => 'projects', 'action' => 'markTag'));
 Router::connect('/projects/moreprojects/*', array('controller' => 'projects', 'action' => 'moreprojects'));
 Router::connect('/projects/renderComments/*', array('controller' => 'projects', 'action' => 'renderComments'));
+Router::connect('/projects/:username/:id', array('controller' => 'projects', 'action' => 'view'),
+													array(
+													   'pass' => array('username','id'),
+														array('id' => '([0-9]+)','username'=>'([A-Za-z0-9-_]+)')  
+													)
+				);
+Router::connect('/projects/:username/:id/:action', array('controller' => 'projects', 'action' => $Action),
+													array(
+													   'pass' => array('username','id'),
+													   array('id' => '([0-9]+)','username'=>'([A-Za-z0-9-_]+)')
+													)
+				);
 
-Router::connect('/projects/:username/:id', array('controller' => 'projects', 'action' => 'view'), array(
-   'pass' => array('username','id'),
-   array('id' => '([0-9]+)','username'=>'([A-Za-z0-9-_]+)')
-   
-   
-));
+//Then we connect url '/test' to our test controller. This is helpful in developement.
+Router::connect('/tests', array('controller' => 'tests', 'action' => 'index'));
 
+//All other page calls will be routed  through the pages_controller
+Router::connect('/:pagename', array('controller' => 'pages', 'action' => 'display'),
+									array(
+									   'pass' => array('pagename'),
+										array('pagename'=>'([A-Za-zs]+)')   
+									)
+				);
 
-Router::connect('/projects/:username/:id/:action', array('controller' => 'projects', 'action' => $Action), array(
-   'pass' => array('username','id'),
-   array('id' => '([0-9]+)','username'=>'([A-Za-z0-9-_]+)')
-   
-   
-));
-
-
-
-
-
-
-
-/**
- * Then we connect url '/test' to our test controller. This is helpful in
- * developement.
- */
-	Router::connect('/tests', array('controller' => 'tests', 'action' => 'index'));
-	
-	
+Router::connect('/pages/:pagename', array('controller' => 'pages', 'action' => 'display'),
+										array(
+										'pass' => array('pagename'),
+										array('pagename'=>'([A-Za-zs]+)')
+									)
+				);
 ?>
