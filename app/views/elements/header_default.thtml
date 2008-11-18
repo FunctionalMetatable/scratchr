@@ -35,6 +35,7 @@ if(isset($ishomepage) && $ishomepage) {
 		  <option value="/lang/ita">Italiano</option>
 		  <option value="/lang/jpn">日本語</option>
 		  <option value="/lang/kor">한국어</option>
+		  <option value="/lang/dut">Nederlands</option>
 		  <option value="/lang/nor">norsk</option>
 		  <option value="/lang/pol">Polski </option>
 		  <option value="/lang/pt-br">Português-Br</option>
