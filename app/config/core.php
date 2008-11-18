@@ -217,7 +217,7 @@
 		'probability'=> 100, //[optional]
 		'prefix' => 'scratch_', //[optional]  prefix every cache file with this string
 		'servers' => array(
-			'127.0.0.1:11211' // localhost, default port 11211
+			'localhost.1:11211' // localhost, default port 11211
 		), //[optional]
 		'compress' => false, // [optional] compress data in Memcache (slower, but uses less memory)
 	));
