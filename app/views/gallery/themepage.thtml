@@ -1,4 +1,5 @@
  <?php 
+	
 	if ($user_status == "normal") {
 		$user_locked = 0;
 	} else {
@@ -125,7 +126,8 @@
 	</div>
 </div>
 
-<?php if ($isAdmin): ?>
+
+<?php if ($isAdmin || isset($users_permission['galleries_view_permission']) || isset($users_permission['censor_galleries'])): ?>
 	<div id="adminActions"/>
 	  <?php e($this->renderElement('gallery/gallery_admin_actions', array('admin_name'=> $admin_name, 'flags' => $flags, 'gallery_id' => $gallery_id)));?>
 	</div>
@@ -194,11 +196,17 @@
 	<?php echo $html->image(getBuddyIconBySize($theme_owner['id'],'mini', $content_status),array('title'=>$theme_owner['username'],'alt'=>$theme_owner['username'],'width'=>'28','height'=>'28'))?>
 	</a></h5>
 	<?php echo "<p> <strong>"; ___('Created'); echo "</strong>: $actual_creation_date " . ___("ago", 'false') . "</p>"; ?>
-
+	<!--- User's permissions action --->
+    <?php if(isset($users_permission['feature_galleries'])):?>
+    	<div id="users_permision_action">
+    	<?php e($this->renderElement('theme_admin_actions',array('user_permission_action'=>true)));?>
+        </div>
+    <?php endif;?>
+    <!--- User's permissions action --->
 	<?php if ($isAdmin): ?>
 	<p>
 	<div id="adminActions_secondary"/>
-	<?php e($this->renderElement('theme_admin_actions'));?>
+	<?php e($this->renderElement('theme_admin_actions',array('user_permission_action'=>false)));?>
 	</div>
 	</p>
 	<br>

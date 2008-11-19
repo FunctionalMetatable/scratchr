@@ -2012,4 +2012,47 @@ color:#336633;
 	margin: 5px 0 5px 0;
 	padding: 0;
 }
+
+.checkbox{
+clear:both;
+margin-top:10px;
+}
+.checkbox input{
+float:left;
+margin-right:10px;
+}
+.checkbox label{
+width:400px;
+float:left;
+}
+.permission_submit{
+clear:both;
+width:636px;
+margin-left:20px;
+}
+.permission_submit input{
+margin-top:10px;
+}
+
+#flash_error{
+float: left;
+	width:770px;
+	text-align: center;
+	background-image: url(../img/bg_footer.png);
+	background-repeat: no-repeat;
+	background-position: bottom;
+	margin-bottom: 0px;
+	padding: 10px 5px 5px 5px;
+	position: relative;
+}
+
+#flash_error .message{	
+
 	
+background:none;
+border:none;
+color:#FF0000;
+margin:0;
+padding:0;
+width:770px;
+}

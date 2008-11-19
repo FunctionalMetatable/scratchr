@@ -93,7 +93,7 @@
 					
 				echo " | ";	
 					
-				if ($isAdmin || $isProjectOwner)
+				if ($isAdmin || $isProjectOwner || isset($users_permission['delete_project_comments']))
 						e($ajax->link("(x)", '#', 
 							array("url"=>"/projects/delete_comment/$project_id/$comment_id", 
 							"update"=>"$comment_id", 

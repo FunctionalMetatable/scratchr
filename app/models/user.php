@@ -12,6 +12,7 @@ Class User extends AppModel
 		'byear'	  => '/^[0-9]{4}$/'
 	);
 	
+	
   /**
    * Returns all user records
    * @return User array => array of user records
@@ -113,6 +114,18 @@ Class User extends AppModel
                 'joinTable' => 'gallery_memberships',
                 'foreignKey' => 'user_id',
                 'associationForeignKey' => 'theme_id',
+				'conditions' => $conditions,
+				'uniq' => true))));	
+	}
+	
+	function bindPermission($conditions=null) {
+        $this->bindModel(array(
+        'hasAndBelongsToMany' => array(
+            'Permission' => array(
+                'className' => 'Permission',
+                'joinTable' => 'permission_users',
+                'foreignKey' => 'user_id',
+                'associationForeignKey' => 'permission_id',
 				'conditions' => $conditions,
 				'uniq' => true))));	
 	}

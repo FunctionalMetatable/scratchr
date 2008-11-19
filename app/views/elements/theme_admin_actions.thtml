@@ -1,4 +1,5 @@
-  <form method="post" action=""/>
+ <?php if($isAdmin){?>
+ <form method="post" action=""/>
 	<br>
 	<input type="hidden" name="theme-id" value="<?php e($theme_id)?>"/>
 	<?php 
@@ -12,3 +13,25 @@
 	<input type="hidden" name="isClubbed" value="<?php e($isClubbed)?>"/>
 	<input type="hidden" name="isFeatured" value="<?php e($isFeatured)?>"/>
   </form>
+<?php 
+}
+else
+{
+?>
+<form method="post" action=""/>
+	<br>
+	<input type="hidden" name="theme-id" value="<?php e($theme_id)?>"/>
+	<?php 
+		$feature_txt = ($isFeatured) ? "defeature" : "feature";
+		$club_txt = ($isClubbed) ? "declub it" : "club it";
+		$club_action = ($isClubbed) ? "declub" : "club";
+		echo $ajax->submit($feature_txt, array("class"=>"button", "url"=>"/galleries/".$feature_txt, "update"=>"users_permision_action")) . "<br>";
+		
+	?>
+	
+	<input type="hidden" name="isClubbed" value="<?php e($isClubbed)?>"/>
+	<input type="hidden" name="isFeatured" value="<?php e($isFeatured)?>"/>
+  </form>
+<?
+}
+?>

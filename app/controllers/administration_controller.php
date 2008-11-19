@@ -2,7 +2,7 @@
  class AdministrationController extends AppController {
     var $name = 'Administration';
    
-    var $uses = array('AdminTag', 'KarmaSetting', 'KarmaRating', 'KarmaEvent', 'KarmaRank', 'Mgcomment', 'RemixedProject', 'GalleryMembership', 'BlockedUser', 'ViewStat', 'Gcomment', 'BlockedIp', 'ProjectFlag', 'Announcement', 'AdminComment', 'Apcomment', 'Mpcomment', 'Project', 'FeaturedGallery', 'ClubbedGallery', 'Pcomment', 'User', 'Gallery', 'Tag', 'Flagger', 'Downloader', 'Favorite', 'Lover', 'Notification');
+    var $uses = array('AdminTag', 'KarmaSetting', 'KarmaRating', 'KarmaEvent', 'KarmaRank', 'Mgcomment', 'RemixedProject', 'GalleryMembership', 'BlockedUser', 'ViewStat', 'Gcomment', 'BlockedIp', 'ProjectFlag', 'Announcement', 'AdminComment', 'Apcomment', 'Mpcomment', 'Project', 'FeaturedGallery', 'ClubbedGallery', 'Pcomment', 'User', 'Gallery', 'Tag', 'Flagger', 'Downloader', 'Favorite', 'Lover', 'Notification','Permission','PermissionUser');
     var $components = array('RequestHandler','Pagination', 'Email');
     var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
 
@@ -12,8 +12,8 @@
      */
     function beforeFilter() {
 		$user_id = $this->getLoggedInUserID();
-		if ( ! $this->isAdmin())
-			$this->__err();
+		//if ( ! $this->isAdmin())
+			//$this->__err();
     }
     
     function __err() {
@@ -22,12 +22,92 @@
     }
     
     function index() { 
+	if ( ! $this->isAdmin())
+			$this->__err();
     }
     
     function projects() { 	
     	$this->redirect('/administration/'.'psort/' . 'created');
     }
 	
+	/*************Set Permission*****************/
+	function set_permission($user_id=null)
+	{
+	
+		$this->autoRender = false;
+		$permissions = $this->Permission->find('list');
+		$this->set('permissions',$permissions);
+		$this->User->bindPermission(); 
+
+		$this->User->id=$user_id;
+		$user=$this->User->read();
+		$this->set('user', $user);
+		
+		$current_permissions=array();
+		foreach($user['Permission'] as $permission)
+		{
+		array_push($current_permissions, $permission['id']);
+		}
+		$this->set('current_permissions',$current_permissions);
+		$this->set('user_id',$user_id);
+		$this->set('isError', false);
+		$this->render('set_permission');
+	}
+	
+	function add_set_permission($user_id=null)
+	{
+		$this->autoRender = false;
+		$errors = Array();
+		$this->PermissionUser->deleteAll('PermissionUser.user_id='.$user_id);
+		if(!empty($this->data['Permission']['Permission']))
+		{
+			
+			foreach($this->data['Permission']['Permission'] as $permission)
+			{
+				$data['PermissionUser']['user_id']=$user_id;
+				$data['PermissionUser']['permission_id']=$permission;
+				$permission_record = $this->PermissionUser->find(array('PermissionUser.permission_id' => $permission,'user_id'=>$user_id));
+				if (empty($permission_record)) 
+				{
+					$this->PermissionUser->save($data['PermissionUser']);
+					$this->PermissionUser->id=false;
+				}
+				$this->Session->setFlash(___("Permissions seted successfully.",true));
+				
+			}//foreach
+		}//this->data
+		else
+		{
+			array_push($errors, ___('Please Select permission to set.',true));
+		}
+		
+		$this->User->bindPermission();
+		$users_permissions = $this->User->find('id='.$user_id);
+		$this->set('data',$users_permissions);
+		$this->set('user_id',$user_id);
+		if (empty($errors)) {
+			$isError = false;
+		} else {
+			$isError = true;
+		}
+		$this->set('isError', $isError);
+		$this->set('errors', $errors);
+		$this->render('render_users_permission_list_ajax', 'ajax');
+	}
+	
+	function remove_users_permission($permission_id=null,$user_id=null)
+	{
+		$this->autoRender = false;
+		$this->PermissionUser->del($permission_id);
+		$this->User->bindPermission();
+		$users_permissions = $this->User->find('id='.$user_id);
+		$this->set('data',$users_permissions);
+		$this->set('user_id',$user_id);
+		$this->set('isError', false);
+		$this->render('render_users_permission_list_ajax', 'ajax');
+	}
+	
+	/****************End Set Permission************/
 	
 	/******************DB Repair********************/
 	/******************DO NOT RUN THESE UNLESS YOU KNOW YOU ARE DOING***********************/
@@ -1513,6 +1593,7 @@
 	**/
 	function render_ips() {
 		$this->autoRender = false;
+		$this->checkPermission('block_IP');
 		$this->Pagination->show = 20;
 		
 		$this->modelClass = "BlockedIp";
@@ -1633,7 +1714,7 @@
 	function ban_user($user_id = "", $overload = "") {	
 		$this->autoRender = false;
 		$this->User->id = $user_id;
-		
+		$this->checkPermission('block_account');
 		$banned_users = $this->set_banned_users();
 		
 		if ($user_id == "" && $overload == "") {
@@ -2094,6 +2175,7 @@
 		}
 	}
 	
+
 	/**
 	* Sets the permissions for a certain rank of karma
 	**/

@@ -1,0 +1,50 @@
+<?php if($isError): ?>
+		<div id="ignore_user_error">
+			<?php
+			
+				$error = $errors[0];
+				echo " <font color='#FF0000'>$error</font>";
+			?>
+		</div>
+	<?php endif; ?>
+    <?php
+				echo "<div id='success_msg'>";
+				if ($session->check('Message.flash')):
+						$session->flash();
+				endif;
+				echo "</div>";
+?>
+<div>
+<?php		
+	//print_r($data);	
+	foreach ($data['Permission'] as $permissions) {
+		$permission_id = $permissions['PermissionUser']['id'];
+		$permission_name = $permissions['name'];
+		//$reason = $user['User']['reason'];
+		//$direct_address = "/users/$user_name";
+		//$details_address = "/administration/viewuser/$user_id";
+		$remove_address = "/administration/remove_users_permission/$permission_id/$user_id";
+		
+		echo "<div class='gallerythumb clearme'>\n";
+		echo "\t<div class='admin_leftcolumn'>\n";
+		?>
+		<span><?php echo $permission_name?></span>
+		
+		<?php
+		echo "\t</div>";
+		echo "\t<div class='admin_rightcolumn'>\n";
+		
+		?>
+		
+		<?php
+		
+		
+		//echo $ajax->link(___("Remove", true), '#', 
+			//array("url"=>$remove_address, "update"=>"users_permissions_results"), NULL, false);
+		echo "</span>\n";
+			
+    	echo "\t</div>\n";
+		echo "</div>\n";
+	}
+?>
+</div>

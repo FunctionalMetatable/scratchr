@@ -72,7 +72,7 @@ class ProjectsController extends AppController {
 	 */
 	function feature($urlname=null) {
 		$user_id = $this->getLoggedInUserID();
-
+		$this->checkPermission('feature_projects');
 		if (!$user_id && !$this->isAdmin()) $this->__err;
 
 		if (!isset($this->params['form']['urlname']) ||
@@ -122,6 +122,7 @@ class ProjectsController extends AppController {
 	 */
 	function defeature($urlname=null) {
 		$user_id = $this->getLoggedInUserID();
+		$this->checkPermission('feature_projects');
 		if (!$user_id && !$this->isAdmin())
 			exit;
 
@@ -1414,6 +1415,7 @@ class ProjectsController extends AppController {
 	 */
 	 function censor() {
 		$this->autoRender = false;
+		$this->checkPermission('censor_projects');
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
 			$this->__err;
@@ -1485,6 +1487,7 @@ class ProjectsController extends AppController {
 	 */
 	 function uncensor() {
 		$this->autoRender = false;
+		$this->checkPermission('censor_projects');
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
 			$this->__err;
@@ -1523,7 +1526,7 @@ class ProjectsController extends AppController {
 			$this->notify($puser_id, $message);
 		}
 
-		if ($this->isAdmin() || ($project['Project']['user_id'] == $user_id))
+		if ($this->isAdmin() || ($project['Project']['user_id'] == $user_id) || isset($users_permission['censor_projects']))
 		{
 			$this->Project->uncensor($pid, $urlname, $this->isAdmin(), $user_id);
 			$this->redirect("/projects/$urlname/$pid");
@@ -1719,7 +1722,7 @@ class ProjectsController extends AppController {
 			$final_flags = $this->ProjectFlag->find("ProjectFlag.project_id = $pid");
 			
 			$admin_name = $this->get_admin_name($pid);
-
+			
 		// setting related work/projects strings
 			$this->set('related_username', $project['Project']['related_username']);
 			if($project['Project']['related_username'])  {
@@ -1785,7 +1788,7 @@ class ProjectsController extends AppController {
 		if ($isLogged) {
 			$mpcomments = $this->Mpcomment->findAll("user_id = $current_user_id");
 		}
-		
+		$this->set_admin_name($pid);
 		$this->set_admin_time($pid);
 		$this->set('isProjectOwner', $isProjectOwner);
 		$this->set('isGalleryOwner', $isGalleryOwner);
@@ -2016,6 +2019,7 @@ class ProjectsController extends AppController {
 	/ 	$safe_level - see database project.safe
 	**/
 	function set_status($project_id, $safe_level,$urlname=null) {
+		$this->checkPermission('project_view_permission');
 		$user_id = $this->getLoggedInUserID();
 		$this->Project->id = $project_id;
 		$this->Project->bindUser();
@@ -2052,6 +2056,7 @@ class ProjectsController extends AppController {
 	**/
 	function set_attribute($project_id, $attribute, $state,$urlname=null) {
 		$this->autoRender=false;
+		$this->checkPermission('project_view_permission');
 		$project = $this->Project->find("Project.id = $project_id");
 		$user_id = $this->getLoggedInUserID();
 		$this->check_project_flag($user_id, $project_id);
@@ -2389,6 +2394,7 @@ class ProjectsController extends AppController {
 	**/
 	function delete_comment($project_id, $comment_id) {
 		$this->autoRender=false;
+		$this->checkPermission('delete_project_comments');
         $this->Project->bindUser();
         $this->Project->id=$project_id;
         $project = $this->Project->find("Project.id = $project_id");
