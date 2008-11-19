@@ -6,7 +6,7 @@
    <?php
 	$param_array = array();
 	foreach($url_params as $url_param) {
-		$param_array[] = htmlspecialchars($item[$url_param[0]][$url_param[1]]);
+		$param_array[] = htmlspecialchars(urlencode($item[$url_param[0]][$url_param[1]]));
 	}
    ?>
    <url>
