@@ -11,8 +11,8 @@
 	?>
 	<br/>
 	</form>
-	 <a href="<?php echo $html->url('/administration/viewuser/')?><?php echo $user_id?>">View Details</a>
-	
+	 <a href="<?php echo $html->url('/administration/viewuser/')?><?php echo $user_id?>">View Details</a><br />
+	 <a href="<?php echo $html->url('/administration/set_permission/')?><?php echo $user_id?>">Set Permissions</a>
 	<br/>
 	<?php
 		$project_rating = $karma_ratings['KarmaRating']['project_rating'];

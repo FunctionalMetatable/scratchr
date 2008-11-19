@@ -101,5 +101,13 @@ if(isset($ishomepage) && $ishomepage) {
 		echo "</div>";
 	}
 ?>
-
+<?php
+				
+				if ($session->check('Message.flash')):
+				echo "<div id='flash_error'>";
+						$session->flash();
+				echo "</div>";		
+				endif;
+				
+?>
 </div>

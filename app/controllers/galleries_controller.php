@@ -178,10 +178,10 @@ Class GalleriesController extends AppController {
 	 * Admin Feature a theme
 	 */
 	function feature() {
+		$this->checkPermission('feature_galleries');
 		$user_id = $this->getLoggedInUserID();
-		if (!$user_id || !$this->isAdmin() || empty($this->params['form']))
+		if (!$user_id || empty($this->params['form']))
 			exit;
-
 		$gallery_id = $this->params['form']['theme-id'];
 		$this->Gallery->set_status($gallery_id, "safe");
 		$this->FeaturedGallery->id=null;
@@ -200,18 +200,19 @@ Class GalleriesController extends AppController {
 	 * Admin deFeature a theme
 	 */
 	function defeature() {
+		$this->checkPermission('feature_galleries');
 		$user_id = $this->getLoggedInUserID();
-		if (!$user_id || !$this->isAdmin() || empty($this->params['form']))
+		if (!$user_id ||  empty($this->params['form']))
 			exit;
 
 		$gallery_id = $this->params['form']['theme-id'];
 		$featured_gallery = $this->FeaturedGallery->find("gallery_id = $gallery_id");
-
+		
 		if (!($featured_gallery == null))
 		{
 			if ($this->FeaturedGallery->del($featured_gallery['FeaturedGallery']['id']))
 			{
-				$this->set('gallery_id', $gallery_id);
+				$this->set('theme_id', $gallery_id);
 				$this->set("isFeatured", false);
 				$this->set("isClubbed", $this->params['form']['isClubbed']);
 
@@ -648,6 +649,7 @@ Class GalleriesController extends AppController {
 	**/
 	function delete_comment($gallery_id, $comment_id) {
 		$user_id = $this->getLoggedInUserID();
+		$this->checkPermission('delete_gallery_comments');
 		$this->autoRender=false;
         $this->Gallery->bindUser();
         $this->Gallery->id=$gallery_id;
@@ -867,6 +869,7 @@ Class GalleriesController extends AppController {
 		$isAdmin = $this->isAdmin();
 		$isLogged = $this->isLoggedIn();
 		$user_id = $this->getLoggedInUserID();
+		
 		$this->Gallery->id = $gallery_id;
 		$current_gallery_record = $this->Gallery->findAll("Gallery.id = $gallery_id", null, null, null, null, null, "overload");
 		$content_status = $this->getContentStatus();
@@ -2067,6 +2070,7 @@ Class GalleriesController extends AppController {
 	**/
 	function set_status($gallery_id, $safe_level) {
 		$this->autoRender=false;
+		$this->checkPermission('galleries_view_permission');
 		$user_id = $this->getLoggedInUserID();
 		$this->Gallery->id = $gallery_id;
 		$this->Gallery->bindUser();
@@ -2107,6 +2111,7 @@ Class GalleriesController extends AppController {
 	**/
 	function set_attribute($gallery_id, $attribute, $state) {
 		$this->autoRender=false;
+		$this->checkPermission('galleries_view_permission');
 		$gallery= $this->Gallery->find("Gallery.id = $gallery_id");
 		$user_id = $this->getLoggedInUserID();
 

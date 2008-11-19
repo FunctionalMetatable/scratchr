@@ -1,3 +1,4 @@
+<?php if($isAdmin):?>
 <div class="fullcontent">
 	<h2>Manage Users</h2>
     <h5>
@@ -11,3 +12,4 @@
 	<a href="<?php echo $html->url('/administration/predefined_tags')?>"> Admin Tags </a>
 	</h5>
 </div>
+<?php endif;?>

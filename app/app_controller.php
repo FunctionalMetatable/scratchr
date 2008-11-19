@@ -39,6 +39,8 @@ class AppController extends Controller {
 		$this->set('this_controller_here', $this->here);
 		$isLoggedIn = $this->isLoggedIn();
 		$this->set('isLoggedIn', $isLoggedIn);
+		$users_permission =$this->isAnyPermission();
+		$this->set('users_permission',$users_permission);
 		$this->set('content_status', $this->getContentStatus());
 		$blocked = $this->checkIP();
 		$isBanned = false;
@@ -243,6 +245,26 @@ class AppController extends Controller {
 
 	function isAdmin() {
 		return $this->Session->read('User.role') === 'admin';
+	}
+	
+	function isAnyPermission()
+	{
+		return $this->Session->read('UsersPermission');
+	}
+	
+	function checkPermission($permission_url=null)
+	{
+		if ( ! $this->isAdmin()){
+			$users_permission =$this->isAnyPermission(); 
+			if (array_key_exists($permission_url, $users_permission)) {
+			}
+			else
+			{
+				
+				$this->Session->setFlash(___("You do not have the permission to perform this operation",true));
+				$this->redirect('/');	
+			}
+		}	
 	}
 
     /**

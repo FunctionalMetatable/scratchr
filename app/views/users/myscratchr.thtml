@@ -1,3 +1,4 @@
+
 <?php if ($isLoggedIn): ?>
 <style>
 #themebox1 div{width:200px;}
@@ -190,6 +191,18 @@ function langList($countries) {
 			<input value="<?php ___('update'); ?>" type="submit" class="button">
 			</form>
 		<?php endif;?>
+        
+        
+        
+        <?php if(isset($users_permission['block_account'])):?>
+        <br /><a href="<?php echo $html->url('/administration/ban_user/')?><?php echo $user_id?>">Ban User</a>
+        <?php endif?>
+        <?php if(isset($users_permission['block_account'])):?>
+        <br /><a href="<?php echo $html->url('/administration/ban_ip/')?><?php echo $user_id?>/<?php echo $ip=long2ip($user['ipaddress']) ?>">Ban IP</a>
+        <?php endif?>
+        
+        
+        
 
 		<?php if ($isLoggedIn && $isAdmin):?>
 		<p><a onclick="document.getElementById('user_notify').style.display='block'; return false;" href="#"><?php ___('send notification'); ?></a></p>
@@ -334,7 +347,7 @@ function langList($countries) {
 	  	      </form>
     </div>
     <?php endif; ?>
-
+	
 	<div class="sidecontainer">
 	  <h4>
 	  <?php

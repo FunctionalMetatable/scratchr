@@ -315,7 +315,16 @@ class UsersController extends AppController {
 	  if (!empty($this->params['form']['User'])) {
 		  $submit_username = $this->params['form']['User'];
 		  $submit_pwd = $this->params['form']['Pass'];
+		  $this->User->bindPermission();
+		  $users_permission = array();
 		  $user_record = $this->User->findByUsername($submit_username);
+		  foreach($user_record['Permission'] as $user_permission)
+		  {
+		  	$id = $user_permission['id'];
+			$url_name =$user_permission['url_name'];
+		  	$users_permission[$url_name] = 1;
+		  }
+		  
 		  $user_status = 'normal';
 		  if (!empty($user_record)) {
 			$user_status = $user_record['User']['status'];
@@ -326,6 +335,7 @@ class UsersController extends AppController {
 			$this->setFlash(___("Invalid username and password pair", true), FLASH_ERROR_KEY);
 		  } else if (!empty($user_record['User']['password']) && $user_record['User']['password'] == sha1($submit_pwd)) {
 				$this->Session->write('User', $user_record['User']);
+				$this->Session->write('UsersPermission', $users_permission);
 				$userID = $user_record['User']['id'];
 				$statID = $this->UserStat->field("id", "user_id = $userID");
 				$time = date("Y-m-d G:i:s");

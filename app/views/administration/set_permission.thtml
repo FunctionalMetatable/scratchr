@@ -1,0 +1,41 @@
+<?php
+	
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	<h3> <?php ___('Set Permission for')?> <?php echo $user['User']['username']?></h3>
+	</div>
+    <form  id="admin_set_permission"action="<?=e("/administration/add_set_permission/".$this->params['pass']['0'])?>" method="post">
+       <?php
+    	//$attributes = array('size'=>3,'multiple'=> true);
+		//echo $form->select('permission',$permissions,null,$attributes,false); 
+//		echo $form->input('User.permission',array('type'=>'select', 'multiple'=>'checkbox', 'options'=>$permissions))
+		echo $form->input('Permission.Permission', array('multiple'=>'checkbox','selected'=>$current_permissions));
+		?>
+        <div  class="permission_submit">
+        <?php 
+			e($ajax->submit('Set', array('id' => 'admin_set_permission_submit', 
+			'class'=>'button', 'url' => "/administration/add_set_permission/".$this->params['pass']['0'],
+			'update' => 'users_permissions_results',
+			)));
+		?>
+		
+        </div>
+	</form>
+</div>
+
+
+<div class="fullcontent">
+
+	<div class="top_header">
+	<h5> <?php ___('Given Permission')?> </h5>
+	</div>
+	<div id="users_permissions_results">
+		
+			<?php
+				echo $this->renderElement('admin/users_permission_list', Array('data' => $user,'user_id'=>$user_id));
+			?>
+		
+	</div>
+</div>

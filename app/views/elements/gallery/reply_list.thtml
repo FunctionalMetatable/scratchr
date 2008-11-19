@@ -100,7 +100,7 @@
 					
 				echo " | ";	
 					
-				if ($isAdmin || $isThemeOwner)
+				if ($isAdmin || $isThemeOwner || isset($users_permission['delete_gallery_comments']))
 						e($ajax->link("(x)", '#', 
 							array("url"=>"/galleries/delete_comment/$gallery_id/$comment_id", 
 							"update"=>"$comment_id", 
