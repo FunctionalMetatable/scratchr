@@ -749,7 +749,7 @@ class ProjectsController extends AppController {
 				$this->Lover->del($lover['Lover']['id']);
 				$prev_lovers_count = (int)$project['Project']['loveit'];
 				$new_lovers_count = $prev_lovers_count - 1;
-				$this->Project->save(array("loveit"=>($new_lovers_count == 0 ? null : $new_lovers_count)));
+				$this->Project->saveField('loveit', ($new_lovers_count == 0 ? null : $new_lovers_count));
 				$this->set('pid', $pid);
 				$this->set('urlname', $urlname);
 				
