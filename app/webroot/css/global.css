@@ -2056,3 +2056,31 @@ margin:0;
 padding:0;
 width:770px;
 }
+
+
+/*********tagger*********/
+.tagger{
+	width:350px;
+	float:left;
+	margin-bottom:5px;
+	margin-top:5px;
+}
+
+.tagger .user {
+	width:100px;
+	float:left;
+	text-align:center;
+}
+.tagger .tags{
+	float:left;
+	width:200px;
+}
+
+.clearer {
+	height:0;
+	font-size:0pt;
+	margin:0;
+	padding:0;
+	clear:both;
+}
+/*********tagger*********/

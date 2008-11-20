@@ -911,7 +911,7 @@ class ProjectsController extends AppController {
 
 		if (!$this->isAdmin() && $urlname !== $this->getLoggedInUrlname())
 			$this->__err();*/
-
+		$users_array=array();
 		$this->Project->bindUser();
 		$this->Project->id = $pid;
 		$project_id = $pid;
@@ -926,7 +926,25 @@ class ProjectsController extends AppController {
 		list($order,$limit,$page) = $this->Pagination->init("ProjectTag.project_id = $pid AND ProjectTag.user_id > 0 AND User.status = 'normal' GROUP BY tag_id", Array(), $options);
 		$final_taggers = $this->ProjectTag->findAll("ProjectTag.project_id = $pid AND ProjectTag.user_id > 0 AND User.status = 'normal' GROUP BY tag_id", null, $order, $limit, $page);
 		
-		$this->set('tags', $final_taggers);
+		foreach($final_taggers as $taggers)
+		{
+			array_push($users_array,$taggers['User']['id']);
+		}
+		
+		$unique_users_array = array_unique($users_array);
+		$allid  = implode(',',$unique_users_array);
+		$this->User->bindModel(array(
+        'hasAndBelongsToMany' => array(
+            'Tags' => array(
+                'className' => 'Tags',
+                'joinTable' => 'project_tags',
+                'foreignKey' => 'user_id',
+                'associationForeignKey' => 'tag_id',
+				'conditions' => 'project_id='.$pid
+			))));
+				
+		$final_results=$this->User->findAll("User.id in (".$allid.") " );
+		$this->set('tags', $final_results);
 	}
 
 	

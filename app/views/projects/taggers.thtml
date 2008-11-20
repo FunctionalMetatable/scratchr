@@ -2,7 +2,7 @@
   
     <h2><?php e(count($tags))?> <?php ___('taggers'); ?></h2>
 
-	<table cellspacing="10">
+	
 	<?php // todo: really need to create helper class for stuff like this
 	$count = 1; 
 	$length = count($tags);
@@ -12,19 +12,42 @@
 		$username = $user['username'];
 		$user_ref = "/users/".$urlname;
 		$buddyicon = getBuddyIconBySize($user['id'],'med', $content_status);
-		if ($count%5 == 1) 
-			echo "<tr>";?>	
 		
-		<td align="center">
+?>
+
+<div class="tagger">
+	<div class="user">
 		<a href="<?php echo $html->url($user_ref)?>">
 		<?php echo $html->image($buddyicon,array('alt'=>$username,'width'=>'90','height'=>'90'))?>
 		<br>
 		<h5><?php e($username)?></h5></a>
-		</td>
+    </div>    
+        <div class="tags">
+        	<strong>Tags:</strong><br />
+			<?php 
+            	foreach($tag['Tags'] as $tag_name ):
+           		 $date = friendlyDate($tag_name['timestamp']);
+            ?>
+          			<a href="<?php echo $html->url('/tags/view/'.$tag_name['name'])?>"><?php echo $tag_name['name'];?></a>
+				  <small><?php
+                  if ($date == "Now") {
+                            echo $date;
+                            } else {
+                                printf(___('%s ago', true), friendlyDate($tag_name['timestamp'])); 
+                            }
+                   ?>	
+                   </small>	
+               <br />
+          	 <?php endforeach;?>
+       </div><!--tags-->
+       <div class="clearer"></div>
+</div><!--tagger-->
+	<?php if ($count%2 == 0) {?>
+       <div class="clearer"></div>
+       <?php }?>
+<?php 
+$count = $count + 1;
+endforeach;
+?>
+</div>		
 		
-		<?php if ($count%5 == 0 || $count == $length) echo "</tr>";
-			$count = $count + 1;
-			endforeach; ?>
-	</table>
-</div>
-
