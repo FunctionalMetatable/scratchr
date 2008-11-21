@@ -72,6 +72,7 @@ Router::connect('/users/renderProjects/*', array('controller' => 'users', 'actio
 Router::connect('/users/render_comment_list/*', array('controller' => 'users', 'action' => 'render_comment_list'));
 Router::connect('/users/loginsu/*', array('controller' => 'users', 'action' => 'loginsu'));
 Router::connect('/users/pwdreset/*', array('controller' => 'users', 'action' => 'pwdreset'));
+Router::connect('/users/set_email/*', array('controller' => 'users', 'action' => 'set_email'));
 Router::connect('/users/removefavorites', array('controller' => 'users', 'action' => 'removefavorites'));
 Router::connect('/users/*', array('controller' => 'users', 'action' => 'view'));
 
