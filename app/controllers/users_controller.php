@@ -347,8 +347,9 @@ class UsersController extends AppController {
 				}
 
 			  //Now, let's figure out where to redirect this person to.
-			 
-			 
+			 if($user_record['User']['email']=="" || $user_record['User']['email']=="rather-not-say@scratchr.org"){
+					$this->redirect('/users/set_email/'.$user_record['User']['urlname']);
+			 }
 			if(isset($_REQUEST['refer'])&& $_REQUEST['refer']!="/"){
 				$this->redirect($_REQUEST['refer']);
 			}
@@ -370,6 +371,52 @@ class UsersController extends AppController {
 	  $this->set('errors', $errors);
 	  $this->set('isLoginError', $isError);
 	}
+	
+	/*************set_email******/
+	
+	function set_email($urlname=null)
+	{
+		if(!isset($this->data['referrer'])) $this->set('referrer', $_SERVER['HTTP_REFERER']);
+		else $this->set('referrer', $this->data['referrer']);
+		
+		$this->pageTitle = "Scratch | Set Email";
+	  	$errors = Array();
+	    $session_user_id = $this->getLoggedInUserID();
+                if (!$session_user_id)
+                   $this->redirect('/login');
+		$user_record = $this->User->findByUsername($urlname);		   
+		 if(!empty($this->data))
+		 {
+			 if (empty($this->data['email']))
+			 {
+			 	array_push($errors, ___("Enter Email Id", true));
+			 }
+			 else
+			 {
+			 	if (eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $this->data['email'])) {
+					$this->User->id=$user_record['User']['id'];
+					$this->User->saveField("email",$this->data['email']);
+					$this->redirect($this->data['referrer']);
+					
+				} else {
+				
+					array_push($errors, ___("Invalid Email Id", true));
+					
+				}
+			}	
+		  }	 
+		if (empty($errors)) {
+			$isError = false;
+	  } else {
+			$isError = true;
+	  }
+	  
+	  $this->set('errors', $errors);
+	  $this->set('isError', $isError);
+	  $this->set('age', $this->getUserAge($user_record) );	
+	}
+	
+	/*************end set_email******/
 
 	function loginsu($user) {
 		if($this->isAdmin()) {
@@ -951,7 +998,7 @@ class UsersController extends AppController {
 	updates user email 
         */
         function updateemail($user_id) {
-                //$this->exitOnInvalidArgCount(1);
+                $this->exitOnInvalidArgCount(1);
                 $session_user_id = $this->getLoggedInUserID();
                 if (!$session_user_id)
                    $this->__err();
@@ -961,7 +1008,7 @@ class UsersController extends AppController {
 
                 $this->User->id=$user_id;
                 $user = $this->User->read();
-				print_r($user);
+				
                 if (empty($user))
                    $this->__err;
 
