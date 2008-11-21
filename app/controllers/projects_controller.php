@@ -408,6 +408,10 @@ class ProjectsController extends AppController {
 		//checks to see if this user has already marked this comment previously
 		if ($mpcomment_record == 0) {
 			$this->Mpcomment->save(array('Mpcomment'=>array('id'=>null, 'user_id' => $user_id, 'comment_id' => $comment_id)));
+			
+			///////////temp block//////////
+			$this->Pcomment->set_temporary_block($comment_id);
+			//////////temp block end //////
 /*
 			$msg = "User '$flaggername' has flagged this comment by '$creatorname':\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
 			$subject= "Flagged comment under '$pname'";
@@ -811,8 +815,10 @@ class ProjectsController extends AppController {
 		$project_title = htmlspecialchars($project['Project']['name']);
 
 		$pname = htmlspecialchars($project['Project']['name']);
-
-        if (empty($project) || empty($msgin) || $project['User']['urlname'] !== $urlname)
+		
+		
+        
+		if (empty($project) || empty($msgin) || $project['User']['urlname'] !== $urlname)
             exit();
 
 		$user_id = $this->getLoggedInUserID();
@@ -842,7 +848,11 @@ class ProjectsController extends AppController {
 				$this->set('just_flagged', true);
 				$this->set('pid', $pid);
 				$this->set('urlname', $urlname);
-				
+		
+				///////////temp block//////////
+			$this->Project->set_temporary_block($comment_id);
+			//////////temp block end //////			
+					
 				//if the number of flags on this project exceeds the current maximum, automatically censor this project
 				if ($flags >= NUM_MAX_PROJECT_FLAGS && $project_status == 'notreviewed') {
 					$msg = "Project *automatically censored* because it reached the maximum number of flags.\n";
@@ -2683,6 +2693,6 @@ class ProjectsController extends AppController {
 	}
 	
 	
+		
 }
-
 ?>

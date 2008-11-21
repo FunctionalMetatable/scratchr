@@ -153,6 +153,12 @@ define("SUBTOPIC3", "scrach-feedback@mit");
 define('MAX_LINKS_PER_SITEMAP', 5000);
 define('CACHE_DURATION', '1 day');
 
+/***
+* Define block time
+**/
+define('BLOCK_CHECK_INTERVAL', '30 minutes');
+define('TEMP_BLOCK_INTERVAL', '90 minutes');
+ 
  /**
   * Returns theme url for html link destination
   */

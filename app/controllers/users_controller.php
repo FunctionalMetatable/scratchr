@@ -318,6 +318,12 @@ class UsersController extends AppController {
 		  $this->User->bindPermission();
 		  $users_permission = array();
 		  $user_record = $this->User->findByUsername($submit_username);
+		  
+		  if($user_record['User']['blocked_till'] <= date("Y-m-d H:i:s", time())) {
+		 	    $this->User->tempunblock($user_record['User']['id']);
+				$user_record['User']['status']=normal;
+		  }
+		  
 		  foreach($user_record['Permission'] as $user_permission)
 		  {
 		  	$id = $user_permission['id'];
@@ -326,14 +332,26 @@ class UsersController extends AppController {
 		  }
 		  
 		  $user_status = 'normal';
+		  
 		  if (!empty($user_record)) {
-			$user_status = $user_record['User']['status'];
+			$user_status = $user_record['User']['status']; 
 		  }
+		 /* */
+		  
+		 
+		  
+		  
 		  
 		  if ($user_status == 'delbyadmin') {
 			array_push($errors, ___("Invalid username and password pair", true));
 			$this->setFlash(___("Invalid username and password pair", true), FLASH_ERROR_KEY);
-		  } else if (!empty($user_record['User']['password']) && $user_record['User']['password'] == sha1($submit_pwd)) {
+		  }  
+		  /* check user temporarily block or not */
+		  else if($user_record['User']['status'] == "blockedtemporarily") {
+		   	array_push($errors, ___("your account is temporarily blocked", true));
+		 	$this->setFlash(___("your account is temporarily blocked", true), FLASH_ERROR_KEY);
+		  }
+		  else if (!empty($user_record['User']['password']) && $user_record['User']['password'] == sha1($submit_pwd)) {
 				$this->Session->write('User', $user_record['User']);
 				$this->Session->write('UsersPermission', $users_permission);
 				$userID = $user_record['User']['id'];
@@ -1677,6 +1695,6 @@ class UsersController extends AppController {
 	
 	function updateBaseRating($user_id, $amount) {
 	}
-	
+
   }
 ?>

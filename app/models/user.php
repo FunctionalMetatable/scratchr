@@ -141,5 +141,23 @@ Class User extends AppModel
 			'limit' => $limit,
             'order' => $order))));
     }
+	
+	function tempblock($id) {
+		$this->id=$id;
+		$block_time = "+". TEMP_BLOCK_INTERVAL;
+		$blocked_till=date("Y-m-d H:i:s", strtotime("$block_time", time()));
+		$data['User']['blocked_till']=$blocked_till;
+		$data['User']['status']='blockedtemporarily';
+		$data['User']['id']=$id;
+		return $this->save($data);
+		}
+	
+	function tempunblock($id) {
+		$this->id=$id;
+		$data['User']['blocked_till']='0000-00-00 00:00';
+		$data['User']['status']='normal';
+		$data['User']['id']=$id;
+		return $this->save($data);
+	}
 }
 ?>
