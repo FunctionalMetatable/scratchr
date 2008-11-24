@@ -158,7 +158,7 @@ class PaginationHelper extends Helper
 			}
 			else
 			{
-				$t .= $this->_pageDetails['total'];
+				$t .= " " . $this->_pageDetails['total'];
 			}
 			return $t;
 		}
