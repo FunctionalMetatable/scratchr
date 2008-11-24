@@ -1,5 +1,5 @@
 <div class="fullcontent">
-  
+  	<?php if(isset($tags)){?>
     <h2><?php e(count($tags))?> <?php ___('taggers'); ?></h2>
 
 	
@@ -48,6 +48,15 @@
 <?php 
 $count = $count + 1;
 endforeach;
+?>
+<?php
+}
+else
+{
+?>
+ <h2><?php e(count($tags))?> <?php ___('taggers'); ?></h2>
+<?php
+}
 ?>
 </div>		
 		

@@ -935,7 +935,9 @@ class ProjectsController extends AppController {
 					"direction"=> "ASC", "url"=>"/projects/".$urlname."/".$pid."/taggers");
 		list($order,$limit,$page) = $this->Pagination->init("ProjectTag.project_id = $pid AND ProjectTag.user_id > 0 AND User.status = 'normal' GROUP BY tag_id", Array(), $options);
 		$final_taggers = $this->ProjectTag->findAll("ProjectTag.project_id = $pid AND ProjectTag.user_id > 0 AND User.status = 'normal' GROUP BY tag_id", null, $order, $limit, $page);
-		
+		$final_taggers_count = $this->ProjectTag->findCount("ProjectTag.project_id = $pid AND ProjectTag.user_id > 0 AND User.status = 'normal' ", null, $order, $limit, $page);
+		$final_results =Array();
+		if($final_taggers_count > 0){
 		foreach($final_taggers as $taggers)
 		{
 			array_push($users_array,$taggers['User']['id']);
@@ -954,6 +956,9 @@ class ProjectsController extends AppController {
 			))));
 				
 		$final_results=$this->User->findAll("User.id in (".$allid.") " );
+		$this->set('tags', $final_results);
+		}
+		else
 		$this->set('tags', $final_results);
 	}
 
