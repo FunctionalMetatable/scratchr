@@ -222,12 +222,12 @@ Class ThemesController extends AppController {
 		$isAdmin = $this->isAdmin();
 
 		if (!$session_UID)
-			$this->__err();
+			$this->cakeError('error404');
 
 		$this->Theme->id = $theme_id;
 		$theme = $this->Theme->read();
 		if (empty($theme) || !$isAdmin)
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (empty($this->params['form']))
 		{
@@ -265,12 +265,12 @@ Class ThemesController extends AppController {
 		$isAdmin = $this->isAdmin();
 
 		if (!$session_UID)
-			$this->__err();
+			$this->cakeError('error404');
 
 		$this->Theme->id = $theme_id;
 		$theme = $this->Theme->read();
 		if (empty($theme) || (!$isAdmin && $theme['Theme']['user_id'] !== $session_UID))
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (empty($this->params['form']))
 		{
@@ -305,12 +305,12 @@ Class ThemesController extends AppController {
 		$session_UID = $this->getLoggedInUserID();
 
 		if (!$session_UID)
-			$this->__err();
+			$this->cakeError('error404');
 
 		$this->Theme->id = $theme_id;
 		$theme = $this->Theme->read();
 		if (empty($theme) || $theme['Theme']['user_id'] !== $session_UID)
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (empty($this->params['form']))
 		{
@@ -364,13 +364,13 @@ Class ThemesController extends AppController {
 		$session_UID = $this->getLoggedInUserID();
 
 		if (!$session_UID)
-			$this->__err();
+			$this->cakeError('error404');
 
 		$uid = $this->params['url']['uid'];
 		$user = $this->User->find("id = $uid");
 
 		if (empty($user))
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (!empty($this->params["form"]))
 		{
@@ -409,7 +409,7 @@ Class ThemesController extends AppController {
 	function create($theme_name=null) {
 		$UID = $this->getLoggedInUserID();
 		if (!$UID)
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (!empty($this->params["form"])) {
 			$name = $this->params["form"]["theme_name"];
@@ -467,16 +467,16 @@ Class ThemesController extends AppController {
 	function delete() {
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (!isset($this->params['form']['theme-id']))
-			$this->__err();
+			$this->cakeError('error404');
 
 		$theme_id = $this->params['form']['theme-id'];
 
 		$theme = $this->Theme->read('user_id',intval($theme_id));
 		if (empty($theme['Theme']['user_id']))
-			$this->__err();
+			$this->cakeError('error404');
 
 		if ($this->isAdmin() || $theme['Theme']['user_id'] == $user_id) {
 			if ($this->Theme->remove($theme_id)) {
@@ -578,7 +578,7 @@ Class ThemesController extends AppController {
 
 	 	$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
-			$this->__err;
+			$this->cakeError('error404');
 
 		if (empty($this->params["form"]))
 		{
@@ -835,11 +835,11 @@ Class ThemesController extends AppController {
         $theme = $this->Theme->read();
 
 		if (empty($theme))
-			$this->__err;
+			$this->cakeError('error404');
 
 		if (!$this->isAdmin())
 			if ($theme['User']['id'] !== $user_id)
-				$this->__err;
+				$this->cakeError('error404');
 
 		$this->Tcomment->id = $comment_id;
 		$this->Tcomment->saveField("visibility", null) ;
@@ -858,21 +858,20 @@ Class ThemesController extends AppController {
 	function updatepic($theme_id) {
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (empty($this->params["form"]))
-			$this->__err();
+			$this->cakeError('error404');
 
 		$this->Theme->id=$theme_id;
         $theme = $this->Theme->read();
 
 		if (empty($theme))
-			$this->__err;
+			$this->cakeError('error404');
 
 		if (!$this->isAdmin())
 			if ($theme['User']['id'] !== $user_id)
-				$this->__err;
-
+				$this->cakeError('error404');
 		$icon_array = $this->params["form"]["theme_icon"];
 		$theme_icon_file = WWW_ROOT . getThemeIcon($theme_id, false, DS);
 		mkdirR(dirname($theme_icon_file) . DS);
@@ -902,7 +901,7 @@ Class ThemesController extends AppController {
         {
 			$theme =  $this->Theme->read(null, $theme_id);
             if (empty($theme))
-                $this->__err();
+                $this->cakeError('error404');
 
             $this->modelClass = "ThemeProject";
 			$criteria = Array("theme_id" => $theme_id);
@@ -929,7 +928,7 @@ Class ThemesController extends AppController {
 			$theme = $this->Theme->find("Theme.id = $theme_id", NULL, NULL, 2);
 
 			if (empty($theme))
-				$this->__err();
+				$this->cakeError('error404');
 
 			$this->set('theme', $theme['Theme']);
 			$this->set('theme_id', $theme_id);

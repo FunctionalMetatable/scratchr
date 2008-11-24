@@ -12,8 +12,13 @@
      */
     function beforeFilter() {
 		$user_id = $this->getLoggedInUserID();
-		//if ( ! $this->isAdmin())
-			//$this->__err();
+		$users_permission =$this->isAnyPermission();
+		if (($this->isAdmin() || isset($users_permission['block_IP']) || isset($users_permission['block_account'])))
+		{}
+		else
+		{
+			$this->cakeError('error404');
+		}
     }
     
     function __err() {
@@ -22,8 +27,7 @@
     }
     
     function index() { 
-	if ( ! $this->isAdmin())
-			$this->__err();
+
     }
     
     function projects() { 	
@@ -41,6 +45,9 @@
 
 		$this->User->id=$user_id;
 		$user=$this->User->read();
+		if(empty($user)){
+		$this->cakeError('error404');
+		}
 		$this->set('user', $user);
 		
 		$current_permissions=array();
@@ -279,6 +286,8 @@
     	$this->Project->id = $project_id;
 		$this->Project->bindUser();
 		$project = $this->Project->read();
+		if(empty($project))
+			$this->cakeError('error404');
 		$project_flags = $this->ProjectFlag->find("project_id = $project_id");
 		$admin_id = $project_flags['ProjectFlag']['admin_id'];
 		if ($admin_id == null) {
@@ -391,6 +400,8 @@
 		$this->Project->id = $project_id;
 		$this->Project->bindUser();
 		$project = $this->Project->read();
+		if(empty($project))
+		$this->cakeError('error404');
 		$username = $project['User']['username'];
 		$this->Project->saveField("safe", $safe_level);
 		$this->redirect('/projects/'. $username. '/' . $project_id);
