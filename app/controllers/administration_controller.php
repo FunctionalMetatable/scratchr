@@ -79,7 +79,7 @@
 					$this->PermissionUser->save($data['PermissionUser']);
 					$this->PermissionUser->id=false;
 				}
-				$this->Session->setFlash(___("Permissions seted successfully.",true));
+				$this->Session->setFlash(___("Permissions set successfully.",true));
 				
 			}//foreach
 		}//this->data
