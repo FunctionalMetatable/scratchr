@@ -97,7 +97,7 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 	<!-- ::: Begin license ::: -->
 	<div id="licenseDiv"><a href="http://creativecommons.org/licenses/by-sa/2.0/">
 	<?php echo $html->image('/img/cc_icon_attribution_small.gif',array('alt'=>'Attribution','title'=>'Attribution'))?>
-	<?php echo $html->image('/img/cc_icon_attribution_small.gif',array('alt'=>'Attribution','title'=>'Attribution'))?>
+	<?php echo $html->image('/img/cc_icon_sharealike_small.gif',array('alt'=>'Share Alike','title'=>'Share Alike'))?>
 	
 	<a href="<?php  echo $html->url('/pages/license')?>"><?php ___('Some rights reserved'); ?></a></div>
 	<!-- ::: End license ::: -->
