@@ -21,6 +21,8 @@ class NotificationsController extends AppController {
 		$memcache->connect('localhost', 11211) or die ("Could not connect");
 		$prefix = MEMCACHE_PREFIX;
 		$user_id = $this->Session->read('User.id');
+		if(empty($user_id))
+		$this->cakeError('error404');
 		$user_record = $this->User->find("id = $user_id");
 		if(empty($user_record))
 		$this->cakeError('error404');
