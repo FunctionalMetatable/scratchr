@@ -32,7 +32,7 @@ class ProjectsController extends AppController {
 	$pos = strpos($referer_url, $url);
 	if ($pos === false && !$referer_url == "") {
 		echo "Referrer: $referer_url, URL: $url";
-		$this->__err();
+		$this->cakeError('error404');
 	} else {
 		//TODO
 	}
@@ -73,7 +73,7 @@ class ProjectsController extends AppController {
 	function feature($urlname=null) {
 		$user_id = $this->getLoggedInUserID();
 		$this->checkPermission('feature_projects');
-		if (!$user_id && !$this->isAdmin()) $this->__err;
+		if (!$user_id && !$this->isAdmin()) $this->cakeError('error404');
 
 		if (!isset($this->params['form']['urlname']) ||
 			!isset($this->params['form']['pid']))
@@ -84,6 +84,7 @@ class ProjectsController extends AppController {
 		$this->Project->id = $project_id;
 		$this->Project->bindUser();
 		$project = $this->Project->read();
+		if(empty($project)) $this->cakeError('error404');
 
 		$this->FeaturedProject->id=null;
 		$this->FeaturedProject->save(Array('FeaturedProject'=>Array('project_id'=>$project_id)));
@@ -135,7 +136,8 @@ class ProjectsController extends AppController {
 		$this->Project->id = $project_id;
 		$this->Project->bindUser();
 		$project = $this->Project->read();
-
+		if(empty($project)) $this->cakeError('error404');
+		
 		$featured_project = $this->FeaturedProject->find("project_id = $project_id", NULL, "FeaturedProject.id DESC");
 		if (!empty($featured_project))
 			$this->FeaturedProject->del($featured_project["FeaturedProject"]["id"]);
@@ -175,9 +177,9 @@ class ProjectsController extends AppController {
     function name($urlname, $pid) {
 	    $this->exitOnInvalidArgCount(2);
 		if (!$this->RequestHandler->isAjax())
-			$this->__err();
+			$this->cakeError('error404');
 		if (!$this->activeSession())
-			$this->__err();
+			$this->cakeError('error404');
 
         $this->autoRender=false;
 
@@ -186,11 +188,11 @@ class ProjectsController extends AppController {
         $project = $this->Project->read();
 
 		if (empty($project) || ($project['User']['urlname'] !== $urlname))
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (!$this->isAdmin())
 			if (!$this->activeSession($project['User']['id']))
-				$this->__err();
+				$this->cakeError('error404');
 
 		// save new name
 		// by default the default the scriptaculous library puts form values for Ajax.EditInPlace fields
@@ -228,6 +230,8 @@ class ProjectsController extends AppController {
         $this->Project->bindUser();
         $this->Project->id=$pid;
         $project = $this->Project->read();
+		if(empty($project)) $this->cakeError('error404');
+		
 		$commenter_id = $this->getLoggedInUserID();
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
@@ -378,7 +382,7 @@ class ProjectsController extends AppController {
 		$isLogged = $this->isLoggedIn();
 
 		if (!$isLogged) {
-			$this->__err();
+			$this->cakeError('error404');
 		}
 
 		$this->Project->bindUser();
@@ -388,7 +392,7 @@ class ProjectsController extends AppController {
 		$urlname = $project['User']['urlname'];
 
 		if (empty($project))
-			$this->_err();
+			$this->cakeError('error404'); 
 
 		$this->Pcomment->id = $comment_id;
 		$this->Pcomment->bindUser();
@@ -485,8 +489,8 @@ class ProjectsController extends AppController {
 		$this->autoRender=false;
 
 		if (empty($this->params['url']['cid']))
-			$this->_err;
-
+			$this->cakeError('error404');
+			
 		$comment_id = $this->params['url']['cid'];
 		$user_id = $this->getLoggedInUserID();
 
@@ -501,11 +505,11 @@ class ProjectsController extends AppController {
 		$isCommentOwner = $comment_owner_id == $user_id;
 
 		if (empty($project))
-			$this->__err;
-			
+			$this->cakeError('error404');
+						
 		if (!($this->isAdmin() || $isProjectOwner || $isCommentOwner))
-			$this->__err;
-
+			$this->cakeError('error404');
+			
 		$this->Pcomment->id = $comment_id;
 		if ($this->isAdmin()) {
 			$this->Pcomment->saveField("comment_visibility", "delbyadmin");
@@ -594,11 +598,11 @@ class ProjectsController extends AppController {
         $project = $this->Project->read();
 
 		if (empty($project) || ($project['User']['urlname'] !== $urlname))
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (!$this->isAdmin())
 			if (!$this->activeSession($project['User']['id']))
-				$this->__err();
+				$this->cakeError('error404');
 
         if (isset($this->params['form']['description'])) {
             #$newdesc = htmlspecialchars($this->params['form']['description']);
@@ -675,7 +679,7 @@ class ProjectsController extends AppController {
         $user = $this->User->find("User.urlname = '$urlname'");
 
 		if (empty($user))
-			$this->__err();
+			$this->cakeError('error404'); //$this->__err();
 
 		// return results for provided user
 		$this->modelClass = "Project";
@@ -781,7 +785,7 @@ class ProjectsController extends AppController {
 		$this->Project->id = $pid;
         $project = $this->Project->read();
         if (empty($project) || $project['User']['urlname'] !== $urlname)
-            $this->__err();
+            $this->cakeError('error404'); //$this->__err();
 
 		$this->Pagination->show = 50;
 		$this->modelClass = "Lover";
@@ -883,16 +887,16 @@ class ProjectsController extends AppController {
 	function flaggers($urlname=null, $pid=null) {
 		$this->exitOnInvalidArgCount(2);
 		if ($urlname == null || $pid == null)
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (!$this->isAdmin() && $urlname !== $this->getLoggedInUrlname())
-			$this->__err();
+			$this->cakeError('error404');
 
 		$this->Project->bindUser();
 		$this->Project->id = $pid;
         $project = $this->Project->read();
         if (empty($project) || $project['User']['urlname'] !== $urlname)
-            $this->__err();
+            $this->cakeError('error404');
 
 		$this->modelClass = "User";
 		$options = Array("url"=>"/projects/".$urlname."/".$pid."/flaggers", "show"=>50);
@@ -915,11 +919,11 @@ class ProjectsController extends AppController {
 	 * @param int $pid
 	 */
 	function taggers($urlname=null, $pid=null) {
-		/*$this->exitOnInvalidArgCount(2);
+		$this->exitOnInvalidArgCount(2);
 		if ($urlname == null || $pid == null)
-			$this->__err();
+			$this->cakeError('error404');
 
-		if (!$this->isAdmin() && $urlname !== $this->getLoggedInUrlname())
+		/*if (!$this->isAdmin() && $urlname !== $this->getLoggedInUrlname())
 			$this->__err();*/
 		$users_array=array();
 		$this->Project->bindUser();
@@ -927,7 +931,7 @@ class ProjectsController extends AppController {
 		$project_id = $pid;
 		$project = $this->Project->read();
 		if (empty($project) || $project['User']['urlname'] !== $urlname)
-		$this->__err();
+		$this->cakeError('error404');
 
 		$this->Pagination->show = 50;
 		$this->modelClass = "ProjectTag";
@@ -1277,16 +1281,16 @@ class ProjectsController extends AppController {
 	function favoriters($urlname=null, $pid=null) {
 		$this->exitOnInvalidArgCount(2);
 		if ($urlname == null || $pid == null)
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (!$this->isAdmin() && $urlname !== $this->getLoggedInUrlname())
-			$this->__err();
+			$this->cakeError('error404');
 
 		$this->Project->bindUser();
 		$this->Project->id = $pid;
         $project = $this->Project->read();
         if (empty($project) || $project['User']['urlname'] !== $urlname)
-            $this->__err();
+            $this->cakeError('error404');
 
 		$this->modelClass = "Favorite";
 		$options = Array("url"=>"/projects/".$urlname."/".$pid."/favoriters", "show"=>50);
@@ -1435,7 +1439,7 @@ class ProjectsController extends AppController {
 		
 		if (!$this->isAdmin())
 			if (!$this->activeSession($project['User']['id']))
-				$this->__err();
+				$this->cakeError('error404');
 
 		$this->ProjectTag->del($project_tag_id);
 		exit;
@@ -1451,7 +1455,7 @@ class ProjectsController extends AppController {
 		$this->checkPermission('censor_projects');
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
-			$this->__err;
+			$this->cakeError('error404');
 
 		if (!isset($this->params['form']['urlname']) ||
 			!isset($this->params['form']['pid']))
@@ -1464,7 +1468,7 @@ class ProjectsController extends AppController {
 		$this->Project->id = intval($pid);
 		$project = $this->Project->read("user_id");
 		if (empty($project['Project']['user_id']))
-			$this->__err();
+			$this->cakeError('error404');
 		
 		$project_record = $this->Project->read();
 		$puser_id = $project_record['Project']['user_id'];
@@ -1523,7 +1527,7 @@ class ProjectsController extends AppController {
 		$this->checkPermission('censor_projects');
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
-			$this->__err;
+			$this->cakeError('error404');
 
 		if (!isset($this->params['form']['urlname']) ||
 			!isset($this->params['form']['pid']))
@@ -1536,7 +1540,7 @@ class ProjectsController extends AppController {
 		$this->Project->id = intval($pid);
 		$project = $this->Project->read("user_id");
 		if (empty($project['Project']['user_id']))
-			$this->__err();
+			$this->cakeError('error404');
 		
 		$project_record = $this->Project->read();
 		$puser_id = $project_record['Project']['user_id'];
@@ -1582,7 +1586,7 @@ class ProjectsController extends AppController {
 		$this->autoRender = false;
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
-			$this->__err;
+			$this->cakeError('error404');
 
 		if (!isset($this->params['form']['urlname']) ||
 			!isset($this->params['form']['pid']))
@@ -1595,7 +1599,7 @@ class ProjectsController extends AppController {
 		$this->Project->id = intval($pid);
 		$project = $this->Project->read("user_id");
 		if (empty($project['Project']['user_id']))
-			$this->__err();
+			$this->cakeError('error404');
 
 		if ($this->isAdmin() || ($project['Project']['user_id'] == $user_id))
 		{
@@ -1620,7 +1624,7 @@ class ProjectsController extends AppController {
 		$user_id = $this->getLoggedInUserID();
 
 		if (empty($this->params["form"]))
-			$this->__err();
+			$this->cakeError('error404');
 
 		$formData = $this->params["form"];
 		if  ($this->isAdmin() || $formData["UID"] == $user_id)
@@ -1628,7 +1632,7 @@ class ProjectsController extends AppController {
 			$this->User->id = $formData["UID"];
 			$urlname = $this->User->field("urlname");
 			if (!$urlname)
-				$this->__err;
+				$this->cakeError('error404');
 
 			array_shift($formData);
 
@@ -1653,7 +1657,7 @@ class ProjectsController extends AppController {
      * @param int $pid => project id
      */
     function view($urlname=null, $pid=null) {
-        if ($pid && $urlname) {
+        	if ($pid && $urlname) {
             // TODO: make only one call to find in this clause
             // TODO: set global associations to bind model at load-time
             // TODO: get $uid from hidden field when possible / from directory lookup
@@ -1674,24 +1678,23 @@ class ProjectsController extends AppController {
 			$content_status = $this->getContentStatus();
 			$projects = $this->Project->findAll("Project.id = $project_id", null, null, null, 1, null, "all", 1);
 			if (empty($projects)) {
-				$this->__err();
-			} else {
+				$this->cakeError('error404');
+				} else {
 				$project = $projects[0];
 			}
 			
 			$project_visibility = $project['Project']['proj_visibility'];
 
 			if(($project_visibility == "delbyusr" || $project_visibility ==  "delbyadmin") && ! $this->isAdmin()) {
-				$this->__err();
-			}
+			$this->cakeError('error404');
+				}
 
 			$project_id = $project['Project']['id'];
 			$owner_id = $project['User']['id'];
 			$isMine = $logged_id == $owner_id;
 			
 			if ($project['User']['urlname'] !== $urlname)
-				$this->__err();
-			
+				$this->cakeError('error404');
 			 $viewcount = $project['Project']['views'];
 	   		 $client_ip = ip2long($this->RequestHandler->getClientIP());
 			if ($isLogged) {
@@ -1887,7 +1890,7 @@ class ProjectsController extends AppController {
 			$this->render('userprojects', 'scratchr_userpage');
 			*/
 
-			$this->__err();
+			$this->cakeError('error404');
 
         } else {
 
@@ -1905,7 +1908,7 @@ class ProjectsController extends AppController {
             $this->render('explorer');
 			*/
 
-			$this->__err();
+			$this->cakeError('error404');
         }
     }
 
@@ -2439,10 +2442,10 @@ class ProjectsController extends AppController {
 		$isProjectOwner = $project_owner_id == $user_id;
 		$isCommentOwner = $comment_owner_id == $user_id;
 
-		if (empty($project)) $this->__err();
+		if (empty($project)) $this->cakeError('error404');
 
 		if (!($this->isAdmin() || $isProjectOwner || $isCommentOwner))
-			$this->__err();
+			$this->cakeError('error404');
 
 		$this->Pcomment->del($comment_id);
 		exit;
@@ -2696,8 +2699,5 @@ class ProjectsController extends AppController {
 		}
 
 	}
-	
-	
-		
 }
 ?>

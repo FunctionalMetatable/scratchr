@@ -442,11 +442,11 @@ Class GalleriesController extends AppController {
 	function delete($gallery_id) {
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
-			$this->__err();
-
+			$this->cakeError('error404');
+			
 		$gallery = $this->Gallery->find("Gallery.id = $gallery_id");
 		if (!$gallery)
-			$this->__err();
+			$this->cakeError('error404');
 
 		if ($this->isAdmin() || $gallery['Gallery']['user_id'] == $user_id) {
 			if ($this->isAdmin()) {
@@ -625,10 +625,10 @@ Class GalleriesController extends AppController {
 		$isCommentOwner = $comment_owner_id == $user_id;
 		
 		if (empty($gallery))
-			$this->__err;
+			$this->cakeError('error404');
 
 		if (!($this->isAdmin() || $isGalleryOwner || $isCommentOwner))
-			$this->__err;
+			$this->cakeError('error404');
 
 		$this->Gcomment->id = $comment_id;
 		$this->Gcomment->saveField("visibility", null) ;
@@ -660,10 +660,10 @@ Class GalleriesController extends AppController {
 		$isGalleryOwner = $gallery_owner_id == $user_id;
 		$isCommentOwner = $comment_owner_id == $user_id;
 
-		if (empty($gallery)) $this->__err();
+		if (empty($gallery)) $this->cakeError('error404');
 
 		if (!($this->isAdmin() || $isGalleryOwner || $isCommentOwner))
-			$this->__err();
+			$this->cakeError('error404');
 			
 		if ($this->isAdmin()) {
 			$this->hide_gcomment($comment_id, "delbyadmin");
@@ -681,20 +681,20 @@ Class GalleriesController extends AppController {
 	function updatepic($gallery_id) {
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (empty($this->params["form"]))
-			$this->__err();
+			$this->cakeError('error404');
 
 		$this->Gallery->id=$gallery_id;
         $gallery = $this->Gallery->read();
 
 		if ($gallery == null)
-			$this->__err;
+			$this->cakeError('error404');
 
 		if (!$this->isAdmin())
 			if ($gallery['User']['id'] !== $user_id)
-				$this->__err;
+				$this->cakeError('error404');
 
 		$icon_array = $this->params["form"]["gallery_icon"];
 
@@ -875,14 +875,14 @@ Class GalleriesController extends AppController {
 		$content_status = $this->getContentStatus();
 		
 		if (empty($current_gallery_record)) {
-			$this->__err();
+			$this->cakeError('error404');
 		} else {
 			$current_gallery = $current_gallery_record[0];
 			$gallery = $current_gallery;
 			$gallery_content_level = $current_gallery['Gallery']['status'];
 			$gallery_visibility = $current_gallery['Gallery']['visibility'];
 			if ($gallery_visibility != 'visible' && !$isAdmin) {
-				$this->__err();
+				$this->cakeError('error404');
 			}
 			if ($gallery_content_level == "safe") {
 			} else {
@@ -890,7 +890,7 @@ Class GalleriesController extends AppController {
 				$isClubbed = $this->ClubbedGallery->hasAny("gallery_id = $gallery_id");
 				if ($content_status == "safe") {
 					if (!$isFeatured && !$isClubbed) {
-						$this->__err();
+						$this->cakeError('error404');
 					}
 				}
 			}
@@ -1480,7 +1480,7 @@ Class GalleriesController extends AppController {
 		if ($isAdmin || $isProjectOwner || $isGalleryOwner) {
 			
 		} else {
-			$this->__err();
+			$this->cakeError('error404');
 		}
 
 		$project_name = $project['Project']['name'];
@@ -1513,7 +1513,7 @@ Class GalleriesController extends AppController {
 		$this->GalleryMembership->bindUser();
 		if (!($owner_id == $session_uid)) {
 			if (!($this->isAdmin())) {
-				$this->__err();
+				$this->cakeError('error404');
 			}
 		}
 		
@@ -1578,7 +1578,7 @@ Class GalleriesController extends AppController {
 		$this->GalleryMembership->bindUser();
 		if (!($owner_id == $session_uid)) {
 			if (!$this->isAdmin()) {
-				$this->__err();
+				$this->cakeError('error404');
 			}	
 		}
 
@@ -1650,7 +1650,7 @@ Class GalleriesController extends AppController {
 		$newusername = $newuser['User']['username'];
 		
 		if (!($owner_id == $session_uid)) {
-			$this->__err();
+			$this->cakeError('error404');
 		}
 
 		$info = Array('GalleryMembership' => Array('id' => null, 'user_id' => $user_id, 'gallery_id' => $gallery_id, 'type' => 2, 'rank' => 'member'));
@@ -1731,9 +1731,10 @@ Class GalleriesController extends AppController {
 		$gallery = $this->Gallery->read();
 		$gallery_name = $gallery['Gallery']['name'];
 		$owner_id = $gallery['Gallery']['user_id'];
+		
 		$this->Gallery->saveField("type", 3);
 		if (!($owner_id == $session_uid)) {
-			$this->__err();
+			$this->cakeError('error404');
 		}
 
 		$this->User->id = $user_id;
@@ -1971,11 +1972,11 @@ Class GalleriesController extends AppController {
         $this->Gallery->id=$gallery_id;
         $gallery = $this->Gallery->read();
 
-		if (empty($gallery)) $this->__err();
+		if (empty($gallery)) $this->cakeError('error404');
 
 		if (!$this->isAdmin())
 			if (!$this->activeSession($gallery['User']['id']))
-				$this->__err();
+				$this->cakeError('error404');
 
 
 		$this->GalleryTag->del($gallery_tag_id);
@@ -2174,7 +2175,7 @@ Class GalleriesController extends AppController {
 		$tag_name = $tag['Tag']['name'];
 		
 		if (!$isLogged) {
-			$this->__err();
+			$this->cakeError('error404');
 		}
 		
 		$mark_records = $this->TagFlag->findAll("user_id = $user_id AND tag_id = $tag_id");
