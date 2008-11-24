@@ -44,11 +44,12 @@ Class ChannelController extends AppController {
         if ( $final_projects == "" ) {
 		$final_projectstmp = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
 		$final_projectstmp = $this->set_projects($final_projectstmp);
-		$memcache->set("$prefix-channel-recent-$limit-$page", $final_projectstmp, false, 120) or die ("Failed to save data at the server");
+		$memcache->set("$prefix-channel-recent-$limit-$page", $final_projectstmp, false, 180) or die ("Failed to save data at the server");
         	$this->set('data', $final_projectstmp);
         } else {
         	$this->set('data', $final_projects);
         }
+	$memcache->close();
 
 	$newest_feed_link = "/feeds/getNewestProjects";
 		
@@ -92,12 +93,12 @@ Class ChannelController extends AppController {
         if ( $final_projects == "" ) {
                 $final_projectstmp = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
                 $final_projectstmp = $this->set_projects($final_projectstmp);
-                $memcache->set("$prefix-channel-topviewed-$limit-$page", $final_projectstmp, false, 120) or die ("Failed to save data at the server");
+                $memcache->set("$prefix-channel-topviewed-$limit-$page", $final_projectstmp, false, 600) or die ("Failed to save data at the server");
                 $this->set('data', $final_projectstmp);
         } else {
                 $this->set('data', $final_projects);
         }
-
+	$memcache->close();
 	$topviewed_feed_link = "/feeds/getTopViewedProjects";
 		
         $this->set('heading', ___("top viewed", true));
@@ -123,12 +124,12 @@ Class ChannelController extends AppController {
         if ( $final_projects == "" ) {
                 $final_projectstmp = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
                 $final_projectstmp = $this->set_projects($final_projectstmp);
-                $memcache->set("$prefix-channel-toploved-$limit-$page", $final_projectstmp, false, 120) or die ("Failed to save data at the server");
+                $memcache->set("$prefix-channel-toploved-$limit-$page", $final_projectstmp, false, 600) or die ("Failed to save data at the server");
                 $this->set('data', $final_projectstmp);
         } else {
                 $this->set('data', $final_projects);
         }
-
+	$memcache->close();
 		
 	$toploved_feed_link = "/feeds/getTopLovedProjects";
 			
