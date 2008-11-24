@@ -14,10 +14,10 @@ font-weight:bold;
 
 </style>
 <div class="error404">
-	<span id="sd"><?php ___('404 Page Not Found')?> </span>
+	<span id="sd"><?php ___('404 - Page Not Found - Our server is Scratch\'ing its head')?> </span>
 </div>
 
-<?php ___('The page')?> <strong>- <?php echo $_SERVER['HTTP_HOST']?><?php echo $_SERVER['REQUEST_URI']?> - </strong><?php ___('does not exists.')?>
+<?php ___('The page')?> <strong>- <?php echo $_SERVER['HTTP_HOST']?><?php echo $_SERVER['REQUEST_URI']?> - </strong><?php ___('cannot be found. Try again later or search for something else:')?>
 
 <style type="text/css">
 #goog-wm { }
