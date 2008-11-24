@@ -19,7 +19,7 @@
 ?>
   <form action="<?php echo $html->url('/users/set_email/'.$this->params['pass']['0'])?>" method="POST" accept-charset="UTF-8">
   <div class="login_header">
-  	 <h3><?php ___('Enter a valid email to recover a lost password.')?></h3>
+  	 <h3><?php ___("We've realized you have not registered an email address on the Scratch website. Please provide one as it will be useful in the future.")?></h3>
   </div>
 	<?php 
 		if($isError) {
@@ -37,7 +37,7 @@
         <?php if($age >=13){?>
         <label for="User" style="width:80px"><?php ___('Email'); ?>&nbsp;:</label>
         <?php } else {?>
-			<label for="User" style="width:200px"><?php ___('Email of Parent or Guardian'); ?>&nbsp;:</label>
+			<label for="User" style="width:200px"><?php ___("Since you're under 13 years old, we need the email of a parent or guardian"); ?>&nbsp;:</label>
            <?php }?> 
 			<input id="EmailInput" type="text" name="data[email]" value="" size="30">
 		</div>
