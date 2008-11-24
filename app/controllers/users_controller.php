@@ -582,7 +582,7 @@ class UsersController extends AppController {
 						//if empty user_record
 						else
 						{
-							$this->Session->setFlash(___('There is no any records having this information',true));
+							$this->cakeError('error404');
 						}	
 			}
 			
@@ -617,7 +617,9 @@ class UsersController extends AppController {
 		$isMe = $this->activeSession($user_id);
 		$username = $user_record['User']['username'];	
 	
-		if (empty($user_record)) $this->__err();
+		if (empty($user_record)){
+		$this->cakeError('error404');
+		}
 		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC");	
 		if ($option == "projects") {
 			$this->Pagination->show = 15;
@@ -699,6 +701,12 @@ class UsersController extends AppController {
 		$this->User->bindMyThemes();
 		$this->Project->bindUser();
 		$user_record = $this->User->find("urlname = '$urlname'", null, null, 2);
+		if(empty($user_record))
+			{
+			
+			$this->cakeError('error404');
+			}
+
 		$user_id = $user_record['User']['id'];
 		$isMe = $this->activeSession($user_id);
 		$username = $user_record['User']['username'];	
@@ -935,9 +943,9 @@ class UsersController extends AppController {
 		$this->User->id=$user_id;
         $user = $this->User->read();
 
-		if (empty($user))
-			$this->__err;
-
+		if (empty($user)){
+			$this->cakeError('error404');
+		}	
 		if (!$this->isAdmin())
 			if ($user['User']['id'] !== $session_user_id)
 				$this->__err;
@@ -980,9 +988,9 @@ class UsersController extends AppController {
 		$this->User->id=$user_id;
 		$user = $this->User->read();
 
-		if (empty($user))
-		   $this->__err;
-
+		if (empty($user)){
+		   $this->cakeError('error404');
+		}
 		if (!$this->isAdmin())
 		   if ($user['User']['id'] !== $session_user_id)
 		      $this->__err;
@@ -1027,9 +1035,9 @@ class UsersController extends AppController {
                 $this->User->id=$user_id;
                 $user = $this->User->read();
 				
-                if (empty($user))
-                   $this->__err;
-
+                if (empty($user)){
+                   $this->cakeError('error404');
+				}
                 if (!$this->isAdmin())
                    if ($user['User']['id'] !== $session_user_id)
                       $this->__err;
@@ -1072,9 +1080,9 @@ class UsersController extends AppController {
 		$this->User->id=$user_id;
 		$user = $this->User->read();
 
-		if (empty($user))
-		   $this->__err;
-
+		if (empty($user)){
+		   $this->cakeError('error404');
+		}
 		if (!$this->isAdmin())
 		      $this->__err;
 		
@@ -1115,9 +1123,9 @@ class UsersController extends AppController {
 		{	echo $formData["UID"];
 			$this->User->id = $formData["UID"];
 			$urlname = $this->User->field("urlname");
-			if (!$urlname)
-				$this->__err;
-
+			if (!$urlname){
+				$this->cakeError('error404');
+			}	
 			array_shift($formData);
 
 			foreach ($formData as $favorite_id_str)
@@ -1192,7 +1200,7 @@ class UsersController extends AppController {
 			$isOwner = $owner_id == $session_UID;
 			
 			if ($record == null) {
-				
+				$this->cakeError('error404');
 			} else {
 				$membership_id = $record['GalleryMembership']['id'];
 				if ($isOwner) {
@@ -1211,6 +1219,9 @@ class UsersController extends AppController {
 		$isMe = $this->activeSession($user_id);
 		$this->User->id=$user_id;
         $user = $this->User->read();
+		if(empty($user)){
+		$this->cakeError('error404');
+		}
 		$user_name = $user['User']['username'];
 		
 		$this->Pagination->show = 210;
@@ -1235,6 +1246,10 @@ class UsersController extends AppController {
 		$isMe = $this->activeSession($user_id);
 		$this->User->id=$user_id;
         $user = $this->User->read();
+		if(empty($user)){
+		$this->cakeError('error404');
+		}
+		
 		$user_name = $user['User']['username'];
 		
 		if ($option == "all") {
@@ -1479,7 +1494,7 @@ class UsersController extends AppController {
 			$new_reason = htmlspecialchars($this->params['form']['blacklist_reason']);
 			$user_record = $this->User->find("username = '$new_username'");
 			if (empty($user_record)) {
-				array_push($errors, "That user does not exist.");
+				$this->cakeError('error404');
 			} else {
 				if ($new_reason == "") {
 					array_push($errors, "You must provide a valid reason for ignoring this user.");
@@ -1572,7 +1587,9 @@ class UsersController extends AppController {
 		$this->autoRender = false;
 		$this->User->id = $user_id;
 		$current_user = $this->User->read();
-	
+		if(empty($current_user)){
+		$this->cakeError('error404');
+		}
 		$project_rating = $this->calculateProjectRating($user_id);
 		$gallery_rating = $this->calculateGalleryRating($user_id);
 		$comment_rating = $this->calculateCommentRating($user_id);

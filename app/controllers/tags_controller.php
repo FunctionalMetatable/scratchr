@@ -55,7 +55,7 @@ Class TagsController extends AppController {
 		$this->pageTitle = ___("Scratch | Projects tagged with", true) . " '" . htmlspecialchars($tag_name) . "'";
         $tag =  $this->Tag->find("name = '$tag_name'");
         if (empty($tag))
-            $this->__err();
+            $this->cakeError('error404');
 		$content_status = $this->getContentStatus();
 		
 		$this->Pagination->show = 10;
@@ -110,7 +110,7 @@ Class TagsController extends AppController {
 		$this->pageTitle = ___("Scratch | Galleries tagged with", true) . " '" . htmlspecialchars($tag_name) . "'";
         $tag =  $this->Tag->find("name = '$tag_name'");
         if (empty($tag))
-            $this->__err();
+            $this->cakeError('error404');
 		$content_status = $this->getContentStatus();
 		
 		$this->Pagination->show = 10;

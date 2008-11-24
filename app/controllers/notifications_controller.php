@@ -22,6 +22,8 @@ class NotificationsController extends AppController {
 		$prefix = MEMCACHE_PREFIX;
 		$user_id = $this->Session->read('User.id');
 		$user_record = $this->User->find("id = $user_id");
+		if(empty($user_record))
+		$this->cakeError('error404');
 		$notify_pcomment = $user_record['User']['notify_pcomment'];
 		$notify_gcomment = $user_record['User']['notify_gcomment'];
 		$this->set('notify_pcomment', $notify_pcomment);
