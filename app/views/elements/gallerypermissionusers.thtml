@@ -10,6 +10,7 @@ echo "<div class='gallery_content'>\n";
 		foreach ($members as $member):
 			$uid = $member['id'];
 			$username = $member['username'];
+			$fullusername = $member['username'];
 			$urlname = $member['urlname'];
 			$member_url = "/users/".$urlname;
 			$image_url = getBuddyIconBySize($uid, 'mini', $content_status);
@@ -18,8 +19,8 @@ echo "<div class='gallery_content'>\n";
 				$username = substr($username,0,4) . "...";
 			}
 			echo "<div class='gallery_user_list'>\n"; 
-				echo $ajax->link("$icon_url", '#', array("url"=>"removegallerymember" . "/" . $gallery_id . "/" . $uid, "update"=>"gallery_users_ajax"), NULL, false);
-	  			echo "<h6><a href='#'>$username</a></h6>\n";
+				echo $ajax->link("$icon_url", '#', array("title"=>$fullusername ,"url"=>"removegallerymember" . "/" . $gallery_id . "/" . $uid, "update"=>"gallery_users_ajax"), NULL, false);
+				echo "<h6><a href='#' title='$fullusername'>$username</a></h6>\n";
 			echo "\t</div>\n";
 		endforeach;
 	} elseif ($gallery_type == 0) {
@@ -41,6 +42,7 @@ echo "<div class='gallery_content'>\n";
 	foreach ($friends as $friend):
 		$uid = $friend['id'];
 		$username = $friend['username'];
+		$fullusername = $friend['username'];
 		$urlname = $friend['urlname'];
 		$friend_url = "/users/".$urlname;
 		$image_url = getBuddyIconBySize($uid, 'mini', $content_status);
@@ -49,8 +51,8 @@ echo "<div class='gallery_content'>\n";
 			$username = substr($username,0,4) . "...";
 		}
 		echo "<div class='gallery_user_list'>\n"; 
-			echo $ajax->link("$icon_url", '#', array("url"=>"addgallerymember" . "/" . $gallery_id . "/" . $uid, "update"=>"gallery_users_ajax"), NULL, false);
-	  		echo "<h6><a href='#'>$username</a></h6>\n";
+			echo $ajax->link("$icon_url", '#', array("title"=>$fullusername ,"url"=>"addgallerymember" . "/" . $gallery_id . "/" . $uid, "update"=>"gallery_users_ajax"), NULL, false);
+	  		echo "<h6><a href='#' title='$fullusername'>$username</a></h6>\n";
 		echo "\t</div>\n";
 	endforeach;
 echo "</div>\n";
