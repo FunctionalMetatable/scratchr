@@ -12,6 +12,7 @@
 			if (empty($friend['id'])) continue;
 			$friend_id = $friend['id'];
 			$friend_name = $friend['username'];
+			$friend_fullname = $friend['username'];
 			$friend_urlname = $friend['urlname'];
 			$friend_url= "/users/".$friend_urlname;
 			$buddy_icon = getBuddyIconBySize($friend['id'], 'mini', $content_status);
@@ -20,8 +21,8 @@
 				$friend_name = substr($friend_name,0,9) . "&#0133;";
 			}
 		
-		echo "<div class='mystuff_friend_thumb'>"; echo" <a href='"; echo "$friend_url"; echo "'><img src='"; echo "$buddy_icon"; echo "' title='$friend_name' alt='$friend_name' width='40' height='40'></a>\n";
-				echo "<h5><a href='$friend_url'>"; echo "$friend_name"; echo "</a></h5>\n";
+		echo "<div class='mystuff_friend_thumb'>"; echo" <a href='"; echo "$friend_url"; echo "'><img src='"; echo "$buddy_icon"; echo "' title='$friend_fullname' alt='$friend_name' width='40' height='40'></a>\n";
+				echo "<h5><a href='$friend_url' title='$friend_fullname'>"; echo "$friend_name"; echo "</a></h5>\n";
 				if ($isAdmin || $isMe) 
 					echo "<a href='/users/removefriend/$relationship_id'>[x]</a>\n";
 		echo "</div>\n";
