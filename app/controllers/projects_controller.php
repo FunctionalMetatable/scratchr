@@ -1677,17 +1677,19 @@ class ProjectsController extends AppController {
 			$this->Project->id=$pid;
 			$content_status = $this->getContentStatus();
 			$projects = $this->Project->findAll("Project.id = $project_id", null, null, null, 1, null, "all", 1);
+
 			if (empty($projects)) {
-				$this->cakeError('error404');
-				} else {
+				$this->cakeError('error',array('code'=>'404', 'message'=>'project_not_found', 'name' => __('Not Found', true)));
+			} 
+			else {
 				$project = $projects[0];
 			}
 			
 			$project_visibility = $project['Project']['proj_visibility'];
 
-			if(($project_visibility == "delbyusr" || $project_visibility ==  "delbyadmin") && ! $this->isAdmin()) {
-			$this->cakeError('error404');
-				}
+			if($project_visibility == "delbyusr" || ($project_visibility ==  "delbyadmin" && ! $this->isAdmin()))  {
+				$this->cakeError('error',array('code'=>'404', 'message'=>'project_deleted', 'name' => __('Not Found', true)));
+			}
 
 			$project_id = $project['Project']['id'];
 			$owner_id = $project['User']['id'];
