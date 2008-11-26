@@ -1471,9 +1471,9 @@
 	function update_announcements() {
 		$this->autoRender = false;
 		if (!empty($this->params['form'])) {
-			$a_1 = htmlspecialchars($this->params['form']['a_1_textarea']);
-			$a_2 = htmlspecialchars($this->params['form']['a_2_textarea']);
-			$a_3 = htmlspecialchars($this->params['form']['a_3_textarea']);
+			$a_1 = $this->params['form']['a_1_textarea'];
+			$a_2 = $this->params['form']['a_2_textarea'];
+			$a_3 = $this->params['form']['a_3_textarea'];
         } else {
 			$a_1  = "";
 			$a_2 = "";
