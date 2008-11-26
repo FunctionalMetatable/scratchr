@@ -229,7 +229,7 @@
         <?php endforeach;?>
         <li><a href="#"></a></li>
       </ul>
-      <p class="more"><a href="/galleries"><?php ___('See more');?></a> </p>
+      <p class="more"><a href="/galleries/browse/feature"><?php ___('See more');?></a> </p>
     </div>
 
 
