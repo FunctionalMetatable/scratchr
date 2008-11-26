@@ -13,7 +13,7 @@
 			$user_birth = $user['User']['byear'];
 			$user_country = $user['User']['country'];
 			$user_created = $user['User']['created'];
-			$user_url = "http://scratch.mit.edu/users/$user_name";
+			$user_url = "/users/$user_name";
 			$user_status = $user['User']['status'];
 			$user_reason = $user['User']['reason'];
 	

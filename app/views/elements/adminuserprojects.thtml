@@ -12,7 +12,7 @@
 		$project_creator = htmlspecialchars($project['User']['username']);
 		$project_views = $project['Project']['views'];
 		$project_id = $project['Project']['id'];
-		$project_url = "http://scratch.mit.edu/projects/$project_creator/$project_id";
+		$project_url = "/projects/$project_creator/$project_id";
 	
 		echo "<div class='gallerythumb clearme'>\n";
     	echo "\t<div class='admin_leftcolumn'>\n";
