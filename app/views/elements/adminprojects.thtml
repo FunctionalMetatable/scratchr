@@ -28,8 +28,8 @@
 		$project_creator = $project['User']['username'];
 		$project_views = $project['Project']['views'];
 		$project_id = $project['Project']['id'];
-		$project_url = "http://scratch.mit.edu/projects/$project_creator/$project_id";
-		$creator_url = "http://scratch.mit.edu/users/$project_creator";
+		$project_url = "/projects/$project_creator/$project_id";
+		$creator_url = "/users/$project_creator";
 	
 		echo "<div class='gallerythumb clearme'>\n";
     		echo "\t<div class='admin_leftcolumn'>\n";

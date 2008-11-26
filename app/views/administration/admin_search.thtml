@@ -17,7 +17,7 @@
 				$user_country = $user['User']['country'];
 				$user_created = $user['User']['created'];
 				$user_status = $user['User']['status'];
-				$user_url = "http://scratch.mit.edu/users/$user_name";
+				$user_url = "/users/$user_name";
 				
 				echo "<div class='gallerythumb clearme'>\n";
 				echo "\t<div class='admin_leftcolumn'>\n";
