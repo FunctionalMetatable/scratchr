@@ -1,7 +1,7 @@
 <div id="footer" class="clearme">
-<a href="http://scratch.wik.is/Privacy_Policy"><?php ___('Privacy Policy')?></a> | 
+<a href="/privacy"><?php ___('Privacy Policy')?></a> | 
 
-<a href="http://scratch.wik.is/Terms_of_use"><?php ___('Terms of Use')?></a> | 
+<a href="/terms"><?php ___('Terms of Use')?></a> | 
 
 <a href="<?php echo $html->url('/contact/us')?>"><?php ___('Contact Us')?></a> 
 
