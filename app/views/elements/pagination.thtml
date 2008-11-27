@@ -10,8 +10,8 @@
     $next = $next?$next:$rightArrow;
 
     $pages = $pagination->pageNumbers(" | ");
-
-    echo $pagination->result()."<br>";
+	//to remove line "Showing: a-b of c"
+   /* echo $pagination->result()."<br>";*/
 	echo $pages;
     endif;
 ?>
