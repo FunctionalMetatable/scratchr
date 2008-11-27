@@ -52,5 +52,11 @@
 		</div>
 		<?php endforeach; ?>
 		</div>
+        <div class="pagination_container">
+			<?php 
+				$pagination->setPaging($paging);
+				echo $this->renderElement('pagination'); 
+			?>
+		</div>
 <?php endif;?>
 </div>
