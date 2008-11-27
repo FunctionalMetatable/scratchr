@@ -43,4 +43,10 @@
 	</div>
 <?php endforeach; ?>
 </div>
+<div class="pagination_container">
+	<?php 
+		$pagination->setPaging($paging_secondary);
+		echo $this->renderElement('pagination_secondary'); 
+	?>
+</div>
 </div>
