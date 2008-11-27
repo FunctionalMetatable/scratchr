@@ -2,6 +2,7 @@
 		<?php
 		foreach ($user_projects as $user_project):
 		$user_project_name = htmlspecialchars($user_project['Project']['name']);
+		$user_project_fullname = htmlspecialchars($user_project['Project']['name']);
 		$views = $user_project['Project']['views'];
 		$user_project_id = $user_project['Project']['id'];
 		$user_project_url = "/projects/".$urlname."/".$user_project_id;
@@ -11,7 +12,7 @@
 		}
 		?>
 		<li> <a href="<?php echo $html->url($user_project_url)?>">
-		<?php echo $html->image($mini_project_thumb,array('title'=>$user_project_name,'alt'=>$user_project_name,'width'=>'90','height'=>'68'))?>
+		<?php echo $html->image($mini_project_thumb,array('title'=>$user_project_fullname,'alt'=>$user_project_name,'width'=>'90','height'=>'68'))?>
 		</a><a href="<?php echo $html->url($user_project_url)?>"><?php e($user_project_name)?></a><br>
 		  <?php e($views)?> <?php ___('views'); ?> </li>
 		<?php endforeach; ?>
