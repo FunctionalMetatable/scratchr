@@ -2432,8 +2432,7 @@ class ProjectsController extends AppController {
 	**/
 	function delete_comment($project_id, $comment_id) {
 		$this->autoRender=false;
-		$this->checkPermission('delete_project_comments');
-        $this->Project->bindUser();
+		$this->Project->bindUser();
         $this->Project->id=$project_id;
         $project = $this->Project->find("Project.id = $project_id");
 		$user_id = $this->getLoggedInUserID();
@@ -2446,9 +2445,11 @@ class ProjectsController extends AppController {
 
 		if (empty($project)) $this->cakeError('error404');
 
-		if (!($this->isAdmin() || $isProjectOwner || $isCommentOwner))
-			$this->cakeError('error404');
-
+		//if the user is not an admin, or not the project owner or not the comment owner, check if s/he has special permission
+		if (!($this->isAdmin() || $isProjectOwner || $isCommentOwner)) {
+			$this->checkPermission('delete_project_comments');
+		}
+		
 		$this->Pcomment->del($comment_id);
 		exit;
 	}
