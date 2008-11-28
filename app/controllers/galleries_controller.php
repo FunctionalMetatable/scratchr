@@ -648,12 +648,12 @@ Class GalleriesController extends AppController {
 	* Deletes a comment from the gallery
 	**/
 	function delete_comment($gallery_id, $comment_id) {
-		$user_id = $this->getLoggedInUserID();
-		$this->checkPermission('delete_gallery_comments');
 		$this->autoRender=false;
-        $this->Gallery->bindUser();
-        $this->Gallery->id=$gallery_id;
-        $gallery = $this->Gallery->read();
+		$this->Gallery->bindUser();
+		$this->Gallery->id=$gallery_id;
+		$gallery = $this->Gallery->read();
+		$user_id = $this->getLoggedInUserID();
+		
 		$comment = $this->Gcomment->find("Gcomment.id = $comment_id");
 		$comment_owner_id = $comment['User']['id'];
 		$gallery_owner_id = $gallery['User']['id'];
@@ -662,13 +662,15 @@ Class GalleriesController extends AppController {
 
 		if (empty($gallery)) $this->cakeError('error404');
 
-		if (!($this->isAdmin() || $isGalleryOwner || $isCommentOwner))
-			$this->cakeError('error404');
-			
-		if ($this->isAdmin()) {
-			$this->hide_gcomment($comment_id, "delbyadmin");
-		} else {
+		//if the user is not an admin, or not the gallery owner or not the comment owner, check if s/he has special permission
+		if (!($this->isAdmin() || $isGalleryOwner || $isCommentOwner)) {
+			$this->checkPermission('delete_gallery_comments');
+		}
+		
+		if($isGalleryOwner || $isCommentOwner) {
 			$this->hide_gcomment($comment_id, "delbyusr");
+		} else {
+			$this->hide_gcomment($comment_id, "delbyadmin");
 		}
 		exit;
 	}
