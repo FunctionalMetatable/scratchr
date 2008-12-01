@@ -1,4 +1,5 @@
 
+
 <!-- |||||| Begin main content area ||||||| -->
 
 
@@ -12,8 +13,18 @@
 				echo "</div>";
 ?>
 <?php if($isId):?>
-  <form action="<?php echo $html->url('/users/pwdreset/'.$this->params['pass']['0'].'/'.$this->params['pass']['1'])?>" method="POST" accept-charset="UTF-8">
-  
+  <form action="<?php echo $html->url('/users/pwdreset/'.$this->params['pass']['0'].'/'.$this->params['pass']['1'].'/'.$this->params['pass']['2'])?>" method="POST" accept-charset="UTF-8">
+   <div class="signup_header">
+    <h3><?php ___('Resetting the password for username '.'"'.$username.'"'); ?></h3>
+  </div>
+  <?php 
+		if($isError) {
+			echo "<div class='login_error'>";
+				$error = $errors[0];
+				echo $error;
+			echo "</div>";
+		}
+	?>
     <div class="signup_row">
 		<div class="signup_label">
 			<label for="data[User][password]"><?php ___('Password'); ?>*</label>
