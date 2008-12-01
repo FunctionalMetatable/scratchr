@@ -480,7 +480,7 @@ class UsersController extends AppController {
 							$msg = $msg.___("for the username:".$username."\r\n",true);
 							$msg =$msg.___("If you did not submit this request, do not worry, just ignore this message.". "\r\n",true);
 							$msg =$msg.___("If you want to reset your password follow this link:"."\r\n",true);
-							$msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password". "\r\n",true);
+							$msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password/$username". "\r\n",true);
 							$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
 						}
 						$this->Session->setFlash(___("A confirmation has been sent to the e-mail address you used to register. If you did not register with a valid e-mail address or you no longer have access to it, you might have to create a new account.",true));	
@@ -506,7 +506,8 @@ class UsersController extends AppController {
 						$msg = ___("The Scratch Website received a request to reset the password.". "\r\n",true);
 						$msg =$msg.___("If you did not submit this request, do not worry, just ignore this message.". "\r\n",true);
 						$msg =$msg.___("If you want to reset your password follow this link:"."\r\n",true);
-						$msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password". "\r\n",true);
+					    $msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password/$username". "\r\n",true);
+						
 						$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
 						$this->Session->setFlash(___("A confirmation has been sent to the e-mail address you used to register. If you did not register with a valid e-mail address or you no longer have access to it, you might have to create a new account.",true));	
 					}
@@ -534,25 +535,30 @@ class UsersController extends AppController {
 	}//function
 
 	/***End Password recovery***/
-	function pwdreset($id=null, $code=null)
+	function pwdreset($id=null, $code=null,$username=null)
 	{	
-		$this->pageTitle = "Scratch | Password Recovery";
+		
+		$this->pageTitle = "Scratch | Resetting the password for username "."'".$username."'";
 		$errors =Array();
+		$errorFlag=false;
 			if(!empty($this->data))
 				{
 					if(strlen($this->data['User']['password']) < 6) {
-						$this->User->invalidate('password');
-						$errors['password_length'] =  ___('Password too short', true);
+					array_push($errors, ___("Password too short.", true));
+					$errorFlag=true;
 					}
 					
 					if (strcmp($this->data['User']['password'], $this->data['User']['password2']) == 0) {
 					} else {
-						$this->User->invalidate('password2');
-						$errors['password_confirmation'] = ___("Passwords don't match", true);
+					array_push($errors, ___("Passwords don't match.", true));
+					$errorFlag=true;	
 						}
-						
-						$user_record=$this->User->find("User.id =$id and User.password='$code'");
-						
+					if($errorFlag){
+					}
+					else
+					{	
+					$user_record=$this->User->find("User.id =$id and User.password='$code'");	
+					
 					if(!empty($user_record))
 						{
 							$user_record['User']['password'] = sha1($this->data['User']['password']);
@@ -569,7 +575,7 @@ class UsersController extends AppController {
 							  $this->UserStat->save(array('UserStat'=>array("user_id"=>$userID, "lastin"=>$time)));
 							}
 							$this->Session->setFlash(___("New password successfully saved. You are now logged in.",true));
-							$this->redirect('/users/pwdreset');
+							$this->redirect('/users/pwdreset/'.$username);
 							
 						}
 						
@@ -577,7 +583,8 @@ class UsersController extends AppController {
 						else
 						{
 							$this->cakeError('error404');
-						}	
+						}
+					}
 			}
 			
 		if($id && $code)
@@ -588,12 +595,15 @@ class UsersController extends AppController {
 		{
 			 $isId = false;
 		}
-		
-		
-		
-	 
+		 if (empty($errors)) {
+			$isError = false;
+	  } else {
+			$isError = true;
+	  }
+	  $this->set('errors', $errors);
+	  $this->set('isError', $isError);
 	  $this->set('isId',$isId);
-
+	  $this->set('username',$username);
 	}//function pwdreset
 	/**
 	/* Ajax pagination helper
