@@ -430,7 +430,7 @@ function langList($countries) {
 		<?php endif;?>
 		<?php if ($isMe) { ?>
 		<div>
-		<?php ___('Do you want to')?> <a href="<?php echo $html->url('/galleries/')?>"><?php ___('browse')?></a> or <a href="<?php echo $html->url('/galleries/create')?>"><?php ___('create')?></a> <?php ___('a gallery?')?>
+		<a href="<?php echo $html->url('/galleries/')?>"><?php ___('Browse galleries')?></a> <?php ___('or')?> <a href="<?php echo $html->url('/galleries/create')?>"><?php ___('create a gallery!')?></a>
 		</div>
 		
 		<?php } ?>
