@@ -698,7 +698,8 @@ class UsersController extends AppController {
 	**/
 	function view($urlname=null, $option = "projects") {
 		$this->autoRender = false;
-		
+		if(!$urlname)
+		$this->cakeError('error404');
 		$content_status = $this->getContentStatus();
 		//init user variables
 		$isLoggedIn = $this->isLoggedIn();
@@ -715,11 +716,9 @@ class UsersController extends AppController {
 		$isMe = $this->activeSession($user_id);
 		$username = $user_record['User']['username'];	
 		
-		if (empty($user_record)) $this->__err();
-		
 		$user_status = $user_record['User']['status'];
-		if ($user_status == 'delbyadmin') $this->__err();
-		
+		if ($user_status == 'delbyadmin') 
+		$this->cakeError('error404');
 		$this->Pagination->show = 15;
 		$this->Pagination->url = "/users/renderProjects/".$username . "/" . "projects";
 		// get all projects from user
