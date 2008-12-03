@@ -57,7 +57,7 @@ if(isset($ishomepage) && $ishomepage) {
 		<li <?php if ($this_controller_here === "/forums"):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'forums'))?>"><?php ___('forums'); ?></a></li>
 	  <?php endif; ?>
 	  <li <?php if ($this_controller_here === "/about"):?> id="active" <?php endif;?>><a href="<?php echo $html->url('/about')?>"><?php ___('about'); ?></a></li>
-      <li <?php if ($this_controller_here === "/login"):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'users','action'=>'login'))?>"><?php ___('my stuff'); ?></a></li>
+      
     </ul>
 <!-- ////// End main menu ////// -->
 	
