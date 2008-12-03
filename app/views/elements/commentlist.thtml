@@ -7,10 +7,7 @@
 	}
 ?>
 <div class="project_pagination_container">
-	<?php 
-		$pagination->setPaging($paging_secondary);
-		echo $this->renderElement('pagination_secondary'); 
-	?>
+	
 </div>
 <?php 
 	foreach($comments as $comment) {
@@ -179,3 +176,9 @@
 		}
 	}
 ?>
+<div class="project_pagination_container">
+	<?php 
+		$pagination->setPaging($paging_secondary);
+		echo $this->renderElement('pagination_secondary'); 
+	?>
+</div>

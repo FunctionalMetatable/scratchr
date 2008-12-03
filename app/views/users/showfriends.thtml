@@ -1,10 +1,7 @@
 <div id="ajax_pagination">
 <div class="fullcontent">
 	<h3><?php if ($isMe) ___("My Friends"); else {printf(___("%s's Friends", true), $user['User']['username']);} ?></h3>
-	<?php 
-		$pagination->setPaging($paging);
-		echo $this->renderElement('pagination'); 
-	?>
+	
 	<?php
 	  	foreach ($friends as $friend) {
 			$relationship_id = $friend['Relationship']['id'];
@@ -28,5 +25,9 @@
 		echo "</div>\n";
 		}
 		?>
+    <?php 
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination'); 
+	?>
 </div>
 </div>

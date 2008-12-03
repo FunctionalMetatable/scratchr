@@ -44,10 +44,7 @@
 	
 	?>
    </div>
-	<?php 
-		$pagination->setPaging($paging);
-		echo $this->renderElement('pagination'); 
-	?>
+	
 	<?php
 		foreach ($tag_galleries as $tag_gallery) {
 			$theme = $tag_gallery['Gallery'];
@@ -89,6 +86,10 @@
 				echo "</div>\n";
 			}
 		}
+	?>
+	<?php 
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination'); 
 	?>
 </div>
 </div>

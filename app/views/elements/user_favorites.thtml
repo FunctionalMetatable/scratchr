@@ -1,10 +1,5 @@
 <div class="mystuff_content">
-<div class="pagination_container">
-	<?php 
-		$pagination->setPaging($paging_secondary);
-		echo $this->renderElement('pagination_secondary'); 
-	?>
-</div>
+
 <?php if ($isMe || $isAdmin): ?>
 	<div class="mystuff_project_action">
 	<form id="removeFavorites" action="<?php echo $html->url('/users/removefavorites')?>" method="post">

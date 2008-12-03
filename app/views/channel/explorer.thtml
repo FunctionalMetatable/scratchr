@@ -1,6 +1,63 @@
 <?php //print_r($data)?>
 <div id="ajax_pagination">
 <div class="fullcontent">
+
+	<?php
+		if ($option == "featured") {
+		?>
+			<div class="mystuff_project_action">
+			<a href="<?php echo $html->url($featured_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
+			
+			
+			</div>
+			
+		<?php
+		}
+		if ($option == "recent") {
+		?>
+			<div class="mystuff_project_action">
+			<a href="<?php echo $html->url($newest_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
+			
+			
+			</div>
+			
+		<?php
+		}
+		
+		if ($option == "topviewed") {
+		?>
+			<div class="mystuff_project_action">
+			<a href="<?php echo $html->url($topviewed_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
+			
+			
+			</div>
+			
+		<?php
+		}
+		
+		if ($option == "toploved") {
+		?>
+			<div class="mystuff_project_action">
+			<a href="<?php echo $html->url($toploved_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
+			
+			
+			</div>
+			
+		<?php
+		}
+		if ($option == "remixed") {
+		?>
+			<div class="mystuff_project_action">
+			<a href="<?php echo $html->url($remixed_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
+			
+			
+			</div>
+			
+		<?php
+		}
+		
+	
+	?>
 	<div class="top_header">
 	<h2><?php echo ___('Explore Projects', true) . " " . ___($heading, true);?></h2>
 	<h3>
@@ -71,68 +128,8 @@
 		
 	?>
    </div>
-   
-   	<?php
-		$pagination->setPaging($paging);
-		echo $this->renderElement('pagination');
-	?>
+  
 	
-	<?php
-		if ($option == "featured") {
-		?>
-			<div class="mystuff_project_action">
-			<a href="<?php echo $html->url($featured_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
-			
-			
-			</div>
-			
-		<?php
-		}
-		if ($option == "recent") {
-		?>
-			<div class="mystuff_project_action">
-			<a href="<?php echo $html->url($newest_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
-			
-			
-			</div>
-			
-		<?php
-		}
-		
-		if ($option == "topviewed") {
-		?>
-			<div class="mystuff_project_action">
-			<a href="<?php echo $html->url($topviewed_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
-			
-			
-			</div>
-			
-		<?php
-		}
-		
-		if ($option == "toploved") {
-		?>
-			<div class="mystuff_project_action">
-			<a href="<?php echo $html->url($toploved_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
-			
-			
-			</div>
-			
-		<?php
-		}
-		if ($option == "remixed") {
-		?>
-			<div class="mystuff_project_action">
-			<a href="<?php echo $html->url($remixed_feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?></a>
-			
-			
-			</div>
-			
-		<?php
-		}
-		
-	
-	?>
 	
 	<?php
 		if ($option == "featured") {

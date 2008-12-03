@@ -1,7 +1,6 @@
 <div id="user_comment_list">
 <?php		
-	$pagination->setPaging($paging);
-	echo $this->renderElement('pagination'); 
+	
 	
 	if ($option == 'projects') {
 		foreach ($data as $comment) {
@@ -76,5 +75,7 @@
 			}
 		}
 	}
+	$pagination->setPaging($paging);
+	echo $this->renderElement('pagination'); 
 ?>
 </div>

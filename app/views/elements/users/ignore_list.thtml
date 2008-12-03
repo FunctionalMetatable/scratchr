@@ -1,8 +1,6 @@
 <div id="ignore_user_list">
 <?php		
-	$pagination->setPaging($paging);
-	echo $this->renderElement('pagination'); 
-	
+		
 	foreach ($data as $user) {
 		$current_id = $user['IgnoredUser']['id'];
 		$current_name = $user['User']['username'];
@@ -23,5 +21,7 @@
     	echo "\t</div>\n";
 		echo "</div>\n";
 	}
+	$pagination->setPaging($paging);
+	echo $this->renderElement('pagination'); 
 ?>
 </div>

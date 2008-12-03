@@ -58,7 +58,7 @@
 	width: 100%;
 	margin-top: 5px;
 	padding-left: 2px;
-	margin-bottom: 5px;
+	margin-bottom: 20px;
 }
 /*-------------------- basic---------------------*/ 
 body {
@@ -498,8 +498,8 @@ legend{
 	width: 100%;
 }
 .mystuff_project_action {
-	float: left;
-	width: 85%;
+	text-align: right;
+	
 	margin-left: 10px;
 	margin-bottom: 5px;
 }
@@ -1462,7 +1462,7 @@ hr{
 	width: 100%;
 	margin-top: 5px;
 	padding-left: 2px;
-	margin-bottom: 5px;
+	margin-bottom: 20px;
 }
 
 .bottomcontent {
