@@ -256,6 +256,15 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
       </ul>
      </div>
 
+	<div id="socialmedia" class="sidecontainer">
+      <h4><?php ___('Social Media'); ?></h4>
+      <ul class="sidelist">
+				<li><?php ___('The latest posts on blogs, microblogs, photo and video sharing sites by the Scratch Team and fans!'); ?>
+      <p class="more"><a href="/socialmedia"><?php ___('Take a look');?></a> </p>
+				</li>
+      </ul>
+     </div>
+
     <div id="RecentVisitors" class="sidecontainer">
       <h4><?php ___('Recent Visitors') ?></h4>
       <ul class="sidelist">
