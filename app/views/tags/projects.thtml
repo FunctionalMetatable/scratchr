@@ -53,10 +53,7 @@
 		
 	?>
    </div>
-	<?php 
-		$pagination->setPaging($paging);
-		echo $this->renderElement('pagination'); 
-	?>
+	
 	<?php
 		foreach ($tag_projects as $tag_project):
 		$project = $tag_project['Project'];

@@ -63,10 +63,7 @@
 		
    ?>
    </div>
-	<?php 
-		$pagination->setPaging($paging);
-		echo $this->renderElement('pagination'); 
-	?>
+	
 	<?php
 		foreach ($galleries as $membership) {
 			$gallery = $membership['Gallery'];
@@ -122,6 +119,10 @@
 		
 		<?php
 		}
+	?>
+    <?php 
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination'); 
 	?>
 </div>
 </div>

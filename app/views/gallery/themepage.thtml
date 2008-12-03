@@ -69,12 +69,7 @@
 	</div>
 	
 	<div id="ajax_pagination">
-	<div class="pagination">
-		<?php 
-			$pagination->setPaging($paging);
-			echo $this->renderElement('pagination');
-		?>
-	</div>
+	
 	
 	<a href="<?php echo $html->url($feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe'); ?></a>
 	

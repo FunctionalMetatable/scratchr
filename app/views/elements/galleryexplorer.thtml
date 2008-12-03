@@ -1,7 +1,5 @@
 <?php
-	$pagination->setPaging($paging);
-	echo $this->renderElement('pagination');
-
+	
 	if ($option == "newest") {
 		echo "<div>";
 		foreach ($data as $theme):

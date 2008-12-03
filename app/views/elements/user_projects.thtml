@@ -5,12 +5,7 @@
 	
 	</h3></div>
 <?php elseif(count($data) > 0):?>
-		<div class="pagination_container">
-			<?php 
-				$pagination->setPaging($paging);
-				echo $this->renderElement('pagination'); 
-			?>
-		</div>
+		
 		<?php if ($isMe || $isAdmin): ?>
 			<div class="mystuff_project_action">
 			<form id="deleteProjects" action="<?php echo $html->url('/projects/deleteprojects')?>" method="post">

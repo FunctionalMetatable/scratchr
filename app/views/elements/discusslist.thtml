@@ -6,12 +6,7 @@
 		echo "</div>";
 	}
 ?>
-<div class="gallery_pagination_container">
-	<?php 
-		$pagination->setPaging($paging_secondary);
-		echo $this->renderElement('pagination_secondary'); 
-	?>
-</div>
+
 <div id="gallery_comments">
 <?php 
 	foreach($comments as $comment) {
