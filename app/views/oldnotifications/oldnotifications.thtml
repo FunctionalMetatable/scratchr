@@ -1,0 +1,16 @@
+<div class="fullcontent">
+
+<div id="main">
+	<ul>
+     <?php foreach($notifications as $notification):
+     	$notification = $notification['Oldnotification'];
+		$id = $notification['id'];
+		$custom_message = $notification['custom_message'];
+     ?>
+     <li>
+		<?php echo $custom_message; ?>
+     </li>
+     <?php endforeach; ?>
+	</ul>
+</div>
+</div>

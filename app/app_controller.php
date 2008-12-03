@@ -255,7 +255,7 @@ class AppController extends Controller {
 	function checkPermission($permission_url=null)
 	{
 		if ( ! $this->isAdmin()){
-			$users_permission =$this->isAnyPermission(); 
+			$users_permission = $this->isAnyPermission(); 
 			if (array_key_exists($permission_url, $users_permission)) {
 			}
 			else
@@ -264,7 +264,7 @@ class AppController extends Controller {
 				$this->Session->setFlash(___("You do not have the permission to perform this operation",true));
 				$this->redirect('/');	
 			}
-		}	
+		}
 	}
 
     /**
@@ -408,7 +408,7 @@ class AppController extends Controller {
 		$notification_count = $memcache->get("$prefix-notification_count-$user_id");
 		$total = 0;
 		if ($notification_count == "") {
-			$notification_count_tmp = $this->Notification->findCount("user_id=$user_id AND status='unread'");
+			$notification_count_tmp = $this->Notification->findCount("to_user_id=$user_id AND status='UNREAD'");
 			$total += $notification_count_tmp;
 			$memcache->set("$prefix-notification_count-$user_id",$notification_count_tmp, false, 600) or die ("Failed to save data at the server");
 		} else {
@@ -423,26 +423,25 @@ class AppController extends Controller {
 	/**
 	* sends notification to specified user
 	*/
-	function notify($user_id, $message, $flashit = true) {
+	function notify($type, $to_user_id, $data, $extra = array(), $flashit = false) {
 		$session_user_id = $this->getLoggedInUserID();
 		if (!$session_user_id)
 		   $this->__err();
 
-		$this->User->id=$user_id;
+		$this->User->id = $to_user_id;
 		$user = $this->User->read();
-
 		if (empty($user))
 		   $this->__err;
 
-		$custom_message = $message;
+		//store the notification
+		App::import('Model', 'Notification');
+		$this->Notification =& ClassRegistry::init('Notification');
+		$this->Notification->addNotification($type, $to_user_id,
+											$data, $extra);
 
-		$this->Notification->save(array('Notification'=>array("user_id"=>$user_id, "custom_message"=>$custom_message, "status"=>'unread')));
-
-		$user_record = $this->User->find("id = $user_id", "username");
-		$username = $user_record['User']['username'];
-
-		if($flashit)
+		if($flashit) {
 			$this->setFlash("Notification sent.", FLASH_NOTICE_KEY);
+		}
 	}
 
 		/**

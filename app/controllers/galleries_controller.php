@@ -90,9 +90,10 @@ Class GalleriesController extends AppController {
 			$newtitle = htmlspecialchars( $inputText );
 			if(isInappropriate($newtitle))
 			{
-			        $user_record = $this->Session->read('User');
+			    $user_record = $this->Session->read('User');
 				$user_id = $user_record['id'];
-				$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);
+				$this->notify('inappropriate_gtitle', $user_id,
+								array('gallery_id' => $gallery_id));
 			}
 			else
 			{
@@ -141,7 +142,8 @@ Class GalleriesController extends AppController {
 	    {
 		$user_record = $this->Session->read('User');
 		$user_id = $user_record['id'];
-		$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);
+		$this->notify('inappropriate_gdesc', $user_id,
+					array('gallery_id' => $gallery_id));
 	    }
 	    else
 	    {
@@ -519,7 +521,10 @@ Class GalleriesController extends AppController {
 
 				if(isInappropriate($comment)) {
 					$vis = 'censbyadmin';
-					$this->notify($commenter_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);
+					$this->notify('inappropriate_gcomment', $commenter_id,
+								array('gallery_id' => $gallery_id),
+								array($comment)
+							);
 				} else {
 					$vis = 'visible';
 				}
@@ -584,12 +589,14 @@ Class GalleriesController extends AppController {
 			$user_record = $this->User->find("id = $guser_id");
 			$username = $user_record['User']['username'];
 			$gallery_title = $gallery['Gallery']['name'];
-			$message = 'Your gallery  <a href="/galleries/view/'.$gallery_id.'">'.$gallery_title.'</a> has received a new comment by <a href="/users/'.$commenter_username.'">'.$commenter_username.'</a>.'; /*ergon decided no to modify this line. the notification messages is generated in the language of the commenter. once the message is generated, its language can't be changed anymore. */
 			
 			$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND IgnoredUser.blocker_id = $gallery_owner_id");
 			if ($ignore_count == 0) {
-				$this->notify($guser_id, $message, false);
-			}	
+				$this->notify('new_gcomment', $guser_id,
+								array('gallery_id' => $gallery_id,
+								'from_user_name' => $commenter_username)
+							);
+			}
 		}
 		
 		$this->set('gallery_id', $gallery_id);
@@ -1365,16 +1372,17 @@ Class GalleriesController extends AppController {
 		if (empty($projects)) {
 			$info = Array('GalleryProject' => Array('id' => null, 'gallery_id' => $gallery_id, 'project_id' => $project_id));
 			$this->GalleryProject->save($info);
-			
 			$membership_record = $this->GalleryMembership->findAll("GalleryMembership.user_id = $UID AND gallery_id = $gallery_id");
 			if (empty($membership_record)) {
 				//$info = Array('GalleryMembership' => Array('id' => null, 'user_id' => $UID, 'gallery_id' => $gallery_id, 'type' => 4, 'rank' => 'contributor'));
 				//$this->GalleryMembership->save($info);
 			}
-			
 			$this->updateGallery($gallery_id);
 			$this->Gallery->saveField("total_projects", $project_count + 1);
 			//$this->setFlash("$project_name " . ___('successful added to', true) . " $gallery_name", FLASH_NOTICE_KEY);
+			$this->notify('project_added_to_gallery', $project['Project']['user_id'],
+							array('project_id' => $project_id,
+								'gallery_id' => $gallery_id));
 			$this->redirect('/galleries/'.'addprojectmember'.'/'.$gallery_id . '/' . $current_page);
 		} else {
 			$duplicate = $this->GalleryProject->find("gallery_id = $gallery_id AND project_id = $project_id");
@@ -1448,7 +1456,10 @@ Class GalleriesController extends AppController {
 			$this->updateGallery($gallery_id);
 			$this->Gallery->saveField("total_projects", $project_count + 1);
 			//$this->setFlash(___("Project successful added to", true) . " $gallery_name", FLASH_NOTICE_KEY);
-			$this->notify($user_id, "Your project <a href='$projecturl'>$project_name</a> has been added to the <a href='$galleryurl'>$gallery_name</a> gallery", false, false);
+			$this->notify('project_added_to_gallery', $project['Project']['user_id'],
+							array('project_id' => $project_id,
+								'gallery_id' => $gallery_id));
+												  
 			$this->redirect('/galleries/'.'addtogallery' ."/". $project_id . "/" . $option);
 		} else {
 			$this->GalleryProject->del($projects['GalleryProject']['id']);
@@ -1910,7 +1921,9 @@ Class GalleriesController extends AppController {
 				{
 					$user_record = $this->Session->read('User');
 					$user_id = $user_record['id'];
-					$this->notify($user_id, 'We remind you to use appropriate language for all ages when tagging a project. Please read the <a href="/terms">Terms of Use</a>', false, false);
+					$this->notify('inappropriate_gtag', $user_id,
+									array('gallery_id' => $gallery_id),
+									array($ntag));
 					continue;
 				}
 
@@ -2040,8 +2053,10 @@ Class GalleriesController extends AppController {
 				$this->hide_gcomment($comment_id, "delbyadmin");
 				$subject= "Comment deleted because it was flagged by an admin";
 				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\nhttp://scratch.mit.edu/galleries/view/$gallery_id";
-				$notification_msg = "We would like to remind you to use language appropriate for all ages on your comments. Please see the Terms of Use to learn more.";
-				$this->notify($creator_id, $notification_msg, false);
+				$this->notify('gcomment_removed', $creator_id,
+							array('gallery_id' => $gallery_id),
+							array($content)
+						);
 			}
 			if ($inappropriate_count > $max_count) {
 				$this->Mgcomment->bindUser();
@@ -2401,7 +2416,9 @@ Class GalleriesController extends AppController {
 
 				if(isInappropriate($comment)) {
 					$vis = 'censbyadmin';
-					$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);
+					$this->notify('inappropriate_gcomment_reply', $user_id,
+								array('gallery_id' => $gallery_id),
+								array($comment));
 				} else {
 					$vis = 'visible';
 				}
@@ -2435,13 +2452,25 @@ Class GalleriesController extends AppController {
 					
 					if ($duplicate) {
 					} else {
-					$new_reply = array('Gcomment'=>array('id' => null, 'gallery_id'=>$gallery_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $source_id));
-					$this->Gcomment->save($new_reply);
+						$new_reply = array('Gcomment'=>array('id' => null, 'gallery_id'=>$gallery_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $source_id));
+						$this->Gcomment->save($new_reply);
 					
-					$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND IgnoredUser.blocker_id = $gallery_owner_id ");
-					if ($ignore_count == 0 && $vis == 'visible') {
-						$this->notify($comment_owner_id, 'Your comment on the gallery ' . $gallery_link . " has been replied to." , false, false);
-						  }
+						$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND (IgnoredUser.blocker_id = $gallery_owner_id OR IgnoredUser.blocker_id = $comment_owner_id)");
+						
+						if ($ignore_count == 0 && $vis == 'visible') {
+							//comment notification to gallery_owner
+							$this->notify('new_gcomment', $gallery_owner_id,
+										array('gallery_id' => $gallery_id,
+										'from_user_name' => $this->getLoggedInUsername())
+									);
+							if($gallery_owner_id != $comment_owner_id) {
+								//comment reply notification to comment_owner
+								$this->notify('new_gcomment_reply', $comment_owner_id,
+											array('gallery_id' => $gallery_id,
+											'from_user_name' => $this->getLoggedInUsername())
+										);
+							}
+						}
 					}
 				}
 			}

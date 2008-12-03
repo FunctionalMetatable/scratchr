@@ -2084,3 +2084,14 @@ width:770px;
 	clear:both;
 }
 /*********tagger*********/
+
+/*********notifications*********/
+div.notification {
+	margin:4px 0;
+	padding-bottom:5px;
+	border-bottom:1px solid #DDD;
+}
+div.notification  a img{
+	vertical-align:middle;
+}
+/*********notifications*********/

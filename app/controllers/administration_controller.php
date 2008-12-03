@@ -568,10 +568,9 @@
     	$this->User->id = $user_id;
 		$user = $this->User->read();
 		$this->User->saveField('status', 'locked');
-		$message = 'Your account has been banned from the site due to violations of the Terms of Use';
 		if($this->isAdmin())
 		{
-			$this->notify($user_id, $message);
+			$this->notify('account_lock', $user_id, array());
 		}
 		$this->redirect('/administration/viewuser/'. $user_id);
     }

@@ -120,7 +120,7 @@ Class ServicesController extends Controller {
     function __upload() {
 		$this->__setUploadErrCodes();		
 		
-        $submit_username = $this->params['form']['username'];
+		$submit_username = $this->params['form']['username'];
         $submit_pwd = $this->params['form']['password'];
         $user_record = $this->User->findByUsername($submit_username);
 
@@ -148,19 +148,22 @@ Class ServicesController extends Controller {
 		
 		//check if user is banned
 		if ($user_status != 'locked') {
+			$inappropriates = array();
+			
 			// save project data
 			$project = null;
 			$project_name =  (!empty($this->params['form']['project_name'])) ? trim($this->params['form']['project_name']) : null;
 			if(isInappropriate($project_name))
 			{
 				$project_name = "Untitled";
-				$this->notify($user_id, 'We remind you to use language appropriate for all ages when choosing the title of a project. Please read the <a href="/terms">Terms of Use</a>');
+				$inappropriates[] = 'inappropriate_ptitle_upload';
+				
 			}
 			$project_description = (!empty($this->params['form']['project_description'])) ? trim($this->params['form']['project_description']) : null;
 			if(isInappropriate($project_description))
 			{
 				$project_description = "";
-				$this->notify($user_id, 'We remind you to use language appropriate for all ages when choosing the description of a project. Please read the <a href="/terms">Terms of Use</a>');
+				$inappropriates[] = 'inappropriate_pdesc_upload';
 			}
 			$project_numberOfSprites = (!empty($this->params['form']['numberOfSprites'])) ? trim($this->params['form']['numberOfSprites']) : null;
 			$project_totalScripts = (!empty($this->params['form']['totalScripts'])) ? trim($this->params['form']['totalScripts']) : null;
@@ -269,11 +272,14 @@ Class ServicesController extends Controller {
 					if (!strcmp($ntag,""))
 						continue;
 						
-			if(isInappropriate($ntag))
-			{
-				$this->notify($user_id, 'We remind you to use appropriate language for all ages when tagging a project. Please read the <a href="/terms">Terms of Use</a>');
-				continue;
-			}
+					if(isInappropriate($ntag))
+					{
+						$this->notify('inappropriate_ptag_upload', $user_id,
+										array('project_id' => $project_id,
+										'project_owner_name' => $urlname),
+										array($ntag));
+						continue;
+					}
 					$this->Tag->bindProjectTag(array('project_id' => $project_id));
 					$tag_record = $this->Tag->find("name = '$ntag'",null,null,2);
 
@@ -294,9 +300,14 @@ Class ServicesController extends Controller {
 				}
 			}
 			
+			//set notifications
+			foreach($inappropriates as $inappropriate) {
+				$this->notify($inappropriate, $user_id,
+					array('project_id' => $project_id));
+			}
 			//$this->log("extracting for:$project_id, $user_id...");
 			$this->extracthistory($project_id, $user_id, $newproject);
-	//		$this->log("done extracthistory");
+			//$this->log("done extracthistory");
 			$this->doc = $this->doc . "<pid>$project_id</pid>";
 			$this->__success();
 			
@@ -311,10 +322,12 @@ Class ServicesController extends Controller {
 	/**
 	* sends notification to specified user
 	*/
-	function notify($user_id, $message) {
-		$custom_message = $message;
-		
-		$this->Notification->save(array('Notification'=>array("user_id"=>$user_id, "custom_message"=>$custom_message, "status"=>'unread')));
+	function notify($type, $to_user_id, $data, $extra = array()) {
+		//store the notification
+		App::import('Model', 'Notification');
+		$this->Notification =& ClassRegistry::init('Notification');
+		$this->Notification->addNotification($type, $to_user_id,
+											$data, $extra);
 	}
 	
 	// THE FOLLOWING METHODS SHOULD BE IN THE MODEL OR CONTROLLER OF PROJECT

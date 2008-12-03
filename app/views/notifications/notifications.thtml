@@ -1,53 +1,72 @@
 
 <div class="fullcontent">
 
-<h2><?php ___('Message(s) updated every 1 minute'); ?></h2>
+<h2><?php ___('Message(s) updated every 10 minutes'); ?></h2>
 
 <div id="main">
-     <?php foreach($notifications as $notification):
-     	   $notification = $notification['Notification'];
-			$id = $notification['id'];
-			$custom_message = $notification['custom_message'];
-     ?>
-     <div id='notification_<?php echo $id; ?>' style='display:block;' align='left'>
-		<?php echo $ajax->link("(x)", '#', 
-			array("url"=>"/notifications/hide/".$id, "update"=>"notification_$id", 
-			"complete"=>"updateNotificationsCounter()"), NULL, false); ?>
-		<?php
-			echo $custom_message;
-		?>
-     </div>
-     <?php endforeach; ?>
+    <?php foreach($notifications as $notification):
+		$id = $notification['Notification']['id'];
+		
+		$search = array('{to_user_name}','{from_user_name}',
+					'{gallery_id}', '{gallery_name}',
+					'{project_id}', '{project_owner_name}', '{project_name}');
+		$message = str_replace($search,
+					array(
+						$username,
+						$notification['Notification']['from_user_name'],
+						$notification['Notification']['gallery_id'],
+						$notification['0']['gallery_name'],
+						$notification['Notification']['project_id'],
+						$notification['Notification']['project_owner_name'],
+						$notification['0']['project_name']
+					),
+					$notification['NotificationType']['template']
+				);
+		if(!empty($notification['Notification']['extra'])) {
+			$message = vsprintf($message, explode('|', $notification['Notification']['extra']));
+		}			
+	?>
+		<div id='notification_<?php echo $id; ?>' class="notification" style='display:block;' align='left'>
+			<?php echo $ajax->link($html->image('delete.png'), '#', 
+				array("url"=>"/notifications/hide/".$id, "update"=>"notification_$id", 
+				"complete"=>"updateNotificationsCounter()"), NULL, false); ?>
+			<?php
+				echo $message;
+			?>
+	    </div>
+    <?php endforeach; ?>
 	 
-	 <?php foreach($friend_requests as $request):
-			$id = $request['FriendRequest']['id'];
-			$friend_request_id = $id;
-			$friend = $request['User'];
-			$friend_id = $friend['id'];
-			$friend_name = $friend['username'];
-			$friend_urlname = $friend['urlname'];
-			$friend_url= "/users/".$friend_urlname;
-			$friend_link = "<a href='$friend_url'>$friend_name</a>";
-			$custom_message = $friend_link .  ___(" has added you to her or his list of friends.", 'false');
-     ?>
-     <div id='request_<?php echo $friend_request_id; ?>' style='display:block;' align='left'>
-		<?php
-			$decline_link = "/requests/decline?type=friend&rid=$friend_request_id";
-			echo $ajax->link("(x)", '#', 
-			array("url"=>$decline_link, "update"=>"request_$id"), NULL, false); 
-		?>
-		<?php
-			echo $custom_message;
-		?>
-     </div>
-     <?php endforeach; ?>
-     <br/>
-	 
-     <div id="pnotifyDiv">
-     <?php e($this->renderElement("pnotify")); ?>
-      </div>
-     <div id="gnotifyDiv">
-     <?php e($this->renderElement("gnotify")); ?>
-      </div>
+	<?php foreach($friend_requests as $request):
+		$id = $request['FriendRequest']['id'];
+		$friend_request_id = $id;
+		$friend = $request['User'];
+		$friend_id = $friend['id'];
+		$friend_name = $friend['username'];
+		$friend_urlname = $friend['urlname'];
+		$friend_url= "/users/".$friend_urlname;
+		$friend_link = "<a href='$friend_url'>$friend_name</a>";
+		$custom_message = $friend_link .  ___(" has added you to her or his list of friends.", 'false');
+    ?>
+	    <div id='request_<?php echo $friend_request_id; ?>' class="notification" align='left'>
+			<?php
+				$decline_link = "/requests/decline?type=friend&rid=$friend_request_id";
+				echo $ajax->link($html->image('delete.png'), '#', 
+				array("url"=>$decline_link, "update"=>"request_$id"), NULL, false); 
+			?>
+			<?php
+				echo $custom_message;
+			?>
+	    </div>
+    <?php endforeach; ?>
+    <br/>
+    <div id="pnotifyDiv">
+		<?php e($this->renderElement("pnotify")); ?>
+    </div>
+    <div id="gnotifyDiv">
+		<?php e($this->renderElement("gnotify")); ?>
+    </div>
+	<br/>
+	<p><strong><em>You can check your old notifications <a href="/oldnotifications">here</a>. Old notifications are available till Dec 16th.</em></strong></p>
+	<br/>
 </div>
 </div>
