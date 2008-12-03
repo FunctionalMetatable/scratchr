@@ -143,6 +143,7 @@ Class User extends AppModel
     }
 	
 	function tempblock($id) {
+		$this->notify('account_lock', $id, array());
 		$this->id=$id;
 		$block_time = "+". TEMP_BLOCK_INTERVAL;
 		$blocked_till=date("Y-m-d H:i:s", strtotime("$block_time", time()));
@@ -150,7 +151,7 @@ Class User extends AppModel
 		$data['User']['status']='blockedtemporarily';
 		$data['User']['id']=$id;
 		return $this->save($data);
-		}
+	}
 	
 	function tempunblock($id) {
 		$this->id=$id;

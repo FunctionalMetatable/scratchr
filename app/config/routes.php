@@ -37,6 +37,7 @@
  */
 Router::connect('/', array('controller' => 'home', 'action' => 'index', 'home'));
 Router::connect('/notifications', array('controller' => 'notifications', 'action' => 'index', 'home'));
+Router::connect('/oldnotifications', array('controller' => 'oldnotifications', 'action' => 'index', 'home'));
 Router::connect('/download', array('controller' => 'dusers', 'action' => 'add'));
 Router::connect('/password_recovery', array('controller' => 'users', 'action' => 'password_recovery'));
 Router::connect('/login', array('controller' => 'users', 'action' => 'login'));

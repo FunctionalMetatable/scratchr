@@ -202,10 +202,11 @@ class ProjectsController extends AppController {
 			$newtitle =  $inputText ;
 			if(isInappropriate($newtitle))
 			{
-			        $user_record = $this->Session->read('User');
+			    $user_record = $this->Session->read('User');
 				$user_id = $user_record['id'];
-				$this->notify($user_id, 'We remind you to use language appropriate for all ages when choosing the title of a project. Please read the <a href="/terms">Terms of Use</a>', false, false);
-				}
+				$this->notify('inappropriate_ptitle', $user_id,
+					array('project_id' => $pid));
+			}
 			else
 			{
 				if ($this->Project->saveField('name',$newtitle)) {
@@ -286,7 +287,11 @@ class ProjectsController extends AppController {
 
 				if(isInappropriate($comment)) {
 					$vis = 'censbyadmin';
-					$this->notify($commenter_id, 'We remind you to use appropriate language for all ages when posting comments, please read the <a href="/terms">Terms of Use</a>', false, false);
+					$this->notify('inappropriate_pcomment', $commenter_id,
+									array('project_id' => $pid,
+									'project_owner_name' => $urlname),
+									array($comment)
+								);
 				} else {
 					$vis = 'visible';
 				}
@@ -347,12 +352,14 @@ class ProjectsController extends AppController {
 			$user_record = $this->User->find("id = $puser_id");
 			$username = $user_record['User']['username'];
 			$project_title = htmlspecialchars($project['Project']['name']);
-			$message = 'Your project <a href="/projects/'.$username.'/'.$pid.'">'.$project_title.'</a> has received a new comment by <a href="/users/'.$commenter_username.'">'.$commenter_username.'</a>.'; /*ergon decided no to modify this line. the notification messages is generated in the language of the commenter. once the message is generated, its language can't be changed anymore. */
 			
 			//if comment by ignored user do not send notification
 			$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND IgnoredUser.blocker_id = $project_owner_id");
 			if ($ignore_count == 0) {
-				$this->notify($puser_id, $message, false);
+				$this->notify('new_pcomment', $puser_id,
+									array('project_id' => $pid,
+										'from_user_name' => $commenter_username)
+							);
 			}
 		}
 		
@@ -437,8 +444,10 @@ class ProjectsController extends AppController {
 				$this->Pcomment->saveField("comment_visibility", "delbyadmin") ;
 				$subject= "Comment deleted because it was flagged by an admin";
 				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
-				$notification_msg = "We would like to remind you to use language appropriate for all ages on your comments. Please see the Terms of Use to learn more.";
-				$this->notify($creator_id, $notification_msg, false);
+				$this->notify('pcomment_removed', $creator_id,
+								array('project_id' => $pid,
+									'project_owner_name' => $project_creator),
+									array($content));
 			}
 			if ($inappropriate_count > $max_count) {
 				$this->Mpcomment->bindUser();
@@ -611,7 +620,8 @@ class ProjectsController extends AppController {
 	    {
 		$user_record = $this->Session->read('User');
 		$user_id = $user_record['id'];
-		$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);	
+		$this->notify('inappropriate_pdesc', $user_id,
+					array('project_id' => $pid));
 		}
 	    else
 	    {
@@ -853,7 +863,7 @@ class ProjectsController extends AppController {
 				$this->set('pid', $pid);
 				$this->set('urlname', $urlname);
 		
-				///////////temp block//////////
+			///////////temp block//////////
 			$this->Project->set_temporary_block($comment_id);
 			//////////temp block end //////			
 					
@@ -863,8 +873,8 @@ class ProjectsController extends AppController {
 					$msg .= "user $flaggername ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid";
 					$subject= "Project '$pname' censored";
 					
-					$message = 'Your project <a href="/projects/'.$username.'/'.$pid.'">'.$project_title.'</a> has been automatically removed because multiple Scratch members considered it inappropriate for the Scratch community. The Scratch administrators will review this. Please read the <a href="/terms">Terms of Use</a> or contact us for more info. Thank you and Scratch on!';
-					$this->notify($creator['User']['id'], $message);
+					$this->notify('project_removed_auto', $creator['User']['id'],
+									array('project_id' => $pid));
 					$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, 'scratch-feedback@media.mit.edu');
 					$this->Project->censor($pid, $urlname, $this->isAdmin(), $user_id);
 				} else {
@@ -1366,7 +1376,10 @@ class ProjectsController extends AppController {
 					{
 						$user_record = $this->Session->read('User');
 						$user_id = $user_record['id'];
-						$this->notify($user_id, 'We remind you to use appropriate language for all ages when tagging a project. Please read the <a href="/terms">Terms of Use</a>', false, false);
+						$this->notify('inappropriate_ptag', $user_id,
+									array('project_id' => $pid,
+									'project_owner_name' => $urlname),
+									array($ntag));
 						continue;
 					}
 					$this->Tag->bindProjectTag(array('project_id'=>$pid));
@@ -1488,15 +1501,10 @@ class ProjectsController extends AppController {
 		$username = $user_record['User']['username'];
 		$project_title = htmlspecialchars($project_record['Project']['name']);
 
-		$message = 'Your project <a href="/projects/'.$username.'/'.$pid.'">'.$project_title.'</a> has
-					been removed because multiple Scratch members considered it
-					inappropriate for the Scratch community. Please read the <a
-					href="/terms">Terms of Use</a> or contact us for more info. Thank you
-					and Scratch on!';
-
 		if($this->isAdmin())
 		{
-			$this->notify($puser_id, $message);
+			$this->notify('project_removed_admin', $user_record['User']['id'],
+									array('project_id' => $pid));
 		}
 
 		if ($this->isAdmin() || ($project['Project']['user_id'] == $user_id))
@@ -1557,10 +1565,11 @@ class ProjectsController extends AppController {
 		$this->check_project_flag($user_id, $project_id);
 		$this->set_project_flag_timestamp($project_id);
 
-		$message = 'Your project <a href="/projects/'.$username.'/'.$pid.'">'.$project_title.'</a> was reviewed by the Scratch administrators and they decided to revert the automatic deletion caused by multiple Scratch members flagging your project as inappropriate. Please read the <a href="/terms">Terms of Use</a> or contact us for more info. Thank you and Scratch on!';
+		
 		if($this->isAdmin())
 		{
-			$this->notify($puser_id, $message);
+			$this->notify('project_restored', $project['Project']['user_id'],
+						array('project_id' => $pid));
 		}
 
 		if ($this->isAdmin() || ($project['Project']['user_id'] == $user_id) || isset($users_permission['censor_projects']))
@@ -2349,7 +2358,10 @@ class ProjectsController extends AppController {
 
 				if(isInappropriate($comment)) {
 					$vis = 'censbyadmin';
-					$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);
+					$this->notify('inappropriate_pcomment_reply', $user_id,
+								array('project_id' => $project_id,
+								'project_owner_name' => $urlname),
+								array($comment));
 				} else {
 					$vis = 'visible';
 				}
@@ -2383,13 +2395,25 @@ class ProjectsController extends AppController {
 					
 					if ($duplicate) {
 					} else {
-					$new_reply = array('Pcomment'=>array('id' => null, 'project_id'=>$project_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $source_id));
-					$this->Pcomment->save($new_reply);
-				
-					$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND IgnoredUser.blocker_id = $project_owner_id");
-					if ($ignore_count == 0 && $vis == 'visible') {
-						$this->notify($comment_owner_id, 'Your comment on the project ' . $project_link . " has been replied to." , false, false);
-					}
+						$new_reply = array('Pcomment'=>array('id' => null, 'project_id'=>$project_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $source_id));
+						$this->Pcomment->save($new_reply);
+					
+						$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND (IgnoredUser.blocker_id = $project_owner_id OR IgnoredUser.blocker_id = $comment_owner_id)");
+						if ($ignore_count == 0 && $vis == 'visible') {
+							//comment reply notification to comment_owner
+							$this->notify('new_pcomment_reply', $comment_owner_id,
+										array('project_id' => $project_id,
+										'project_owner_name' => $urlname,
+										'from_user_name' => $this->getLoggedInUsername())
+									);
+							//comment notification to project_owner (if project owner is not comment owner)
+							if($project_owner_id != $comment_owner_id) {
+								$this->notify('new_pcomment', $project_owner_id,
+											array('project_id' => $project_id,
+											'from_user_name' => $this->getLoggedInUsername())
+										);
+							}
+						}
 					}
 				}
 			}
