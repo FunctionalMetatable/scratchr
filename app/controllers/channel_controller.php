@@ -182,6 +182,37 @@ Class ChannelController extends AppController {
         $this->render('explorer');
     }
 	
+	
+ /* Methods to show surprise project(10 random projects)
+ *
+ * @author	Ashok gond
+ */
+	function surprise() {
+		$this->layout = 'scratchr_explorer'; 
+		$this->pageTitle = ___("Scratch | Surprise projects", true);
+        $this->modelClass = "Project";
+        $options = array("sortBy"=>"remixes", "direction" => "DESC");
+        list($order,$limit,$page) = $this->Pagination->init("remixes > 0", Array(), $options);
+		$result = $this->Project->query("SELECT MAX(projects.id) AS maxid FROM projects");
+        $random = rand(1, $result[0][0]['maxid']);
+        $query = "Project.id >= $random AND Project.status <> 'notsafe'";
+        $count = $this->Project->findCount($query);
+        if ($count < 10) $query = "Project.id <= ".($random+$count);
+		$final_projects = $this->Project->findAll($query, NULL, "Project.id", 10, 1, NULL);
+		
+		//$final_projects = $this->Project->findAll("remixes > 0", NULL, $order, $limit, $page, NULL);
+		$final_projects = $this->set_projects($final_projects);
+		
+		$remixed_feed_link = "/feeds/getTopRemixedProjects";
+		
+        $this->set('data', $final_projects);
+        $this->set('heading', ___("surprised", true));
+		$this->set('option', 'surprised');
+		$this->set('rss_link', $remixed_feed_link);
+        $this->render('surprise');
+    }
+	
+	
 	function set_projects($projects) {
 		$isLogged = $this->isLoggedIn();
 		$user_id = $this->getLoggedInUserID();

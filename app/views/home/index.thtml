@@ -113,7 +113,7 @@
 		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
 		</div>
 		<?php endforeach; ?>
-      <p class="more"><a href="/channel/recent"><?php ___('See more');?></a> </p>
+      <p class="more"><a href="/channel/surprise"><?php ___('See more');?></a> </p>
     </div>
 
     <div id="TopLovedLately" class="container">
