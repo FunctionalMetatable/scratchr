@@ -407,6 +407,10 @@ class ProjectsController extends AppController {
 
 		$project_creator = $project['User']['username'];
 		$creator_id = $comment['Pcomment']['user_id'];
+		//logged in user is the comment creator, and is not allowed to flag his own comment
+		if($user_id == $creator_id) {
+			return false;
+		}
 		$content = $comment['Pcomment']['content'];
 		$isMine = ($user_id == $project['User']['id']);
 		$creator = $this->User->find("User.id = '$creator_id'");

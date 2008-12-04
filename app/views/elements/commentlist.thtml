@@ -110,12 +110,14 @@
 					echo "</span>";
 				}
 				
-				echo "(" . $ajax->link(___("flag as inappropriate", true), '#', 
-					array("url"=>$mark_address, 
-						"update"=>"$comment_id", "condition"=>"hideComment($comment_id)"), 
-					"Are you sure?", false) . ")";
-				
-				echo " | ";
+				if(!$isCommentOwner) {
+					echo "(" . $ajax->link(___("flag as inappropriate", true), '#', 
+						array("url"=>$mark_address, 
+							"update"=>"$comment_id", "condition"=>"hideComment($comment_id)"), 
+						"Are you sure?", false) . ")";
+					
+					echo " | ";
+				}
 				
 				if ($isAdmin || $isProjectOwner || isset($users_permission['delete_project_comments'])) {
 					e($ajax->link("(x)", '#', 
