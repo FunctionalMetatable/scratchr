@@ -592,10 +592,13 @@ Class GalleriesController extends AppController {
 			
 			$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND IgnoredUser.blocker_id = $gallery_owner_id");
 			if ($ignore_count == 0) {
-				$this->notify('new_gcomment', $guser_id,
+				//do not notify if gallery owner is the commenter
+				if($guser_id != $commenter_id) {
+					$this->notify('new_gcomment', $guser_id,
 								array('gallery_id' => $gallery_id,
 								'from_user_name' => $commenter_username)
 							);
+				}
 			}
 		}
 		
@@ -2458,17 +2461,22 @@ Class GalleriesController extends AppController {
 						$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND (IgnoredUser.blocker_id = $gallery_owner_id OR IgnoredUser.blocker_id = $comment_owner_id)");
 						
 						if ($ignore_count == 0 && $vis == 'visible') {
-							//comment notification to gallery_owner
-							$this->notify('new_gcomment', $gallery_owner_id,
+							//user is not replying to his own comment
+							if($commenter_id != $comment_owner_id) {
+								//comment reply notification to comment_owner
+								$this->notify('new_gcomment_reply', $comment_owner_id,
 										array('gallery_id' => $gallery_id,
 										'from_user_name' => $this->getLoggedInUsername())
 									);
-							if($gallery_owner_id != $comment_owner_id) {
-								//comment reply notification to comment_owner
-								$this->notify('new_gcomment_reply', $comment_owner_id,
-											array('gallery_id' => $gallery_id,
-											'from_user_name' => $this->getLoggedInUsername())
-										);
+							}
+							//send notification to gallery owner if gallery owner and comment owner are differnt
+							//and comment replier is not the gallery owner
+							if($gallery_owner_id != $comment_owner_id && $commenter_id != $gallery_owner_id) {
+								//comment notification to gallery_owner
+								$this->notify('new_gcomment', $gallery_owner_id,
+										array('gallery_id' => $gallery_id,
+										'from_user_name' => $this->getLoggedInUsername())
+									);
 							}
 						}
 					}

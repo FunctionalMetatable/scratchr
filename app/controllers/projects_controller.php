@@ -356,10 +356,13 @@ class ProjectsController extends AppController {
 			//if comment by ignored user do not send notification
 			$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND IgnoredUser.blocker_id = $project_owner_id");
 			if ($ignore_count == 0) {
-				$this->notify('new_pcomment', $puser_id,
+				//if user is not commenting on his own project
+				if($logged_id != $puser_id) {
+					$this->notify('new_pcomment', $puser_id,
 									array('project_id' => $pid,
 										'from_user_name' => $commenter_username)
 							);
+				}
 			}
 		}
 		
@@ -2404,14 +2407,18 @@ class ProjectsController extends AppController {
 					
 						$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND (IgnoredUser.blocker_id = $project_owner_id OR IgnoredUser.blocker_id = $comment_owner_id)");
 						if ($ignore_count == 0 && $vis == 'visible') {
-							//comment reply notification to comment_owner
-							$this->notify('new_pcomment_reply', $comment_owner_id,
+							//user is not replying to his own comment
+							if($user_id != $comment_owner_id) {
+								//comment reply notification to comment_owner
+								$this->notify('new_pcomment_reply', $comment_owner_id,
 										array('project_id' => $project_id,
 										'project_owner_name' => $urlname,
 										'from_user_name' => $this->getLoggedInUsername())
 									);
-							//comment notification to project_owner (if project owner is not comment owner)
-							if($project_owner_id != $comment_owner_id) {
+							}
+							//send notification to project owner if project owner and comment owner are differnt
+							//and comment replier is not the project owner
+							if($project_owner_id != $comment_owner_id && $user_id != $project_owner_id) {
 								$this->notify('new_pcomment', $project_owner_id,
 											array('project_id' => $project_id,
 											'from_user_name' => $this->getLoggedInUsername())
