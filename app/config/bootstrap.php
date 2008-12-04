@@ -159,6 +159,11 @@ define('CACHE_DURATION', '1 day');
 define('BLOCK_CHECK_INTERVAL', '30 minutes');
 define('TEMP_BLOCK_INTERVAL', '90 minutes');
  
+ /***
+* Define filtered site
+**/
+define('FILTERED_HOST', 'devscratch.media.mit.edu');
+
  /**
   * Returns theme url for html link destination
   */

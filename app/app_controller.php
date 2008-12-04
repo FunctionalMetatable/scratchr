@@ -463,7 +463,7 @@ class AppController extends Controller {
 	/* Based on the URL used it will render different content */
 	function getContentStatus() {
 		$host = env('HTTP_HOST');
-		if($host == 'devscratch.media.mit.edu') {
+		if($host == FILTERED_HOST) {
 			return 'safe';
 		}
 		return 'all';
