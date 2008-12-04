@@ -23,7 +23,8 @@ class DusersController extends AppController
 	function add()
 	{
 	$this->set('content_status', $this->getContentStatus());
-	$this->autoLayout = false;
+	$this->pageTitle = ___("Scratch Download Form", true);
+	//$this->autoLayout = false;
 	if (!empty($this->data['Duser']))
 	{
 		if (empty($this->data['Duser']['role']))
@@ -63,6 +64,7 @@ class DusersController extends AppController
             $this->redirect("/pages/download");
            }
        }
+	   
  }
 
 }
