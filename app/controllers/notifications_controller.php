@@ -66,6 +66,20 @@ class NotificationsController extends AppController {
 		 $this->render('hide_notification_ajax', 'ajax');
 	}
 	
+	/* 
+	 * AJAX-called
+	 * marks all user notification as read
+	 */
+	function hide_all() {
+		 $this->autoRender = false;
+		 $user_id = $this->getLoggedInUserID();
+		 //notification update
+		 $this->Notification->updateAll(array('status' => '"READ"'), array('Notification.to_user_id' => $user_id));
+		 //friend request update
+		 $this->FriendRequest->updateAll(array('FriendRequest.status' => '"declined"'), array('to_id' => $user_id));
+		 $this->render('hide_all_notification_ajax', 'ajax');
+	}
+	
 	function pnotify() {
 		 $this->autoRender = false;
 		 $user_id = $this->Session->read('User.id');

@@ -4,7 +4,8 @@
 <h2><?php ___('Message(s) updated every 10 minutes'); ?></h2>
 
 <div id="main">
-    <?php foreach($notifications as $notification):
+    <div id="messages">
+	<?php foreach($notifications as $notification):
 		$id = $notification['Notification']['id'];
 		
 		$search = array('{to_user_name}','{from_user_name}',
@@ -58,7 +59,21 @@
 			?>
 	    </div>
     <?php endforeach; ?>
-    <br/>
+	</div>
+	
+	<br/>
+	
+	<?php if((count($notifications) + count($friend_requests)) > 0): ?>
+	<div id="hide_all_notification">
+		<h6>
+		<?php echo $ajax->link("Click here", '#', 
+			array("url"=>"/notifications/hide_all/", "update"=>"hide_all_notification", 
+			"complete"=>"updateNotificationsCounter(true)"), NULL, false); ?>
+		 to delete all of your notifications
+		 </h6>
+	</div>
+	<?php endif; ?>
+	
     <div id="pnotifyDiv">
 		<?php e($this->renderElement("pnotify")); ?>
     </div>

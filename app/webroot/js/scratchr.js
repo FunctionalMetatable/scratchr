@@ -331,14 +331,15 @@ function hideAnnouncement(){
 }
 
 
-function updateNotificationsCounter() {
+function updateNotificationsCounter(hide) {
     var notificationscount=document.getElementById("notificationscount");
     var notificationcontainer=document.getElementById("notificationcontainer");
 	var notify_count = parseInt(notificationscount.innerHTML);
 	notify_count = notify_count - 1;
-    if(notify_count==0)
+    if((typeof hide !== 'undefined' && hide) || notify_count==0)
     {
         notificationcontainer.style.display = "none";
+		document.getElementById("messages").style.display = "none";
     } else {
 		notificationscount.innerHTML = notify_count.toString() + " messages";
 	}

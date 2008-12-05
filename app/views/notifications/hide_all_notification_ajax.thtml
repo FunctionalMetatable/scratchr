@@ -1,0 +1,6 @@
+<h6>
+<?php
+	___("All messages read and deleted.");
+?>
+</h6>
+<br/>
