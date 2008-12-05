@@ -2095,3 +2095,22 @@ div.notification  a img{
 	vertical-align:middle;
 }
 /*********notifications*********/
+
+/*********ajax indicator*********/
+#ajax_indicator {
+	position:fixed;
+	top:9px;
+	right:241px;
+	padding:2px 5px;
+	background-color:#FFFF99;
+	font-weight:bold;
+	visibility:hidden;
+}
+#ajax_indicator img {
+	float:left;
+}
+#ajax_indicator div {
+	float:left;
+	margin-left:7px;
+}
+/*********ajax indicator*********/

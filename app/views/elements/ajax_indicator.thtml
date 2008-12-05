@@ -1,0 +1,4 @@
+<div id="ajax_indicator">
+<?php e($html->image('spinner.gif')) ?>
+<div>Please Wait...</div>
+</div>
