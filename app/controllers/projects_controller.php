@@ -441,7 +441,7 @@ class ProjectsController extends AppController {
 		$max_count = NUM_MAX_COMMENT_FLAGS;
 		$stringwflaggernames = "";
 		$inappropriate_count = $this->Mpcomment->findCount("comment_id=$comment_id");
-		if ($inappropriate_count > $max_count || $isMine) {
+		if ($inappropriate_count > $max_count || $isMine || $isAdmin) {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->Pcomment->saveField("comment_visibility", "delbyusr") ;

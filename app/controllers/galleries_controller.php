@@ -2046,7 +2046,7 @@ Class GalleriesController extends AppController {
 		//checks to see if the comment has been flagged too many times
 		$max_count = NUM_MAX_COMMENT_FLAGS;
 		$inappropriate_count = $this->Mgcomment->findCount("comment_id = $comment_id");
-		if ($inappropriate_count > $max_count || $isMine) {
+		if ($inappropriate_count > $max_count || $isMine || $isAdmin) {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->hide_gcomment($comment_id, "delbyusr");
