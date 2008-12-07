@@ -426,15 +426,11 @@ class ProjectsController extends AppController {
 		//checks to see if this user has already marked this comment previously
 		if ($mpcomment_record == 0) {
 			$this->Mpcomment->save(array('Mpcomment'=>array('id'=>null, 'user_id' => $user_id, 'comment_id' => $comment_id)));
-			
-			///////////temp block//////////
-			$this->Pcomment->set_temporary_block($comment_id);
-			//////////temp block end //////
-/*
+			/*
 			$msg = "User '$flaggername' has flagged this comment by '$creatorname':\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
 			$subject= "Flagged comment under '$pname'";
 			$this->Email->email('scratch-feedback@media.mit.edu',  $flaggername, $msg, $subject, 'scratch-caution@media.mit.edu', $userflagger['User']['email']);
-*/
+			*/
 		}
 		
 		//checks to see if the comment has been flagged too many times
@@ -853,27 +849,22 @@ class ProjectsController extends AppController {
 
 		if ($user_id) {
 			if (!$this->Flagger->hasAny("project_id = $pid AND user_id = $user_id")) {
+				if ($project_status == 'notreviewed') {
+					$subject= "Project '$pname' flagged";
+				} else {
+					$subject= "Project '$pname' flagged" . " (REVIEWED)";
+				}
+				$msg = "user $flaggername ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid \n Reason: \n " . $msgin;
 			
-			if ($project_status == 'notreviewed') {
-				$subject= "Project '$pname' flagged";
-			} else {
-				$subject= "Project '$pname' flagged" . " (REVIEWED)";
-			}
-			$msg = "user $flaggername ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid \n Reason: \n " . $msgin;
-		
-			$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  $flaggername, $msg, $subject, TO_FLAGGED_PROJECT, $userflagger['User']['email']);
+				$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  $flaggername, $msg, $subject, TO_FLAGGED_PROJECT, $userflagger['User']['email']);
 				$this->Flagger->save($this->data);
 				$prev_flaggers_count = (int)$project['Project']['flagit'];
-				$this->Project->save(array("flagit"=>$prev_flaggers_count + 1));
+				$this->Project->saveField('flagit',($prev_flaggers_count + 1));
 				$flags = $project['Project']['flagit'];
 				$this->set('just_flagged', true);
 				$this->set('pid', $pid);
 				$this->set('urlname', $urlname);
-		
-			///////////temp block//////////
-			$this->Project->set_temporary_block($comment_id);
-			//////////temp block end //////			
-					
+				
 				//if the number of flags on this project exceeds the current maximum, automatically censor this project
 				if ($flags >= NUM_MAX_PROJECT_FLAGS && $project_status == 'notreviewed') {
 					$msg = "Project *automatically censored* because it reached the maximum number of flags.\n";
@@ -884,7 +875,19 @@ class ProjectsController extends AppController {
 									array('project_id' => $pid));
 					$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, 'scratch-feedback@media.mit.edu');
 					$this->Project->censor($pid, $urlname, $this->isAdmin(), $user_id);
-				} else {
+					
+					//if the project is not censored already
+					if($project['Project']['proj_visibility'] == 'visible') {
+						//if the censored project is created N mins ago then temp block the user
+						$block_time = date('Y-m-d H:i:s', strtotime('-' . BLOCK_CHECK_INTERVAL, time()));
+						if($project['Project']['created'] >= $block_time) {
+							//block user for X mins
+							$this->User->tempblock($project['Project']['user_id']);
+							$this->notify('account_lock', $project['Project']['user_id'], array());
+						}
+					}
+				}
+				else {
 					$this->render("projectflagging_ajax", "ajax");
 				}
 			}

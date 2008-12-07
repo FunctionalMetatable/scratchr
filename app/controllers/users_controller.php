@@ -321,7 +321,7 @@ class UsersController extends AppController {
 		  
 		  if($user_record['User']['blocked_till'] <= date("Y-m-d H:i:s", time())) {
 		 	    $this->User->tempunblock($user_record['User']['id']);
-				$user_record['User']['status']=normal;
+				$user_record['User']['status'] = 'normal';
 		  }
 		  
 		  foreach($user_record['Permission'] as $user_permission)
