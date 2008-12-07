@@ -1,8 +1,8 @@
 Copyright (C)  2007 Andres Monroy-Hernandez and the 
 Lifelong Kindergarten Research Group at the MIT Media Laboratory.
 
-The name Scratch and its logo are copyright of the
-Lifelong Kindergarten Group at the MIT Media Lab
+The name Scratch, its logo and other images included here
+are copyright of the Lifelong Kindergarten Group at the MIT Media Lab
 http://llk.media.mit.edu
 
 ABOUT SCRATCHR
@@ -11,22 +11,11 @@ ScratchR is the web application that powers the Scratch Online Community
 Apache <http://httpd.apache.org>, CakePHP <http://cakephp.org>
 and MySQL <http://mysql.com>
 
+Please contact us if you are interested in running your own Scratch Website.
+
 ABOUT SCRATCH
 The Scratch programming environemnt, the Scratch logo and the support 
 materials are NOT necessarily under the same license as ScratchR.
-
-APPROVED USES
-While the source code is open and freely modifiable,
-this license does not allow you to use ScratchR to run 
-a publicly available website on the World Wide Web.
-Basically, if a search engine can see your site then
-it is an unapproved use.
-For more information please contact the Scratch Team at:
-scratch-feedback@media.mit.edu
-
-TECHNICAL SUPPORT FOR SCRATCHR
-Unfortunately,  we are not committed to providing technical 
-support for ScratchR
 
 LICENSE
 This program is free software: you can redistribute it and/or modify
