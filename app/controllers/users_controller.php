@@ -943,16 +943,16 @@ class UsersController extends AppController {
 		if (empty($this->params["form"]))
 			$this->__err();
 
-		$this->User->id=$user_id;
+		$this->User->id = $user_id;
         $user = $this->User->read();
 
 		if (empty($user)){
 			$this->cakeError('error404');
-		}	
-		if (!$this->isAdmin())
-			if ($user['User']['id'] !== $session_user_id)
-				$this->__err;
-
+		}
+		if (!$this->isAdmin() && $user['User']['id'] !== $session_user_id) {
+			$this->__err();
+		}
+		
 		// assumini'_ and 'med' types will reside in the same directory
 		$icon_array = $this->params["form"]["user_icon"];
 
