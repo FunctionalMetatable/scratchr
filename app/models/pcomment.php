@@ -29,21 +29,5 @@ class Pcomment extends AppModel {
 					  'foreignKey' => 'comment_id'
 				))));
     }
-	
-	function set_temporary_block($id) {
-		$this->id=$id;
-		$pcomment = $this->read();
-		$comment_created_date_time = $pcomment['Pcomment']['created'];
-		$block_time = "-" . BLOCK_CHECK_INTERVAL;
-		$block_time = date("Y-m-d H:i:s", strtotime("$block_time", time()));
-		if($comment_created_date_time >= $block_time) {	
-			$this->bindMpcomment();
-			$flags=$this->Mpcomment->findCount("Mpcomment.comment_id =".$id);	
-			if($flags >= NUM_MAX_COMMENT_FLAGS) {
-				$this->bindUser();
-				$this->User->tempblock($pcomment['Pcomment']['user_id']);
-			}
-		}
-	}
 }
 ?>

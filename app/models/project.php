@@ -718,21 +718,5 @@ Class Project extends AppModel
 			$this->saveField('loveit', $love_its);
 		}
 	}
-	
-	function set_temporary_block($id) {
-		$this->id=$id;
-		$project = $this->read();
-		$project_created_date_time = $project['Project']['created'];
-		$block_time = "-" . BLOCK_CHECK_INTERVAL;
-		$block_time = date("Y-m-d H:i:s", strtotime("$block_time", time()));
-		if($project_created_date_time >= $block_time) {	
-			$this->bindProjectFlag();
-			$flags = $this->ProjectFlag->findCount("ProjectFlag.project_id = $id");
-			if($flags >= NUM_MAX_PROJECT_FLAGS) {
-				$id = $project['Project']['user_id'];
-				$this->User->tempblock($id);
-			}
-		}
-	}
 }
 ?>
