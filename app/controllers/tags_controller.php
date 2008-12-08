@@ -29,13 +29,7 @@ Class TagsController extends AppController {
 	}
 	
     function __setProjectTagCloud() {
-        $resultset = $this->Tag->query("
-            SELECT Tag.name, COUNT(Project.id) as tagcounter FROM projects Project
-            JOIN project_tags tt ON Project.id = tt.project_id
-            JOIN tags Tag ON tt.tag_id = Tag.id
-            GROUP BY Tag.id
-            ORDER BY tagcounter DESC
-            LIMIT " . TAG_CLOUD_BIG);
+        $resultset = $this->Tag->getProjectTagCloud(TAG_CLOUD_BIG);
         $this->set('tags', $resultset);
     }
 	
