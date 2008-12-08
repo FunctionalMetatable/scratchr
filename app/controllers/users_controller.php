@@ -302,6 +302,7 @@ class UsersController extends AppController {
 	
 	function logout() {
 	  $this->Session->delete('User'); //kill session info
+	  $this->Session->delete('UsersPermission'); //kill users permission
 	  $this->redirect('/');
 	  die;
 	}
