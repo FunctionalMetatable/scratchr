@@ -10,5 +10,11 @@ Ajax.Responders.register({
 	if(Ajax.activeRequestCount==0) {
 		$('ajax_indicator').setStyle({'visibility': 'hidden'});
 	}
+  },
+  onException: function() {
+	Ajax.activeRequestCount--;
+	if(Ajax.activeRequestCount==0) {
+		$('ajax_indicator').setStyle({'visibility': 'hidden'});
+	}
   }
 });
