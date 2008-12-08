@@ -68,11 +68,11 @@
 		
 		if ($option == "surprised") {
 		?>
-			<a href="<?php echo $html->url('/channel/surprise')?>"><span class="button2_selected"><?php ___('Surprised');?></span></a>
+			<a href="<?php echo $html->url('/channel/surprise')?>"><span class="button2_selected"><?php ___('surprise!');?></span></a>
 			
 		<?php
 		} else {?>
-		<a href="<?php echo $html->url('/channel/surprise')?>"><span class="button2"><?php ___('Surprised');?></span></a>
+		<a href="<?php echo $html->url('/channel/surprise')?>"><span class="button2"><?php ___('surprise!');?></span></a>
 			
 		<?php
 		}
