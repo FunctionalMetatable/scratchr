@@ -27,5 +27,16 @@ Class Tag extends AppModel {
             'foreignKey' => 'tag_id',
             'associationForeignKey' => 'project_id'))));
     }
+	
+	function getProjectTagCloud( $limit ) {
+		$query = 'SELECT Tag.name, COUNT( tt.project_id ) AS tagcounter'
+				.' FROM project_tags tt, tags Tag '
+				.' WHERE Tag.id = tt.tag_id '
+				.' GROUP BY Tag.id '
+				.' ORDER BY tagcounter DESC '
+				.' LIMIT ' . $limit;
+		
+		return $this->query($query);
+	}
 }
 ?>
