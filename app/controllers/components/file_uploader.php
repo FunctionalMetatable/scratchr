@@ -7,7 +7,7 @@ class FileUploaderComponent extends Object {
    * Here you can set the validations needed for the file upload.
    * Currently it supports only size and type.
    */
-  var $validateFile = array('size' => 90800,'type' => 'pjpeg,jpg,jpeg,png,gif,x-png,bmp');
+  var $validateFile = array('size' => 1024000,'type' => 'pjpeg,jpg,jpeg,png,gif,x-png,bmp');
 
   function setValidation($validateFile=null) {
 	$this->validateFile = $validateFile;
