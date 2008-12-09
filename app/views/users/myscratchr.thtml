@@ -159,7 +159,7 @@ function langList($countries) {
 		<?php endif;?>
         
         
-		<b><?php ___('Featured Project:')?></b><br />
+		<b><?php ___('Featured Projects:')?></b>
         <?php echo $featured_count?><br />
         
 		<?php endif;?>
