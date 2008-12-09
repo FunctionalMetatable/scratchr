@@ -1,0 +1,38 @@
+<script>
+function validate() {
+	if($('notif_type').value.match(/^\w+$/)) {
+		return true;
+	} else {
+		alert('only alphanumeric (A-Z,a-z,0-9) and underscores(_) are allowed for Name');
+		return false;
+	}
+}
+</script>
+<div class="fullcontent">
+	<h2>Manage Admin Notifications</h2>
+	<br/>
+	<h3>Add Admin Notification Template</h3>
+	<form method="post" onsubmit="return validate()">
+	<p>
+	<strong style="width:50px; display:block; float:left">Name:</strong>
+	<input id="notif_type" name="data[type]" type="text" style="width:190px" />
+	</p>
+	<p>
+	<strong style="width:50px; display:block; float:left">Text:</strong>
+	<textarea name="data[template]" style="width:190px"></textarea>
+	</p>
+	<p>
+	<input type="submit" value="Add Notification Template">
+	</p>
+	</form>
+	<br/>
+	<h3>Admin Notifications</h3>
+	<ul>
+	<?php foreach($notifications as $notification): ?>
+	<li>
+	<strong><?= $notification['NotificationType']['type']; ?></strong>
+	<p><?= $notification['NotificationType']['template']; ?></p>
+	</li>
+	<?php endforeach; ?>
+	</ul>
+</div>

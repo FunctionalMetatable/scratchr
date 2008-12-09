@@ -886,6 +886,11 @@ class UsersController extends AppController {
 		$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $user_id");
 		$comment_count = $this->Pcomment->findCount(array('Pcomment.user_id' => $user_id,'comment_visibility'=>'visible')) + $this->Gcomment->findCount(array('Gcomment.user_id' => $user_id,'comment_visibility'=>'visible'));
 		
+		if ($this->isAdmin()) {
+			$admin_notifications = $this->Notification->NotificationType->find('all', array('conditions' => array('is_admin' => 1), 'order' => 'type DESC'));
+			$this->set('admin_notifications', $admin_notifications);
+		}
+		
 		$this->set('comment_count', $comment_count);
 		$this->set('ignore_count', $ignore_count);
 		$this->set('karma_ratings', $karma_ratings);
@@ -1082,7 +1087,7 @@ class UsersController extends AppController {
 	/**
 	* sends notification to specified user
 	*/
-	function notify($user_id, $message = null, $flashit = true, $redirect = true) {
+	function notify($user_id) {
 		$this->exitOnInvalidArgCount(1);
 		$session_user_id = $this->getLoggedInUserID();
 		if (!$session_user_id)
@@ -1097,31 +1102,17 @@ class UsersController extends AppController {
 		if (empty($user)){
 		   $this->cakeError('error404');
 		}
-		if (!$this->isAdmin())
+		if (!$this->isAdmin()) {
 		      $this->__err;
-		
-		if($message==null)
-		{
-			$custom_message = $this->params['form']['custom_message'];
-		}
-		else
-		{
-			$custom_message = $message;
 		}
 		
-		$this->Notification->save(array('Notification'=>array("user_id"=>$user_id, "custom_message"=>$custom_message, "status"=>'unread')));
-
+		$type = $this->params['form']['type'];
+		$this->Notification->addNotification($type, $user_id, array());
+		
 		$user_record = $this->User->find("id = $user_id", "username");
 		$username = $user_record['User']['username'];
-
-		if($flashit)
-		{
-			$this->setFlash(___("Notification sent.", true), FLASH_NOTICE_KEY);
-		}
-		if($redirect)
-		{
-			$this->redirect('/users/'.$username);
-		}
+		$this->setFlash(___("Notification sent.", true), FLASH_NOTICE_KEY);
+		$this->redirect('/users/'.$username);
 	}
 
 
