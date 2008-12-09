@@ -97,7 +97,7 @@
 		?>
 		<?php endif;?>
 
-
+		
 		<?php if (!empty($user['country'])): ?>
 		<div id="user_country"><?php ___($user['country']);?></div>
 		<?php if ($isMe || $isAdmin) {
@@ -126,7 +126,7 @@ function langList($countries) {
 			"); }
 		?>
 		<?php endif;?>
-
+        
 		<?php if ($isAdmin) : ?>
 		<?php if(!empty($user['bmonth'])): ?>
 		<b><?php ___('Birth Date'); ?>:</b>
@@ -140,6 +140,7 @@ function langList($countries) {
 			");
 		?>
 		</td>
+       
 		<?php endif;?>
 
 		<?php if (!empty($user['byear'])): ?>
@@ -153,8 +154,14 @@ function langList($countries) {
 		?>
 		</td>
 		</tr>
+         
 		</table>
 		<?php endif;?>
+        
+        
+		<b><?php ___('Featured Project:')?></b><br />
+        <?php echo $featured_count?><br />
+        
 		<?php endif;?>
 	  </p>
 
