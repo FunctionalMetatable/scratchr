@@ -3,7 +3,7 @@ class UsersController extends AppController {
 
 	var $components = array('PaginationSecondary', 'Pagination','RequestHandler','FileUploader','Email');
 	var $helpers = array('Pagination', 'Ajax', 'Javascript');
-	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 
+	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject',
 						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable');
 
 
@@ -720,6 +720,16 @@ class UsersController extends AppController {
 		$user_status = $user_record['User']['status'];
 		if ($user_status == 'delbyadmin') 
 		$this->cakeError('error404');
+		//Find number of featured project for a particular user
+		$this->Project->bindFeatured();
+		$allUserProject = $this->Project->findAll("Project.user_id = $user_id");
+		$featured_count = 0;
+		foreach($allUserProject as $userProject)
+		{
+			if(isset($userProject['FeaturedProject']['id'] ))
+			$featured_count+=1;
+		}
+		$this->set('featured_count', $featured_count);
 		$this->Pagination->show = 15;
 		$this->Pagination->url = "/users/renderProjects/".$username . "/" . "projects";
 		// get all projects from user
