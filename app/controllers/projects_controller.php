@@ -1476,6 +1476,7 @@ class ProjectsController extends AppController {
 	 function censor() {
 		$this->autoRender = false;
 		$this->checkPermission('censor_projects');
+		$users_permission =$this->isAnyPermission();
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
 			$this->cakeError('error404');
@@ -1517,7 +1518,7 @@ class ProjectsController extends AppController {
 									array('project_id' => $pid));
 		}
 
-		if ($this->isAdmin() || ($project['Project']['user_id'] == $user_id))
+		if ($this->isAdmin() || ($project['Project']['user_id'] == $user_id) || isset($users_permission['censor_projects']))
 		{
 			$this->Project->censor($pid, $urlname, $this->isAdmin(), $user_id);
 			$this->setFlash(___("Project censored", true), FLASH_NOTICE_KEY);
@@ -1543,6 +1544,7 @@ class ProjectsController extends AppController {
 	 function uncensor() {
 		$this->autoRender = false;
 		$this->checkPermission('censor_projects');
+		$users_permission =$this->isAnyPermission();
 		$user_id = $this->getLoggedInUserID();
 		if (!$user_id)
 			$this->cakeError('error404');
