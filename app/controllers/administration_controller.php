@@ -2225,5 +2225,15 @@
 		$this->set('current_spread', $spread['KarmaSetting']['value']);
 		$this->set('current_offset', $offset['KarmaSetting']['value']);
 	}
+	
+	function notifications() {
+		if(!empty($this->data)) {
+			$this->data['is_admin'] = 1;
+			$this->Notification->NotificationType->save($this->data);
+		}
+		
+		$notifications = $this->Notification->NotificationType->find('all', array('conditions' => array('is_admin' => 1), 'order' => 'type DESC'));
+		$this->set('notifications', $notifications);
+	}
 }
 ?>

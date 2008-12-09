@@ -36,4 +36,9 @@
     <a href="/administration/predefined_tags"></a>
 	<h3><a href="<?php echo $html->url('/administration/predefined_tags')?>"> Admin Tags </a></h3>			
 	</div>
+	
+	<div class="gallerythumb clearme"> 
+    <a href="/administration/notifications"></a>
+	<h3><a href="<?php echo $html->url('/administration/notifications')?>"> Admin Notifications </a></h3>			
+	</div>
 </div>

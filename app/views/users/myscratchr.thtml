@@ -215,12 +215,35 @@ function langList($countries) {
 		<p><a onclick="document.getElementById('user_notify').style.display='block'; return false;" href="#"><?php ___('send notification'); ?></a></p>
 		<form id="user_notify" style="display:none" action="/users/notify/<?php e($user['id'])?>" method="post" enctype='multipart/form-data'>
 
-		<?php ___('Custom notification'); ?>: <input name='custom_message' size="18" type='text'/>
+		<?php ___('Custom notification'); ?>:
+		<br>
+		<script>
+		var templates = [];
+		templates['blank'] = '';
+		function showTemplate() {
+			var dropdownValue = $('admin_notifications')[$('admin_notifications').selectedIndex].value;
+			$('custom_message').value = templates[dropdownValue];
+		}
+		</script>
+		<select id="admin_notifications" name="type" onchange="showTemplate();" style="width:167px">
+		<option value="blank" selected="selected">&nbsp;</option>
+		<?php foreach($admin_notifications as $notification): ?>
+		<option value="<?= $notification['NotificationType']['type']; ?>">
+			<?= $notification['NotificationType']['type']; ?>
+		</option>
+		<script>
+		 templates['<?= $notification['NotificationType']['type']; ?>'] = '<?= $notification['NotificationType']['template']; ?>';
+		</script>
+		<?php endforeach; ?>
+		</select>
+		<br>
+		<textarea id="custom_message" readonly="true"></textarea>
 		<br>
 		<input value="<?php __('send'); ?>" type="submit" class="button">
+		<br>
 		</form>
 		<?php endif;?>
-
+		
 		<?php if ($isLoggedIn && !$isMe):?>
 			<div class="mod_title">
 				<?php if ($isMyFriend):?>
