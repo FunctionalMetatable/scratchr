@@ -1333,7 +1333,7 @@ class UsersController extends AppController {
 		if ($isMe || $this->isAdmin()) {
 			
 		} else {
-			$this->__err();
+			$this->cakeError('error404');
 		}
 		
 		if ($option == 'projects') {
@@ -1353,7 +1353,7 @@ class UsersController extends AppController {
 			list($order,$limit,$page) = $this->Pagination->init("Gcomment.user_id = $user_id AND Gcomment.comment_visibility = 'visible'", Array(), $options);
 			$final_comments = $this->Gcomment->findAll("Gcomment.user_id = $user_id AND Gcomment.comment_visibility = 'visible'", null, $order, $limit, $page);
 		}
-		
+		if(empty($final_comments))$this->cakeError('error404');
 		$final_comments = $this->set_comments($final_comments, $option);
 		$this->set('option', $option);
 		$this->set('final_comments', $final_comments);
