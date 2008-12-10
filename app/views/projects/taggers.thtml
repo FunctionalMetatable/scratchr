@@ -26,14 +26,14 @@
         	<strong>Tags:</strong><br />
 			<?php 
             	foreach($tag['Tags'] as $tag_name ):
-           		 $date = friendlyDate($tag_name['timestamp']);
+           		 $date = friendlyDate($tag_name['ProjectTag']['timestamp']);
             ?>
           			<a href="<?php echo $html->url('/tags/view/'.$tag_name['name'])?>"><?php echo $tag_name['name'];?></a>
 				  <small><?php
                   if ($date == "Now") {
                             echo $date;
                             } else {
-                                printf(___('%s ago', true), friendlyDate($tag_name['timestamp'])); 
+                                printf(___('%s ago', true), friendlyDate($tag_name['ProjectTag']['timestamp'])); 
                             }
                    ?>	
                    </small>	
