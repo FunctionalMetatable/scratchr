@@ -60,9 +60,20 @@ class NotificationsController extends AppController {
 	 */
 	function hide($nid) {
 		 $this->autoRender = false;
-		 $id = $nid;
-		 $this->Notification->id = $id;
+		 $user_id = $this->getLoggedInUserID();
+		 $this->Notification->recursive = -1;
+		 $notification = $this->Notification->find('first', array('fields' => array('to_user_id'),
+											'conditions' => array('id' => $nid)));
+		 if(empty($notification)) {
+			$this->cakeError('error404');
+		 }
+		 if($notification['Notification']['to_user_id'] != $user_id) {
+			$this->cakeError('error404');
+		 }
+		 
+		 $this->Notification->id = $nid;
 		 $this->Notification->saveField('status','READ');
+		 $this->Notification->clear_memcached_notifications($user_id, true, false);
 		 $this->render('hide_notification_ajax', 'ajax');
 	}
 	
@@ -77,6 +88,7 @@ class NotificationsController extends AppController {
 		 $this->Notification->updateAll(array('status' => '"READ"'), array('Notification.to_user_id' => $user_id));
 		 //friend request update
 		 $this->FriendRequest->updateAll(array('FriendRequest.status' => '"declined"'), array('to_id' => $user_id));
+		 $this->Notification->clear_memcached_notifications($user_id, true, true);
 		 $this->render('hide_all_notification_ajax', 'ajax');
 	}
 	
