@@ -84,5 +84,26 @@ class Notification extends AppModel {
 		return $notification_type['NotificationType']['id'];
 		
 	}
+	
+	/**
+	* clears notification/requests items stored in memcache
+	*
+	* @param int $user_id			specifies the user's id - who's notifications/requests need to be cleared
+	* @param bool $clear_notifs		true when we want to clear notification related items, false otherwise
+	* @param bool $clear_requests	true when we want to clear request related items, false otherwise
+	*/
+	function clear_memcached_notifications($user_id, $clear_notifs, $clear_requests) {
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211) or die ("Could not connect");
+		if($clear_notifs) {
+			$memcache->delete(MEMCACHE_PREFIX.'-notifications-'.$user_id);
+			$memcache->delete(MEMCACHE_PREFIX.'-notification_count'.-$user_id);
+		}
+		if($clear_requests) {
+			$memcache->delete(MEMCACHE_PREFIX.'-friend_requests-'.$user_id);
+			$memcache->delete(MEMCACHE_PREFIX.'-friend_count-'.$user_id);
+		}
+		$memcache->close();
+	}
 }
 ?>

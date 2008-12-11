@@ -52,7 +52,8 @@
 			<?php
 				$decline_link = "/requests/decline?type=friend&rid=$friend_request_id";
 				echo $ajax->link($html->image('delete.png'), '#', 
-				array("url"=>$decline_link, "update"=>"request_$id"), NULL, false); 
+				array("url"=>$decline_link, "update"=>"request_$id",
+				"complete"=>"updateNotificationsCounter()"), NULL, false); 
 			?>
 			<?php
 				echo $custom_message;

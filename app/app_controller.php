@@ -391,29 +391,23 @@ class AppController extends Controller {
 	 */
 	 function countNotifications()
 	 {
-	        $memcache = new Memcache;
-        	$memcache->connect('localhost', 11211) or die ("Could not connect");
-        	$prefix = MEMCACHE_PREFIX;
+		$memcache = new Memcache;
+		$memcache->connect('localhost', 11211) or die ("Could not connect");
+		$prefix = MEMCACHE_PREFIX;
 		$user_record = $this->Session->read('User');
 		$user_id = $user_record['id'];
-		$friend_count = $memcache->get("$prefix-friend_count-$user_id");
 		$total = 0;
+		$friend_count = $memcache->get("$prefix-friend_count-$user_id");
 		if ($friend_count == "") {
-			$friend_count_tmp = $this->FriendRequest->findCount(array("to_id"=>$user_id, "FriendRequest.status"=>"pending"));
-			$total += $friend_count_tmp;
-			$memcache->set("$prefix-friend_count-$user_id",$friend_count_tmp, false, 600) or die ("Failed to save data at the server");
-		} else {
-			$total += $friend_count;
+			$friend_count = $this->FriendRequest->findCount(array("to_id"=>$user_id, "FriendRequest.status"=>"pending"));
+			$memcache->set("$prefix-friend_count-$user_id", $friend_count, false, 600) or die ("Failed to save data at the server");
 		}
 		$notification_count = $memcache->get("$prefix-notification_count-$user_id");
-		$total = 0;
 		if ($notification_count == "") {
-			$notification_count_tmp = $this->Notification->findCount("to_user_id=$user_id AND status='UNREAD'");
-			$total += $notification_count_tmp;
-			$memcache->set("$prefix-notification_count-$user_id",$notification_count_tmp, false, 600) or die ("Failed to save data at the server");
-		} else {
-			$total += $notification_count;
+			$notification_count = $this->Notification->findCount("to_user_id=$user_id AND status='UNREAD'");
+			$memcache->set("$prefix-notification_count-$user_id", $notification_count, false, 600) or die ("Failed to save data at the server");
 		}
+		
 		$total = $friend_count + $notification_count;
 		$memcache->close();
 		return $total;
