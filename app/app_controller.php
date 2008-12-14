@@ -396,21 +396,15 @@ class AppController extends Controller {
 		$prefix = MEMCACHE_PREFIX;
 		$user_record = $this->Session->read('User');
 		$user_id = $user_record['id'];
-		$total = 0;
-		$friend_count = $memcache->get("$prefix-friend_count-$user_id");
-		if ($friend_count == "") {
-			$friend_count = $this->FriendRequest->findCount(array("to_id"=>$user_id, "FriendRequest.status"=>"pending"));
-			$memcache->set("$prefix-friend_count-$user_id", $friend_count, false, 600) or die ("Failed to save data at the server");
-		}
+		
 		$notification_count = $memcache->get("$prefix-notification_count-$user_id");
 		if ($notification_count == "") {
-			$notification_count = $this->Notification->findCount("to_user_id=$user_id AND status='UNREAD'");
+			$notification_count = $this->Notification->countAll($user_id);
 			$memcache->set("$prefix-notification_count-$user_id", $notification_count, false, 600) or die ("Failed to save data at the server");
 		}
-		
-		$total = $friend_count + $notification_count;
 		$memcache->close();
-		return $total;
+		
+		return intval($notification_count);
 	 }
 
 
