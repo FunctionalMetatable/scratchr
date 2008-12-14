@@ -313,82 +313,94 @@ class UsersController extends AppController {
 	  $this->pageTitle = "Scratch | Login";
 	  $errors = Array();
 	  
-	  if (!empty($this->params['form']['User'])) {
-		  $submit_username = $this->params['form']['User'];
-		  $submit_pwd = $this->params['form']['Pass'];
-		  $this->User->bindPermission();
-		  $users_permission = array();
-		  $user_record = $this->User->findByUsername($submit_username);
-		  
-		  if($user_record['User']['blocked_till'] <= date("Y-m-d H:i:s", time())) {
-		 	    $this->User->tempunblock($user_record['User']['id']);
-				$user_record['User']['status'] = 'normal';
-		  }
-		  
-		  foreach($user_record['Permission'] as $user_permission)
-		  {
-		  	$id = $user_permission['id'];
-			$url_name =$user_permission['url_name'];
-		  	$users_permission[$url_name] = 1;
-		  }
-		  
-		  $user_status = 'normal';
-		  
-		  if (!empty($user_record)) {
-			$user_status = $user_record['User']['status']; 
-		  }
-		 /* */
-		  
-		 
-		  
-		  
-		  
-		  if ($user_status == 'delbyadmin') {
-			array_push($errors, ___("Invalid username and password pair", true));
-			$this->setFlash(___("Invalid username and password pair", true), FLASH_ERROR_KEY);
-		  }  
-		  /* check user temporarily block or not */
-		  else if($user_record['User']['status'] == "blockedtemporarily") {
-		   	array_push($errors, ___("your account is temporarily blocked", true));
-		 	$this->setFlash(___("your account is temporarily blocked", true), FLASH_ERROR_KEY);
-		  }
-		  else if (!empty($user_record['User']['password']) && $user_record['User']['password'] == sha1($submit_pwd)) {
+		if (!empty($this->params['form']['User'])) {
+			$submit_username = $this->params['form']['User'];
+			$submit_pwd = $this->params['form']['Pass'];
+			$this->User->bindPermission();
+			$users_permission = array();
+			$user_record = $this->User->findByUsername($submit_username);
+			  
+			foreach($user_record['Permission'] as $user_permission) {
+				$id = $user_permission['id'];
+				$url_name =$user_permission['url_name'];
+				$users_permission[$url_name] = 1;
+			}
+
+			//determine user status
+			$user_status = 'normal';
+			if (!empty($user_record)) {
+				$user_status = $user_record['User']['status']; 
+				//if temp blocked user
+				if($user_status == 'locked'
+				&& $user_record['User']['blocked_till'] != '0000-00-00 00:00:00') {
+					//blocked_till time is in past
+					if($user_record['User']['blocked_till'] <= date("Y-m-d H:i:s", time())) {
+						//so unblock the user
+						$this->User->tempunblock($user_record['User']['id']);
+						//the user status is normal now
+						$user_status = 'normal';
+					}
+					//block till time is in future
+					else {
+						//user status is temp_blocked
+						$user_status == 'temp_blocked';
+					}
+				}
+			}
+			  
+			if ($user_status == 'delbyadmin') {
+				array_push($errors, ___("Invalid username and password pair", true));
+				$this->setFlash(___("Invalid username and password pair", true), FLASH_ERROR_KEY);
+			}
+			//temp blocked
+			else if($user_status == 'temp_blocked') {
+				array_push($errors, ___("your account is temporarily blocked", true));
+				$this->setFlash(___("your account is temporarily blocked", true), FLASH_ERROR_KEY);
+			}
+			//permanent lock
+			else if($user_status == 'locked') {
+				
+			}
+			else if (!empty($user_record['User']['password']) 
+			&& $user_record['User']['password'] == sha1($submit_pwd)) {
 				$this->Session->write('User', $user_record['User']);
 				$this->Session->write('UsersPermission', $users_permission);
 				$userID = $user_record['User']['id'];
 				$statID = $this->UserStat->field("id", "user_id = $userID");
 				$time = date("Y-m-d G:i:s");
 				if ($statID) {
-				  $this->UserStat->id = $statID;
-				  $this->UserStat->saveField("lastin",$time);
-				} else {
-				  $this->UserStat->save(array('UserStat'=>array("user_id"=>$userID, "lastin"=>$time)));
+					$this->UserStat->id = $statID;
+					$this->UserStat->saveField("lastin",$time);
+				}
+				else {
+					$this->UserStat->save(array('UserStat'=>array("user_id"=>$userID, "lastin"=>$time)));
 				}
 
-			  //Now, let's figure out where to redirect this person to.
-			 if($user_record['User']['email']=="" || $user_record['User']['email']=="rather-not-say@scratchr.org"){
+				//Now, let's figure out where to redirect this person to.
+				if($user_record['User']['email']=="" || $user_record['User']['email']=="rather-not-say@scratchr.org"){
 					$this->redirect('/users/set_email/'.$user_record['User']['urlname']);
-			 }
-			if(isset($_REQUEST['refer'])&& $_REQUEST['refer']!="/"){
-				$this->redirect($_REQUEST['refer']);
+				}
+				else if(isset($_REQUEST['refer'])&& $_REQUEST['refer']!="/"){
+					$this->redirect($_REQUEST['refer']);
+				}
+				else {
+				  $this->redirect('/users/'.$user_record['User']['urlname']);
+				}
 			}
-			else{
-			  $this->redirect('/users/'.$user_record['User']['urlname']);
+			else {
+				array_push($errors, ___("Invalid username and password pair", true));
+				$this->setFlash(___("Invalid username and password pair", true), FLASH_ERROR_KEY);
 			}
-		  } else {
-			array_push($errors, ___("Invalid username and password pair", true));
-			$this->setFlash(___("Invalid username and password pair", true), FLASH_ERROR_KEY);
-		  }
-	  }
+		}
 	  
-	  if (empty($errors)) {
+		if (empty($errors)) {
 			$isError = false;
-	  } else {
+		} else {
 			$isError = true;
-	  }
+		}
 	  
-	  $this->set('errors', $errors);
-	  $this->set('isLoginError', $isError);
+		$this->set('errors', $errors);
+		$this->set('isLoginError', $isError);
 	}
 	
 	/*************set_email******/
