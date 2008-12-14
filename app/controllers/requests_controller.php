@@ -118,7 +118,7 @@ Class RequestsController extends AppController {
 				exit;
 			
 			$this->FriendRequest->saveField('status', 'declined');
-			$this->Notification->clear_memcached_notifications($session_UID, false, true);
+			$this->Notification->clear_memcached_notifications($session_UID);
 			___("Message read and deleted");
 		}		
 		exit;

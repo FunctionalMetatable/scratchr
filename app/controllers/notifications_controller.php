@@ -36,18 +36,11 @@ class NotificationsController extends AppController {
 		
 
     	$notifications = $memcache->get("$prefix-notifications-$user_id");
-		if ( $notifications == "" ) {
+		if ($notifications == "") {
 			$notifications = $this->Notification->getNotifications($user_id);
 			$memcache->set("$prefix-notifications-$user_id", $notifications, false, 600) or die ("Failed to save data at the server");
 		}
 		$this->set('notifications', $notifications);
-		
-		$friend_requests = $memcache->get("$prefix-friend_requests-$user_id");
-		if ( $friend_requests == "" ) {
-			$friend_requests = $this->FriendRequest->findAll(array("to_id" => $user_id, "FriendRequest.status" => "pending"));
-			$memcache->set("$prefix-friend_requests-$user_id", $friend_requests, false, 600) or die ("Failed to save data at the server");
-		}
-		$this->set('friend_requests', $friend_requests);
 		$memcache->close();
 
 		$this->set('title', "Scratch | Messages and notifications");
@@ -73,7 +66,7 @@ class NotificationsController extends AppController {
 		 
 		 $this->Notification->id = $nid;
 		 $this->Notification->saveField('status','READ');
-		 $this->Notification->clear_memcached_notifications($user_id, true, false);
+		 $this->Notification->clear_memcached_notifications($user_id);
 		 $this->render('hide_notification_ajax', 'ajax');
 	}
 	
@@ -88,7 +81,7 @@ class NotificationsController extends AppController {
 		 $this->Notification->updateAll(array('status' => '"READ"'), array('Notification.to_user_id' => $user_id));
 		 //friend request update
 		 $this->FriendRequest->updateAll(array('FriendRequest.status' => '"declined"'), array('to_id' => $user_id));
-		 $this->Notification->clear_memcached_notifications($user_id, true, true);
+		 $this->Notification->clear_memcached_notifications($user_id);
 		 $this->render('hide_all_notification_ajax', 'ajax');
 	}
 	
