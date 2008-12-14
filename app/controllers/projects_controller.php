@@ -867,17 +867,18 @@ class ProjectsController extends AppController {
 				
 				//if the number of flags on this project exceeds the current maximum, automatically censor this project
 				if ($flags >= NUM_MAX_PROJECT_FLAGS && $project_status == 'notreviewed') {
-					$msg = "Project *automatically censored* because it reached the maximum number of flags.\n";
-					$msg .= "user $flaggername ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid";
-					$subject= "Project '$pname' censored";
-					
-					$this->notify('project_removed_auto', $creator['User']['id'],
-									array('project_id' => $pid));
-					$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, 'scratch-feedback@media.mit.edu');
-					$this->Project->censor($pid, $urlname, $this->isAdmin(), $user_id);
-					
 					//if the project is not censored already
 					if($project['Project']['proj_visibility'] == 'visible') {
+						$this->Project->censor($pid, $urlname, $this->isAdmin(), $user_id);
+						
+						$msg = "Project *automatically censored* because it reached the maximum number of flags.\n";
+						$msg .= "user $flaggername ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid";
+						$subject= "Project '$pname' censored";
+						$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, 'scratch-feedback@media.mit.edu');
+						
+						$this->notify('project_removed_auto', $creator['User']['id'],
+										array('project_id' => $pid));
+						
 						//if the censored project is created N mins ago then temp block the user
 						$block_time = date('Y-m-d H:i:s', strtotime('-' . BLOCK_CHECK_INTERVAL, time()));
 						if($project['Project']['created'] >= $block_time) {

@@ -143,19 +143,19 @@ Class User extends AppModel
     }
 	
 	function tempblock($id) {
+		$data = array();
 		$blocked_till = date('Y-m-d H:i:s', strtotime('+'. TEMP_BLOCK_INTERVAL, time()));
-		$data['User']['blocked_till'] = $blocked_till;
-		$data['User']['status'] = 'blockedtemporarily';
 		$data['User']['id'] = $id;
+		$data['User']['blocked_till'] = $blocked_till;
+		$data['User']['status'] = 'locked';
 		return $this->save($data);
 	}
 	
 	function tempunblock($id) {
-		$this->id=$id;
-		$data['User']['blocked_till']='0000-00-00 00:00';
-		$data['User']['status']='normal';
-		$data['User']['id']=$id;
-		return $this->save($data);
+		return $this->updateAll(
+			array('blocked_till' => '"0000-00-00 00:00"', 'status' => '"normal"'),
+			array('id' => $id)
+		);
 	}
 }
 ?>
