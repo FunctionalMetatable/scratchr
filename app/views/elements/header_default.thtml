@@ -1,4 +1,8 @@
-
+<?php if(isset($isFeatured )&& isset($image_name )):?>
+<?php if($isFeatured ):?>
+<?php echo $html->image('large_ribbon/'.$image_name,array('class'=>'project_ribbon'));?>
+<?php //echo $html->image('php_thumb/phpThumb.php?src=../project_ribbon.gif&fltr[]=wmt|'.$featured_on.'|10|50x40|ffffff|arial.ttf|100|0|315&f=gif', array('class'=>'project_ribbon','border'=>'0')); ?>
+<?php endif;endif;?>
   <div id="header" class="clearme">
     <div id="logo">
 <?php

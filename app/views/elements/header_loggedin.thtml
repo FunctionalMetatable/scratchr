@@ -1,3 +1,8 @@
+<?php if(isset($isFeatured )&& isset($image_name )):?>
+<?php if($isFeatured ):?>
+<?php echo $html->image('large_ribbon/'.$image_name,array('class'=>'project_ribbon'));?>
+
+<?php endif;endif;?>
   <div id="header" class="clearme">
     <div id="logo">
 <?php

@@ -1,7 +1,7 @@
 <?php
 class UsersController extends AppController {
 
-	var $components = array('PaginationSecondary', 'Pagination','RequestHandler','FileUploader','Email');
+	var $components = array('PaginationSecondary', 'Pagination','RequestHandler','FileUploader','Email','Thumb');
 	var $helpers = array('Pagination', 'Ajax', 'Javascript');
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject',
 						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable');
@@ -736,11 +736,24 @@ class UsersController extends AppController {
 		$this->Project->bindFeatured();
 		$allUserProject = $this->Project->findAll("Project.user_id = $user_id");
 		$featured_count = 0;
+		$featureProlectList = array();
+		$image_name='';
 		foreach($allUserProject as $userProject)
 		{
 			if(isset($userProject['FeaturedProject']['id'] ))
-			$featured_count+=1;
+			{
+				//array_push($featureProlectList,$userProject['Project']['id']);
+				$text =$this->convertDate($userProject['FeaturedProject']['timestamp']);
+			 	$image_name =$this->ribbonImageName($userProject['FeaturedProject']['timestamp']);
+			 	$this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='30x20',125,125);
+				$featured_count+=1;
+				$id = $userProject['Project']['id'];
+				$image_name =$image_name; 
+				$featureProlectList[$id] = $image_name;
+			}
 		}
+		$this->set('featureProlectList',$featureProlectList);
+		
 		$this->set('featured_count', $featured_count);
 		$this->Pagination->show = 15;
 		$this->Pagination->url = "/users/renderProjects/".$username . "/" . "projects";
