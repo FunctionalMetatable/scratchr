@@ -1,3 +1,4 @@
+
 /*-------------Standard Reusable Classes-----------*/ 
 
 .standard_floating_div {
@@ -2114,3 +2115,22 @@ div.notification  a img{
 	margin-left:7px;
 }
 /*********ajax indicator*********/
+
+/******showing ribbon on feature projects****/
+.ribbon{
+margin-left:49px !important;
+border:none !important;
+position:absolute;
+opacity:0.9;
+}
+
+.project_ribbon{
+right:0;
+margin:0;
+padding:0;
+top:0;
+border:none !important;
+position:absolute;
+opacity:0.9;
+}
+/******showing ribbon on feature projects****/

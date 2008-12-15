@@ -3,7 +3,7 @@
 class ProjectsController extends AppController {
 
     var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject');
-    var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary');
+    var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
     var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
 
     /**
@@ -1806,6 +1806,20 @@ class ProjectsController extends AppController {
 			$isLocked = true;
 		}
 		
+		/*Generate ribbon thumbnail for featured project
+		@ author Ashok Gond
+		*/
+		$isFeaturedProject = $this->FeaturedProject->hasAny("project_id = $pid");
+		if($isFeaturedProject)
+		{
+			$timestamp = $this->FeaturedProject->field('timestamp',"project_id = $pid");
+			
+			 $text =$this->convertDate($timestamp);
+			 $image_name =$this->ribbonImageName($timestamp);
+			 $this->Thumb->generateThumb($ribbon_image='project_ribbon.gif',$text,$dir="large_ribbon",$image_name,$dimension='50x40',125,125);
+			 $this->set('image_name',$image_name);
+		}//if $isFeaturedProject
+		
 		//sets the tags relating to this project
 		$project_tags = $this->ProjectTag->findAll("project_id = $project_id");
 		
@@ -2717,17 +2731,19 @@ class ProjectsController extends AppController {
 		}
 		
 		if ($feature_admin_id == 0) {
-			$feature_time = "";
+			$feature_time = "";$feature_on = "";
 		} else {
 			$feature_timestamp = $final_flags['ProjectFlag']['feature_timestamp'];
 			$feature_time = stampToDate($feature_timestamp);
+			$feature_on = $feature_timestamp;
 		}
 		
 		if ($overload_time == "") {
 		} else {
 			$feature_time = stampToDate($overload_time);
+			$feature_on = $overload_time;
 		}
-		
+		$this->set('feature_on', $feature_on);
 		$this->set('feature_time', $feature_time);
 		$this->set('admin_time', $actual_time);
 	}

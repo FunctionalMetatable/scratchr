@@ -479,7 +479,7 @@ function langList($countries) {
 			<h3><?php if ($isMe) ___("My Projects"); else {printf(___("%s's Projects", true), $user['username']);} ?></h3>
 		</div>
 		<?php
-			e($this->renderElement('user_projects', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $projects, 'feed_link'=>$feed_link)));
+			e($this->renderElement('user_projects', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $projects, 'feed_link'=>$feed_link,'featureProlectList'=>$featureProlectList)));
 		?>
 	</div>
 	</div>

@@ -21,6 +21,7 @@
 		</a>
 		</div>
 		<div class="mystuff_projects">
+     
 		<?php foreach($data as $project): ?>
 			<?php
 				$pid = $project['Project']['id'];
@@ -32,12 +33,22 @@
 				if (strlen($project_name) >= 17) {
 					$project_name = substr($project_name,0,17) . "&#0133;";
 			}
+			
+			
 			?>
 
 		<div class="mystuff_thumb"> 
+		<?php 
+		if(array_key_exists($pid,$featureProlectList)):?>
+		<a href="<?php echo $html->url($project_url)?>">
+		<?php echo $html->image('small_ribbon/'.$featureProlectList[$pid],array('class'=>'ribbon'));?>
+		</a>
+		<?php endif?>
 		<a href="<?php echo $html->url($project_url)?>">
 		<?php echo $html->image($project_thumbnail,array('title'=>htmlspecialchars($project['Project']['name']),'alt'=>htmlspecialchars($project['Project']['name']),'width'=>'148','height'=>'111'))?>
 		</a>
+		
+		
 		<h6><a href="<?php e($html->url($project_url)); ?>"><?php e($project_name)?></a></h6>
 		<p><?php ___('Comments'); ?>: <?php e($project_totalComments)?></p>
 

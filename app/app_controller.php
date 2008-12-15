@@ -5,7 +5,7 @@
  */
 class AppController extends Controller {
 
-    var $helpers = array("head");
+    var $helpers = array("head",'Time');
     var $uses = array('AdminTag', 'Relationship', 'Project', 'Pcomment', 'Gcomment', 'Gallery', 'GalleryProject', 'GalleryMembership', 'BlockedUser', 'Notification', 'User', 'Announcement', 'BlockedIp', 'FriendRequest');
 	var $components = array('RequestHandler', 'Cookie', 'Session');
     var $layout = 'scratchr_default';
@@ -150,6 +150,20 @@ class AppController extends Controller {
 		$this->set('isBanned', $isBanned);
 		$this->Session->delete('FLASH_NOTICE_KEY');
 		$this->Session->delete('FLASH_ERROR_KEY');
+	}
+	/**
+	* Sets date and name for showing ribbon on featred project
+	**/
+	function convertDate($original=null)
+	{
+		$actual_date = date('M Y', strtotime($original));
+		return $actual_date;
+	}
+	
+	function ribbonImageName($original=null)
+	{
+		$actual_date = date('M_Y', strtotime($original));
+		return $actual_date.'.gif';
 	}
 	
 	/**
