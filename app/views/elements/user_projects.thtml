@@ -39,11 +39,12 @@
 
 		<div class="mystuff_thumb"> 
 		<?php 
+		if(SHOW_RIBBON ==1):
 		if(array_key_exists($pid,$featureProlectList)):?>
 		<a href="<?php echo $html->url($project_url)?>">
 		<?php echo $html->image('small_ribbon/'.$featureProlectList[$pid],array('class'=>'ribbon'));?>
 		</a>
-		<?php endif?>
+		<?php endif;endif;?>
 		<a href="<?php echo $html->url($project_url)?>">
 		<?php echo $html->image($project_thumbnail,array('title'=>htmlspecialchars($project['Project']['name']),'alt'=>htmlspecialchars($project['Project']['name']),'width'=>'148','height'=>'111'))?>
 		</a>

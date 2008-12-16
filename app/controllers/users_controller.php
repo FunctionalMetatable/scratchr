@@ -742,14 +742,16 @@ class UsersController extends AppController {
 		{
 			if(isset($userProject['FeaturedProject']['id'] ))
 			{
-				//array_push($featureProlectList,$userProject['Project']['id']);
+				$featured_count+=1;
+				if(SHOW_RIBBON ==1):
 				$text =$this->convertDate($userProject['FeaturedProject']['timestamp']);
 			 	$image_name =$this->ribbonImageName($userProject['FeaturedProject']['timestamp']);
 			 	$this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='30x20',125,125);
-				$featured_count+=1;
+				
 				$id = $userProject['Project']['id'];
 				$image_name =$image_name; 
 				$featureProlectList[$id] = $image_name;
+				endif;
 			}
 		}
 		$this->set('featureProlectList',$featureProlectList);
