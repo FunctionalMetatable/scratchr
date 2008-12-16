@@ -343,7 +343,7 @@ class UsersController extends AppController {
 					//block till time is in future
 					else {
 						//user status is temp_blocked
-						$user_status == 'temp_blocked';
+						$user_status = 'temp_blocked';
 					}
 				}
 			}
@@ -354,8 +354,8 @@ class UsersController extends AppController {
 			}
 			//temp blocked
 			else if($user_status == 'temp_blocked') {
-				array_push($errors, ___("your account is temporarily blocked", true));
-				$this->setFlash(___("your account is temporarily blocked", true), FLASH_ERROR_KEY);
+				array_push($errors, ___("Your account is temporarily blocked", true));
+				$this->setFlash(___("Your account is temporarily blocked", true), FLASH_ERROR_KEY);
 			}
 			//permanent lock
 			else if($user_status == 'locked') {
@@ -398,7 +398,7 @@ class UsersController extends AppController {
 		} else {
 			$isError = true;
 		}
-	  
+		
 		$this->set('errors', $errors);
 		$this->set('isLoginError', $isError);
 	}
