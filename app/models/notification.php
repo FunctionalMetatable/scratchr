@@ -44,7 +44,7 @@ class Notification extends AppModel {
 			.' WHERE Request.to_id = '.$user_id.' AND Request.status = "pending"';
 		
 		$query = 'SELECT * FROM ( ' . $notification_query . ' ) As Notif'
-				.' UNION ( ' . $request_query . ' ) ORDER BY `created` DESC';
+				.' UNION ' . $request_query . ' ORDER BY `created` DESC';
 		
 		return $this->query($query);
 	}
