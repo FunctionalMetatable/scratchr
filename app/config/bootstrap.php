@@ -62,6 +62,10 @@ $this->params['webservices']
  define("NUM_MYSCRATCHR_PROJECTS", 0);
  define("NUM_MYSCRATCHR_FRIENDS", 6);
  define("MAX_SHARIABLES", 3);
+ /**
+ Show ribbon on featured project. Value 1 means fetured is active and 0 means deactive.
+ */
+ define("SHOW_RIBBON", 1);
 
  /**
   * sets the time interval (hrs) in which

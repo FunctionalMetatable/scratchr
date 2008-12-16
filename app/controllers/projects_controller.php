@@ -1809,6 +1809,7 @@ class ProjectsController extends AppController {
 		/*Generate ribbon thumbnail for featured project
 		@ author Ashok Gond
 		*/
+		if(SHOW_RIBBON ==1):
 		$isFeaturedProject = $this->FeaturedProject->hasAny("project_id = $pid");
 		if($isFeaturedProject)
 		{
@@ -1819,7 +1820,7 @@ class ProjectsController extends AppController {
 			 $this->Thumb->generateThumb($ribbon_image='project_ribbon.gif',$text,$dir="large_ribbon",$image_name,$dimension='50x40',125,125);
 			 $this->set('image_name',$image_name);
 		}//if $isFeaturedProject
-		
+		endif;
 		//sets the tags relating to this project
 		$project_tags = $this->ProjectTag->findAll("project_id = $project_id");
 		
