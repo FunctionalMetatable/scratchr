@@ -221,7 +221,7 @@ Class HomeController extends AppController {
         } else {
 		    $days = 10;
 	}
-        return $this->Project->findAll("Project.created > now() - interval $days  day AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.remixes > 0 AND Project.status <> 'notsafe'", NULL, "Project.remixes DESC", NUM_TOP_REMIXED, 1, NULL, $this->getContentStatus());
+        return $this->Project->findAll("Project.created > now() - interval $days  day AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.realremixes > 0 AND Project.status <> 'notsafe'", NULL, "Project.realremixes DESC", NUM_TOP_REMIXED, 1, NULL, $this->getContentStatus());
     }
 
     function __getTopLovedProjects() {
