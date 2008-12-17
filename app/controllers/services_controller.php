@@ -337,9 +337,9 @@ Class ServicesController extends Controller {
 	function extracthistory($project_shared_id, $user_shared_id, $newproject) {
 //		$this->log("extracting for $project_shared_id, $user_shared_id");
 		$ppath = '/llk/scratchr/production/app/webroot/static/projects/';
-		//$ppath = 'z:/scratchr/app/webroot/static/projects/';
+		//$ppath = 'e:/scratchr/app/webroot/static/projects/';
 		$jar = "/llk/scratchr/production/app/misc/historyextraction/ScratchAnalyzer.jar";
-		//$jar = "z:/scratchr/app/misc/historyextraction/ScratchAnalyzer.jar";
+		//$jar = "e:/scratchr/app/misc/historyextraction/ScratchAnalyzer.jar";
 		$jar = escapeshellcmd($jar);
         $powner = $this->User->findById($user_shared_id);
 		$sbfilepath =  $ppath . $powner['User']['username'] . "/" . $project_shared_id . ".sb";		
@@ -438,7 +438,13 @@ Class ServicesController extends Controller {
 					if (empty($current_related_project)) {
 					} else {
 						$total_remixes = $current_related_project['Project']['remixes'] + 1;
+						
 						$this->Project->saveField("remixes", $total_remixes);
+						if($current_related_project['Project']['user_id'] !=$user_shared_id)
+						{
+							$total_realremixes = $current_related_project['Project']['realremixes'] + 1;
+							$this->Project->saveField("realremixes", $total_realremixes);
+						}
 					}
 				} else {
 					// echo"\n<br>!COULDNTSAVE!:";
