@@ -166,7 +166,7 @@ define('TEMP_BLOCK_INTERVAL', '90 minutes');
  /***
 * Define filtered site
 **/
-define('FILTERED_HOST', 'devscratch.media.mit.edu');
+define('FILTERED_HOST', 'filtered.scratch.mit.edu');
 
  /**
   * Returns theme url for html link destination
