@@ -347,7 +347,6 @@ class UsersController extends AppController {
 					}
 				}
 			}
-			  
 			if ($user_status == 'delbyadmin') {
 				array_push($errors, ___("Invalid username and password pair", true));
 				$this->setFlash(___("Invalid username and password pair", true), FLASH_ERROR_KEY);
@@ -359,7 +358,8 @@ class UsersController extends AppController {
 			}
 			//permanent lock
 			else if($user_status == 'locked') {
-				
+				array_push($errors, ___("Your account is permanently blocked", true));
+				$this->setFlash(___("Your account is permanently blocked", true), FLASH_ERROR_KEY);				
 			}
 			else if (!empty($user_record['User']['password']) 
 			&& $user_record['User']['password'] == sha1($submit_pwd)) {
