@@ -330,36 +330,11 @@ class UsersController extends AppController {
 			$user_status = 'normal';
 			if (!empty($user_record)) {
 				$user_status = $user_record['User']['status']; 
-				//if temp blocked user
-				if($user_status == 'locked'
-				&& $user_record['User']['blocked_till'] != '0000-00-00 00:00:00') {
-					//blocked_till time is in past
-					if($user_record['User']['blocked_till'] <= date("Y-m-d H:i:s", time())) {
-						//so unblock the user
-						$this->User->tempunblock($user_record['User']['id']);
-						//the user status is normal now
-						$user_status = 'normal';
-					}
-					//block till time is in future
-					else {
-						//user status is temp_blocked
-						$user_status = 'temp_blocked';
-					}
-				}
 			}
+			
 			if ($user_status == 'delbyadmin') {
 				array_push($errors, ___("Invalid username and password pair", true));
 				$this->setFlash(___("Invalid username and password pair", true), FLASH_ERROR_KEY);
-			}
-			//temp blocked
-			else if($user_status == 'temp_blocked') {
-				array_push($errors, ___("Your account is temporarily blocked", true));
-				$this->setFlash(___("Your account is temporarily blocked", true), FLASH_ERROR_KEY);
-			}
-			//permanent lock
-			else if($user_status == 'locked') {
-				array_push($errors, ___("Your account is permanently blocked", true));
-				$this->setFlash(___("Your account is permanently blocked", true), FLASH_ERROR_KEY);				
 			}
 			else if (!empty($user_record['User']['password']) 
 			&& $user_record['User']['password'] == sha1($submit_pwd)) {
