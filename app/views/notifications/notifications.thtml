@@ -26,7 +26,7 @@
 					$notification['template']
 				);
 		if(!empty($notification['extra'])) {
-			$message = vsprintf($message, explode('|', $notification['Notification']['extra']));
+			$message = vsprintf($message, explode('|', $notification['extra']));
 		}
 		?>
 		<div id='notification_<?php echo $id; ?>' class="notification" style='display:block;' align='left'>
@@ -74,7 +74,7 @@
 		<?php e($this->renderElement("gnotify")); ?>
     </div>
 	<br/>
-	<p><strong><em>You can check your old notifications <a href="/oldnotifications">here</a>. Old notifications are available till Dec 16th.</em></strong></p>
+	<p><strong><em>You can check your old notifications <a href="/oldnotifications">here</a>. Old notifications are available till Dec 31st.</em></strong></p>
 	<br/>
 </div>
 </div>
