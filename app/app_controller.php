@@ -95,13 +95,27 @@ class AppController extends Controller {
 			$user_id = $this->getLoggedInUserID();
 			$user = $this->User->find("User.id = $user_id");
 			
+			$isLocked = false;
+			
+			//locked user
 			if (isset($user['User']['status']) && $user['User']['status'] == 'locked') {
-				$isLocked = true;
-			} else {
-				$isLocked = false;
+				//if temp blocked user
+				if($user['User']['blocked_till'] != '0000-00-00 00:00:00') {
+					//blocked_till time is in past
+					if($user['User']['blocked_till'] <= date("Y-m-d H:i:s", time())) {
+						//so unblock the user
+						$this->User->tempunblock($user['User']['id']);
+					}
+					//block time is in future..
+					else {
+						$isLocked = true;
+					}
+				}
+				//permanent block..
+				else {
+					$isLocked = true;
+				}
 			}
-			
-			
 			
 			if ($isLocked) {
 				$isBanned = true;
