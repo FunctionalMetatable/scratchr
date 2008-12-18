@@ -52,14 +52,11 @@ Class TagsController extends AppController {
             $this->cakeError('error404');
 		$content_status = $this->getContentStatus();
 		
-		$this->Pagination->show = 10;
+		$this->Pagination->show = 1;
 		$tag_id = $tag['Tag']['id'];
-		$criteria = Array("tag_id" => $tag['Tag']['id']);
-		$criteria = Array("ProjectTag.tag_id = $tag_id");
 		$final_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
         $count_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id";
 		
-		$distinct_criteria = "DISTINCT project_id, tag_id, user_id"; 
 		if ($content_status == "safe") {
 			$final_criteria = "Project.status = 'safe' AND " . $final_criteria; 
 			$count_criteria = "Project.status = 'safe' AND " . $count_criteria; 
@@ -87,7 +84,11 @@ Class TagsController extends AppController {
 			$options = Array("sortBy"=>"created", "sortByClass" => "Project", 
 						"direction"=> "DESC", "url"=>"/tags/view/" . $tag_name . "/" . $option);
 		}
-		$final_count = $this->ProjectTag->findCount($count_criteria);
+		
+		 $final_count_result=$this->Tag->query("SELECT COUNT(DISTINCT(project_id)) AS `count` FROM `project_tags` AS `ProjectTag` LEFT JOIN `users` AS `User` ON (`ProjectTag`.`user_id` = `User`.`id`) LEFT JOIN `projects` AS `Project` ON (`ProjectTag`.`project_id` = `Project`.`id`) WHERE ".$count_criteria);
+		
+		 $final_count=$final_count_result[0][0]['count'];
+				
 		list($order,$limit,$page) = $this->Pagination->init($this->Project->addVisCheck($final_criteria), Array(), $options, $final_count);
 		$tag_projects = $this->ProjectTag->findAll($final_criteria, null, $order, $limit, $page, 3);
 			
