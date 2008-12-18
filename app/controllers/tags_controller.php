@@ -52,7 +52,7 @@ Class TagsController extends AppController {
             $this->cakeError('error404');
 		$content_status = $this->getContentStatus();
 		
-		$this->Pagination->show = 1;
+		$this->Pagination->show = 10;
 		$tag_id = $tag['Tag']['id'];
 		$final_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
         $count_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id";
