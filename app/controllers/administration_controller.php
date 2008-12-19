@@ -2232,7 +2232,7 @@
 			$this->Notification->NotificationType->save($this->data);
 		}
 		
-		$notifications = $this->Notification->NotificationType->find('all', array('conditions' => array('is_admin' => 1), 'order' => 'type DESC'));
+		$notifications = $this->Notification->NotificationType->find('all', array('conditions' => array('is_admin' => 1), 'order' => 'type ASC'));
 		$this->set('notifications', $notifications);
 	}
 }

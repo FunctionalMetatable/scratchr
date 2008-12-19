@@ -889,7 +889,7 @@ class UsersController extends AppController {
 		$comment_count = $this->Pcomment->findCount(array('Pcomment.user_id' => $user_id,'comment_visibility'=>'visible')) + $this->Gcomment->findCount(array('Gcomment.user_id' => $user_id,'comment_visibility'=>'visible'));
 		
 		if ($this->isAdmin()) {
-			$admin_notifications = $this->Notification->NotificationType->find('all', array('conditions' => array('is_admin' => 1), 'order' => 'type DESC'));
+			$admin_notifications = $this->Notification->NotificationType->find('all', array('conditions' => array('is_admin' => 1), 'order' => 'type ASC'));
 			$this->set('admin_notifications', $admin_notifications);
 		}
 		
