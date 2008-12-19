@@ -18,50 +18,76 @@ class Notification extends AppModel {
 	* @param int $user_id	specifies the id of the user
 	* @return mixed	all notifications set to a user
 	*/
-	function getNotifications($user_id) {
-		$notification_query = 
-			'SELECT `Notification`.`id`, `Notification`.`from_user_name`, `Notification`.`created`,'
-			.' `Notification`.`to_user_id`,  `Notification`.`project_id`, `Notification`.`project_owner_name`,'
-			.' `Notification`.`gallery_id`, `Notification`.`extra`, `Notification`.`notification_type_id`,'
-			.' `Notification`.`status`, `NotificationType`.`id` type_id, `NotificationType`.`type`,'
-			.' `NotificationType`.`template`, `NotificationType`.`is_admin`,'
-			.' IFNULL(Project.user_id, 0) project_owner_id, IFNULL(Project.name, "") project_name,'
-			.' IFNULL(Gallery.user_id, 0) gallery_owner_id, IFNULL(Gallery.name, "") gallery_name,'
-			.' "notification" notif_type'
-			.' FROM `notifications` AS `Notification`'
-			.' LEFT JOIN `notification_types` AS `NotificationType` ON'
-			.' (`Notification`.`notification_type_id` = `NotificationType`.`id`)'
-			.' LEFT JOIN `projects` AS `Project` ON (`Notification`.`project_id` = `Project`.`id`)'
-			.' LEFT JOIN `galleries` AS `Gallery` ON (`Notification`.`gallery_id` = `Gallery`.`id`)'
-			.' WHERE `Notification`.`to_user_id` = '.$user_id.' AND `Notification`.`status` = "UNREAD"';
-		
-		$request_query = 
-			'SELECT `Request`.`id`, `User`.`username` `from_user_name`, `Request`.`created_at` `created`,'
-			.' `Request`.`to_id` `to_user_id`, NULL, NULL, NULL, NULL, NULL,'
-			.' `Request`.`status`,  NULL,  NULL,  NULL,  NULL, 0, NULL,  0, NULL,'
-			.' "request" notif_type'
-			.' FROM friend_requests as Request LEFT JOIN users as User ON User.id = Request.user_id'
-			.' WHERE Request.to_id = '.$user_id.' AND Request.status = "pending"';
-		
-		$query = 'SELECT * FROM ( ' . $notification_query . ' ) As Notif'
-				.' UNION ' . $request_query . ' ORDER BY `created` DESC';
-		
-		return $this->query($query);
+	function getNotifications($user_id, $page, $limit) {
+		$this->mc_connect();
+		$notifications = false;
+		//try collecting first page from memcache
+		if($page==1) {
+			$notifications = $this->mc_get('notifications_page1', $user_id);
+		}
+		if ($notifications == false) {
+			$offset = ($page -1) * $limit;
+			$notification_query = 
+				'SELECT `Notification`.`id`, `Notification`.`from_user_name`, `Notification`.`created`,'
+				.' `Notification`.`to_user_id`,  `Notification`.`project_id`, `Notification`.`project_owner_name`,'
+				.' `Notification`.`gallery_id`, `Notification`.`extra`, `Notification`.`notification_type_id`,'
+				.' `Notification`.`status`, `NotificationType`.`id` type_id, `NotificationType`.`type`,'
+				.' `NotificationType`.`template`, `NotificationType`.`is_admin`,'
+				.' IFNULL(Project.user_id, 0) project_owner_id, IFNULL(Project.name, "") project_name,'
+				.' IFNULL(Gallery.user_id, 0) gallery_owner_id, IFNULL(Gallery.name, "") gallery_name,'
+				.' "notification" notif_type'
+				.' FROM `notifications` AS `Notification`'
+				.' LEFT JOIN `notification_types` AS `NotificationType` ON'
+				.' (`Notification`.`notification_type_id` = `NotificationType`.`id`)'
+				.' LEFT JOIN `projects` AS `Project` ON (`Notification`.`project_id` = `Project`.`id`)'
+				.' LEFT JOIN `galleries` AS `Gallery` ON (`Notification`.`gallery_id` = `Gallery`.`id`)'
+				.' WHERE `Notification`.`to_user_id` = '.$user_id.' AND `Notification`.`status` = "UNREAD"'
+				.' ORDER BY `created` DESC';
+			
+			$request_query = 
+				'SELECT `Request`.`id`, `User`.`username` `from_user_name`, `Request`.`created_at` `created`,'
+				.' `Request`.`to_id` `to_user_id`, NULL, NULL, NULL, NULL, NULL,'
+				.' `Request`.`status`,  NULL,  NULL,  NULL,  NULL, 0, NULL,  0, NULL,'
+				.' "request" notif_type'
+				.' FROM friend_requests as Request LEFT JOIN users as User ON User.id = Request.user_id'
+				.' WHERE Request.to_id = '.$user_id.' AND Request.status = "pending"'
+				.' ORDER BY `created` DESC';
+			
+			$query = '( ' . $notification_query . ' )'
+					.' UNION ALL (' . $request_query . ')'
+					.' ORDER BY `created` DESC LIMIT '.$offset.', '.$limit;
+			
+			$notifications = $this->query($query);
+			//storing first page in memcache
+			if($page==1) {
+				$this->mc_set('notifications_page1', $notifications, $user_id);
+				$this->mc_close();
+			}
+		}
+		return $notifications;
 	}
 	
 	/**
 	* returns number of unread/pending notifications/friend_requests
+	* Precondition: must be logged in
 	*
 	* @return int	number of total 
 	*/
-	function countAll( $user_id ) {
-		$notification_query =  'SELECT COUNT( id ) AS count FROM `notifications`'
-							.' WHERE `to_user_id` = '. $user_id .' AND `status` = "UNREAD"';
-		$ncount = $this->query($notification_query);
-		$request_query = 'SELECT COUNT( id ) AS count FROM `friend_requests`'
-						.' WHERE `to_id` = '. $user_id .' AND `status` = "pending" ';
-		$rcount = $this->query($request_query);
-		return ($ncount[0][0]['count'] + $rcount[0][0]['count']);
+	function countAll($user_id) {
+		$this->mc_connect();
+		$notification_count = $this->mc_get('notification_count', $user_id);
+		if ($notification_count == false) {
+			$notification_query =  'SELECT COUNT( id ) AS count FROM `notifications`'
+								.' WHERE `to_user_id` = '. $user_id .' AND `status` = "UNREAD"';
+			$ncount = $this->query($notification_query);
+			$request_query = 'SELECT COUNT( id ) AS count FROM `friend_requests`'
+							.' WHERE `to_id` = '. $user_id .' AND `status` = "pending" ';
+			$rcount = $this->query($request_query);
+			$notification_count = ($ncount[0][0]['count'] + $rcount[0][0]['count']);
+			$this->mc_set('notification_count', $notification_count, $user_id, 600);
+		}
+		$this->mc_close();
+		return intval($notification_count);
 	}
 	
 	/**
@@ -115,7 +141,7 @@ class Notification extends AppModel {
 	function clear_memcached_notifications($user_id) {
 		$memcache = new Memcache;
 		$memcache->connect('localhost', 11211) or die ("Could not connect");
-		$memcache->delete(MEMCACHE_PREFIX.'-notifications-'.$user_id);
+		$memcache->delete(MEMCACHE_PREFIX.'-notifications_page1-'.$user_id);
 		$memcache->delete(MEMCACHE_PREFIX.'-notification_count'.-$user_id);
 		$memcache->close();
 	}

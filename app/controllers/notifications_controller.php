@@ -2,8 +2,9 @@
 class NotificationsController extends AppController {
 	var $name = 'Notifications';
 	var $uses = array('Notification', 'FriendRequest');
-	var $helpers = array('Ajax');
-	
+	var $helpers = array('Ajax', 'Pagination');
+	var $components = array('Pagination');
+
 	/**
 	* Called before every controller action
 	* Overrides AppController::beforeFilter()
@@ -13,10 +14,6 @@ class NotificationsController extends AppController {
     }
 	
 	function index() {
-		$memcache = new Memcache;
-		$memcache->connect('localhost', 11211) or die ("Could not connect");
-		$prefix = MEMCACHE_PREFIX;
-		
 		$user_id = $this->Session->read('User.id');
 		if(empty($user_id)) {
 			$this->cakeError('error404');
@@ -34,15 +31,13 @@ class NotificationsController extends AppController {
 		$this->set('notify_pcomment', $notify_pcomment);
 		$this->set('notify_gcomment', $notify_gcomment);
 		
-
-    	$notifications = $memcache->get("$prefix-notifications-$user_id");
-		if ($notifications == "") {
-			$notifications = $this->Notification->getNotifications($user_id);
-			$memcache->set("$prefix-notifications-$user_id", $notifications, false, 600) or die ("Failed to save data at the server");
-		}
+		$options = array( 'show'=>25  );
+		$this->Pagination->ajaxAutoDetect = false;
+		list($order, $limit, $page) = $this->Pagination->init(null, null, $options,
+												$this->Notification->countAll($user_id));
+		$notifications = $this->Notification->getNotifications($user_id, $page, $limit);
 		$this->set('notifications', $notifications);
-		$memcache->close();
-
+		
 		$this->set('title', "Scratch | Messages and notifications");
 		$this->render('notifications');
 	}

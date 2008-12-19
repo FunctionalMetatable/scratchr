@@ -90,11 +90,10 @@ class AppController extends Controller {
 		}
 
 		if ($isLoggedIn) {
-			$this->set('notify_count', $this->countNotifications());
-			
 			$user_id = $this->getLoggedInUserID();
+			$this->set('notify_count', $this->Notification->countAll($user_id));
 			$user = $this->User->find("User.id = $user_id");
-			
+						
 			$isLocked = false;
 			
 			//locked user
@@ -412,30 +411,6 @@ class AppController extends Controller {
 		$this->Session->setFlash($msg, 'default', NULL, $flashKeyStr);
 	}
 
-
-	/**
-	 * Returns whether logged in user has any notifications
-	 * Precondition: must be logged in
-	 */
-	 function countNotifications()
-	 {
-		$memcache = new Memcache;
-		$memcache->connect('localhost', 11211) or die ("Could not connect");
-		$prefix = MEMCACHE_PREFIX;
-		$user_record = $this->Session->read('User');
-		$user_id = $user_record['id'];
-		
-		$notification_count = $memcache->get("$prefix-notification_count-$user_id");
-		if ($notification_count == "") {
-			$notification_count = $this->Notification->countAll($user_id);
-			$memcache->set("$prefix-notification_count-$user_id", $notification_count, false, 600) or die ("Failed to save data at the server");
-		}
-		$memcache->close();
-		
-		return intval($notification_count);
-	 }
-
-
 	/**
 	* sends notification to specified user
 	*/
@@ -450,8 +425,6 @@ class AppController extends Controller {
 		   $this->__err;
 
 		//store the notification
-		App::import('Model', 'Notification');
-		$this->Notification =& ClassRegistry::init('Notification');
 		$this->Notification->addNotification($type, $to_user_id,
 											$data, $extra);
 
