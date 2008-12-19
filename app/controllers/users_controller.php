@@ -1098,7 +1098,7 @@ class UsersController extends AppController {
 		if (empty($this->params["form"]))
 		   $this->__err();
 
-		$this->User->id=$user_id;
+		$this->User->id = $user_id;
 		$user = $this->User->read();
 
 		if (empty($user)){
@@ -1107,14 +1107,25 @@ class UsersController extends AppController {
 		if (!$this->isAdmin()) {
 		      $this->__err;
 		}
-		
+			
+		$username = $user['User']['username'];
 		$type = $this->params['form']['type'];
-		$this->Notification->addNotification($type, $user_id, array());
-		
-		$user_record = $this->User->find("id = $user_id", "username");
-		$username = $user_record['User']['username'];
-		$this->setFlash(___("Notification sent.", true), FLASH_NOTICE_KEY);
-		$this->redirect('/users/'.$username);
+		$msg = $this->params['form']['custom_message'];
+		if(!empty($type) && !empty($msg)) {
+			//if message is not same as the template, then we need to store the message
+			$extra = array();
+			if($this->params['form']['template'] != $msg) {
+				$extra = array($msg);
+			}
+			
+			$this->Notification->addNotification($type, $user_id, array(), $extra);
+			$this->setFlash(___("Notification sent.", true), FLASH_NOTICE_KEY);
+			$this->redirect('/users/'.$username);
+		}
+		else {
+			$this->setFlash(___("Empty message or type, notification not sent", true), FLASH_ERROR_KEY);
+			$this->redirect('/users/'.$username);
+		}
 	}
 
 
