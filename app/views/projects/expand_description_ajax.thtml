@@ -12,7 +12,7 @@
 				?>
 					<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
 					
-					<h3><a href="<?php echo $html->url($project_url)?>">$project_name </a></h3>	
+					<h3><a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?> </a></h3>	
 					<p><strong><?php ___('By')?>:</strong> <a href="<?php echo $html->url('/users/'.$urlname)?>"><?php echo $username?></a></p>		
 						
 						<?php
