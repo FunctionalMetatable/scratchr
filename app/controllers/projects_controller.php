@@ -618,7 +618,7 @@ class ProjectsController extends AppController {
 
         if (isset($this->params['form']['description'])) {
             #$newdesc = htmlspecialchars($this->params['form']['description']);
-            $newdesc = $this->params['form']['description'];
+            $newdesc = strip_tags($this->params['form']['description']);
 	    if(isInappropriate($newdesc))
 	    {
 		$user_record = $this->Session->read('User');
