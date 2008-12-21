@@ -2232,8 +2232,38 @@
 			$this->Notification->NotificationType->save($this->data);
 		}
 		
-		$notifications = $this->Notification->NotificationType->find('all', array('conditions' => array('is_admin' => 1), 'order' => 'type ASC'));
+		$notifications = $this->Notification->NotificationType->find('all', 
+							array('conditions' => array('is_admin' => 1), 'order' => 'type ASC'));
 		$this->set('notifications', $notifications);
+	}
+	
+	function edit_notif($what, $id) {
+		$new_value = $this->params['form']['value'];
+		$this->Notification->NotificationType->id = $id;
+		$record = $this->Notification->NotificationType->read(array('type', 'template'));
+		
+		//save type name
+		if($what == 'name') {
+			if(empty($new_value) || !
+				$this->Notification->NotificationType->saveField('type', $new_value)) {
+				//echo old type name
+				echo $record['NotificationType']['type'];
+			}
+			else {
+				echo $new_value;
+			}
+		}
+		//save template
+		else if($what == 'template') {
+			if($this->Notification->NotificationType->saveField('template', $new_value)) {
+				echo $new_value;
+			}
+			else {
+				//echo old template
+				echo $record['NotificationType']['template'];
+			}
+		}
+		exit;
 	}
 }
 ?>
