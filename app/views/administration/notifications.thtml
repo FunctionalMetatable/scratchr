@@ -35,7 +35,7 @@ function validate() {
 		<?php  echo $ajax->editor('notification_name_'.$nid, '/administration/edit_notif/name/'.$nid); ?>
 		
 		<p id="notification_template_<?=$nid;?>"><?= $notification['NotificationType']['template']; ?></p>
-		<?php  echo $ajax->editor('notification_template_'.$nid, '/administration/edit_notif/template/'.$nid); ?>
+		<?php  echo $ajax->editor('notification_template_'.$nid, '/administration/edit_notif/template/'.$nid, array("rows" => 3, "cols" => 60)); ?>
 	</li>
 	<?php endforeach; ?>
 	</ul>
