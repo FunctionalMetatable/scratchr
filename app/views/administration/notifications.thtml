@@ -29,9 +29,13 @@ function validate() {
 	<h3>Admin Notifications</h3>
 	<ul>
 	<?php foreach($notifications as $notification): ?>
+	<?php $nid = $notification['NotificationType']['id']; ?>
 	<li>
-	<strong><?= $notification['NotificationType']['type']; ?></strong>
-	<p><?= $notification['NotificationType']['template']; ?></p>
+		<strong id="notification_name_<?=$nid?>"><?= $notification['NotificationType']['type']; ?></strong>
+		<?php  echo $ajax->editor('notification_name_'.$nid, '/administration/edit_notif/name/'.$nid); ?>
+		
+		<p id="notification_template_<?=$nid;?>"><?= $notification['NotificationType']['template']; ?></p>
+		<?php  echo $ajax->editor('notification_template_'.$nid, '/administration/edit_notif/template/'.$nid); ?>
 	</li>
 	<?php endforeach; ?>
 	</ul>
