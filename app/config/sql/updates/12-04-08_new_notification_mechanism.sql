@@ -29,7 +29,7 @@ CREATE TABLE `notifications` (
 
   `gallery_id` int(10) default NULL,
 
-  `extra` varchar(64) collate utf8_unicode_ci default NULL,
+  `extra` text collate utf8_unicode_ci default NULL,
 
   `notification_type_id` int(10) NOT NULL,
 
