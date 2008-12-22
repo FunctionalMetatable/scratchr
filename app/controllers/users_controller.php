@@ -612,6 +612,28 @@ class UsersController extends AppController {
 		if (empty($user_record)){
 		$this->cakeError('error404');
 		}
+		
+		//showing rebbon on featured project for a particular user
+		$this->Project->bindFeatured();
+		$allUserProject = $this->Project->findAll("Project.user_id = $user_id");
+		
+		$featureProlectList = array();
+		$image_name='';
+		foreach($allUserProject as $userProject)
+		{
+			if(isset($userProject['FeaturedProject']['id'] ))
+			{
+				
+				if(SHOW_RIBBON ==1):
+			 	$image_name =$this->ribbonImageName($userProject['FeaturedProject']['timestamp']);
+				
+				$id = $userProject['Project']['id'];
+				$image_name =$image_name; 
+				$featureProlectList[$id] = $image_name;
+				endif;
+			}
+		}
+		$this->set('featureProlectList',$featureProlectList);
 		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC");	
 		if ($option == "projects") {
 			$this->Pagination->show = 15;
