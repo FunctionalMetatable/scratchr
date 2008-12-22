@@ -10,7 +10,7 @@
 	<? endif; ?>
 	<?php
 		if ($option == "projects") {
-			e($this->renderElement('user_projects', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $data)));
+			e($this->renderElement('user_projects', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $data,'featureProlectList'=>$featureProlectList)));
 		}
 		if ($option == "favorites") {
 		
