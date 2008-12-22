@@ -746,7 +746,7 @@ Class GalleriesController extends AppController {
 			$options = Array("sortBy"=>"changed", "direction"=> "DESC", "url"=>"/galleries/browse/newest");
 			$order = "Gallery.changed DESC";
 			$page = null;
-			list($order,$limit,$page) = $this->Pagination->init("total_projects > 0", Array(), $options);
+			list($order,$limit,$page) = $this->Pagination->init("total_projects > 0 AND Gallery.visibility = 'visible'", Array(), $options);
 		} elseif ($option == "largest") {
 			$options = Array("sortBy"=>"total_projects", "direction"=> "DESC", "url"=>"/galleries/browse/largest");
 			$order = "Gallery.total_projects DESC";
@@ -773,9 +773,10 @@ Class GalleriesController extends AppController {
 			$clubbed_record = $this->finalize_galleries($clubbed_record);
 			$this->set('data', $clubbed_record);
 		} else {
-			$data = $this->Gallery->findAll("total_projects > 0 AND Gallery.visibility = 'visible'", NULL, $order, $limit, $page); // display only galleries which have atleast 1 project
+			$data = $this->Gallery->findAll("total_projects > 0 AND Gallery.visibility = 'visible'", NULL, $order, $limit, $page);// display only galleries which have atleast 1 project
 			$data = $this->set_galleries($data);
 			$data = $this->finalize_galleries($data);
+			
 			$this->set('data',$data);
 		}
 
