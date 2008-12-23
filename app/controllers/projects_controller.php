@@ -322,7 +322,7 @@ class ProjectsController extends AppController {
 						$original = $duplicate_record['Pcomment']['timestamp'];
 						$today = time(); /* Current unix time */
 						$since = $today - strtotime($original);
-						if ($since < 15) {
+						if ($since < 60) {
 							$duplicate = true;
 						} else {
 							$duplicate = false;
