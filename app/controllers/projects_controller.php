@@ -558,7 +558,7 @@ class ProjectsController extends AppController {
 		if ($project['Project']['proj_visibility'] !== 'visible'){
 			if($this->isAdmin()){
 				$cen_file="../webroot/static/projects/$urlname/$pid.sb.hid";			
-				header("Content-type: application/force-download");
+				header("Content-type: application/x-scratch-project");
 				
 				header("Content-length: ".filesize($cen_file));
 				header("Content-disposition: attachment; filename=\"". $project_name .".sb\"");
@@ -572,7 +572,7 @@ class ProjectsController extends AppController {
 				readfile($cen_file);
 			}
 		}else{	
-			header("Content-type: application/force-download");
+			header("Content-type: application/x-scratch-project");
 			
 			header("Content-length: ".filesize($file));
 			header("Content-disposition: attachment; filename=\"". $project_name .".sb\"");
