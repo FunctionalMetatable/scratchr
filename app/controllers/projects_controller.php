@@ -319,7 +319,7 @@ class ProjectsController extends AppController {
 					if (empty($duplicate_record)) {
 						$duplicate = false;
 					} else {
-						$original = $duplicate_record['Pcomment']['timestamp'];
+						$original = $duplicate_record['Pcomment']['created'];
 						$today = time(); /* Current unix time */
 						$since = $today - strtotime($original);
 						if ($since < 60) {
@@ -2411,10 +2411,10 @@ class ProjectsController extends AppController {
 					if (empty($duplicate_record)) {
 						$duplicate = false;
 					} else {
-						$original = $duplicate_record['Pcomment']['timestamp'];
+						$original = $duplicate_record['Pcomment']['created'];
 						$today = time(); /* Current unix time */
 						$since = $today - strtotime($original);
-						if ($since < 30) {
+						if ($since < 60) {
 							$duplicate = true;
 						} else {
 							$duplicate = false;
