@@ -212,30 +212,34 @@ function langList($countries) {
         
 
 		<?php if ($isLoggedIn && $isAdmin):?>
-		<p><a onclick="document.getElementById('user_notify').style.display='block'; return false;" href="#"><?php ___('send notification'); ?></a></p>
-		
+		<script>
+		function showTemplate() {
+			var dropdownValue = $('admin_notifications')[$('admin_notifications').selectedIndex].value;
+			var text = $('template_'+dropdownValue).innerHTML.strip();
+			$('custom_message').value = text;
+			$('template').value 	  = text;
+		}
+		function showNotifyForm() {
+			$('user_notify').style.display = 'block';
+			//$('admin_notifications')[$('admin_notifications').selectedIndex]
+		}
+		</script>
+		<p><a onclick="showNotifyForm(); return false;" href="#"><?php ___('send notification'); ?></a></p>
 		<form id="user_notify" style="display:none" action="/users/notify/<?php e($user['id'])?>" method="post" enctype='multipart/form-data'>
 		<?php ___('Custom notification'); ?>:
 		<br>
-		<script>
-		var templates = [];
-		function showTemplate() {
-			var dropdownValue = $('admin_notifications')[$('admin_notifications').selectedIndex].value;
-			$('custom_message').value = templates[dropdownValue];
-			$('template').value 	  = templates[dropdownValue];
-		}
-		</script>
 		<select id="admin_notifications" name="type" onchange="showTemplate();" style="width:167px">
 		<?php foreach($admin_notifications as $notification): ?>
-		<?php $selected = ($notification['NotificationType']['type'] == 'blank') ? 'selected="selected"' : '' ?>
-		<option value="<?= $notification['NotificationType']['type']; ?>" <?=$selected?>>
+		<option value="<?= $notification['NotificationType']['type']; ?>">
 			<?= $notification['NotificationType']['type']; ?>
 		</option>
-		<script>
-		 templates['<?= $notification['NotificationType']['type']; ?>'] = '<?= $notification['NotificationType']['template']; ?>';
-		</script>
 		<?php endforeach; ?>
 		</select>
+		<?php foreach($admin_notifications as $notification): ?>
+		<span id="template_<?= $notification['NotificationType']['type']; ?>" style="display:none">
+		 <?= $notification['NotificationType']['template']; ?>
+		</span>
+		<?php endforeach; ?>
 		<br>
 		<textarea id="custom_message" name="custom_message"></textarea>
 		<input id="template" type="hidden" name="template" />
