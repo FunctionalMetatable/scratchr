@@ -60,7 +60,7 @@ class Notification extends AppModel {
 			$notifications = $this->query($query);
 			//storing first page in memcache
 			if($page==1) {
-				$this->mc_set('notifications_page1', $notifications, $user_id);
+				$this->mc_set('notifications_page1', $notifications, $user_id, 10);
 				$this->mc_close();
 			}
 		}
@@ -84,7 +84,7 @@ class Notification extends AppModel {
 							.' WHERE `to_id` = '. $user_id .' AND `status` = "pending" ';
 			$rcount = $this->query($request_query);
 			$notification_count = ($ncount[0][0]['count'] + $rcount[0][0]['count']);
-			$this->mc_set('notification_count', $notification_count, $user_id, 600);
+			$this->mc_set('notification_count', $notification_count, $user_id, 10);
 		}
 		$this->mc_close();
 		return intval($notification_count);
