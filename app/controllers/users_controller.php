@@ -322,7 +322,7 @@ class UsersController extends AppController {
 			  
 			foreach($user_record['Permission'] as $user_permission) {
 				$id = $user_permission['id'];
-				$url_name =$user_permission['url_name'];
+				$url_name =$user_permission['short_name'];
 				$users_permission[$url_name] = 1;
 			}
 
