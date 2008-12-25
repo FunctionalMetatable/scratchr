@@ -21,3 +21,7 @@ INSERT INTO `permissions` (`id`, `name`, `url_name`) VALUES
 (8, 'delete gallery comments', 'delete_gallery_comments'),
 (9, 'block IP', 'block_IP'),
 (10, 'block account', 'block_account');
+
+ 
+
+ ALTER TABLE `permissions` CHANGE `url_name` `short_name` VARCHAR( 255 )  NOT NULL  
