@@ -1,6 +1,11 @@
 <div class="fullcontent">
 
 <div id="main">
+   <?php
+if(count($notifications) < 1) {
+echo "<p>No notifications</p>";
+}
+?>
 	<ul>
      <?php foreach($notifications as $notification):
      	$notification = $notification['Oldnotification'];
