@@ -1,9 +1,4 @@
-<?php if(SHOW_RIBBON ==1):?>
-<?php if(isset($isFeatured )&& isset($image_name )):?>
-<?php if($isFeatured ):?>
-<?php echo $html->image('large_ribbon/'.$image_name,array('class'=>'project_ribbon'));?>
 
-<?php endif;endif;endif;?>
   <div id="header" class="clearme">
     <div id="logo">
 <?php
@@ -27,28 +22,57 @@ if(isset($ishomepage) && $ishomepage) {
 	<li><a href="#main" class="hidden"><?php ___('Skip Navigation'); ?> </a></li>
 
 
-      <li id="langselect">
-        <select name="lang" onchange="location = this.options[this.selectedIndex].value;">
-          <option><?php ___('Language'); ?></option>
-		  <option value="/lang/ara">العربية</option>
-          <option value="/lang/de-de">Deutsch</option>
-          <option value="/lang/en-us">English</option>	
-          <option value="/lang/es-es">Español</option>
-          <option value="/lang/fr-fr">Français</option>
-		  <option value="/lang/gre">Ελληνικά</option>
-		  <option value="/lang/hun">magyar</option>
-		  <option value="/lang/ita">Italiano</option>
-		  <option value="/lang/jpn">日本語</option>
-		  <option value="/lang/kor">한국어</option>
-		  <option value="/lang/dut">Nederlands</option>
-		  <option value="/lang/nor">norsk</option>
-		  <option value="/lang/pol">Polski </option>
-		  <option value="/lang/pt-br">Português-Br</option>
-		  <option value="/lang/ru">Русский</option>
-		  <option value="/lang/tur">Türkçe</option>
-		  <option value="/lang/zh-tw">漢字</option>
-        </select>
-      </li>
+<li style="float:right; margin-right:6px;">
+
+<script type="text/javascript" language="JavaScript"><!--
+function langm(d) {
+if(d.length < 1) { return; }
+if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+else { document.getElementById(d).style.display = "none"; }
+}
+--></script>
+
+
+<div id="langmenu">
+<?php
+$lang = array( array("العربية", "/lang/ara", "اللغة"),
+               array("Deutsch", "/lang/de-de", "Sprache"),
+               array("English", "/lang/en-us", "Language"),
+               array("Español", "/lang/es-es", "Español"),
+			   
+               array("Français", "/lang/fr-fr", "Langue"),
+               array("Ελληνικά", "/lang/gre", "Γλώσσα"),
+               array("Magyar", "/lang/hun", "Nyelv"),
+               array("Italiano", "/lang/ita", "Lingua"),
+			   
+               array("日本語", "/lang/jpn", "言語"),
+               array("한국어", "/lang/kor", "언어"),
+               array("Nederlands", "/lang/dut", "Taal"),
+               array("Norsk", "/lang/nor", "Språk"), 	       
+			   
+               array("Polski", "/lang/pol", "Język"),
+               array("Português-Br", "/lang/pt-br", "Idioma"),
+			   array("Русский", "/lang/ru", "Язык"),
+			   array("Türkçe", "/lang/tur", "Dil"),
+			   array("漢字", "/lang/zh-tw", "語言")
+             ); 
+
+$langnum = count($lang)-1;			 
+$langi=0;		
+$langselect = ___('Language', true);
+for ($z = 0; $z < $langnum; $z++) { 
+	if ($lang[$z][2]==$langselect){
+	$stop=$lang[$z][0];
+	} 
+	else {next;}
+}			 
+?>
+
+    <span onClick="javascript:langm('langbg')"><a class="drop"><?php echo $langselect; ?><img src="img/drop-down.gif" height="11" width="11" align="top"/></a></span>
+
+</div>
+
+</li>
 	
 	 
       <li <?php if ($active_tab == "home"):?> id="active" <?php endif;?>>
@@ -65,6 +89,37 @@ if(isset($ishomepage) && $ishomepage) {
       
     </ul>
 <!-- ////// End main menu ////// -->
+
+<!-- ////// Continue language menu ////// -->
+            <div id="langbg" style="display:none;">
+            	<img src="img/langtop.png" height="24" width="330" align="top"/>
+                <div style="width:330px; padding-left:16px; float:left; background: url(img/lang-1px.png) repeat-y scroll 0pt 50%;">
+
+              
+<?php 
+        
+for ($d = 0; $d < 4; $d++) { // 4 columns loop
+echo "<ul id='languages'>";	
+	if ($g !=$langnum) { 
+	$g = $langi+$langnum/4; // number of languages per column
+	} 
+	else {break;}
+		for (; $langi < $g; $langi++) { //loop for each column			 
+			
+			if ($lang[$langi][0]!==$stop) {
+			echo "<li><a href='".$lang[$langi][1]."'>".$lang[$langi][0]."</a>";
+			}
+			else {next; $g+=1;} // removes displayed language, default is English
+	}
+	
+echo "</ul>";	
+}
+?>
+                </div>
+                <img src="img/langbottom.png" height="17" width="330" />
+            </div>
+<!-- ////// End language menu ////// -->			
+
 	
      <div id="userbar"><?php printf(___('%sLogin%s or %sSignup%s for an account', true), '<a href="/login" onclick="return(showLogin())">', '</a>', '<a href="/signup">', '</a>'); ?></div>
 	
