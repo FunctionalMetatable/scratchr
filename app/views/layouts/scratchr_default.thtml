@@ -14,6 +14,7 @@ echo $javascript->link('jquery.js');
 echo $javascript->link('ajax.js');
 echo $javascript->link('signup.js');
 echo $html->css('global');
+echo $html->css('languagemenu');
 
 ?>
 
