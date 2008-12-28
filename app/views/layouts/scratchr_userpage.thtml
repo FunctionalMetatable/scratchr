@@ -14,6 +14,7 @@ echo $javascript->link('scratchr.js?v=1.2');
 echo $javascript->link('jquery.js');
 echo $javascript->link('ajax.js');
 echo $html->css('global');
+echo $html->css('languagemenu');
 
 ?>
 

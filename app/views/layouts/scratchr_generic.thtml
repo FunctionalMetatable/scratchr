@@ -5,7 +5,8 @@
 	echo $this->renderElement('superheader');
 ?>
 <title><?php e($title_for_layout)?></title>
-<?php echo $html->css('global');?>
+<?php echo $html->css('global');
+echo $html->css('languagemenu');?>
 
 <!-- |||||| IE- only stylesheet in conditional comment ||||||| -->
 <!--[if IE]>
