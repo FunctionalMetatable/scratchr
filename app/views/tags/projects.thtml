@@ -64,6 +64,7 @@
 		$username = $project['User']['username'];
 		$project_url = "/projects/$urlname/$pid";
 		$project_desc = htmlspecialchars($project['description']);
+		$project_desc = wordwrap($project_desc, 92, "\n",true);
 		$expand = false;
 		$ignored = $project['ignored'];
 		if (strlen($project_desc) >= 300) {

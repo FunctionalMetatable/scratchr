@@ -5,6 +5,7 @@
 				$username = htmlspecialchars($project['User']['username']);
 				$project_url = "/projects/$urlname/$pid";
 				$project_desc = htmlspecialchars($project['Project']['description']);
+				$project_desc = wordwrap($project_desc, 88, "\n",true);
 				$lovers = $project['Project']['loveit'];
 				$mini_img_src = getThumbnailImg($urlname,$pid);
 				$project_name = htmlspecialchars($project['Project']['name']);
