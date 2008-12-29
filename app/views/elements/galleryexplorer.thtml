@@ -10,6 +10,7 @@
 			$theme_icon_src = $theme['icon_src'];
 			$theme_url = "/galleries/view/$theme_id";
 			$theme_desc = $theme['description'];
+			$theme_desc = wordwrap($theme_desc, 88, "\n",true);
 			$creation_date = $theme['timestamp'];
 			$actual_creation_date = friendlyDate($creation_date);
 			$ignored = $theme['ignored'];
@@ -55,6 +56,7 @@
 			$theme_icon_src = $theme['icon_src'];
 			$theme_url = "/galleries/view/$theme_id";
 			$theme_desc = $theme['description'];
+			$theme_desc = wordwrap($theme_desc, 88, "\n",true);
 			$creation_date = $theme['timestamp'];
 			$actual_creation_date = friendlyDate($creation_date);
 			
@@ -100,6 +102,7 @@
 			$theme_icon_src = $theme['icon_src'];
 			$theme_url = "/galleries/view/$theme_id";
 			$theme_desc = $theme['description'];
+			$theme_desc = wordwrap($theme_desc, 88, "\n",true);
 			$creation_date = $theme['timestamp'];
 			$ignored = $theme['ignored'];
 			$actual_creation_date = friendlyDate($creation_date);
@@ -146,6 +149,7 @@
 			$theme_icon_src = $theme['icon_src'];
 			$theme_url = "/galleries/view/$theme_id";
 			$theme_desc = $theme['description'];
+			$theme_desc = wordwrap($theme_desc, 88, "\n",true);
 			$creation_date = $theme['created'];
 			$actual_creation_date = friendlyDate($creation_date);
 			
