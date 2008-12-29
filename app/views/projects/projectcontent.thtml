@@ -32,10 +32,7 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 				</script>
 				<script type="text/javascript" src="/js/projectembed.js"></script>
 			</div>
-			<div id="downloadjava" style="display:none">
-				<h3><?php printf(___('Your browser needs Java to view projects. Click %shere%s to install Java.', true), '<a href="http://java.com/getjava/index.jsp">', '</a>');?></h3>
-				<p><a href="#" onclick="showProject('<?php echo $html->url( "/projects/$urlname/$pid") ?>');"><?php ___("I'm sure I have the plugin, show me the project!");?></a></p>
-			</div>
+			
 		</div>
     </div>
     <!-- ::: End project ::: -->

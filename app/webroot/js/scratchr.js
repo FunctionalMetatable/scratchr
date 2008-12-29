@@ -7,17 +7,9 @@ function el(ID)
 	return document.getElementById(ID);
 }
 
-
 function initScratchPlayer() {
-	if (javadetect())
-		show($('projectload'));
-	else
-	{
-	        hide($('projectload'));
-		show($('downloadjava'));	
+	show($('projectload'));
 	}
-}
-
 
 function initProjectNotes() {
     var pdesc = document.getElementById("pdesc");
