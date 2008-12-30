@@ -634,12 +634,14 @@ Ajax.InPlaceEditor.prototype = {
   },
   createEditField: function() {
     var text;
+
+	
     if(this.options.loadTextURL) {
       text = this.options.loadingText;
     } else {
       text = this.getText();
     }
-
+	
     var obj = this;
     
     if (this.options.rows == 1 && !this.hasHTMLLineBreaks(text)) {
@@ -676,7 +678,18 @@ Ajax.InPlaceEditor.prototype = {
     this.form.appendChild(this.editField);
   },
   getText: function() {
-    return this.element.innerHTML;
+	  var text;
+
+	  new Ajax.Request(
+        this.url, Object.extend({
+          parameters: "text:text",
+          onComplete: function(res){text=res.responseText},
+          onFailure: function(){},
+          asynchronous:false, 
+          evalScripts:true
+        },{} ));
+
+    return text;
   },
   loadExternalText: function() {
     Element.addClassName(this.form, this.options.loadingClassName);
