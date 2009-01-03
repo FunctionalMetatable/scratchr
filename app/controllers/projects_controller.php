@@ -2440,8 +2440,9 @@ class ProjectsController extends AppController {
 							//send notification to project owner if project owner and comment owner are differnt
 							//and comment replier is not the project owner
 							if($project_owner_id != $comment_owner_id && $user_id != $project_owner_id) {
-								$this->notify('new_pcomment', $project_owner_id,
+								$this->notify('new_pcomment_reply_to_owner', $project_owner_id,
 											array('project_id' => $project_id,
+											'project_owner_name' => $urlname,
 											'from_user_name' => $this->getLoggedInUsername())
 										);
 							}
