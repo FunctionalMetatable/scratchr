@@ -2474,7 +2474,7 @@ Class GalleriesController extends AppController {
 							//and comment replier is not the gallery owner
 							if($gallery_owner_id != $comment_owner_id && $commenter_id != $gallery_owner_id) {
 								//comment notification to gallery_owner
-								$this->notify('new_gcomment', $gallery_owner_id,
+								$this->notify('new_gcomment_reply_to_owner', $gallery_owner_id,
 										array('gallery_id' => $gallery_id,
 										'from_user_name' => $this->getLoggedInUsername())
 									);
