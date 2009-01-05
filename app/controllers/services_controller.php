@@ -167,6 +167,16 @@ Class ServicesController extends Controller {
 			}
 			$project_numberOfSprites = (!empty($this->params['form']['numberOfSprites'])) ? trim($this->params['form']['numberOfSprites']) : null;
 			$project_totalScripts = (!empty($this->params['form']['totalScripts'])) ? trim($this->params['form']['totalScripts']) : null;
+			$project_allScripts = (!empty($this->params['form']['allScripts'])) ? trim($this->params['form']['allScripts']) : null;
+			if($this->params['form']['hasSoundSensorBlocks']=='false')
+			$project_has_sound_blocks = 0;
+			else
+			$project_has_sound_blocks = 1;
+			if($this->params['form']['hasScratchBoardSensorBlocks']=='false')
+			$project_has_sensorboard_blocks = 0;
+			else
+			$project_has_sensorboard_blocks = 1;
+			
 			$project_scratch_version_date = (!empty($this->params['form']['version-date'])) ? trim($this->params['form']['version-date']) : null;
 			
 			if (empty($project_name)) 
@@ -174,6 +184,8 @@ Class ServicesController extends Controller {
 				$this->__failed(INVALID_PROJECT_REQUEST);
 				return;
 			}
+			
+
 				 
 			$project = $this->Project->find("Project.name = "."'".$project_name."' AND user_id = ". $user_id);
 			$project_id = null;
@@ -213,8 +225,17 @@ Class ServicesController extends Controller {
 				$this->data['Project']['numberOfSprites'] = $project_numberOfSprites;
 			if ($project_totalScripts)
 				$this->data['Project']['totalScripts'] = $project_totalScripts;
+			
+			if ($project_allScripts){
+				$this->data['Project']['text_scripts'] = $project_allScripts;}
+			
+				$this->data['Project']['has_sound_blocks'] = $project_has_sound_blocks;
+			
+				$this->data['Project']['has_sensorboard_blocks'] = $project_has_sensorboard_blocks;
 			if ($project_scratch_version_date)
 				$this->data['Project']['scratch_version_date'] = $project_scratch_version_date;
+				
+			
 
 		/* performs INET_ATON on the IP string aaa.bbb.ccc.ddd, converts to 4
 		4 byte int (long). To view in sql do 
