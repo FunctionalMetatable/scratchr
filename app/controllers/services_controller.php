@@ -257,7 +257,7 @@ Class ServicesController extends Controller {
 			mkdirR(dirname($bin_file) . DS);
 			/**
 			For write log to app/tmp/project_$projectid.log during sharing project.
-			*/
+			
 			if(WRITE_LOG == 1){
 			$current_date = date('d M,Y')."\n";
 			$path = APP.'tmp'.'\\'.'project'.'_'.$project_id.'.log';
@@ -268,7 +268,7 @@ Class ServicesController extends Controller {
 			fwrite($fh, print_r($this->params,true));
 			fwrite($fh,$str);
 			fclose($fh);
-			}
+			}*/
 			if (!$new_project)
 			{
 				// rename old version
