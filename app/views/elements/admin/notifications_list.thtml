@@ -1,19 +1,14 @@
 <?php 
 	$pagination->setPaging($paging);
 	echo $this->renderElement('pagination');
- 
-	foreach($data as $notification) {
-		$notification_id = $notification['Notification']['id'];
-		$isRead = $notification['Notification']['status'];
-		$message = $notification['Notification']['custom_message'];
-		$user_id = $notification['Notification']['user_id'];
-	
-		echo '<div class="comment">';	
-		if ($isRead == "read") {
-			echo "<span class='notification_read'>$message</span>";
-		} else {
-			echo "<span class='notification_unread'>$message</span>";
-		}
-		echo "</div>";
-	}
-?>
+?>	
+<?php foreach($data as $notification): ?>
+	<?php $message = $template->create($notification['0'], $username); ?>	
+	<div class="comment">
+		<?php if ($notification['0']['status'] == "READ"): ?>
+			<span class='notification_read'><?= $message ?></span>
+		<?php else: ?>
+			<span class='notification_unread'><?= $message ?></span>
+		<?php endif; ?>
+	</div>
+<?php endforeach; ?>

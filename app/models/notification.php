@@ -18,11 +18,19 @@ class Notification extends AppModel {
 	* @param int $user_id	specifies the id of the user
 	* @return mixed	all notifications set to a user
 	*/
-	function getNotifications($user_id, $page, $limit) {
-		$this->mc_connect();
+	function getNotifications($user_id, $page, $limit, $admin = false) {
 		$notifications = false;
+		$nstatus_conditions = '';
+		$rstatus_conditions = '';
+		
+		if(!$admin) {
+			$nstatus_conditions = ' AND `Notification`.`status` = "UNREAD"';
+			$rstatus_conditions = ' AND Request.status = "pending"';
+		}
+		
 		//try collecting first page from memcache
-		if($page==1) {
+		if($page==1 && !$admin) {
+			$this->mc_connect();
 			$notifications = $this->mc_get('notifications_page1', $user_id);
 		}
 		if ($notifications == false) {
@@ -41,7 +49,7 @@ class Notification extends AppModel {
 				.' (`Notification`.`notification_type_id` = `NotificationType`.`id`)'
 				.' LEFT JOIN `projects` AS `Project` ON (`Notification`.`project_id` = `Project`.`id`)'
 				.' LEFT JOIN `galleries` AS `Gallery` ON (`Notification`.`gallery_id` = `Gallery`.`id`)'
-				.' WHERE `Notification`.`to_user_id` = '.$user_id.' AND `Notification`.`status` = "UNREAD"'
+				.' WHERE `Notification`.`to_user_id` = '.$user_id.$nstatus_conditions
 				.' ORDER BY `created` DESC';
 			
 			$request_query = 
@@ -50,7 +58,7 @@ class Notification extends AppModel {
 				.' `Request`.`status`,  NULL,  NULL,  NULL,  NULL, 0, NULL,  0, NULL,'
 				.' "request" notif_type'
 				.' FROM friend_requests as Request LEFT JOIN users as User ON User.id = Request.user_id'
-				.' WHERE Request.to_id = '.$user_id.' AND Request.status = "pending"'
+				.' WHERE Request.to_id = '.$user_id.$rstatus_conditions
 				.' ORDER BY `created` DESC';
 			
 			$query = '( ' . $notification_query . ' )'
@@ -59,11 +67,11 @@ class Notification extends AppModel {
 			
 			$notifications = $this->query($query);
 			//storing first page in memcache
-			if($page==1) {
+			if($page==1 && !$admin) {
 				$this->mc_set('notifications_page1', $notifications, $user_id, 10);
-				$this->mc_close();
 			}
 		}
+		if($page==1 && !$admin) { $this->mc_close(); }
 		return $notifications;
 	}
 	
@@ -73,20 +81,35 @@ class Notification extends AppModel {
 	*
 	* @return int	number of total 
 	*/
-	function countAll($user_id) {
-		$this->mc_connect();
-		$notification_count = $this->mc_get('notification_count', $user_id);
+	function countAll($user_id, $admin = false) {
+		$notification_count = false;
+		$nstatus_conditions = '';
+		$rstatus_conditions = '';
+		
+		//for admin we dont want to use memcache, for no admins we want to select only unread ones
+		if(!$admin) {
+			$this->mc_connect();
+			$notification_count = $this->mc_get('notification_count', $user_id);
+			$nstatus_conditions = ' AND `status` = "UNREAD"';
+			$rstatus_conditions = ' AND `status` = "pending" ';
+		}
+		
 		if ($notification_count == false) {
 			$notification_query =  'SELECT COUNT( id ) AS count FROM `notifications`'
-								.' WHERE `to_user_id` = '. $user_id .' AND `status` = "UNREAD"';
+								.' WHERE `to_user_id` = '. $user_id . $nstatus_conditions;
 			$ncount = $this->query($notification_query);
 			$request_query = 'SELECT COUNT( id ) AS count FROM `friend_requests`'
-							.' WHERE `to_id` = '. $user_id .' AND `status` = "pending" ';
+							.' WHERE `to_id` = '. $user_id . $rstatus_conditions;
 			$rcount = $this->query($request_query);
 			$notification_count = ($ncount[0][0]['count'] + $rcount[0][0]['count']);
-			$this->mc_set('notification_count', $notification_count, $user_id, 10);
+			
+			if(!$admin) {
+				$this->mc_set('notification_count', $notification_count, $user_id, 10);
+			}
 		}
-		$this->mc_close();
+		
+		if(!$admin) { $this->mc_close(); }
+		
 		return intval($notification_count);
 	}
 	
