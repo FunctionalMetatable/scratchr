@@ -4,7 +4,7 @@
    
     var $uses = array('AdminTag', 'KarmaSetting', 'KarmaRating', 'KarmaEvent', 'KarmaRank', 'Mgcomment', 'RemixedProject', 'GalleryMembership', 'BlockedUser', 'ViewStat', 'Gcomment', 'BlockedIp', 'ProjectFlag', 'Announcement', 'AdminComment', 'Apcomment', 'Mpcomment', 'Project', 'FeaturedGallery', 'ClubbedGallery', 'Pcomment', 'User', 'Gallery', 'Tag', 'Flagger', 'Downloader', 'Favorite', 'Lover', 'Notification','Permission','PermissionUser');
     var $components = array('RequestHandler','Pagination', 'Email');
-    var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
+    var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination', 'Template');
 
     /**
      * Called before every controller action
@@ -774,12 +774,15 @@
 		}
 		if ($option == "notifications") {
 			$this->modelClass = "Notification";
-			$options = Array("sortBy"=>"id", "sortByClass" => "Notification", 
-						"direction"=> "DESC", "url"=>"/administration/renderUser/$user_id/" . $option);
-			list($order,$limit,$page) = $this->Pagination->init("user_id = $user_id", Array(), $options);
-			$data = $this->Notification->findAll("user_id = $user_id", null, $order, $limit, $page);
-			
-			$this->set('data', $data);
+			$options = array( 'show'=>25  );
+			$count = $this->Notification->countAll($user_id, true);
+			$this->Pagination->ajaxAutoDetect = false;
+			list($order, $limit, $page) = $this->Pagination->init(null, null, $options,
+													$count);
+			$notifications = $this->Notification->getNotifications($user_id, $page, $limit, true);
+			$username = $user['User']['username'];
+			$this->set('username', $username);
+			$this->set('data', $notifications);
 		}
 		
 		$user_status = $user['User']['status'];

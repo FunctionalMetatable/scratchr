@@ -4,40 +4,13 @@
 
 <div id="main">
     <div id="messages">
-	<?php foreach($notifications as $notification):
-		  $notification = $notification[0]; ?>
-	<?php if($notification['notif_type'] == 'notification'): ?>
-		<?php 
+	<?php foreach($notifications as $notification):?>
+	<?php
+		$notification = $notification[0]; 
 		$id = $notification['id'];
-		if($notification['is_admin']) {
-			if(!empty($notification['extra'])) {
-				$message = $notification['extra'];
-			}
-			else {
-				$message = $notification['template'];
-			}
-		}
-		else {
-			$search = array('{to_user_name}','{from_user_name}',
-						'{gallery_id}', '{gallery_name}',
-						'{project_id}', '{project_owner_name}', '{project_name}');
-			$message = str_replace($search,
-						array(
-							$username,
-							$notification['from_user_name'],
-							$notification['gallery_id'],
-							$notification['gallery_name'],
-							$notification['project_id'],
-							$notification['project_owner_name'],
-							$notification['project_name']
-						),
-						$notification['template']
-					);
-			if(!empty($notification['extra'])) {
-				$message = vsprintf($message, explode('|', $notification['extra']));
-			}
-		}
-		?>
+		$message = $template->create($notification, $username);
+	?>
+	<?php if($notification['notif_type'] == 'notification'): ?>
 		<div id='notification_<?php echo $id; ?>' class="notification" style='display:block;' align='left'>
 			<?php echo $ajax->link($html->image('delete.png'), '#', 
 				array("url"=>"/notifications/hide/".$id, "update"=>"notification_$id", 
@@ -45,12 +18,6 @@
 			<?php echo $message; ?>
 	    </div>
 	<?php else: ?>
-		<?php 
-		$id = $notification['id'];
-		$message = '<a href="/users/'.$notification['from_user_name'].'">'
-				 . $notification['from_user_name'].'</a>'
-				 . ___(" has added you to her or his list of friends.", 'false');
-		?>
 		<div id='request_<?php echo $id; ?>' class="notification" align='left'>
 			<?php
 				echo $ajax->link($html->image('delete.png'), '#', 

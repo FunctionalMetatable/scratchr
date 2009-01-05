@@ -1,8 +1,9 @@
 <?php
 class NotificationsController extends AppController {
+	
 	var $name = 'Notifications';
 	var $uses = array('Notification', 'FriendRequest');
-	var $helpers = array('Ajax', 'Pagination');
+	var $helpers = array('Ajax', 'Pagination', 'Template');
 	var $components = array('Pagination');
 
 	/**
