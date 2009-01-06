@@ -67,7 +67,7 @@ $this->params['webservices']
  */
  define("SHOW_RIBBON", 1);
  /**
- To enable/disable debugging for service controller.Value 1 for enable and 0 for desable
+ To enable/disable to write debug log for service controller.Value 1 for enable and 0 for desable
  */
  define("WRITE_LOG", 1);
 
