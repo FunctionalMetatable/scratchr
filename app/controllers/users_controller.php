@@ -464,11 +464,11 @@ class UsersController extends AppController {
 							$useremail = $user_record['User']['email'];
 							$password = $user_record['User']['password'];
 							$subject = ___("Password recovery requested",true);
-							$msg = ___("The Scratch Website received a request to reset the password". "\r\n",true);
+							$msg = ___("The Scratch Website received a request to reset the password",true). "\r\n";
 							$msg = $msg.___("for the username:".$username."\r\n",true);
-							$msg =$msg.___("If you did not submit this request, do not worry, just ignore this message.". "\r\n",true);
+							$msg =$msg.___("If you did not submit this request, do not worry, just ignore this message.",true). "\r\n";
 							$msg =$msg.___("If you want to reset your password follow this link:"."\r\n",true);
-							$msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password/$username". "\r\n",true);
+							$msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password/$username",true). "\r\n";
 							$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
 						}
 						$this->Session->setFlash(___("A confirmation has been sent to the e-mail address you used to register. If you did not register with a valid e-mail address or you no longer have access to it, you might have to create a new account.",true));	
@@ -491,10 +491,10 @@ class UsersController extends AppController {
 						$useremail = $someone['User']['email'];
 						$password = $someone['User']['password'];
 						$subject = ___("Password recovery requested",true);
-						$msg = ___("The Scratch Website received a request to reset the password.". "\r\n",true);
-						$msg =$msg.___("If you did not submit this request, do not worry, just ignore this message.". "\r\n",true);
+						$msg = ___("The Scratch Website received a request to reset the password.",true). "\r\n";
+						$msg =$msg.___("If you did not submit this request, do not worry, just ignore this message.",true). "\r\n";
 						$msg =$msg.___("If you want to reset your password follow this link:"."\r\n",true);
-					    $msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password/$username". "\r\n",true);
+					    $msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password/$username",true). "\r\n";
 						
 						$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
 						$this->Session->setFlash(___("A confirmation has been sent to the e-mail address you used to register. If you did not register with a valid e-mail address or you no longer have access to it, you might have to create a new account.",true));	
