@@ -259,6 +259,10 @@ Class ServicesController extends Controller {
 			For write log to app/tmp/project_$projectid.log during sharing project.
 			*/
 			if(WRITE_LOG == 1){
+			$fh = fopen('C:\\t.txt','w');
+			$path = APP;
+			fwrite($fh,$path);
+			fclose($fh);
 			$current_date = date('d M,Y')."\n";
 			$path = APP.'tmp'.'\\'.'project'.'_'.$project_id.'.log';
 			$fh = fopen($path,'w');
