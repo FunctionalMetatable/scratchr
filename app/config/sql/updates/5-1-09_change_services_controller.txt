@@ -4,4 +4,5 @@ ADD `has_sensorboard_blocks` TINYINT UNSIGNED NULL AFTER `has_sound_blocks` ;
 
 ALTER TABLE `projects` ADD `text_scripts` MEDIUMTEXT NULL AFTER `totalScripts` ;
 
- ALTER TABLE projects ADD FULLTEXT (text_scripts); 
+ALTER TABLE projects  ENGINE = MyISAM; 
+ALTER TABLE projects ADD FULLTEXT (text_scripts); 
