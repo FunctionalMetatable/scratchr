@@ -465,7 +465,7 @@ class UsersController extends AppController {
 							$password = $user_record['User']['password'];
 							$subject = ___("Password recovery requested",true);
 							$msg = ___("The Scratch Website received a request to reset the password",true). "\r\n";
-							$msg = $msg.___("for the username:".$username."\r\n",true);
+							$msg = $msg.___("for the username:".$username,true). "\r\n";
 							$msg =$msg.___("If you did not submit this request, do not worry, just ignore this message.",true). "\r\n";
 							$msg =$msg.___("If you want to reset your password follow this link:",true). "\r\n";
 							$msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password/$username",true). "\r\n";
@@ -493,7 +493,7 @@ class UsersController extends AppController {
 						$subject = ___("Password recovery requested",true);
 						$msg = ___("The Scratch Website received a request to reset the password.",true). "\r\n";
 						$msg =$msg.___("If you did not submit this request, do not worry, just ignore this message.",true). "\r\n";
-						$msg =$msg.___("If you want to reset your password follow this link:"."\r\n",true);
+						$msg =$msg.___("If you want to reset your password follow this link:",true). "\r\n";
 					    $msg = $msg.___("http://".$_SERVER['SERVER_NAME']."/users/pwdreset/$userid/$password/$username",true). "\r\n";
 						
 						$this->Email->email('scratch-feedback@media.mit.edu','Scratch Website', $msg, $subject,$useremail,'scratch-feedback@media.mit.edu');
