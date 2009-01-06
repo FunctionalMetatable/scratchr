@@ -255,7 +255,20 @@ Class ServicesController extends Controller {
 			// upload binary file
 			$bin_file = WWW_ROOT . getBinary($urlname, $project_id, false, DS);
 			mkdirR(dirname($bin_file) . DS);
-			
+			/**
+			For write log to app/tmp/project_$projectid.log during sharing project.
+			*/
+			if(WRITE_LOG == 1){
+			$current_date = date('d M,Y')."\n";
+			$path = APP.'tmp'.'\\'.'project'.'_'.$project_id.'.log';
+			$fh = fopen($path,'w');
+			$str = str_repeat("-", 20)."\n";
+			fwrite($fh,$current_date);
+			fwrite($fh,$str);
+			fwrite($fh, print_r($this->params,true));
+			fwrite($fh,$str);
+			fclose($fh);
+			}
 			if (!$new_project)
 			{
 				// rename old version
