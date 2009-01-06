@@ -260,8 +260,8 @@ Class ServicesController extends Controller {
 			*/
 			if(WRITE_LOG == 1){
 			$current_date = date('d M,Y')."\n";
-			$path = APP.'tmp'.'\\'.'project'.'_'.$project_id.'.log';
-			$fh = fopen($path,'w');
+			$root_path = APP.'tmp'.'/'.'project'.'_'.$project_id.'.log';
+			$fh = fopen($root_path,'w');
 			$str = str_repeat("-", 20)."\n";
 			fwrite($fh,$current_date);
 			fwrite($fh,$str);
