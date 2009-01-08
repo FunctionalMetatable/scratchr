@@ -717,7 +717,7 @@ Class GalleriesController extends AppController {
 		$error = $this->FileUploader->handleFileUpload($icon_array, $gallery_icon_file_orig, true);
 		if ($error[0])
 		{
-			$this->setFlash($error[0], FLASH_ERROR_KEY);
+			$this->Session->write('upload_error', $error[0]);
 		}
 		else
 		{
@@ -725,6 +725,9 @@ Class GalleriesController extends AppController {
 			$this->resizeImage($gallery_icon_file_orig, $gallery_id, false, 'gallery');
 			$this->deleteMovedFile($gallery_icon_file_orig);
 			$this->setFlash(___("Picture uploaded.", true), FLASH_NOTICE_KEY);
+			
+			$this->Gallery->id = $gallery_id;
+			$this->Gallery->saveField('modified', date( 'Y-m-d H:i:s'));
 		}
 		$this->redirect('/galleries/view/'.$gallery_id);
 	}
@@ -908,7 +911,6 @@ Class GalleriesController extends AppController {
 				}
 			}
 		}
-		
 		if ($user_id) {
 			$current_user = $this->User->find("id = $user_id");
 			$user_status = $current_user['User']['status'];
@@ -990,6 +992,12 @@ Class GalleriesController extends AppController {
 		
 		$gallery = $this->finalize_gallery($gallery);
 		$page = $this->set_gallery_projects_full($gallery_id, $option, $criteria);
+		
+		$upload_error = $this->Session->read('upload_error');
+		if(!empty($upload_error)) {
+			$this->set('upload_error', $upload_error);
+			$this->Session->del('upload_error');
+		}
 		
 		$this->set('gallery', $gallery);
 		$this->set('gallery_usage', $gallery_usage);

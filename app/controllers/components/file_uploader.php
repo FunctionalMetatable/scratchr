@@ -19,26 +19,26 @@ class FileUploaderComponent extends Object {
    */
   function handleFileUpload($fileData, $fileName, $sameFileName = false)
   {
-    $error = false;
- 
     //Get file type
     $typeArr = explode('/', $fileData['type']);
     
     if($sameFileName)
     {
-	$fileName.=$fileData['name'];
+		$fileName .= $fileData['name'];
      }
-	$error[0]=false;
-	$error[1]=$fileData['name'];
+	
+	$error = array();
+	$error[0] = false;
+	$error[1] = $fileData['name'];
 
     //If size is provided for validation check with that size
     if ($this->validateFile['size'] && $fileData['size'] > $this->validateFile['size'])
     {
       $error[0] = 'File is too large to upload';
     }
-    elseif ($this->validateFile['type'] && (!isset($typeArr[1]) || (strpos($this->validateFile['type'], strtolower($typeArr[1])) === false)))
+    elseif ($this->validateFile['type'] && (isset($typeArr[1]) && (strpos($this->validateFile['type'], strtolower($typeArr[1])) === false)))
 	{
-		$error[0] = "Invalid file type: '$typeArr[1]'.";
+		$error[0] = "Invalid file type";
     }
     else
     {
@@ -68,9 +68,7 @@ class FileUploaderComponent extends Object {
       }
 	  else
 	  {
-	  	$error = true;
-
-		switch($fileData['error'])
+	  	switch($fileData['error'])
 		{
 			case 1:
 				$error[0] = 'The file is too large (server).';
@@ -98,7 +96,7 @@ class FileUploaderComponent extends Object {
 		}
 	  }
     }
-    return $error;
+	return $error;
   }
 
   /**
