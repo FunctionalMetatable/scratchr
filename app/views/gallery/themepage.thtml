@@ -184,7 +184,10 @@
 
 
 	<?php if ($isThemeOwner || $isAdmin): ?>
-		<p><a onclick="document.getElementById('gallery_icon').style.display='block'; return false;" href="#"><?php ___('change picture'); ?></a></p>
+		<p>
+		<a onclick="document.getElementById('gallery_icon').style.display='block'; return false;" href="#"><?php ___('change picture'); ?></a>
+		<div class="std_error"><?php if(isset($upload_error)) echo $upload_error; ?> </div>
+		</p>
 		<form id="gallery_icon" style="display:none" action="<?php echo $html->url('/galleries/updatepic/')?><?php e($theme_id)?>" method="post" enctype='multipart/form-data'>
 		<input name='gallery_icon' size="10" type='file'/>
 		<input value=<?php ___('update'); ?> type="submit" class="button">

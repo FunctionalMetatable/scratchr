@@ -861,7 +861,7 @@ ini_restore ("memory_limit");
 				$gallery['Gallery']['icon_src'] = $project_icon_src;
 			}
 		} else {
-			$gallery['Gallery']['icon_src'] = $gallery_icon_src;
+			$gallery['Gallery']['icon_src'] = $gallery_icon_src.'?t='.urlencode($gallery['Gallery']['modified']);
 		}
 		
 		return $gallery;
@@ -890,7 +890,7 @@ ini_restore ("memory_limit");
 					$gallery['Gallery']['icon_src'] = $project_icon_src;
 				}
 			} else {
-				$gallery['Gallery']['icon_src'] = $gallery_icon_src;
+				$gallery['Gallery']['icon_src'] = $gallery_icon_src.'?t='.urlencode($gallery['Gallery']['modified']);
 			}
 			array_push($final_array, $gallery); 
 		}
