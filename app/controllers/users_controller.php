@@ -914,6 +914,12 @@ class UsersController extends AppController {
 			$admin_notifications = $this->Notification->NotificationType->find('all', array('conditions' => array('is_admin' => 1), 'order' => 'type ASC'));
 			$this->set('admin_notifications', $admin_notifications);
 		}
+
+        $upload_error = $this->Session->read('upload_error');
+		if(!empty($upload_error)) {
+			$this->set('upload_error', $upload_error);
+			$this->Session->del('upload_error');
+		}
 		
 		$this->set('comment_count', $comment_count);
 		$this->set('ignore_count', $ignore_count);
@@ -930,7 +936,6 @@ class UsersController extends AppController {
 		$this->set('isMe', $isMe);
 		
 		$this->render('myscratchr', 'scratchr_userpage');
-		
 	}
 
 
@@ -1004,13 +1009,15 @@ class UsersController extends AppController {
 		$error = $this->FileUploader->handleFileUpload($icon_array, $buddy_icon_file_orig, true);
 		if ($error[0])
 		{
-			$this->setFlash($error[0], FLASH_ERROR_KEY);
+			$this->Session->write('upload_error', $error[0]);
 		}
 		else
 		{
 			$buddy_icon_file_orig.=$error[1];
 			$this->resizeImage($buddy_icon_file_orig, $user_id);
 			//$this->deleteMovedFile($buddy_icon_file_orig);
+            $this->User->id = $user_id;
+			$this->User->saveField('timestamp', date( 'Y-m-d H:i:s'));
 			$this->setFlash(___("Picture uploaded.", true), FLASH_NOTICE_KEY);
 		}
 		$this->redirect('/users/'.$user['User']['urlname']);
