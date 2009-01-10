@@ -74,7 +74,7 @@
 
       <p>
 	  
-	  <?php echo $html->image(getBuddyIconBySize($user['id'],'med', $content_status) . '?' . time(),array('height'=>'90','width'=>'90','alt'=>'scratch code'))?>
+	  <?php echo $html->image(getBuddyIconBySize($user['id'],'med', $content_status, $user['timestamp']),array('height'=>'90','width'=>'90','alt'=>'scratch code'))?>
 	  
 		
 		<?php if ((!empty($user['city']) && $age >= 13) || ($isMe || $isAdmin)): ?>
@@ -167,7 +167,10 @@ function langList($countries) {
 
 
 		<?php if ($isMe || $isAdmin):?>
-			<a onclick="document.getElementById('user_icon').style.display='block'; return false;" href="#"><?php ___('change picture'); ?></a>
+			<p>
+            <a onclick="document.getElementById('user_icon').style.display='block'; return false;" href="#"><?php ___('change picture'); ?></a>
+            <div class="std_error"><?php if(isset($upload_error)) echo '<br/>'.$upload_error; ?> </div>
+            </p>
 			<form id="user_icon" style="display:none" action="<?php echo $html->url('/users/updatepic/')?><?php e($user['id'])?>" method="post" enctype='multipart/form-data'>
 			<input name='user_icon' size="10" type='file'/>
 			<input value="<?php ___('update'); ?>" type="submit" class="button">

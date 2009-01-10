@@ -13,7 +13,7 @@ echo "<div class='gallery_content'>\n";
 			$fullusername = $member['username'];
 			$urlname = $member['urlname'];
 			$member_url = "/users/".$urlname;
-			$image_url = getBuddyIconBySize($uid, 'mini', $content_status);
+			$image_url = getBuddyIconBySize($uid, 'mini', $content_status, $member['timestamp']);
 			$icon_url = "<img src='" . $image_url . "'" . " alt='$username' width='60' height='60'>";
 			if (strlen($username) >= 7) {
 				$username = substr($username,0,4) . "...";

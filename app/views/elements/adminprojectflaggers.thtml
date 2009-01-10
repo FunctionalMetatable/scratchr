@@ -5,7 +5,7 @@
 	$flagger_urlname = $flagger['User']['urlname'];
 	$flagger_username = $flagger['User']['username'];
 	$flagger_reasons = $flagger['Flagger']['reasons'];
-	$flagger_icon = getBuddyIconBySize($flagger_id, 'mini', $content_status);
+	$flagger_icon = getBuddyIconBySize($flagger_id, 'mini', $content_status, $flagger['User']['timestamp']);
 	$flagger_url = "/users/".$flagger_urlname;
 	?>
 		<div class="comment">

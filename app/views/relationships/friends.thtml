@@ -45,7 +45,7 @@
 			$user_url = "/users/".$friend_urlname;
 			$firstname = $friend['firstname'];
 			$lastname = $friend['lastname'];
-			$buddyicon = getBuddyIconBySize($friend['id'], 'mini', $content_status);?>
+			$buddyicon = getBuddyIconBySize($friend['id'], 'mini', $content_status, $friend['timestamp']);?>
 			
 			<div class="browseEntry">
 			<table><tr>

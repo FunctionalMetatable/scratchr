@@ -18,7 +18,7 @@
 		$commenter_urlname = $comment['User']['urlname'];
 		$commenter_username = $comment['User']['username'];
 		$commenter_url ="/users/".$commenter_urlname;
-		$commenter_icon = getBuddyIconBySize($commenter_id, 'mini');
+		$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $comment['User']['timestamp']);
 		$comment_id = $comment['Apcomment']['id'];
 		$comment_content = $comment['Apcomment']['content'];
 		$timestamp = $comment['Apcomment']['timestamp'];

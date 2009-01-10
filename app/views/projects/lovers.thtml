@@ -12,7 +12,7 @@
 		$urlname = $user['urlname'];
 		$username = $user['username'];
 		$user_ref = "/users/".$urlname;
-		$buddyicon = getBuddyIconBySize($user['id'],'med', $content_status);
+		$buddyicon = getBuddyIconBySize($user['id'],'med', $content_status, $user['timestamp']);
 		if ($count%5 == 1) 
 			echo "<tr>";?>	
 		

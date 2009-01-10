@@ -120,7 +120,7 @@ $session->flash(FLASH_NOTICE_KEY);
 	  
 	  
 	<h5>Gallery owner: <a href="<?php echo $html->url('/users/')?><?php e($theme_owner['urlname'])?>"><?php e($theme_owner['username'])?>
-	<?php echo $html->image(getBuddyIconBySize($theme_owner['id'],'mini'),array('alt'=>$theme_owner['username'],'width'=>'28','height'=>'28'))?>
+	<?php echo $html->image(getBuddyIconBySize($theme_owner['id'],'mini', $theme_owner['timestamp']),array('alt'=>$theme_owner['username'],'width'=>'28','height'=>'28'))?>
 	</a></h5> 
 
 
