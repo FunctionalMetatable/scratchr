@@ -75,7 +75,7 @@ $results = $pagination->result(___("Showing", true) . " ");
 	$user = $user['User'];
 	$user_urlname = $user['urlname'];
 	$user_ref = "/users/".$user_urlname;
-	$buddyicon = getBuddyIconBySize($user['id'], 'mini', $content_status);
+	$buddyicon = getBuddyIconBySize($user['id'], 'mini', $content_status, $user['timestamp']);
 	if ($count%3 == 1) echo "<tr>";?>	
 		<td><a href="<?php echo $html->url($user_ref)?>">
 		<?php echo $html->image($buddyicon,array('alt'=>'user photo','class'=>'bordered','width'=>'45','height'=>'55'))?>

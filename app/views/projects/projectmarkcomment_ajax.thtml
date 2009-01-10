@@ -2,7 +2,7 @@
 	$commenter_id = $comment['User']['id'];
 	$commenter_urlname = $comment['User']['urlname'];
 	$commenter_username = $comment['User']['username'];
-	$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $content_status);
+	$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $content_status, $comment['User']['timestamp']);
 	$commenter_url = "/users/".$commenter_urlname;
 	$comment_type = isset($comment['Pcomment']);
 	$comment_id = ($comment_type) ? $comment['Pcomment']['id']:$comment['id'];

@@ -12,7 +12,7 @@
 			$friend_fullname = $friend['username'];
 			$friend_urlname = $friend['urlname'];
 			$friend_url= "/users/".$friend_urlname;
-			$buddy_icon = getBuddyIconBySize($friend['id'], 'mini', $content_status);
+			$buddy_icon = getBuddyIconBySize($friend['id'], 'mini', $content_status, $friend['timestamp']);
 			$friend_name_s = $friend_name;
 			if (strlen($friend_name) > 10) {
 				$friend_name = substr($friend_name,0,9) . "&#0133;";
