@@ -257,8 +257,8 @@ define('FILTERED_HOST', 'filtered.scratch.mit.edu');
 
  }
 
- function getBuddyIconBySize($userid, $type='mini', $content=false) {
-	return getBuddyIcon($userid, true, "/", $type, $content);
+ function getBuddyIconBySize($userid, $type='mini', $content=false, $timestamp = '') {
+	return getBuddyIcon($userid, true, "/", $type, $content).'?t='. urlencode($timestamp);
  }
 
 /* Discontinued
@@ -486,7 +486,7 @@ function friendlyDate($original) {
 			}
 		} else {
 			if (!class_exists('I18n')) {
-				require_once('../vendors/i18n.php'); //loading cakephp1.2.-i18n-module from the vendor directory
+				require_once('vendors/i18n.php'); //loading cakephp1.2.-i18n-module from the vendor directory
 			}
 
 			//$calledFrom = debug_backtrace();

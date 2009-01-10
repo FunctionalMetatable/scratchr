@@ -232,8 +232,8 @@ define("SUBTOPIC3", "scrach-feedback@scratch.mit.edu");
 
  }
 
- function getBuddyIconBySize($userid, $type='mini', $content=false) {
-	return getBuddyIcon($userid, true, "/", $type, $content);
+  function getBuddyIconBySize($userid, $type='mini', $content=false, $timestamp = '') {
+	return getBuddyIcon($userid, true, "/", $type, $content).'?t='. urlencode($timestamp);
  }
 
 /* Discontinued
