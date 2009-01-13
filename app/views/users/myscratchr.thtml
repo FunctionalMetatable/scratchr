@@ -233,7 +233,7 @@ function langList($countries) {
 		<br>
 		<select id="admin_notifications" name="type" onchange="showTemplate();" style="width:167px">
 		<?php foreach($admin_notifications as $notification): ?>
-		<option value="<?= $notification['NotificationType']['type']; ?>">
+		<option value="<?= $notification['NotificationType']['type']; ?>" <?php if($notification['NotificationType']['type'] == 'blank') { echo 'selected="true"'; } ?> >
 			<?= $notification['NotificationType']['type']; ?>
 		</option>
 		<?php endforeach; ?>
