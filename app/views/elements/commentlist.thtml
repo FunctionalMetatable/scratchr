@@ -10,6 +10,12 @@
 	
 </div>
 <?php 
+if ($comments['0']['Project']['locked'] == 1) {
+			$isLocked = false;
+		} else {
+			$isLocked = true;
+		}
+
 	foreach($comments as $comment) {
 		$commenter_id = $comment['User']['id'];
 		$commenter_urlname = $comment['User']['urlname'];
@@ -85,9 +91,11 @@
 			echo "<span class='flag_comment'>";
 			if ($isLogged) {
 				$form_id = "project_comment_reply_input_" . $comment_id;
+				if($isLocked)
+				{
 				echo "(" . "<a href='#' id='reply_hide_link_$comment_id' onclick='showReplyBox($comment_id, 0); addProjectCharCounter($comment_id); return false;'>reply</a>" . ")";
 				echo " | ";
-				
+				}
 				if ($replies > 0) {
 					echo "<span id='view_hide_link_frame_$comment_id' class='visible_element'>";
 					echo "(<strong>" . $ajax->link(___("view all replies", true), '#', 
