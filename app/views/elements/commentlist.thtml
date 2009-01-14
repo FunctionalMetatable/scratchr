@@ -96,7 +96,7 @@ if ($comments['0']['Project']['locked'] == 1) {
 				echo "(" . "<a href='#' id='reply_hide_link_$comment_id' onclick='showReplyBox($comment_id, 0); addProjectCharCounter($comment_id); return false;'>reply</a>" . ")";
 				echo " | ";
 				}
-				if ($replies > 0) {
+				if ($replies > NUM_COMMENT_REPLY) {
 					echo "<span id='view_hide_link_frame_$comment_id' class='visible_element'>";
 					echo "(<strong>" . $ajax->link(___("view all replies", true), '#', 
 						array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
@@ -106,7 +106,10 @@ if ($comments['0']['Project']['locked'] == 1) {
 								NULL, false) . "</strong>)";
 					echo " | ";
 					echo "</span>";
-				} else {
+				} 
+				
+				
+				/*else {
 					echo "<span id='view_hide_link_frame_$comment_id' class='hidden_element'>";
 					echo "(" . $ajax->link(___("view all replies", true), '#', 
 						array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
@@ -116,7 +119,7 @@ if ($comments['0']['Project']['locked'] == 1) {
 								NULL, false) . ")";
 					echo " | ";
 					echo "</span>";
-				}
+				}*/
 				
 				if(!$isCommentOwner) {
 					echo "(" . $ajax->link(___("flag as inappropriate", true), '#', 

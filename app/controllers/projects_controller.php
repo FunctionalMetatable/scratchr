@@ -2562,7 +2562,7 @@ class ProjectsController extends AppController {
 					$temp_comment['Pcomment']['ignored'] = false;
 				}
 			}
-			$all_replies = $this->set_replies($project_id, $current_id, $user_id, 3);
+			$all_replies = $this->set_replies($project_id, $current_id, $user_id, NUM_COMMENT_REPLY);
 			$temp_comment['Pcomment']['replylist'] = $all_replies;
 			$final_comments[$counter] = $temp_comment;
 			$counter++;
@@ -2586,7 +2586,7 @@ class ProjectsController extends AppController {
 		$project = $this->Project->find("Project.id = $project_id");
 		$creator_id = $project['Project']['user_id'];
 		
-		$all_replies = $this->Pcomment->findAll("project_id = $project_id AND comment_visibility = 'visible' AND reply_to = $source_id");
+		$all_replies = $this->Pcomment->findAll("project_id = $project_id AND comment_visibility = 'visible' AND reply_to = $source_id",null,'Pcomment.created DESC',$limit);
 		$isLogged = $this->isLoggedIn();
 		
 		$counter = 0;
@@ -2629,14 +2629,7 @@ class ProjectsController extends AppController {
 			$counter++;
 		}
 		
-		if ($limit == 0) {
-		} else {
-			$length = count($final_comments);
-			if ($limit >= $length) {
-			} else {
-				$final_comments = array_splice($final_comments, 0, $limit);
-			}
-		}
+		
 		return $final_comments;
 	}
 	
