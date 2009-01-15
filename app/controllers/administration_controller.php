@@ -1750,6 +1750,7 @@
 	
 	/**
 	* Adds an user to the banned users list
+    * used in administration/ban_user form
 	**/
 	function add_banned_user() {
 		$this->autoRender = false;
@@ -1767,13 +1768,18 @@
 			} else {
 				$current_user_id = $user_record['User']['id'];
 				$blocked_record = $this->BlockedUser->find("BlockedUser.user_id = $current_user_id");
-				if (empty($blocked_record)) {
-					$info = Array('BlockedUser' => Array('id' => null, 'user_id' => $current_user_id, 'admin_id' => $admin_id, 'reason' => $reason));
-					$this->BlockedUser->save($info);
+				//not already blocked
+                if (empty($blocked_record)) {
 					$this->User->id = $current_user_id;
-					$banned_user = $this->User->read();
-					$this->User->saveField("status", 'locked');
-				} else {
+					if($this->User->saveField("status", 'locked')) {
+                        $info = Array('BlockedUser' => Array('id' => null, 'user_id' => $current_user_id, 'admin_id' => $admin_id, 'reason' => $reason));
+                        $this->BlockedUser->save($info);
+                    }
+                    else {
+                        array_push($errors, "Unknown exception, please contact andresmh@media.mit.edu");
+                    }
+				}
+                else {
 					array_push($errors, "That user has already been banned.");
 				}
 			}
