@@ -1,5 +1,16 @@
 <div class="fullcontent">
-    <h2>Remixes</h2>
+
+<?php 
+if(empty($this->params['arg']))
+{
+echo "<h2>";___('Total Remixes');echo "</h2>";
+}
+else
+{
+echo "<h2>";___('Remixes by other people');echo "</h2>";
+}
+?>
+    
 	<p>
 	<?php if(!empty($mods['linkable'])):?>
 	<?php 

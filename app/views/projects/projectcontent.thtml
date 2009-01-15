@@ -1,5 +1,5 @@
  <?php
- //print_r($users_permission); 
+  
 	if ($isLocked) {
 		$lock = 1;
 	} else {
@@ -139,14 +139,26 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 			$favandtagtxt = ___("Check for", true) ." <a href='$favtag'>" . ___("favoriters", true) . "</a> " . ___('or', true) . " <a href='$tagurl'>" . ___('taggers', true) . "</a>";
 		}
 		$relatedtxt = '';
+		$relatedrealtxt = '';
 		$downloadtxt = '';
 		$relatedtag = $html->url('/projects/'.$urlname.'/'.$pid.'/mods');
 		if(!empty($relatedcount)) {
-			$relatedtxt = ", <a href='$relatedtag'>$relatedcount " . ___('remix', true);
+			$relatedtxt = ", <a href='$relatedtag'>$relatedcount " . ___('total remix', true);
 		 	if ($relatedcount > 1)
-				$relatedtxt = ", <a href='$relatedtag'>$relatedcount " . ___('remixes', true);
+				$relatedtxt = ", <a href='$relatedtag'>$relatedcount " . ___('total remixes', true);
 			$relatedtxt .= '</a>';
 		}
+		
+		// for real remixes
+		$realremixes =$project['Project']['realremixes'];
+		$relatedrealtag = $html->url('/projects/'.$urlname.'/'.$pid.'/'.'real'.'/mods');
+		if(!empty($realremixes)) {
+			$relatedrealtxt = ", <a href='$relatedrealtag'>$realremixes " . ___('remix by other people', true);
+		 	if ($realremixes > 1)
+				$relatedrealtxt = ", <a href='$relatedrealtag'>$realremixes " . ___('remixes by other people', true);
+			$relatedrealtxt .= '</a>';
+		}
+		
 		if(!empty($downloadcount)) {
 			$downloadtxt = ", $downloadcount " . ___('download', true);
 		 	if ($downloadcount > 1)
@@ -170,7 +182,7 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 			$ingals .= "</a>";
 		}
 
-		e("<h5>$viewtxt$lovetxt$taggerstxt$downloadtxt$ingals$relatedtxt</h5><h6>$favandtagtxt</h6>");
+		e("<h5>$viewtxt$lovetxt$taggerstxt$downloadtxt$ingals$relatedrealtxt$relatedtxt</h5><h6>$favandtagtxt</h6>");
 	  ?>
 </div>
        <!-- ::: End lovers, taggers and favoriters ::: -->
