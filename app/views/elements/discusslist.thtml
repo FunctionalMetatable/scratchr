@@ -88,7 +88,7 @@
 				echo "(" . "<a href='#' id='reply_hide_link_$comment_id' onclick='showReplyBox($comment_id, 0); addGalleryCharCounter($comment_id); return false;'>reply</a>" . ")";
 				echo " | ";
 				
-				if ($replies > 0) {
+				if ($replies > NUM_COMMENT_REPLY) {
 					echo "<span id='view_hide_link_frame_$comment_id' class='visible_element'>";
 					echo "(<strong>" . $ajax->link(___("view all replies", true), '#', 
 						array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
@@ -98,7 +98,8 @@
 								NULL, false) . "</strong>)";
 					echo " | ";
 					echo "</span>";
-				} else {
+				} 
+				/*else {
 					echo "<span id='view_hide_link_frame_$comment_id' class='hidden_element'>";
 					echo "(" . $ajax->link(___("view all replies", true), '#', 
 						array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
@@ -108,7 +109,7 @@
 								NULL, false) . ")";
 					echo " | ";
 					echo "</span>";
-				}
+				}*/
 				
 				echo "(" . $ajax->link(___("flag as inappropriate", true), '#', 
 					array("url"=>$mark_address, 
@@ -125,7 +126,7 @@
 								"condition"=>"checkLogin()"), NULL, false));
 				echo "</p>\n";
 			} else {
-				if ($replies > 0) {
+				if ($replies > NUM_COMMENT_REPLY) {
 					echo "<span id='view_hide_link_frame_$comment_id' class='visible_element'>";
 					echo "(" . $ajax->link(___("view all replies", true), '#', 
 						array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
@@ -133,7 +134,8 @@
 								"complete"=>"showReplyList($comment_id);"), 
 								NULL, false) . ")";
 					echo "</span>";
-				} else {
+				} 
+				/*else {
 					echo "<span id='view_hide_link_frame_$comment_id' class='hidden_element'>";
 					echo "(" . $ajax->link(___("view all replies", true), '#', 
 						array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
@@ -141,7 +143,7 @@
 								"complete"=>"showReplyList($comment_id);"), 
 								NULL, false) . ")";
 					echo "</span>";
-				}
+				}*/
 			}
 			echo "</span>";
 			
