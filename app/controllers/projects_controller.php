@@ -2066,9 +2066,17 @@ class ProjectsController extends AppController {
 		}
     }
 	
-	function mods($urlnameignored = null, $pid = null) {
+	function mods($urlnameignored = null, $pid = null,$real=null) {
 		$this->exitOnInvalidArgCount(2);
+		
+		if(empty($this->params['arg']))
+		{
 		$modpids = $this->ProjectShare->findAll("related_project_id = $pid AND related_project_id != project_id group by project_id, user_id");
+		}
+		else
+		{
+		$modpids = $this->ProjectShare->findAll("related_project_id = $pid AND related_project_id != project_id AND related_user_id !=user_id group by project_id, user_id");
+		}
 		foreach ($modpids as $modpid) {	
 			$this->Project->bindUser();
 			$this->Project->id = $modpid['ProjectShare']['project_id'];

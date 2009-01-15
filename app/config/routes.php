@@ -110,6 +110,12 @@ Router::connect('/projects/:username/:id/:action', array('controller' => 'projec
 													)
 				);
 
+Router::connect('/projects/:username/:id/:arg/:action', array('controller' => 'projects', 'action' => $Action),
+													array(
+													   'pass' => array('username','id'),
+													   array('id' => '([0-9]+)','username'=>'([A-Za-z0-9-_]+)')
+													)
+				);
 //Then we connect url '/test' to our test controller. This is helpful in developement.
 Router::connect('/tests', array('controller' => 'tests', 'action' => 'index'));
 
