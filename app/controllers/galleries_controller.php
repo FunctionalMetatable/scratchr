@@ -2588,7 +2588,7 @@ Class GalleriesController extends AppController {
 					$temp_comment['Gcomment']['ignored'] = false;
 				}
 			}
-			$all_replies = $this->set_replies($gallery_id, $current_id, $user_id, $isLogged, 3);
+			$all_replies = $this->set_replies($gallery_id, $current_id, $user_id, $isLogged, NUM_COMMENT_REPLY);
 			$temp_comment['Gcomment']['replylist'] = $all_replies;
 			$final_comments[$counter] = $temp_comment;
 			$counter++;
@@ -2673,7 +2673,7 @@ Class GalleriesController extends AppController {
 	function set_replies($gallery_id, $source_id, $user_id, $isLogged, $limit = 0) {
 		$gallery = $this->Gallery->find("Gallery.id = $gallery_id");
 		$creator_id = $gallery['Gallery']['user_id'];
-		$all_replies = $this->Gcomment->findAll("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = $source_id");
+		$all_replies = $this->Gcomment->findAll("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = $source_id",null,'Gcomment.timestamp DESC',$limit);
 
 		$counter = 0;
 		$final_comments = Array();
@@ -2714,14 +2714,7 @@ Class GalleriesController extends AppController {
 			$final_comments[$counter] = $temp_comment;
 			$counter++;
 		}
-		if ($limit == 0) {
-		} else {
-			$length = count($final_comments);
-			if ($limit >= $length) {
-			} else {
-				$final_comments = array_splice($final_comments, 0, $limit);
-			}
-		}
+		
 		return $final_comments;
 	}
 	
