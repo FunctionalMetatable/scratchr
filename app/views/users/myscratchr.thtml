@@ -232,8 +232,8 @@ function langList($countries) {
 		<?php ___('Custom notification'); ?>:
 		<br>
 		<select id="admin_notifications" name="type" onchange="showTemplate();" style="width:167px">
-		<?php foreach($admin_notifications as $notification): ?>
-		<option value="<?= $notification['NotificationType']['type']; ?>" <?php if($notification['NotificationType']['type'] == 'blank') { echo 'selected="true"'; } ?> >
+		<?php foreach($admin_notifications as $key=>$notification): ?>
+		<option value="<?= $notification['NotificationType']['type']; ?>" <?php if($key == 0) { echo 'selected="true"'; } ?> >
 			<?= $notification['NotificationType']['type']; ?>
 		</option>
 		<?php endforeach; ?>
@@ -244,7 +244,11 @@ function langList($countries) {
 		</span>
 		<?php endforeach; ?>
 		<br>
-		<textarea id="custom_message" name="custom_message"></textarea>
+		<textarea id="custom_message" name="custom_message">
+        <?php if(isset($notifications[0]['NotificationType']['template'])): ?>
+            <?= $notifications[0]['NotificationType']['template'] ?>
+        <?php endif; ?>
+        </textarea>
 		<input id="template" type="hidden" name="template" />
 		<br>
 		<input value="<?php __('send'); ?>" type="submit" class="button">
