@@ -164,8 +164,12 @@ class Notification extends AppModel {
                             'notification_type_id' => $notification_type_id,
             );
         }
-        $this->create();
-		$ok = $this->saveAll($data);
+        
+        $ok = false;
+        if(!empty($data)) {
+            $this->create();
+            $ok = $this->saveAll($data);
+        }
 
         return ($ok) ? $users : array();
     }
