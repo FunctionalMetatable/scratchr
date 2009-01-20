@@ -152,13 +152,14 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 		// for real remixes
 		$realremixes =$project['Project']['realremixes'];
 		$relatedrealtag = $html->url('/projects/'.$urlname.'/'.$pid.'/'.'real'.'/mods');
+/*
 		if(!empty($realremixes)) {
-			$relatedrealtxt = ", <a href='$relatedrealtag'>$realremixes " . ___('remix by other people', true);
+			 $relatedrealtxt = ", <a href='$relatedrealtag'>$realremixes " . ___('remix by other people', true);
 		 	if ($realremixes > 1)
 				$relatedrealtxt = ", <a href='$relatedrealtag'>$realremixes " . ___('remixes by other people', true);
 			$relatedrealtxt .= '</a>';
 		}
-		
+*/		
 		if(!empty($downloadcount)) {
 			$downloadtxt = ", $downloadcount " . ___('download', true);
 		 	if ($downloadcount > 1)
