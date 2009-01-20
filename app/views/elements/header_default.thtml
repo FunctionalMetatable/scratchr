@@ -64,7 +64,6 @@ for ($z = 0; $z < $langnum; $z++) {
 	if ($lang[$z][2]==$langselect){
 	$stop=$lang[$z][0];
 	} 
-	else {next;}
 }			 
 ?>
 
@@ -167,3 +166,9 @@ echo "</ul>";
 				
 ?>
 </div>
+<!-- ClickTale Top part -->
+<script type="text/javascript">
+var WRInitTime=(new Date()).getTime();
+</script>
+<!-- ClickTale end of Top part -->
+ 
