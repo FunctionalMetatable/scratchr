@@ -59,7 +59,7 @@ for ($z = 0; $z < $langnum; $z++) {
 	if ($lang[$z][2]==$langselect){
 	$stop=$lang[$z][0];
 	} 
-	else {next;}
+	//else {next;} //??
 }			 
 ?>
 

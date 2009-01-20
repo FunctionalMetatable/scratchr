@@ -2274,5 +2274,12 @@
 		}
 		exit;
 	}
+
+    function send_bulk_notifications() {
+        if(!empty($this->data)) {
+            $users = $this->Notification->addBulkNotifications($this->data['usernames'], $this->data['text']);
+            $this->set('users', $users);
+        }
+    }
 }
 ?>
