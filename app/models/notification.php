@@ -139,6 +139,36 @@ class Notification extends AppModel {
 		$this->create();
 		$this->save($data);
 	}
+
+    /**
+	* saves bulk notifications sent from admin panel to a set of users
+	* @param string $usernames  comma separated usernames
+    * @param string $text       text of the notification
+	*/
+    function addBulkNotifications($to_usernames, $text) {
+        //get notification type id for bulk
+        $notification_type_id = $this->__getNotificationTypeId('bulk');
+
+        //get to_user_ids from to_usernames
+        $to_usernames = trim($to_usernames, ', ');
+        $patterns = array('/(\s*)(\w+)(\s*)/i', '/(\s*)(\w+)(\s*),(\s*)/i');
+        $replacements = array('"${2}"', '"${2}",');
+        $to_usernames = preg_replace($patterns, $replacements, $to_usernames);
+      
+        $users = $this->query('SELECT id, username FROM `users` WHERE `username` IN ('.$to_usernames.')');
+
+        $data = array();
+        foreach($users as $user) {
+            $data[] = array('to_user_id' => $user['users']['id'],
+                            'extra' => $text,
+                            'notification_type_id' => $notification_type_id,
+            );
+        }
+        $this->create();
+		$ok = $this->saveAll($data);
+
+        return ($ok) ? $users : array();
+    }
 	
 	/**
 	* Returns notification type id from notification type string to a user specified by $user_id

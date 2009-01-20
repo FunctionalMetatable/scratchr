@@ -41,4 +41,9 @@
     <a href="/administration/notifications"></a>
 	<h3><a href="<?php echo $html->url('/administration/notifications')?>"> Admin Notifications </a></h3>			
 	</div>
+
+    <div class="gallerythumb clearme">
+    <a href="/administration/send_bulk_notifications"></a>
+	<h3><a href="<?php echo $html->url('/administration/send_bulk_notifications')?>"> Send Bulk Notifications </a></h3>
+	</div>
 </div>
