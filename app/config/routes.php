@@ -78,6 +78,7 @@ Router::connect('/users/removefavorites', array('controller' => 'users', 'action
 Router::connect('/users/*', array('controller' => 'users', 'action' => 'view'));
 
 // Project pages
+Router::connect('/projects/share_project', array('controller' => 'projects', 'action' => 'share_project'));
 Router::connect('/projects/gallerylist/*', array('controller' => 'projects', 'action' => 'gallerylist'));
 Router::connect('/projects/feature/*', array('controller' => 'projects', 'action' => 'feature'));
 Router::connect('/projects/defeature/*', array('controller' => 'projects', 'action' => 'defeature'));
