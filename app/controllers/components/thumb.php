@@ -71,7 +71,7 @@ class ThumbComponent{
 			
 			// Load phpThumb
 			
-			App::import('Vendor', 'example', array('file'=>'phpThumb'.DS.'phpthumb.class.php'));
+			App::import('Vendor', 'example', array('file'=>'php_thumb'.DS.'phpthumb.class.php'));
 		
 		
 		if(!file_exists(WWW_ROOT.$this->image_location.DS.$dir.DS.$image_name)) {
@@ -130,7 +130,7 @@ class ThumbComponent{
 		
 		
 		// Load phpThumb
-		App::import('Vendor', 'example', array('file'=>'phpThumb'.DS.'phpthumb.class.php'));
+		App::import('Vendor', 'example', array('file'=>'php_thumb'.DS.'phpthumb.class.php'));
 		
 		$phpThumb = new phpThumb();
 		
