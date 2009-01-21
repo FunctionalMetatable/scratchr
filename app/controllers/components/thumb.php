@@ -3,7 +3,7 @@
  * Thumbnail Generator for CakePHP that uses phpThumb (http://phpthumb.sourceforge.net/)
  *
  * @package default
- * @author Nate Constant
+ * 
  **/ 
 
 class ThumbComponent{
@@ -26,7 +26,7 @@ class ThumbComponent{
 	/**
 	 * Default width if not set
 	 */
-	var $width = 100;
+	var $width = 133;
 	
 	/**
 	 * Default height if not set
@@ -71,7 +71,7 @@ class ThumbComponent{
 			
 			// Load phpThumb
 			
-			App::import('Vendor', 'example', array('file'=>'php_thumb'.DS.'phpthumb.class.php'));
+			App::import('Vendor', 'example', array('file'=>'phpThumb'.DS.'phpthumb.class.php'));
 		
 		
 		if(!file_exists(WWW_ROOT.$this->image_location.DS.$dir.DS.$image_name)) {
@@ -101,8 +101,7 @@ class ThumbComponent{
 		
 		// if we have any errors, remove any thumbnail that was generated and return false
 		if(count($this->errors)>0){
-	//		echo __LINE__;
-	//		exit;
+	
 			if(file_exists(WWW_ROOT.DS.$this->image_location.DS.$dir.DS.$image_name)) {
 
 			}
@@ -114,6 +113,52 @@ class ThumbComponent{
 	function addError($msg){
 		$this->errors[] = $msg;
 	}
+	
+	function resizeThumb($filename,  $name, $width , $height ) {
+					
+		// Make sure we have the name of the uploaded file and that the Model is specified
+		
+		// save the file to the object
+		$this->file = $filename;		
+		
+		// verify that the size is greater than 0 ( emtpy file uploaded )
+		if(!$this->file['size']){
+			$this->addError('File Size is 0');
+			return false;
+		}
+		
+		
+		
+		// Load phpThumb
+		App::import('Vendor', 'example', array('file'=>'phpThumb'.DS.'phpthumb.class.php'));
+		
+		$phpThumb = new phpThumb();
+		
+		$phpThumb->setSourceFilename($this->file['tmp_name']);		
+		$phpThumb->setParameter('w', $width);
+		$phpThumb->setParameter('h', $height);
+		
+		$phpThumb->setParameter('far','C');
+		if($phpThumb->generateThumbnail()){
+			if(!$phpThumb->RenderToFile($name)){
+				$this->addError('Could not render file to: '.$name);
+			}
+		} else {
+			$ext = '';
+			$this->addError('could not generate thumbnail');
+			$this->addError(implode('; '."\n",$phpThumb->debugmessages));	
+		}
+		
+		// if we have any errors, remove any thumbnail that was generated and return false
+		if(count($this->errors)>0){
+			if(file_exists($name)) {
+				unlink($name);
+			}
+			return false;
+		} else return true;
+			
+	}
+	
 	
 	  
 }
