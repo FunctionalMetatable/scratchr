@@ -169,7 +169,7 @@ class AppController extends Controller {
 	**/
 	function convertDate($original=null)
 	{
-		$actual_date = date('M Y', strtotime($original));
+		$actual_date = date('n/Y', strtotime($original));
 		return $actual_date;
 	}
 	
