@@ -743,7 +743,7 @@ class UsersController extends AppController {
 				if(SHOW_RIBBON ==1):
 				$text =$this->convertDate($userProject['FeaturedProject']['timestamp']);
 			 	$image_name =$this->ribbonImageName($userProject['FeaturedProject']['timestamp']);
-			 	$this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='30x20',125,125);
+			 	$this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='40x30',125,125);
 				
 				$id = $userProject['Project']['id'];
 				$image_name =$image_name; 
