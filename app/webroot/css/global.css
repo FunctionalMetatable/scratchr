@@ -2135,3 +2135,55 @@ position:absolute;
 opacity:0.9;
 }
 /******showing ribbon on feature projects****/
+
+/*********project sharing*******/
+
+.gallery_create_tag_row {
+	float: left;
+	width: 40%;
+	margin-right: 5px;
+}
+.project_share_form {
+	float: left;
+	width: 90%;
+	padding: 3px;
+	margin-top: 5px;
+	text-align: left;
+}
+
+	
+.project_share_item_left {
+	float: left;
+	margin-right: 10px;
+	width: 30%;
+}
+
+.project_share_item_right {
+	float: left;
+	margin-left: 10px;
+	width: 60%;
+}
+.checkbox label{
+width:0px;!important;
+}
+.project_tag{
+margin-left:160px;
+margin-bottom:10px;
+}
+.project_share_item_right .checkbox{
+margin:0 !important;
+}
+
+.project_share_item_checkbox {
+	float: left;
+	margin-left: 10px;
+	width: 60%;
+	margin-left:135px;
+}
+
+#error_message .message{
+text-align:left;
+background:none!important;
+border:none;
+color:#FF0000;
+}
