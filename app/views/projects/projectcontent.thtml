@@ -155,7 +155,12 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 
 		if(!empty($remixer)) {
 			 $remixertxt =___(' by ',true);
-			 $remixertxt .= "$remixer " . ___('remixer people', true);
+			 
+			 
+			 if($remixer >1)
+			 $remixertxt .= "$remixer " . ___('people', true);
+			 else
+			 $remixertxt .= "$remixer " . ___('person', true);
 		 	}
 			
 		
