@@ -397,7 +397,7 @@ Class ServicesController extends Controller {
 			$this->log("failed executing java program: $ret<br>");
 			return false; 
 		}
-
+$this->log(print_r($retvals,true));
 		foreach ($retvals as $retval) {
 			if(! $this->isempty($retval)) {
 //				$this->log("calling storehistory");
@@ -477,10 +477,15 @@ Class ServicesController extends Controller {
 						$total_remixes = $current_related_project['Project']['remixes'] + 1;
 						
 						$this->Project->saveField("remixes", $total_remixes);
-						if($current_related_project['Project']['user_id'] !=$user_shared_id)
+						$project_record = $this->Project->find(array('name' => $pname));
+						$project_record_id = $project_record['Project']['id'];
+						$project_share_count = $this->ProjectShare->findCount("ProjectShare.related_project_id = $project_record_id AND ProjectShare.user_id = $user_shared_id AND ProjectShare.user_id!=ProjectShare.related_user_id");
+						
+						if($project_share_count ==1)
 						{
-							$total_realremixes = $current_related_project['Project']['realremixes'] + 1;
-							$this->Project->saveField("realremixes", $total_realremixes);
+							$total_remixer = $project_record['Project']['remixer'] + 1;
+							$this->Project->id = $project_record_id;
+							$this->Project->saveField("remixer", $total_remixer);
 						}
 					}
 				} else {
