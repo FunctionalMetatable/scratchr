@@ -14,7 +14,7 @@ define("INVALID_PROJECT", 407);
 
 Class ServicesController extends Controller {
 	// var $components = array("Security");
-    var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave');
+    var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave','ProjectScript');
     var $doc = null;
     var $service = null;
     var $debug = null;
@@ -167,7 +167,7 @@ Class ServicesController extends Controller {
 			}
 			$project_numberOfSprites = (!empty($this->params['form']['numberOfSprites'])) ? trim($this->params['form']['numberOfSprites']) : null;
 			$project_totalScripts = (!empty($this->params['form']['totalScripts'])) ? trim($this->params['form']['totalScripts']) : null;
-			$project_allScripts = (!empty($this->params['form']['allScripts'])) ? trim($this->params['form']['allScripts']) : null;
+			$project_text_Scripts = (!empty($this->params['form']['allScripts'])) ? trim($this->params['form']['allScripts']) : null;
 			if($this->params['form']['hasSoundSensorBlocks']=='false')
 			$project_has_sound_blocks = 0;
 			else
@@ -226,11 +226,7 @@ Class ServicesController extends Controller {
 			if ($project_totalScripts)
 				$this->data['Project']['totalScripts'] = $project_totalScripts;
 			
-			if ($project_allScripts){
-				$this->data['Project']['text_scripts'] = $project_allScripts;}
-			
 				$this->data['Project']['has_sound_blocks'] = $project_has_sound_blocks;
-			
 				$this->data['Project']['has_sensorboard_blocks'] = $project_has_sensorboard_blocks;
 			if ($project_scratch_version_date)
 				$this->data['Project']['scratch_version_date'] = $project_scratch_version_date;
@@ -252,6 +248,10 @@ Class ServicesController extends Controller {
 			if ($new_project)
 				$project_id = $this->Project->getLastInsertID();
 				
+			//Save allScripts content to table project_scripts.
+			$project_text_info = array('project_id' => $project_id, 'text_scripts' => $project_text_Scripts);
+			$this->ProjectScript->save($project_text_info);
+			
 			// upload binary file
 			$bin_file = WWW_ROOT . getBinary($urlname, $project_id, false, DS);
 			mkdirR(dirname($bin_file) . DS);
@@ -397,7 +397,7 @@ Class ServicesController extends Controller {
 			$this->log("failed executing java program: $ret<br>");
 			return false; 
 		}
-$this->log(print_r($retvals,true));
+//$this->log(print_r($retvals,true));
 		foreach ($retvals as $retval) {
 			if(! $this->isempty($retval)) {
 //				$this->log("calling storehistory");
