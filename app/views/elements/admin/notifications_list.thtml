@@ -1,3 +1,10 @@
+<?php if(empty($data)): ?>
+<div class="comment">
+<span class='notification_unread'>
+    No Notifications
+</span>
+</div>
+<?php else: ?>
 <?php 
 	$pagination->setPaging($paging);
 	echo $this->renderElement('pagination');
@@ -12,3 +19,4 @@
 		<?php endif; ?>
 	</div>
 <?php endforeach; ?>
+<?php endif; ?>
