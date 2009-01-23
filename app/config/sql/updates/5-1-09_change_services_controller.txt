@@ -9,14 +9,14 @@ ALTER TABLE projects ADD FULLTEXT (text_scripts);
 
 //Create separate table to store text script
 
- CREATE TABLE `scratchr`.`project_scripts` (
+ CREATE TABLE `project_scripts` (
 `id` INT NOT NULL AUTO_INCREMENT ,
 `project_id` INT NOT NULL ,
 `text_scripts` MEDIUMTEXT NULL ,
 PRIMARY KEY ( `id` )
-) ENGINE = InnoDB 
+)  
 
-ALTER TABLE project_scripts ENGINE = MYISAM ;
+
 
 ALTER TABLE project_scripts ADD FULLTEXT (
 text_scripts
