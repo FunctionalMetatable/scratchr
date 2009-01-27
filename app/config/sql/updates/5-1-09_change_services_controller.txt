@@ -21,3 +21,16 @@ PRIMARY KEY ( `id` )
 ALTER TABLE project_scripts ADD FULLTEXT (
 text_scripts
 );
+
+//SQL query to move the content of project.text_scripts to that new table project_scripts.
+
+INSERT INTO project_scripts( `project_id` , `text_scripts` ) (
+
+SELECT id, text_scripts
+FROM projects
+)
+
+//remove the projects.text_scripts field
+
+ALTER TABLE `projects`
+  DROP `text_scripts`;
