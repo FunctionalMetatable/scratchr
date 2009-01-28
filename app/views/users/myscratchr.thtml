@@ -200,7 +200,7 @@ function langList($countries) {
 			<br>
 			<input value="<?php ___('update'); ?>" type="submit" class="button">
 			</form>
-			<br /><a href="<?php echo $html->url('/projects/share_project/')?>">Share Project</a>
+			<br /><a href="<?php echo $html->url('/services/share_project/')?>">Share Project</a>
 		<?php endif;?>
         
         

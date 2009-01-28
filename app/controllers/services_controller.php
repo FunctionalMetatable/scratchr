@@ -12,9 +12,11 @@ define("THUMBNAIL_UPLOAD_ERROR", 405);
 define("UNSUPPORTED_SERVICE", 406);
 define("INVALID_PROJECT", 407);
 
-Class ServicesController extends Controller {
+Class ServicesController extends AppController {
 	// var $components = array("Security");
     var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave','ProjectScript');
+	var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
+	 var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
     var $doc = null;
     var $service = null;
     var $debug = null;
@@ -27,6 +29,11 @@ Class ServicesController extends Controller {
         );
 
     function beforeFilter() {
+	if ($this->action == 'share_project') {
+	$this->autoRender = true;
+	}
+	else
+	{
         $this->autoRender = false;
         $this->autoLayout = false;
         $this->service = $service = $this->params['action'];
@@ -61,6 +68,7 @@ Class ServicesController extends Controller {
             $this->afterFilter();
             die;
         }
+	  }//$this->action	
     }
 	
 	function __addError($code, $msg) {
@@ -77,11 +85,16 @@ Class ServicesController extends Controller {
     }
 
     function afterFilter() {
+	if ($this->action == 'share_project') {
+	}
+	else
+	{
         // write xml return footer
         $this->doc = $this->doc . "</scratchr-" . $this->service . ">";
         echo($this->doc);
         exit();
-    }
+	}	
+  }
 
 
     // clients should really send an encrypted scratch key
@@ -100,6 +113,257 @@ Class ServicesController extends Controller {
 		$this->err_codes[DB_SAVE_ERROR] = "unable to save info to database";
 		$this->err_codes[THUMBNAIL_UPLOAD_ERROR] = "unable to upload thumbnail file";
 	}
+	
+	
+	/**
+	@author ashok gond
+	share project
+	*/
+	function share_project()
+	{	
+		
+		$user_record = $this->Session->read('User');
+        if (empty($user_record)) {
+			$this->setFlash(___("You need to login to upload", true), FLASH_NOTICE_KEY);
+			$this->redirect('/login');
+        }
+		if(!empty($this->data['Project']['more_tags1']))
+		array_push($this->data['Project']['tags'],$this->data['Project']['more_tags1']);
+		if(!empty($this->data['Project']['more_tags2']))
+		array_push($this->data['Project']['tags'],$this->data['Project']['more_tags2']);
+		if(!empty($this->data['Project']['more_tags3']))
+		array_push($this->data['Project']['tags'],$this->data['Project']['more_tags3']);
+		if(!empty($this->data['Project']['more_tags4']))
+		array_push($this->data['Project']['tags'],$this->data['Project']['more_tags4']);
+		
+		if(!empty($this->data))
+		{	
+			$project_name =  (!empty($this->data['Project']['project_name'])) ? trim($this->data['Project']['project_name']) : null;
+			
+			$binary_file = (!empty($this->params["form"]["binary_file"])) ? $this->params["form"]["binary_file"]:null;
+        	$thumbnail_file = (!empty($this->params["form"]["priview_image"])) ? $this->params["form"]["priview_image"]:null;
+        	$preview_file = (!empty($this->params["form"]["priview_image"])) ? $this->params["form"]["priview_image"]:null;
+		
+			// binary file required
+			if (!isset($binary_file['error']) || $binary_file['error']) 
+			{
+				$this->setFlash(___("Select a scratch file", true));
+					$this->redirect('/services/share_project');
+				
+			}
+			$banary_file_type = explode('.',$binary_file['name']);
+			if($banary_file_type['1'] !='sb')
+			{
+					$this->setFlash(___("Select a scratch file with extension .sb only", true));
+					$this->redirect('/services/share_project');
+			}
+			
+			//Make sure  Scratch file contains string "Scratch"
+			$fp=fopen($binary_file['tmp_name'],"r");
+			$content=fread($fp,10);
+			fclose($fp);
+			$pos=strpos($content,'Scratch');
+			if($pos===0){
+			}
+			else{
+					$this->setFlash(___("Invalid scratch file", true));
+					$this->redirect('/services/share_project');
+			}
+			
+			
+			if (!isset($preview_file['error']) || $preview_file['error']) 
+			{
+				$this->setFlash(___("Select a priview image", true));
+					$this->redirect('/services/share_project');
+				
+			}
+			if($preview_file['type'] == "image/png"){
+			}
+			else{
+					$this->setFlash(___("Upload only a PNG image", true));
+					$this->redirect('/services/share_project');
+			}
+			if (empty($project_name)) 
+			{
+				
+				$this->setFlash(___("Please Enter Project name", true));
+				$this->redirect('/services/share_project');
+				
+			}
+		
+        // get project info
+        $user_id = $user_record['id'];
+		$user_status = $user_record['status'];
+        $urlname = $user_record['urlname'];
+		
+		//check if user is banned
+		if ($user_status != 'locked') {
+			$inappropriates = array();
+			
+			// save project data
+			$project = null;
+			
+			if(isInappropriate($project_name))
+			{
+				$project_name = "Untitled";
+				$inappropriates[] = 'inappropriate_ptitle_upload';
+				
+			}
+			$project_description = (!empty($this->data['Project']['project_description'])) ? trim($this->data['Project']['project_description']) : null;
+			if(isInappropriate($project_description))
+			{
+				$project_description = "";
+				$inappropriates[] = 'inappropriate_pdesc_upload';
+			}
+			
+			$project = $this->Project->find("Project.name = "."'".$project_name."' AND user_id = ". $user_id);
+			$project_id = null;
+			$new_project = null;
+			$project_version = null;
+			
+			if (!empty($project)) 
+			{
+				// update existing
+				$project_id = $project['Project']['id'];
+				$project_version = ((int)$project['Project']['version']); // + 1;
+				$this->Project->id = $project_id;
+				$data['Project']['version'] = $project_version + 1;
+				if($project['Project']['proj_visibility']=='delbyadmin' || $project['Project']['proj_visibility']=='censbyadmin' ||$project['Project']['proj_visibility']=='censbycomm')
+				{
+					$this->setFlash(___("Invalid Project", true), FLASH_NOTICE_KEY);
+					$this->redirect('/services/share_project');
+				}
+				else
+				{
+					$data['Project']['proj_visibility'] = "visible";
+				}	
+			} 
+			else 
+			{
+				// create new project
+				$Project->id = null;
+				$data['Project']['name'] = $project_name;
+				$data['Project']['user_id'] = $user_id;
+				$data['Project']['version'] = 1;
+				$new_project = true;
+			}
+			
+			if ($project_description)
+				$data['Project']['description'] = $project_description;
+			
+			if ($this->data['Project']['version_date'])
+				$data['Project']['scratch_version_date'] = $this->data['Project']['version_date'];
+
+		/* performs INET_ATON on the IP string aaa.bbb.ccc.ddd, converts to 4
+		4 byte int (long). To view in sql do 
+		USE mysql;
+		SELECT INET_NTOA(longintval); */	
+		if ($_SERVER['REMOTE_ADDR'])
+			$data['Project']['uploader_ip'] = ip2long($_SERVER['REMOTE_ADDR']);
+			
+			if (!$this->Project->save($data['Project'])) {
+				$this->setFlash(___("Error with project saving", true));
+				$this->redirect('/services/share_project');
+			}
+			
+			
+				if ($new_project)
+					$project_id = $this->Project->getLastInsertID();
+					
+				// upload binary file
+				$bin_file = WWW_ROOT . getBinary($urlname, $project_id, false, DS);
+				mkdirR(dirname($bin_file) . DS);
+				/**
+				For write log to app/tmp/project_$projectid.log during sharing project.
+				*/
+				if(WRITE_LOG == 1){
+				$current_date = date('d M,Y')."\n";
+				$root_path = APP.'tmp'.'/'.'project'.'_'.$project_id.'.log';
+				$fh = fopen($root_path,'w');
+				$str = str_repeat("-", 20)."\n";
+				fwrite($fh,$current_date);
+				fwrite($fh,$str);
+				fwrite($fh, print_r($this->params,true));
+				fwrite($fh,$str);
+				fclose($fh);
+				}
+				if (!$new_project)
+				{
+					// rename old version
+					$new_file = WWW_ROOT . getBinary($urlname, $project_id . "." . $project_version, false, DS);
+					rename($bin_file, $new_file);
+				}
+				
+				if (!move_uploaded_file($binary_file['tmp_name'], $bin_file)) {
+				$this->setFlash(___("Binary upload error", true));
+				$this->redirect('/services/share_project');
+			}
+					
+			if (isset($preview_file['error']) && !$preview_file['error']) {
+				 $med_thumbnail_file = WWW_ROOT . getThumbnailImg($urlname, $project_id, 'medium', false, DS);
+				mkdirR(dirname($med_thumbnail_file) . DS);
+				$this->Thumb->resizeThumb($preview_file,$med_thumbnail_file ,480,360);
+				
+			}
+			
+			if (isset($thumbnail_file['error']) && !$thumbnail_file['error']) {
+				 $sm_thumbnail_file = WWW_ROOT . getThumbnailImg($urlname, $project_id, 'mini', false, DS);
+				mkdirR(dirname($sm_thumbnail_file) . DS);
+				$this->Thumb->resizeThumb($thumbnail_file,$sm_thumbnail_file,133,100);
+				 
+			}
+				// process tags
+			if (!empty($this->data['Project']['tags'])) {
+				
+				
+				foreach ($this->data['Project']['tags'] as $tag) {
+					$ntag = strtolower(trim($tag));
+					if (!strcmp($ntag,""))
+						continue;
+						
+					if(isInappropriate($ntag))
+					{
+						$this->notify('inappropriate_ptag_upload', $user_id,
+										array('project_id' => $project_id,
+										'project_owner_name' => $urlname),
+										array($ntag));
+						continue;
+					}
+					$this->Tag->bindProjectTag(array('project_id' => $project_id));
+					$tag_record = $this->Tag->find("name = '$ntag'",null,null,2);
+
+					if (!empty($tag_record)) {
+						if (empty($tag_record['ProjectTag'])) {
+							// create project_tag record
+							$this->ProjectTag->save(array('ProjectTag'=>array('id' => null, 'project_id' => $project_id, 'tag_id' =>$tag_record['Tag']['id'], 'user_id' => $user_id)));
+							$this->ProjectTag->id=null;
+						}
+					} else {
+						// create tag record
+						$this->Tag->save(array('Tag'=>array('name'=>$ntag)));
+						$this->Tag->id=null; // otherwise things will be overridden
+						$tag_id = $this->Tag->getLastInsertID();
+						$this->ProjectTag->save(array('ProjectTag'=>array('id' => null, 'project_id'=>$project_id, 'tag_id'=>$tag_id, 'user_id' => $user_id)));
+						$this->ProjectTag->id=null;
+					}
+				}
+			}
+				foreach($inappropriates as $inappropriate) {
+				$this->notify($inappropriate, $user_id,
+					array('project_id' => $project_id));
+			}
+			
+			$this->extracthistory($project_id, $user_id);
+			
+			$this->redirect('/users/'.$user_record['urlname']);
+			
+		}//check if user is banned	
+	}//$this->data
+		
+	}//function
+	
+	
+	
 	
 	
 	function upload() {
@@ -369,14 +633,14 @@ Class ServicesController extends Controller {
 	// but couldn't call them remotely
 	// extracts history for a specific project owned by a specific user
 	// uses java extractor
-	function extracthistory($project_shared_id, $user_shared_id, $newproject) {
+	function extracthistory($project_shared_id, $user_shared_id, $newproject=null) {
 //		$this->log("extracting for $project_shared_id, $user_shared_id");
-		$ppath = APP.'webroot/static/projects/';
+		//$ppath = APP.'webroot/static/projects/';
 		//$ppath = '/llk/scratchr/production/app/webroot/static/projects/';
-		//$ppath = 'e:/scratchr/app/webroot/static/projects/';
-		$jar = APP."misc/historyextraction/ScratchAnalyzer.jar";
+		$ppath = 'e:/scratchr/app/webroot/static/projects/';
+		//$jar = APP."misc/historyextraction/ScratchAnalyzer.jar";
 		//$jar = "/llk/scratchr/production/app/misc/historyextraction/ScratchAnalyzer.jar";
-		//$jar = "e:/scratchr/app/misc/historyextraction/ScratchAnalyzer.jar";
+		$jar = "e:/scratchr/app/misc/historyextraction/ScratchAnalyzer.jar";
 		$jar = escapeshellcmd($jar);
         $powner = $this->User->findById($user_shared_id);
 		$sbfilepath =  $ppath . $powner['User']['username'] . "/" . $project_shared_id . ".sb";		
