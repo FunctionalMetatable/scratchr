@@ -204,7 +204,7 @@ Class HomeController extends AppController {
     function __getTopViewedProjects($exclude_project_ids) {
         $exclude_clause = '';
         if(!empty($exclude_project_ids)) {
-            $exclude_clause = 'AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+            $exclude_clause = ' AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
         }
         $this->Project->bindUser();
         if ($this->getContentStatus() =='safe') {
@@ -218,7 +218,7 @@ Class HomeController extends AppController {
     function __getTopRemixedProjects($exclude_project_ids) {
         $exclude_clause = '';
         if(!empty($exclude_project_ids)) {
-            $exclude_clause = 'AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+            $exclude_clause = ' AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
         }
         $this->Project->bindUser();
         if ($this->getContentStatus() =='safe') {
@@ -232,7 +232,7 @@ Class HomeController extends AppController {
     function __getTopLovedProjects($exclude_project_ids) {
         $exclude_clause = '';
         if(!empty($exclude_project_ids)) {
-            $exclude_clause = 'AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+            $exclude_clause = ' AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
         }
         $this->Project->bindUser();
         return $this->Project->findAll("Project.created > now() - interval 10 day AND  Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'".$exclude_clause, NULL, "Project.loveit DESC", NUM_TOP_RATED, 1, NULL, $this->getContentStatus());
@@ -241,16 +241,16 @@ Class HomeController extends AppController {
     function __getTopDownloadedProjects($exclude_project_ids) {
         $exclude_clause = '';
         if(!empty($exclude_project_ids)) {
-           $exclude_clause = 'AND projects.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+           $exclude_clause = ' AND projects.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
         }
 
         $this->Project->bindUser();
         $onlysafesql = '';
         if ($this->getContentStatus() == 'safe') {
-            $onlysafesql =  "AND projects.status = 'safe'";
+            $onlysafesql =  " AND projects.status = 'safe'";
         }
         else {
-            $onlysafesql =  "AND projects.status <> 'notsafe'";
+            $onlysafesql =  " AND projects.status <> 'notsafe'";
         }
         $topdpids =  $this->Project->query("SELECT project_id, COUNT(*) FROM `downloaders`,`projects` WHERE projects.created > now()  - interval 7 day AND projects.id = downloaders.project_id AND proj_visibility = 'visible' $exclude_clause $onlysafesql GROUP BY project_id ORDER BY COUNT(*) DESC LIMIT 3");
 		$sqlor = "Project.id = " . (isset($topdpids[0]['downloaders']['project_id'])?$topdpids[0]['downloaders']['project_id']:-1) . " OR ";
@@ -265,7 +265,8 @@ Class HomeController extends AppController {
         $this->Project->bindUser();
         $result = $this->Project->query("SELECT MAX(projects.id) AS maxid FROM projects");
         $random = rand(1, $result[0][0]['maxid']);
-        $query = "Project.id >= $random AND Project.status <> 'notsafe'";
+        $query = "Project.id >= $random AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible'";
+
         $count = $this->Project->findCount($query);
         if ($count < NUM_TOP_RATED) $query = "Project.id <= ".($random+$count);
             return $this->Project->findAll($query, NULL, "Project.id", NUM_TOP_RATED, 1, NULL, $this->getContentStatus());
