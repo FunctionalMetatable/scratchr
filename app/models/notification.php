@@ -151,19 +151,24 @@ class Notification extends AppModel {
 
         //get to_user_ids from to_usernames
         $to_usernames = trim($to_usernames, ', ');
+        
         $patterns = array('/(\s*)(\w+)(\s*)/i', '/(\s*)(\w+)(\s*),(\s*)/i');
         $replacements = array('"${2}"', '"${2}",');
         $to_usernames = preg_replace($patterns, $replacements, $to_usernames);
       
         $users = $this->query('SELECT id, username FROM `users` WHERE `username` IN ('.$to_usernames.')');
 
+        $all_users = explode('","', trim($to_usernames,'"'));
+        $valid_users = array();
         $data = array();
         foreach($users as $user) {
             $data[] = array('to_user_id' => $user['users']['id'],
                             'extra' => $text,
                             'notification_type_id' => $notification_type_id,
             );
+            $valid_users[] = $user['users']['username'];
         }
+        $invalid_users = array_diff($all_users, $valid_users);
         
         $ok = false;
         if(!empty($data)) {
@@ -171,7 +176,7 @@ class Notification extends AppModel {
             $ok = $this->saveAll($data);
         }
 
-        return ($ok) ? $users : array();
+        return array('valids' => $valid_users, 'invalids' => $invalid_users);
     }
 	
 	/**

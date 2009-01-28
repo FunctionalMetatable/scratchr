@@ -22,12 +22,23 @@
         </p>
 	</form>
 	<br/>
-    <?php if(isset($users)): //bulk notifications were sent to some users?>
+
+    <?php if(!empty($users['valids'])): ?>
     <h3>Notifications were sent successfully to the following users:</h3>
-        <?php foreach($users as $user): ?>
-            <a href="/users/<?= $user['users']['username']; ?>">
-                <?= $user['users']['username']; ?>
-            </a>&nbsp;
-        <?php endforeach; ?>
-	<?php endif; ?>
+    <?php foreach($users['valids'] as $user): ?>
+        <a href="/users/<?= $user; ?>">
+            <?= $user; ?>
+        </a>&nbsp;
+    <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php if(!empty($users['invalids'])): ?>
+    <h3>Could not send notifications to the following users (usernames are invalid):</h3>
+    <?php foreach($users['invalids'] as $user): ?>
+        <span>
+            <?= $user; ?>
+        </span>&nbsp;
+    <?php endforeach; ?>
+    <?php endif; ?>
+        
 </div>
