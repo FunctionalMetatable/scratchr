@@ -198,7 +198,7 @@ Class HomeController extends AppController {
 
     function __getFeaturedProjects() {
         $this->Project->bindUser();
-        return $this->FeaturedProject->findAll(NULL, NULL, "FeaturedProject.id DESC", NUM_FEATURED_PROJECTS, NULL, 2);
+        return $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'", NULL, "FeaturedProject.id DESC", NUM_FEATURED_PROJECTS, NULL, 2);
     }
 
     function __getTopViewedProjects($exclude_project_ids) {

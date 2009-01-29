@@ -37,12 +37,12 @@ Class ChannelController extends AppController {
 	$this->pageTitle = "Scratch | Newest projects";
         $this->modelClass = "Project";
 	$options = array("sortBy"=>"created", "direction" => "DESC");
-        list($order,$limit,$page) = $this->Pagination->init(null, Array(), $options);
+        list($order,$limit,$page) = $this->Pagination->init("Project.proj_visibility = 'visible'", Array(), $options);
         $this->Project->bindUser();
 
 	$final_projects = $memcache->get("$prefix-channel-recent-$limit-$page");
         if ( $final_projects == "" ) {
-		$final_projectstmp = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+		$final_projectstmp = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
 		$final_projectstmp = $this->set_projects($final_projectstmp);
 		$memcache->set("$prefix-channel-recent-$limit-$page", $final_projectstmp, false, 180) or die ("Failed to save data at the server");
         	$this->set('data', $final_projectstmp);
@@ -64,9 +64,9 @@ Class ChannelController extends AppController {
 		$this->pageTitle = ___("Scratch | Featured projects", true);
         $this->modelClass = "FeaturedProject";
 		$options = array("sortByClass" => "FeaturedProject", "sortBy"=>"timestamp", "direction" => "DESC");
-        list($order,$limit,$page) = $this->Pagination->init(null, Array(), $options);
+        list($order,$limit,$page) = $this->Pagination->init("Project.proj_visibility = 'visible'", Array(), $options);
         $this->Project->bindUser();
-		$data = $this->FeaturedProject->findAll(NULL, NULL, $order, $limit, $page, 3, $this->getContentStatus());
+		$data = $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, 3, $this->getContentStatus());
 		
 		$featured_feed_link = "/feeds/getFeaturedProjects";
 		
@@ -86,12 +86,12 @@ Class ChannelController extends AppController {
 	$this->pageTitle = ___("Scratch | Top viewed projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"views", "direction" => "DESC");
-        list($order,$limit,$page) = $this->Pagination->init(null, Array(), $options);
+        list($order,$limit,$page) = $this->Pagination->init("Project.proj_visibility = 'visible'", Array(), $options);
         $this->Project->bindUser();
 
         $final_projects = $memcache->get("$prefix-channel-topviewed-$limit-$page");
         if ( $final_projects == "" ) {
-                $final_projectstmp = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+                $final_projectstmp = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
                 $final_projectstmp = $this->set_projects($final_projectstmp);
                 $memcache->set("$prefix-channel-topviewed-$limit-$page", $final_projectstmp, false, 600) or die ("Failed to save data at the server");
                 $this->set('data', $final_projectstmp);
@@ -116,13 +116,13 @@ Class ChannelController extends AppController {
 	$this->pageTitle = ___("Scratch | Top loved projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"loveit", "direction" => "DESC");
-        list($order,$limit,$page) = $this->Pagination->init("loveit > 0", Array(), $options);
+        list($order,$limit,$page) = $this->Pagination->init("loveit > 0 AND Project.proj_visibility = 'visible'", Array(), $options);
 		
         $this->Project->bindUser();
 
         $final_projects = $memcache->get("$prefix-channel-toploved-$limit-$page");
         if ( $final_projects == "" ) {
-                $final_projectstmp = $this->Project->findAll(NULL, NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+                $final_projectstmp = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
                 $final_projectstmp = $this->set_projects($final_projectstmp);
                 $memcache->set("$prefix-channel-toploved-$limit-$page", $final_projectstmp, false, 600) or die ("Failed to save data at the server");
                 $this->set('data', $final_projectstmp);
@@ -144,9 +144,9 @@ Class ChannelController extends AppController {
 		$this->layout = 'scratchr_explorer'; 
 		$this->pageTitle = "Scratch | Oldest projects";
         $this->modelClass = "Project";
-        list($order,$limit,$page) = $this->Pagination->init();
+        list($order,$limit,$page) = $this->Pagination->init("Project.proj_visibility = 'visible'");
         $this->Project->bindUser();
-        $this->set('data', $this->Project->findAll(NULL,  NULL, "Project.id ASC", $limit, $page));
+        $this->set('data', $this->Project->findAll("Project.proj_visibility = 'visible'",  NULL, "Project.id ASC", $limit, $page));
         $this->set('heading', "new projects");
         $this->render('explorer');
     }
@@ -168,9 +168,9 @@ Class ChannelController extends AppController {
 		$this->pageTitle = ___("Scratch | Most Remixed projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"remixes", "direction" => "DESC");
-        list($order,$limit,$page) = $this->Pagination->init("remixes > 0", Array(), $options);
+        list($order,$limit,$page) = $this->Pagination->init("remixes > 0 AND Project.proj_visibility = 'visible'", Array(), $options);
 		
-		$final_projects = $this->Project->findAll("remixes > 0", NULL, $order, $limit, $page, NULL);
+		$final_projects = $this->Project->findAll("remixes > 0 AND Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL);
 		$final_projects = $this->set_projects($final_projects);
 		
 		$remixed_feed_link = "/feeds/getTopRemixedProjects";
@@ -191,11 +191,10 @@ Class ChannelController extends AppController {
 		$this->layout = 'scratchr_explorer'; 
 		$this->pageTitle = ___("Scratch | Surprise projects", true);
         $this->modelClass = "Project";
-        $options = array("sortBy"=>"remixes", "direction" => "DESC");
-        list($order,$limit,$page) = $this->Pagination->init("remixes > 0", Array(), $options);
+       
 		$result = $this->Project->query("SELECT MAX(projects.id) AS maxid FROM projects");
         $random = rand(1, $result[0][0]['maxid']);
-        $query = "Project.id >= $random AND Project.status <> 'notsafe'";
+        $query = "Project.id >= $random AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible'";
         $count = $this->Project->findCount($query);
         if ($count < 10) $query = "Project.id <= ".($random+$count);
 		$final_projects = $this->Project->findAll($query, NULL, "Project.id", 10, 1, NULL);
