@@ -1,3 +1,4 @@
+
 <?php if ($isThemeOwner || $isAdmin): ?>
 	<div id="addprojectmember">
 		<?php e($ajax->link("<span class='button2'>" . ___('add my projects', true) . "</span>", '#', array('url'=>'/galleries/addprojectmember/' . $gallery_id, 'update'=>'gallery_addproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
@@ -13,9 +14,11 @@
 	</div>
 <?php elseif ($isThemeMember || $isFriend): ?>
 	<?php if ($membership_type <= 2 || $isPublic || $isFriend): ?>
-		<div id="addprojectmember">
-			<?php e($ajax->link("<span class='button2'>" . ___('add my projects', true) . "</span>", '#', array('url'=>'/galleries/addprojectmember/' . $gallery_id, 'update'=>'gallery_addproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
-		</div>
+		<?php if(!in_array($sessionUID,$ignored_user_array)):?>
+			<div id="addprojectmember">
+				<?php e($ajax->link("<span class='button2'>" . ___('add my projects', true) . "</span>", '#', array('url'=>'/galleries/addprojectmember/' . $gallery_id, 'update'=>'gallery_addproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
+			</div>
+		<?php endif;?>
 		<div id="removeprojectmember">
 			<?php e($ajax->link("<span class='button2'>" . ___('remove my projects', true) . "</span>", '#', array('url'=>'/galleries/removeprojectmember/' . $gallery_id, 'update'=>'gallery_removeproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
 		</div>
@@ -23,9 +26,11 @@
 		<?php ___("You have bookmarked this gallery, but you don't have permission to modify its contents"); ?>
 	<?php endif; ?>
 <?php elseif($isPublic): ?>
+	<?php if(!in_array($sessionUID,$ignored_user_array)):?>
 		<div id="addprojectmember">
 			<?php e($ajax->link("<span class='button2'>" . ___('add my projects', true) . "</span>", '#', array('url'=>'/galleries/addprojectmember/' . $gallery_id, 'update'=>'gallery_addproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
 		</div>
+	<?php endif?>	
 		<div id="removeprojectmember">
 			<?php e($ajax->link("<span class='button2'>" . ___('remove my projects', true) . "</span>", '#', array('url'=>'/galleries/removeprojectmember/' . $gallery_id, 'update'=>'gallery_removeproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
 		</div>
