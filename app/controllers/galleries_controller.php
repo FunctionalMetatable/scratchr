@@ -922,6 +922,12 @@ Class GalleriesController extends AppController {
 		$owner_id = $current_gallery['Gallery']['user_id'];
 		$total_projects = $this->GalleryProject->findCount("gallery_id = $gallery_id");
 		
+		//listing ignored user by gallery owner.
+		$ignored_user_array =array();
+		$ignore_user_list = $this->IgnoredUser->findAll("IgnoredUser.blocker_id = $owner_id",'user_id');
+		foreach($ignore_user_list as $ignore_user)
+		array_push($ignored_user_array,$ignore_user['IgnoredUser']['user_id']);
+		
 		$final_comments = $this->set_comments($gallery_id, $user_id, $isLogged);
 		$this->set_comment_errors(Array());
 		$final_tags = $this->set_tags($gallery_id, $user_id, $isLogged);
@@ -998,7 +1004,8 @@ Class GalleriesController extends AppController {
 			$this->set('upload_error', $upload_error);
 			$this->Session->del('upload_error');
 		}
-		
+		$this->set('ignored_user_array',$ignored_user_array);
+		$this->set('sessionUID',$sessionUID);
 		$this->set('gallery', $gallery);
 		$this->set('gallery_usage', $gallery_usage);
 		$this->set('actual_creation_date', $actual_creation_date);

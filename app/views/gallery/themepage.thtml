@@ -223,7 +223,7 @@
 	<div class="sidecontainer">
 		<div id="action_wrapper">
 			<?php
-				echo $this->renderElement('gallery/user_actions');
+				echo $this->renderElement('gallery/user_actions',array('ignored_user_array'=>$ignored_user_array,'sessionUID'=>$sessionUID));
 			?>
 		</div>
 	</div>
