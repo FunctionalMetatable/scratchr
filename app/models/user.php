@@ -53,7 +53,15 @@ Class User extends AppModel
     }
 	
 
-    function bindProject($conditions = null, $order = null) {
+    function bindThank() {
+        $this->bindModel(array(
+        'hasMany' => array(
+            'Thank' =>
+                array('className' => 'Thank',
+				'foreignKey' => 'reciever_id',))));
+                    
+    }
+	function bindProject($conditions = null, $order = null) {
         $this->bindModel(array(
         'hasMany' => array(
             'Project' =>

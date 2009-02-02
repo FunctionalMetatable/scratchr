@@ -715,6 +715,7 @@ class UsersController extends AppController {
 		$isLoggedIn = $this->isLoggedIn();
 		$this->User->bindMyThemes();
 		$this->Project->bindUser();
+		$this->User->bindThank();
 		$user_record = $this->User->find("urlname = '$urlname'", null, null, 2);
 		if(empty($user_record))
 			{
@@ -920,7 +921,7 @@ class UsersController extends AppController {
 			$this->set('upload_error', $upload_error);
 			$this->Session->del('upload_error');
 		}
-		
+		$this->set('thank_you_count', count($user_record['Thank']));
 		$this->set('comment_count', $comment_count);
 		$this->set('ignore_count', $ignore_count);
 		$this->set('karma_ratings', $karma_ratings);
