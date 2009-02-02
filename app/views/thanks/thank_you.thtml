@@ -1,0 +1,29 @@
+<div class="fullcontent">
+	<div id="admin_project_header">
+	<h3> Thank you to "<?php echo $username?>" </h3>
+	</div>
+	<div id="admin_project_content">
+    <?php if($isError): ?>
+		<div id="ignore_user_error">
+			<?php
+			$error = $errors[0];
+				echo " <font color='#FF0000'>$error</font>";
+			?>
+		</div>
+	<?php endif; ?>
+	<?php
+				echo "<div id='success_msg'>";
+				if ($session->check('Message.flash')):
+						$session->flash();
+				endif;
+				echo "</div>";
+?>
+	
+	<form id="admin_banuser" action="<?=e("/thanks/thank_you/".$user_id)?>" method="post">
+		<p>Reason: <br/><textarea id='reason' name="reason" cols="60" rows="2" tabindex="1"></textarea></p>
+		
+		
+		<input value="<?php ___('ok'); ?>" type="submit" class="button">
+	</form>
+    </div>
+</div>
