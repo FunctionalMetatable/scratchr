@@ -210,6 +210,8 @@ Class ServicesController extends AppController {
 				
 			}
 			$project_description = (!empty($this->data['Project']['project_description'])) ? trim($this->data['Project']['project_description']) : null;
+			
+			$project_text_Scripts = (!empty($this->params['form']['allScripts'])) ? trim($this->params['form']['allScripts']) : null;
 			if(isInappropriate($project_description))
 			{
 				$project_description = "";
@@ -269,6 +271,10 @@ Class ServicesController extends AppController {
 			
 				if ($new_project)
 					$project_id = $this->Project->getLastInsertID();
+					
+				//Save allScripts content to table project_scripts.
+				$project_text_info = array('project_id' => $project_id, 'text_scripts' => $project_text_Scripts);
+				$this->ProjectScript->save($project_text_info);	
 					
 				// upload binary file
 				$bin_file = WWW_ROOT . getBinary($urlname, $project_id, false, DS);
