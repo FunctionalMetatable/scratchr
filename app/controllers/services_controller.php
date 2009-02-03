@@ -121,7 +121,7 @@ Class ServicesController extends AppController {
 	*/
 	function share_project()
 	{	
-		
+		$this->pageTitle = ___("Scratch | Share project", true);
 		$user_record = $this->Session->read('User');
         if (empty($user_record)) {
 			$this->setFlash(___("You need to login to upload", true), FLASH_NOTICE_KEY);
