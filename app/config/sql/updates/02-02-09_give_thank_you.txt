@@ -1,0 +1,9 @@
+ CREATE TABLE `dev`.`thanks` (
+`id` INT NOT NULL AUTO_INCREMENT ,
+`sender_id` INT NOT NULL ,
+`reciever_id` INT NOT NULL ,
+`reason` TEXT NULL ,
+`timestamp` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+`ipaddress` INT NOT NULL ,
+PRIMARY KEY ( `id` )
+) 
