@@ -877,10 +877,10 @@ class UsersController extends AppController {
 		
 		$final_galleries = $this->set_galleries($user_id);
 		$final_galleries = $this->finalize_galleries($final_galleries);
-		$num_friends = $this->Relationship->findCount("user_id = $user_id");
+		$num_friends = $this->Relationship->findAll("user_id = $user_id");
 		$num_galleries = $this->GalleryMembership->findCount("GalleryMembership.user_id = $user_id");
 		
-		if ($num_friends > 5) {
+		if (count($num_friends) > 5) {
 			$this->set('showmorefriends' , true);
 		} else {
 			$this->set('showmorefriends' , false);
@@ -891,6 +891,18 @@ class UsersController extends AppController {
 		} else {
 			$this->set('showmoregalleries' , false);
 		}
+		//populate friends latest project
+		$friend_list =array();
+		$friends_project_list =array();
+		foreach($num_friends as $friends)
+		array_push($friend_list,$friends['Relationship']['friend_id']);
+		foreach($friend_list as $keys=>$friend_id)
+		{	
+			$friends_project = $this->Project->find("Project.user_id =$friend_id ",null,'Project.created DESC');
+			if(is_array($friends_project))
+			array_push($friends_project_list,$friends_project);
+		}
+		$this->set('friends_project_list',$friends_project_list);
 		
 		//sets the admin_comment if one exists for this user
 		$admin_comment_record = $this->AdminComment->findCount("user_id = $user_id");
