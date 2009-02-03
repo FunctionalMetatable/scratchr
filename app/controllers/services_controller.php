@@ -635,12 +635,12 @@ Class ServicesController extends AppController {
 	// uses java extractor
 	function extracthistory($project_shared_id, $user_shared_id, $newproject=null) {
 //		$this->log("extracting for $project_shared_id, $user_shared_id");
-		//$ppath = APP.'webroot/static/projects/';
+		$ppath = APP.'webroot/static/projects/';
 		//$ppath = '/llk/scratchr/production/app/webroot/static/projects/';
-		$ppath = 'e:/scratchr/app/webroot/static/projects/';
-		//$jar = APP."misc/historyextraction/ScratchAnalyzer.jar";
+		//$ppath = 'e:/scratchr/app/webroot/static/projects/';
+		$jar = APP."misc/historyextraction/ScratchAnalyzer.jar";
 		//$jar = "/llk/scratchr/production/app/misc/historyextraction/ScratchAnalyzer.jar";
-		$jar = "e:/scratchr/app/misc/historyextraction/ScratchAnalyzer.jar";
+		//$jar = "e:/scratchr/app/misc/historyextraction/ScratchAnalyzer.jar";
 		$jar = escapeshellcmd($jar);
         $powner = $this->User->findById($user_shared_id);
 		$sbfilepath =  $ppath . $powner['User']['username'] . "/" . $project_shared_id . ".sb";		
