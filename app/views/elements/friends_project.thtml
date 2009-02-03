@@ -1,0 +1,31 @@
+<?php //print_r($data)?>
+<div class="mystuff_content">
+<div class="mystuff_projects">
+<?php foreach($data as $contents): ?>
+	<?php
+		//$favorite_id = $favorite['Favorite']['id'];
+		$project = $contents['Project'];
+		$project_name = htmlspecialchars($project['name']);
+		$pid = $project['id'];
+		$owner = $contents['User'];
+		$owner_urlname = $owner['urlname'];
+		$owner_username = $owner['username'];
+		$project_thumbnail = getThumbnailImg($owner_urlname, $pid, 'mini', true);
+		$project_url = "/projects/".$owner_urlname."/".$pid;
+		$project_owner_url = "/users/".$owner_urlname;
+		if (strlen($project_name) >= 17) {
+			$project_name = substr($project_name,0,17) . "&#0133;";
+		}
+	?>
+	<div class="mystuff_thumb"> <a href="<?php echo $html->url($project_url)?>">
+	<?php echo $html->image($project_thumbnail,array('title'=>htmlspecialchars($project['name']),'alt'=>htmlspecialchars($project['name']),'width'=>'148','height'=>'111'))?>
+	
+	</a>
+		<h6><a href="<?php echo $html->url($project_url)?>"><?php e($project_name)?></a></h6>
+		<p><?php ___('by'); ?><a href="<?php echo $html->url($project_owner_url)?>"> <?php e($owner_username)?></a></p>
+	
+	</div>
+<?php endforeach; ?>
+</div>
+
+</div>

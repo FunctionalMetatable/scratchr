@@ -514,5 +514,19 @@ function langList($countries) {
 	</div>
 	</div>
 	<!-- ::: End projects ::: -->
+	
+	 <!-- ::: Begin friends projects ::: -->
+	<div class="mystuff_container">
+	
+    <!-- ::: Begin projects ::: -->
+		<div class="mystuff_header">
+			<h3><?php if ($isMe) ___("My Friend's project"); else {printf(___("%s's Friend's project", true), $user['username']);} ?></h3>
+		</div>
+		<?php
+			e($this->renderElement('friends_project', array('data' => $friends_project_list)));
+		?>
+	
+	</div>
+	<!-- ::: End friends projects ::: -->
   </div>
   <!-- ////// End main content ////// -->
