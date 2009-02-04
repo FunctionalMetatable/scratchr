@@ -78,12 +78,12 @@ for ($z = 0; $z < $langnum; $z++) {
       <li <?php if ($active_tab == "home"):?> id="active" <?php endif;?>><a href="<?php echo $html->url('/')?>"><?php ___('home'); ?></a></li>
       <li <?php if ($active_tab == "projects"):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'channel','action'=>'recent'))?>"><?php ___('projects'); ?></a></li>
       <li <?php if ($active_tab == "galleries"):?> id="active" <?php endif;?>><a href="<?php echo $html->url('/galleries/')?>"><?php ___('galleries'); ?></a></li>
-      <li <?php if ($this_controller_here === "http://scratch.wik.is/Support/"):?> id="active" <?php endif;?>><a href="http://scratch.wik.is/Support/"><?php ___('support'); ?></a></li>
+      <li <?php if ($this_controller_here === "/support"):?> id="active" <?php endif;?>><a href="/redirect/support"><?php ___('support'); ?></a></li> 
       
 	  <?php if (!$isBanned): ?>
 			<li <?php if ($this_controller_here === "/forums"):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'forums'))?>"><?php ___('forums'); ?></a></li>
 	  <?php endif; ?>
-      <li <?php if ($this_controller_here === "/about"):?> id="active" <?php endif;?>><a href="<?php echo $html->url('/about')?>"><?php ___('about'); ?></a></li>
+     <li <?php if ($this_controller_here === "/about"):?> id="active" <?php endif;?>><a href="<?php echo $html->url('/redirect/about')?>"><?php ___('about'); ?></a></li>
       <li <?php if ($this_controller_here === "/users/".$loggedInUrlname):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'users','action'=>'view'))?><?php echo '/'?><?php e($loggedInUrlname)?>"><?php ___('my stuff');?></a></li>
     </ul>
 <!-- ////// End main menu ////// -->

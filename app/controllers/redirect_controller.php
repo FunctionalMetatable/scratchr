@@ -1,5 +1,5 @@
 <?php
-class RedirectionController extends Controller {
+class RedirectController extends Controller {
 var $components = array('Cookie');
 var $uses =array();
 
