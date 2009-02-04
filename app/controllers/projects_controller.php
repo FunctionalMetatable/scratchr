@@ -553,8 +553,11 @@ class ProjectsController extends AppController {
         $project = $this->Project->read();
 		if (empty($project) || $project['User']['urlname'] !== $urlname)
             exit();
-		//$project_name = htmlspecialchars($project['Project']['name']);
+		
 		$project_name = $project['Project']['name'];
+		$special = array('|','/',':','?','*','<','>'); //here you can add as many char. you want
+		$project_name = str_replace($special,'',$project_name);
+		
 		//check if project is censored; if so, allow admin to view
 		if ($project['Project']['proj_visibility'] !== 'visible'){
 			if($this->isAdmin()){
