@@ -2182,3 +2182,11 @@ background:none!important;
 border:none;
 color:#FF0000;
 }
+
+/******Thank you mechanism *****/
+#thankDiv {
+	float: right;
+	text-align: right;
+	padding-left: 40px;
+	font-size:10px;
+}
