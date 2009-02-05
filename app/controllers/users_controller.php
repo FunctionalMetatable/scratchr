@@ -4,7 +4,7 @@ class UsersController extends AppController {
 	var $components = array('PaginationSecondary', 'Pagination','RequestHandler','FileUploader','Email','Thumb');
 	var $helpers = array('Pagination', 'Ajax', 'Javascript');
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject',
-						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable');
+						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable','Thank');
 
 
 	function admin_index() {
@@ -866,7 +866,20 @@ class UsersController extends AppController {
 
 			$this->set('isMyFriend', $isMyFriend);
 		}
-	
+		// set user thanks info
+            $similar_sender = null;
+		 $thanks_interval =THANKS_INTERVAL;
+		 $client_ip = ip2long($this->RequestHandler->getClientIP());
+		 $similar_sender = $this->Thank->hasAny("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.sender_id = $session_UID AND (Thank.reciever_id = $user_id OR Thank.ipaddress = $client_ip)");
+		
+		$this->set('similar_sender', $similar_sender);
+		if($isMe)
+		{
+		  $thanked_people_count = $this->Thank->query("SELECT count(DISTINCT(sender_id)) as cnt from thanks where `reciever_id`=$user_id");
+		
+		$this->set('thanked_count', $thanked_people_count['0']['0']['cnt']);
+		}
+		
 		//init shariables
 		$myShariables = $this->Shariable->findAll("user_id = $user_id");
 		$shariables_used = $this->Shariable->findCount("user_id = $user_id");
@@ -933,7 +946,7 @@ class UsersController extends AppController {
 			$this->set('upload_error', $upload_error);
 			$this->Session->del('upload_error');
 		}
-		$this->set('thank_you_count', count($user_record['Thank']));
+		
 		$this->set('comment_count', $comment_count);
 		$this->set('ignore_count', $ignore_count);
 		$this->set('karma_ratings', $karma_ratings);

@@ -166,11 +166,11 @@ function langList($countries) {
 	  </p>
 
 			<!--Thank you mechanism-->
-			<?php if($isLoggedIn):?>
-			<a href="<?php echo $html->url('/thanks/thank_you/'.$user['id'])?>"><?php ___('give thank you :'); ?></a>
-			<?php echo $thank_you_count; ?>
+			
+			<div id="thankDiv" class="flag"><?php e($this->renderElement("thank_you",array('isLoggedIn'=>$isLoggedIn,'user_id'=>$user['id'],'isMe'=>$isMe,'thanked_count'=>$thanked_count))); ?></div>
+			
 			<!--Thank you mechanism-->
-			<?php endif;?>
+			
 		<?php if ($isMe || $isAdmin):?>
 			<p>
             <a onclick="document.getElementById('user_icon').style.display='block'; return false;" href="#"><?php ___('change picture'); ?></a>

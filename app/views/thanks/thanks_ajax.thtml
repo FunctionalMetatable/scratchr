@@ -1,0 +1,4 @@
+<?php
+    e($this->renderElement("thank_you",array('just_thanked'=>$just_thanked,'isLoggedIn'=>$isLoggedIn,'user_id'=>$user_id))); 
+?>
+

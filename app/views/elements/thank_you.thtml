@@ -1,0 +1,69 @@
+<?php
+
+if ($isLoggedIn) {
+	
+     $have2desc = ___("You have to describe why you\'re want to give thank you!", true);
+    e($javascript->codeBlock("
+
+	function confirmThanking(text){
+		if (checkLogin()) {
+			if (!text.blank())
+			{
+			return true;	
+			}
+			else
+			{
+				alert(\"$have2desc\");
+				return false;
+			}
+		}
+		return false;
+	}
+			
+    "));
+
+} 
+else {
+
+   
+    $pleaselogin = ___('Please login.', true);
+    e($javascript->codeBlock("
+
+    function checkLogin() {
+        alert(\"$pleaselogin\");
+        return false;
+    }
+	
+    "));
+}
+?>
+<?php if($isMe):?>
+<h6><a href="<?php echo $html->url('/thanks/show/'.$user_id)?>"><?php echo $thanked_count;?>&nbsp;</a><?php ___('people thanked you'); ?></h6>
+
+<?php elseif ($isLoggedIn && (!empty($similar_sender) || !empty($just_thanked))):?>
+
+<h6><?php ___('You thanked it!'); ?></h6>
+
+<?php elseif (!$isLoggedIn):?>
+<h6><?php echo $ajax->link(___("Give thank you?", true), 
+'#', array("url"=>"/thanks/give/$user_id", "update"=>"thankDiv",
+ "condition"=>"checkLogin()", "style"=>"color:#aaa"), NULL, false); ?>
+
+</h6>
+<?php else:?>
+<script type="text/javascript">
+var explainThankMsg = "<?php ___('Please explain why do you want to give thank you.'); ?>";
+var explainThankTxt = '';
+</script>
+<h6><a href="#" onclick="$('thankMessageDiv').toggle();$('thankMessageDivTb').value=explainThankMsg;return false;"><?php ___('Give thank you?'); ?></a></h6>
+<div id="thankMessageDiv" style="display:none;">
+<?php e($ajax->form("", "post", array("update"=>"thankDiv",'url' => "/thanks/give/$user_id", "condition"=>"confirmThanking($('thankMessageDivTb').getValue())"))); ?>
+
+	<textarea cols="23" rows="5" name="reason" id="thankMessageDivTb" onClick="if(this.value==explainThankMsg){this.value=explainThankTxt;}"></textarea>
+	
+	
+	
+	<input type="submit" value="<?php ___("Ok"); ?>" onclick="if($('thankMessageDivTb').getValue() == explainThankMsg){$('thankMessageDivTb').value='';}"/>&nbsp;&nbsp;<a href="#" onClick="$('thankMessageDiv').toggle();return false;"> <?php ___('Cancel'); ?></a>
+</form>
+</div>
+<?php endif;?>

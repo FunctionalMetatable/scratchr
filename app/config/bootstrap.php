@@ -166,6 +166,9 @@ define("SUBTOPIC3", "scrach-feedback@mit");
 define('MAX_LINKS_PER_SITEMAP', 5000);
 define('CACHE_DURATION', '1 day');
 
+//Allow people to give thank you after n hours.
+define("THANKS_INTERVAL",5);
+
 /***
 * Define block time
 **/
