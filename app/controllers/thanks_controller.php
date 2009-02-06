@@ -34,7 +34,7 @@ class ThanksController extends AppController {
 			if($session_user_id !=$user_id)
 			$this->cakeError('error404');
 			$this->pageTitle = "Scratch | Thank you";
-			$this->Pagination->show = 2;
+			$this->Pagination->show = 20;
 			$this->modelClass = "Thank";
 			$options = Array("sortBy"=>"timestamp", "sortByClass" => "Thank", 
 						"direction"=> "DESC", "url"=>"/thanks/show/$user_id/" );
