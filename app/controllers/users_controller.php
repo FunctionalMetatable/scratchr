@@ -427,8 +427,17 @@ class UsersController extends AppController {
 	function loginsu($user) {
 		if($this->isAdmin()) {
 			$this->Session->delete('User');
+			$this->User->bindPermission();
+			$users_permission = array();
 			$user_record = $this->User->findByUsername($user);
+			
+			foreach($user_record['Permission'] as $user_permission) {
+				$id = $user_permission['id'];
+				$url_name =$user_permission['short_name'];
+				$users_permission[$url_name] = 1;
+			}
 			$this->Session->write('User', $user_record['User']);
+			$this->Session->write('UsersPermission', $users_permission);
 			$userID = $user_record['User']['id'];
 			$statID = $this->UserStat->field("id", "user_id = $userID");
 			echo "now you're $user"; die;
