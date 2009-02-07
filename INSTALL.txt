@@ -11,11 +11,11 @@ Apache needs mod-rewrite enabled and PHP needs php5-mysql
 
 3. Download CakePHP 1.2 
 
-4. Do an "svn checkout" of our code into CakePHP's directiry structure:
+4. Do an "svn checkout" of our code into CakePHP's directory structure:
    svn co http://svn.assembla.com/svn/scratchr
 
 5. Create a MySQL database based on sql/dbstructure.sql
-mysql -u root -p name_of_database < app/config/sql/dbstructure.sql
+    mysql -u root -p name_of_database < app/config/sql/dbstructure.sql
 
 6. Based on app/config/database.php.default create
 configuration file called app/config/database.php with the
