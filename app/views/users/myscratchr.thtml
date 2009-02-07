@@ -230,6 +230,7 @@ function langList($countries) {
 		}
 		function showNotifyForm() {
 			$('user_notify').style.display = 'block';
+            showTemplate();
 			//$('admin_notifications')[$('admin_notifications').selectedIndex]
 		}
 		</script>
@@ -250,11 +251,7 @@ function langList($countries) {
 		</span>
 		<?php endforeach; ?>
 		<br>
-		<textarea id="custom_message" name="custom_message">
-        <?php if(isset($notifications[0]['NotificationType']['template'])): ?>
-            <?= $notifications[0]['NotificationType']['template'] ?>
-        <?php endif; ?>
-        </textarea>
+		<textarea id="custom_message" name="custom_message"></textarea>
 		<input id="template" type="hidden" name="template" />
 		<br>
 		<input value="<?php __('send'); ?>" type="submit" class="button">
