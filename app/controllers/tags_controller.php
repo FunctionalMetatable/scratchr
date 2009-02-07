@@ -56,8 +56,8 @@ Class TagsController extends AppController {
 		$tag_id = $tag['Tag']['id'];
 		$final_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
         $count_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id";
-		
-		if ($content_status == "safe") {
+
+        if ($content_status == "safe") {
 			$final_criteria = "Project.status = 'safe' AND " . $final_criteria; 
 			$count_criteria = "Project.status = 'safe' AND " . $count_criteria; 
 		}
@@ -90,8 +90,18 @@ Class TagsController extends AppController {
 		 $final_count=$final_count_result[0][0]['count'];
 				
 		list($order,$limit,$page) = $this->Pagination->init($this->Project->addVisCheck($final_criteria), Array(), $options, $final_count);
-		$tag_projects = $this->ProjectTag->findAll($final_criteria, null, $order, $limit, $page, 3);
-			
+		
+        $mc_key = 'project_tag_'.$tag_id.'_'.$content_status.'_'. $order.'_'. $limit.'_'. $page;
+        $this->ProjectTag->mc_connect();
+        $tag_projects = $this->ProjectTag->mc_get($mc_key);
+        if(empty($tag_projects)) {
+            $tag_projects = $this->ProjectTag->findAll($final_criteria, null, $order, $limit, $page, 3);
+            $this->ProjectTag->mc_set($mc_key, $tag_projects, false, 10080); //store for 7 days
+        }
+        $this->ProjectTag->mc_close();
+
+        $tag_projects = $this->ProjectTag->findAll($final_criteria, null, $order, $limit, $page, 3);
+        
 		$tag_projects = $this->set_projects($tag_projects);
 		$this->set('option', $option);
         $this->set('tag_projects', $tag_projects);
