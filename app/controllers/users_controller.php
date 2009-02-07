@@ -876,7 +876,7 @@ class UsersController extends AppController {
 			$this->set('isMyFriend', $isMyFriend);
 		}
 		// set user thanks info
-            $similar_sender = null;
+         $similar_sender = null;
 		 $thanks_interval =THANKS_INTERVAL;
 		 $client_ip = ip2long($this->RequestHandler->getClientIP());
 		 $similar_sender = $this->Thank->hasAny("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.sender_id = $session_UID AND (Thank.reciever_id = $user_id OR Thank.ipaddress = $client_ip)");
@@ -888,7 +888,8 @@ class UsersController extends AppController {
 		
 		$this->set('thanked_count', $thanked_people_count['0']['0']['cnt']);
 		}
-		
+		else
+		$this->set('thanked_count',0);
 		//init shariables
 		$myShariables = $this->Shariable->findAll("user_id = $user_id");
 		$shariables_used = $this->Shariable->findCount("user_id = $user_id");
