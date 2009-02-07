@@ -1548,7 +1548,7 @@ class UsersController extends AppController {
 		$this->autoRender = false;
 		$this->Pagination->show = 20;
 		$isMe = $this->activeSession($user_id);
-		if (!$isMe) {
+		if (!($this->isAdmin() || $isMe)) {
 			$this->__err();
 		}
 		
