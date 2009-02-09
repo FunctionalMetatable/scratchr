@@ -13,6 +13,12 @@
     function beforeFilter() {
 		$user_id = $this->getLoggedInUserID();
 		$users_permission =$this->isAnyPermission();
+		if(($this->action =='ban_ip' || $this->action =='ban_user' || $this->action =='index') || $this->isAdmin())
+		{}
+		else
+		{
+			$this->cakeError('error404');
+		}
 		if (($this->isAdmin() || isset($users_permission['block_IP']) || isset($users_permission['block_account'])))
 		{}
 		else
