@@ -794,14 +794,15 @@ class ProjectsController extends AppController {
 	function lovers($urlname=null, $pid=null) {
 		$this->exitOnInvalidArgCount(2);
 		if ($urlname == null || $pid == null)
-			$this->__err();
+			$this->cakeError('error404');
 
 		if (!$this->isAdmin() && $urlname !== $this->getLoggedInUrlname())
-			$this->__err();
+			$this->cakeError('error404');
 
 		$this->Project->bindUser();
 		$this->Project->id = $pid;
         $project = $this->Project->read();
+		$this->pageTitle = "Project | "."'".$project['Project']['name']."'"." | love it's";
         if (empty($project) || $project['User']['urlname'] !== $urlname)
             $this->cakeError('error404'); //$this->__err();
 
