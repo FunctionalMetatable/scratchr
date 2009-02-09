@@ -96,6 +96,8 @@ $this->params['webservices']
   * Tag clound consts
   */
  define("TAG_CLOUD_HOME", 30);
+ define("TAG_PAGINATION_CACHE_TTL", 720); //12 hours
+ define("TAG_PAGINATION_CACHE_TTL_CREATION", 360); //6 hours
  define("TAG_CLOUD_BIG", 500);
 
  /**

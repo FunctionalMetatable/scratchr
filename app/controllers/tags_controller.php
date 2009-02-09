@@ -96,7 +96,12 @@ Class TagsController extends AppController {
         $tag_projects = $this->ProjectTag->mc_get($mc_key);
         if(empty($tag_projects)) {
             $tag_projects = $this->ProjectTag->findAll($final_criteria, null, $order, $limit, $page, 3);
-            $this->ProjectTag->mc_set($mc_key, $tag_projects, false, 10080); //store for 7 days
+            $ttl = TAG_PAGINATION_CACHE_TTL;
+            if($option == 'creation') { //for sort by creation date
+                $ttl = TAG_PAGINATION_CACHE_TTL_CREATION;
+            }
+            echo $ttl;
+            $this->ProjectTag->mc_set($mc_key, $tag_projects, false, $ttl);
         }
         $this->ProjectTag->mc_close();
 
