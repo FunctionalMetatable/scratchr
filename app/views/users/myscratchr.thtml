@@ -209,11 +209,11 @@ function langList($countries) {
 		<?php endif;?>
         
         
-        
+       
         <?php if(isset($users_permission['block_account']) && $isLoggedIn):?>
         <br /><a href="<?php echo $html->url('/administration/ban_user/')?><?php echo $user_id?>">Ban User</a>
         <?php endif?>
-        <?php if(isset($users_permission['block_account']) && $isLoggedIn):?>
+        <?php if(isset($users_permission['block_IP']) && $isLoggedIn):?>
         <br /><a href="<?php echo $html->url('/administration/ban_ip/')?><?php echo $user_id?>/<?php echo $ip=long2ip($user['ipaddress']) ?>">Ban IP</a>
         <?php endif?>
         
