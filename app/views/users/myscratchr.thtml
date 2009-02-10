@@ -444,7 +444,7 @@ function langList($countries) {
 <?php if($content_status == 'all'): ?>
     <div class="sidecontainer">
       <h4><?php ___('Galleries'); ?></h4>
-	  <?php echo $isIgnored?>
+	 
 	  <?php if(!$isIgnored):?>
 	  	<?php if (empty($themes)) :?>
 		<div><?php if ($isMe) ___("You have not created any Galleries."); else printf(___('%s has not created any Galleries', true), $urlname); ?></div>
