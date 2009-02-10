@@ -822,10 +822,20 @@ class UsersController extends AppController {
 		$relations = $this->Relationship->findAll("user_id = $user_id", NULL, "Relationship.timestamp DESC", 5, 1, NULL);
 		$this->set('friends', $relations);
 
+		 $similar_sender = false;;
+		$isIgnored=false;
 		//determines if the profile page being viewed is that of a friend
 		if ($isLoggedIn)
 		{
 			$session_UID = $this->getLoggedInUserID();
+			$isIgnored = $this->IgnoredUser->hasAny("IgnoredUser.blocker_id = $session_UID AND IgnoredUser.user_id = $user_id");
+			
+			// set user thanks info
+        
+		 $thanks_interval =THANKS_INTERVAL;
+		 $client_ip = ip2long($this->RequestHandler->getClientIP());
+		 $similar_sender = $this->Thank->hasAny("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.sender_id = $session_UID AND (Thank.reciever_id = $user_id OR Thank.ipaddress = $client_ip)");
+			
 			$isMyFriend = false;
 
 			if ($isMe)
@@ -875,13 +885,9 @@ class UsersController extends AppController {
 
 			$this->set('isMyFriend', $isMyFriend);
 		}
-		// set user thanks info
-         $similar_sender = null;
-		 $thanks_interval =THANKS_INTERVAL;
-		 $client_ip = ip2long($this->RequestHandler->getClientIP());
-		 $similar_sender = $this->Thank->hasAny("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.sender_id = $session_UID AND (Thank.reciever_id = $user_id OR Thank.ipaddress = $client_ip)");
 		
-		$this->set('similar_sender', $similar_sender);
+		
+		
 		if($isMe)
 		{
 		  $thanked_people_count = $this->Thank->query("SELECT count(DISTINCT(sender_id)) as cnt from thanks where `reciever_id`=$user_id");
@@ -957,6 +963,9 @@ class UsersController extends AppController {
 			$this->Session->del('upload_error');
 		}
 		
+		
+		$this->set('isIgnored',$isIgnored);
+		$this->set('similar_sender', $similar_sender);
 		$this->set('comment_count', $comment_count);
 		$this->set('ignore_count', $ignore_count);
 		$this->set('karma_ratings', $karma_ratings);
