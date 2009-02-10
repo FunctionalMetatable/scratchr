@@ -482,8 +482,9 @@ function langList($countries) {
 		</div>
 		
 		<?php } ?>
-	   
+	    <?php if(!$isIgnored):?>
 	   <p class="more"><a href="<?php echo $html->url('/users/showgalleries/')?><?php e($user['id']); ?>"><?php ___('See more');?></a> </p>
+	   <?php endif;?>
     </div>
 <?php endif; ?>
   </div>
