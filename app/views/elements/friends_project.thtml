@@ -27,5 +27,10 @@
 	</div>
 <?php endforeach; ?>
 </div>
-
+<div class="pagination_container">
+	<?php 
+		$pagination->setPaging($paging_ternary);
+		echo $this->renderElement('pagination_ternary'); 
+	?>
+</div>
 </div>

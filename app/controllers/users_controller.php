@@ -1,7 +1,7 @@
 <?php
 class UsersController extends AppController {
 
-	var $components = array('PaginationSecondary', 'Pagination','RequestHandler','FileUploader','Email','Thumb');
+	var $components = array('PaginationTernary','PaginationSecondary', 'Pagination','RequestHandler','FileUploader','Email','Thumb');
 	var $helpers = array('Pagination', 'Ajax', 'Javascript');
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject',
 						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable','Thank');
@@ -605,6 +605,31 @@ class UsersController extends AppController {
 	/**
 	/* Ajax pagination helper
 	**/
+	function renderFriendProjects($user_id)
+	{
+		$num_friends = $this->Relationship->findAll("user_id = $user_id");
+		
+		$friend_list =array();
+		$friends_project_list =array();
+		foreach($num_friends as $friends)
+		array_push($friend_list,$friends['Relationship']['friend_id']);
+		$friend_ids = implode(',',$friend_list);
+		
+		$this->PaginationTernary->show = 6;
+		$this->modelClass = "Project";
+		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );	
+
+		list($order,$limit,$page) = $this->PaginationTernary->init("Project.user_id in (".$friend_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
+		
+		
+		$friends_project = $this->Project->findAll("Project.user_id in (".$friend_ids.") ",null,$order, $limit, $page);
+		
+		$this->set('friends_project_list',$friends_project);
+		$this->render('render_friend_projects_ajax', 'ajax');
+		return;
+	
+	}
+	
 	function renderProjects($urlname=null, $option = "projects") {
 		$this->autoRender = false;
 	
@@ -821,7 +846,7 @@ class UsersController extends AppController {
 		$this->Relationship->bindFriend();
 		$relations = $this->Relationship->findAll("user_id = $user_id", NULL, "Relationship.timestamp DESC", 5, 1, NULL);
 		$this->set('friends', $relations);
-
+		
 		 $similar_sender = false;;
 		$isIgnored=false;
 		//determines if the profile page being viewed is that of a friend
@@ -906,6 +931,8 @@ class UsersController extends AppController {
 		
 		$final_galleries = $this->set_galleries($user_id);
 		$final_galleries = $this->finalize_galleries($final_galleries);
+		
+		
 		$num_friends = $this->Relationship->findAll("user_id = $user_id");
 		$num_galleries = $this->GalleryMembership->findCount("GalleryMembership.user_id = $user_id");
 		
@@ -925,13 +952,18 @@ class UsersController extends AppController {
 		$friends_project_list =array();
 		foreach($num_friends as $friends)
 		array_push($friend_list,$friends['Relationship']['friend_id']);
-		foreach($friend_list as $keys=>$friend_id)
-		{	
-			$friends_project = $this->Project->find("Project.user_id =$friend_id ",null,'Project.created DESC');
-			if(is_array($friends_project))
-			array_push($friends_project_list,$friends_project);
-		}
-		$this->set('friends_project_list',$friends_project_list);
+		$friend_ids = implode(',',$friend_list);
+		
+		$this->PaginationTernary->show = 6;
+		$this->modelClass = "Project";
+		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );	
+
+		list($order,$limit,$page) = $this->PaginationTernary->init("Project.user_id in (".$friend_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
+		
+		
+		$friends_project = $this->Project->findAll("Project.user_id in (".$friend_ids.") ",null,$order, $limit, $page);
+		
+		$this->set('friends_project_list',$friends_project);
 		
 		//sets the admin_comment if one exists for this user
 		$admin_comment_record = $this->AdminComment->findCount("user_id = $user_id");
