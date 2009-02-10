@@ -444,6 +444,8 @@ function langList($countries) {
 <?php if($content_status == 'all'): ?>
     <div class="sidecontainer">
       <h4><?php ___('Galleries'); ?></h4>
+	  <?php echo $isIgnored?>
+	  <?php if(!$isIgnored):?>
 	  	<?php if (empty($themes)) :?>
 		<div><?php if ($isMe) ___("You have not created any Galleries."); else printf(___('%s has not created any Galleries', true), $urlname); ?></div>
 		<?php else:?>
@@ -473,6 +475,7 @@ function langList($countries) {
 			<?php endforeach;?>
 		</ul>
 		<?php endif;?>
+	<?php endif;?>
 		<?php if ($isMe) { ?>
 		<div>
 		<a href="<?php echo $html->url('/galleries/')?>"><?php ___('Browse galleries')?></a> <?php ___('or')?> <a href="<?php echo $html->url('/galleries/create')?>"><?php ___('create a gallery!')?></a>
@@ -494,7 +497,9 @@ function langList($countries) {
 			<h3><?php if ($isMe) ___("My Projects"); else {printf(___("%s's Projects", true), $user['username']);} ?></h3>
 		</div>
 		<?php
+		if(!$isIgnored):
 			e($this->renderElement('user_projects', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $projects, 'feed_link'=>$feed_link,'featureProlectList'=>$featureProlectList)));
+		endif;
 		?>
 	</div>
 	</div>
@@ -506,7 +511,9 @@ function langList($countries) {
 			<h3><?php if ($isMe) ___("My Favorites"); else {printf(___("%s's Favorites", true), $user['username']);} ?></h3>
 		</div>
 		<?php
+			if(!$isIgnored):
 			e($this->renderElement('user_favorites', array('isAdmin' => $isAdmin, 'user' => $user, 'isMe' => $isMe, 'data' => $favorites)));
+			endif;
 		?>
 	</div>
 	</div>
@@ -520,7 +527,9 @@ function langList($countries) {
 			<h3><?php if ($isMe) ___("My Friend's project"); else {printf(___("%s's Friend's project", true), $user['username']);} ?></h3>
 		</div>
 		<?php
+			if(!$isIgnored):
 			e($this->renderElement('friends_project', array('data' => $friends_project_list)));
+			endif;
 		?>
 	
 	</div>
