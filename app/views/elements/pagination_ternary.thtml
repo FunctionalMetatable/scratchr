@@ -1,0 +1,18 @@
+<div id='pagination_ternary' class='pagination'>
+<?php
+    if($pagination->setPaging($paging_ternary)):
+    $leftArrow = "<<  ";
+    $rightArrow = "  >>";
+	
+    $prev = $pagination->prevPage($leftArrow,false);
+    $prev = $prev?$prev:$leftArrow;
+    $next = $pagination->nextPage($rightArrow,false);
+    $next = $next?$next:$rightArrow;
+
+    $pages = $pagination->pageNumbers(" | ");
+	//to remove line "Showing: a-b of c"
+    /*echo $pagination->result()."<br>";*/
+	echo $pages;
+    endif;
+?>
+</div>
