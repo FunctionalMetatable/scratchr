@@ -614,8 +614,8 @@ class UsersController extends AppController {
 		foreach($num_friends as $friends)
 		array_push($friend_list,$friends['Relationship']['friend_id']);
 		$friend_ids = implode(',',$friend_list);
-		
-		$this->PaginationTernary->show = 6;
+		$page_limit = NUM_FRIEND_PROJECTS;
+		$this->PaginationTernary->show = $page_limit;
 		$this->modelClass = "Project";
 		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );	
 
@@ -953,8 +953,8 @@ class UsersController extends AppController {
 		foreach($num_friends as $friends)
 		array_push($friend_list,$friends['Relationship']['friend_id']);
 		$friend_ids = implode(',',$friend_list);
-		
-		$this->PaginationTernary->show = 6;
+		$page_limit = NUM_FRIEND_PROJECTS;
+		$this->PaginationTernary->show = $page_limit;
 		$this->modelClass = "Project";
 		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );	
 

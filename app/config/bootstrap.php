@@ -70,6 +70,10 @@ $this->params['webservices']
  To enable/disable to write debug log for service controller.Value 1 for enable and 0 for desable
  */
  define("WRITE_LOG", 1);
+ /**
+ Set how many friend projects to be show.
+ */
+ define("NUM_FRIEND_PROJECTS", 6);
  
  /**
  Set how many comment reply to be show.
