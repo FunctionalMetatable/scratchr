@@ -204,10 +204,18 @@
 	<?php
 		$club_name = htmlspecialchars($scratch_club['name']);
 		$club_name_s = (strlen($club_name) > 23) ? substr($club_name,0,23) . "&#0133;" : $club_name ;
+		$pos=strpos($scratch_club['description'],'--');
+		if($pos===false){
+		$gallery_desc = $scratch_club['description'];
+		}
+		else{
+			$desc_array =explode('--',$scratch_club['description']);
+		 	$gallery_desc = $desc_array['0'];
+		}
 	?>
       <h4><?php ___('Scratch Design Studio');?></h4>
       <h5><a href="/galleries/view/<?php e($scratch_club['id']) ?>"><?php e($club_name_s)?></a></h5>
-      <p><a href="/galleries/view/<?php e($scratch_club['id']) ?>"><img src="<?php e($scratch_club['icon_src']); ?>" title="<?php e($club_name)?>" alt="<?php e($club_name)?>" width="90" height="68"></a><?php e($scratch_club['description'])?></p>
+      <p><a href="/galleries/view/<?php e($scratch_club['id']) ?>"><img src="<?php e($scratch_club['icon_src']); ?>" title="<?php e($club_name)?>" alt="<?php e($club_name)?>" width="90" height="68"></a><?php e($gallery_desc)?></p>
       <p class="more"><a href="/galleries/browse/clubbed"><?php ___('See more');?></a> </p>
     </div>
 
