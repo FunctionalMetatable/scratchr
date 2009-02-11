@@ -555,7 +555,7 @@ class ProjectsController extends AppController {
             exit();
 		
 		$project_name = $project['Project']['name'];
-		$special = array('|','/',':','?','*','<','>'); //here you can add as many char. you want
+		$special = array('|','/',':','?','*','<','>','&'); //here you can add as many char. you want
 		$project_name = str_replace($special,'',$project_name);
 		
 		//check if project is censored; if so, allow admin to view
