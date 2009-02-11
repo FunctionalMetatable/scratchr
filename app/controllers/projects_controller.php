@@ -802,7 +802,8 @@ class ProjectsController extends AppController {
 		$this->Project->bindUser();
 		$this->Project->id = $pid;
         $project = $this->Project->read();
-		$this->pageTitle = "Project | "."'".$project['Project']['name']."'"." | love it's";
+		$this->pageTitle = "Project | ". $project['Project']['name']." | love it's";
+		
         if (empty($project) || $project['User']['urlname'] !== $urlname)
             $this->cakeError('error404'); //$this->__err();
 
