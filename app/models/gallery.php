@@ -135,7 +135,7 @@ Class Gallery extends AppModel {
 	function remove_project($id) {
 		if ($id) {
 			$this->id = $id;
-			$old_count = $this->total_projects;
+			$old_count = $this->field('total_projects',"id = $id");
 			$new_count = $old_count - 1;
 			$this->saveField('total_projects', $new_count);
 		}
@@ -144,7 +144,7 @@ Class Gallery extends AppModel {
 	function add_project($id) {
 		if ($id) {
 			$this->id = $id;
-			$old_count = $this->total_projects;
+			$old_count = $this->field('total_projects',"id = $id");
 			$new_count = $old_count + 1;
 			$this->saveField('total_projects', $new_count);
 		}
