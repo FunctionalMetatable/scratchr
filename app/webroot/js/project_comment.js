@@ -34,14 +34,13 @@ function showReplyBox(comment_id, showReplies, toggle) {
 			link.innerHTML = 'hide';
 		}
 	}
-	
+
 	if (showReplies) {
+		text_input.value = "";	
 		list.style.display = 'block';
-		linkb.innerHTML = 'hide replies';
+		linkb.innerHTML = 'hide replies'; 
 		var button = document.getElementById('project_comment_reply_submit_' + comment_id);
-		text_input.value = "";
 		button.disabled = false;
-		
 		if (view_hide_frame.style.display != 'inline') {
 			view_hide_frame.style.display = 'inline'
 		}
