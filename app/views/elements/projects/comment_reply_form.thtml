@@ -11,7 +11,7 @@
 		<?php
 			echo $ajax->submit(___('Reply', true), 
 				array('id' => 'project_comment_reply_submit_' . $comment_id, 
-				"loading" => "disableReply($comment_id);",
+				
 				"class"=>"button",
 				"url"=>"/projects/comment_reply/$comment_id/$comment_level", 
 				"update"=>"reply_list_$comment_id", 
