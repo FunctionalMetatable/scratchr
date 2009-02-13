@@ -1,4 +1,4 @@
-<?php //print_r($data)?>
+
 <div class="mystuff_content">
 <div class="mystuff_projects">
 <?php foreach($data as $contents): ?>
@@ -29,8 +29,10 @@
 </div>
 <div class="pagination_container">
 	<?php 
+		if(isset($paging_ternary)):
 		$pagination->setPaging($paging_ternary);
-		echo $this->renderElement('pagination_ternary'); 
+		echo $this->renderElement('pagination_ternary');
+		endif; 
 	?>
 </div>
 </div>
