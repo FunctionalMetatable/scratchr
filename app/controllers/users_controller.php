@@ -60,7 +60,13 @@ class UsersController extends AppController {
 		$client_ip = ip2long($this->RequestHandler->getClientIP());
 		$user_data = $this->data;
 		$errors = Array();
+		$multiple_account_error =array();
+		$account_from_same_ip = false;
+		$signup_interval = SIGNUP_INTERVAL;
+		$account_from_same_ip = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
 		
+		if($account_from_same_ip)
+		array_push($multiple_account_error, ___('You can not create multiple account from same Ip address upto some time interval .',true));
 		$this->set('username_error', ___('username must be at least 3 letters and/or numbers, no spaces', true));
 		if(!empty($this->data['User'])) {
 			$this->data['User']['username']  = str_replace(" ", "", $this->data['User']['username']);
@@ -136,18 +142,22 @@ class UsersController extends AppController {
 				 //at some point we though of having a urlname
 				 $this->data['User']['urlname'] =  $this->data['User']['username'];
 				 $this->data['User']['ipaddress'] = $client_ip;
-				if ($this->User->save($this->data['User'], false)) {
-					$this->data['User']['id'] = $this->User->getLastInsertID();
-					$this->setFlash(___("Welcome!", true) . " <a href='/pages/download'>" . ___('Download Scratch', true) . "</a>", FLASH_NOTICE_KEY);
-					$saved_user_id = $this->data['User']['id'];
-					$user_record = $this->User->find("User.id = $saved_user_id");
-					$this->Session->write('User', $user_record['User']);
-					$this->redirect('/users/'.$this->data['User']['username']);
-				} else {
-					$this->data['User']['password'] = '';
-					$this->data['User']['password2'] = '';
-					$this->setFlash(___("could not save information, try again", true), FLASH_ERROR_KEY);
+				 if(!$account_from_same_ip){
+					if ($this->User->save($this->data['User'], false)) {
+						$this->data['User']['id'] = $this->User->getLastInsertID();
+						$this->setFlash(___("Welcome!", true) . " <a href='/pages/download'>" . ___('Download Scratch', true) . "</a>", FLASH_NOTICE_KEY);
+						$saved_user_id = $this->data['User']['id'];
+						$user_record = $this->User->find("User.id = $saved_user_id");
+						$this->Session->write('User', $user_record['User']);
+						$this->redirect('/users/'.$this->data['User']['username']);
+					} else {
+						$this->data['User']['password'] = '';
+						$this->data['User']['password2'] = '';
+						$this->setFlash(___("could not save information, try again", true), FLASH_ERROR_KEY);
+					}
 				}
+				else
+				array_push($multiple_account_error, ___('You can not create multiple account from same Ip address upto some time interval .',true));
 			} else {
 				if($this->data['User']['email'] == 'rather-not-say@scratchr.org') {
 					$this->data['User']['email'] = '';
@@ -155,7 +165,14 @@ class UsersController extends AppController {
 				$this->validateErrors($this->User);
 			}
 		}
+		if (empty($multiple_account_error)) {
+			$isError = false;
+		} else {
+			$isError = true;
+		}
 		
+		$this->set('isError', $isError);
+		$this->set('multiple_account_error', $multiple_account_error);
 		$this->set_signup_variables();
 		$this->set('errors', $errors);
 		$this->render('signup');

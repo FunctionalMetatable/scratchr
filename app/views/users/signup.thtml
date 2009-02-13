@@ -26,6 +26,16 @@
   <div class="signup_header">
 	<h3><?php ___('Create an account'); ?></h3>
   </div>
+  <?php if($isError): ?>
+  		<div id="signup_error" style="float:left; margin-bottom:10px; width:100%; font-size:14px; font-weight:bold">
+		
+			<?php
+				
+				$error = $multiple_account_error[0];
+				echo " <font color='#FF0000'>$error</font>";
+			?>
+		</div>
+	<?php endif; ?>
   <div class="signup_row">
 		<div class="signup_label">
 			<label for="data[User][username]"><?php ___('Username'); ?>*</label>
