@@ -79,6 +79,12 @@ $this->params['webservices']
  Set how many comment reply to be show.
  */
  define("NUM_COMMENT_REPLY", 4);
+ 
+ 
+ /**
+ Allow multiple accounts to be created from the same IP after X minutes
+ */
+ define("SIGNUP_INTERVAL", 5);
 
  /**
   * sets the time interval (hrs) in which
