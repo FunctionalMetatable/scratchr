@@ -949,6 +949,7 @@ class UsersController extends AppController {
 		}
 		//populate friends latest project
 		$friend_list =array();
+		$friends_project = array();
 		$friends_project_list =array();
 		foreach($num_friends as $friends)
 		array_push($friend_list,$friends['Relationship']['friend_id']);
@@ -957,12 +958,12 @@ class UsersController extends AppController {
 		$this->PaginationTernary->show = $page_limit;
 		$this->modelClass = "Project";
 		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );	
-
+		
+		if(!empty($friend_ids)):
 		list($order,$limit,$page) = $this->PaginationTernary->init("Project.user_id in (".$friend_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
 		
-		
 		$friends_project = $this->Project->findAll("Project.user_id in (".$friend_ids.") ",null,$order, $limit, $page);
-		
+		endif;
 		$this->set('friends_project_list',$friends_project);
 		
 		//sets the admin_comment if one exists for this user
