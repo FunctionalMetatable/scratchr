@@ -11,10 +11,11 @@ define("BINARY_UPLOAD_ERROR", 404);
 define("THUMBNAIL_UPLOAD_ERROR", 405);
 define("UNSUPPORTED_SERVICE", 406);
 define("INVALID_PROJECT", 407);
-
+define("USER_BLOCKED_ERROR", 408);
+define("IP_BLOCKED_ERROR", 409);
 Class ServicesController extends AppController {
 	// var $components = array("Security");
-    var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave','ProjectScript');
+    var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave','ProjectScript','BlockedIp');
 	var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
 	 var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
     var $doc = null;
@@ -26,6 +27,7 @@ Class ServicesController extends AppController {
         INVALID_USER => "invalid user",
 		UNSUPPORTED_SERVICE => "service not yet available",
 		INVALID_PROJECT => "project might have been censored or deleted.",
+		
         );
 
     function beforeFilter() {
@@ -393,7 +395,15 @@ Class ServicesController extends AppController {
 		$submit_username = $this->params['form']['username'];
         $submit_pwd = $this->params['form']['password'];
         $user_record = $this->User->findByUsername($submit_username);
-
+		$client_ip = ip2long($this->RequestHandler->getClientIP());
+		$IP = long2ip($client_ip);
+		$ip_count = $this->BlockedIp->findCount("ip = $client_ip");
+		
+		if ($ip_count > 0){
+			$this->err_codes[IP_BLOCKED_ERROR]="Unable to accept project because the IP address '$IP' has been blocked.";
+			$this->__failed(IP_BLOCKED_ERROR);
+			return;
+		}
         if (empty($user_record['User']['password']) || $user_record['User']['password'] !== sha1($submit_pwd)) 
 		{
             $this->__failed(INVALID_USER);
@@ -619,7 +629,9 @@ Class ServicesController extends AppController {
 			$this->doc = $this->doc . "<pid>$project_id</pid>";
 			$this->__success();
 		} else {
-			$this->__failed(BINARY_UPLOAD_ERROR);
+			
+			$this->err_codes[USER_BLOCKED_ERROR]="Unable to accept project because the account '$urlname' has been blocked.";
+			$this->__failed(USER_BLOCKED_ERROR);
 			return;
 		}
     }
