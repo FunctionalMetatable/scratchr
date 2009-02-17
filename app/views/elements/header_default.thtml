@@ -125,7 +125,7 @@ echo "</ul>";
 <!-- ////// End language menu ////// -->			
 
 	
-     <div id="userbar"><?php printf(___('%sLogin%s or %sSignup%s for an account', true), '<a href="/login" onclick="return(showLogin())">', '</a>', '<a href="/signup">', '</a>'); ?></div>
+     <div id="userbar"><?php printf(___('%sLogin%s or %sSignup%s for an account', true), '<a href="/login" onclick="return(showLogin())">', '</a>', '<a href="/confirm_signup">', '</a>'); ?></div>
 	
     <div id="searchbar">
 <!-- Google CSE Search Box Begins  -->

@@ -54,19 +54,35 @@ class UsersController extends AppController {
 	  $this->render('uerror');
 	  die;
 	}
+	
+	function confirm_signup(){
+	$this->pageTitle = ___("Scratch | Signup", true);
+	$client_ip = ip2long($this->RequestHandler->getClientIP());
+	$signup_interval = SIGNUP_INTERVAL;
+	$account_from_same_ip = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
+	if($account_from_same_ip){
+	$this->redirect('/signup');
+	}
+	else
+	{
+	$user_records = $this->User->findAll("User.ipaddress = $client_ip",'urlname','created DESC');
+	$this->set('ip_address',long2ip($client_ip));
+	$this->set('user_records',$user_records);
+	}
+		
+	
+	}
 
 	function signup() {
 		$this->pageTitle = ___("Scratch | Signup", true);
 		$client_ip = ip2long($this->RequestHandler->getClientIP());
 		$user_data = $this->data;
-		$errors = Array();
-		$multiple_account_error =array();
-		$account_from_same_ip = false;
+		
 		$signup_interval = SIGNUP_INTERVAL;
 		$account_from_same_ip = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
 		
-		if($account_from_same_ip)
-		array_push($multiple_account_error, ___('You can not create multiple account from same Ip address upto some time interval .',true));
+		$multipleAccount = $this->User->find("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
+		
 		$this->set('username_error', ___('username must be at least 3 letters and/or numbers, no spaces', true));
 		if(!empty($this->data['User'])) {
 			$this->data['User']['username']  = str_replace(" ", "", $this->data['User']['username']);
@@ -156,8 +172,11 @@ class UsersController extends AppController {
 						$this->setFlash(___("could not save information, try again", true), FLASH_ERROR_KEY);
 					}
 				}
-				else
-				array_push($multiple_account_error, ___('You can not create multiple account from same Ip address upto some time interval .',true));
+				else{
+				$this->set('isError', true);
+				$this->redirect('/signup');
+				}
+				
 			} else {
 				if($this->data['User']['email'] == 'rather-not-say@scratchr.org') {
 					$this->data['User']['email'] = '';
@@ -165,16 +184,15 @@ class UsersController extends AppController {
 				$this->validateErrors($this->User);
 			}
 		}
-		if (empty($multiple_account_error)) {
-			$isError = false;
-		} else {
+		if ($account_from_same_ip) {
 			$isError = true;
+		} else {
+			$isError = false;
 		}
-		
+		$this->set('ip_address',long2ip($client_ip));
+		$this->set('urlname',$multipleAccount['User']['urlname']);
 		$this->set('isError', $isError);
-		$this->set('multiple_account_error', $multiple_account_error);
 		$this->set_signup_variables();
-		$this->set('errors', $errors);
 		$this->render('signup');
 	}
 	

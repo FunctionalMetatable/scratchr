@@ -1,3 +1,13 @@
+<style>
+#signup_notice{
+margin-bottom:10px;
+color:#FF0000;
+}
+#signup_notice p{
+padding:0;!important
+}
+
+</style>
 <?php $head->register_js("FormManager.js") ?>
 
 <?php $head->register_jsblock("
@@ -16,6 +26,7 @@
 		if(bool == true) $('signups').style.visibility='visible';
 		else $('signups').style.visibility='hidden';
 	}
+	
  ");
 ?>
 
@@ -26,16 +37,16 @@
   <div class="signup_header">
 	<h3><?php ___('Create an account'); ?></h3>
   </div>
-  <?php if($isError): ?>
-  		<div id="signup_error" style="float:left; margin-bottom:10px; width:100%; font-size:14px; font-weight:bold">
-		
-			<?php
-				
-				$error = $multiple_account_error[0];
-				echo " <font color='#FF0000'>$error</font>";
-			?>
-		</div>
-	<?php endif; ?>
+  <div id="signup_notice" >
+  <?php 
+  if($isError):
+  $user_ref = "/users/".$urlname;
+  ?>
+  <h5><p><?php ___('The following accounts have already been created from this IP')?> (<?php echo $ip_address?>):
+  <a href="<?php echo $html->url($user_ref)?>"><?php echo $urlname ?></a></p></h5> 
+  <p><?php ___('In order to prevent misuse, please wait a few more minutes before creating a new account from')?> <?php echo $ip_address?>.</p>
+ <?php endif?>
+ </div>
   <div class="signup_row">
 		<div class="signup_label">
 			<label for="data[User][username]"><?php ___('Username'); ?>*</label>

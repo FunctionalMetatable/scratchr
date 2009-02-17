@@ -1,0 +1,20 @@
+<div class="fullcontent">
+<p><h5><?php ___('The following accounts have already been created from this IP')?> (<?php echo $ip_address?>):</h5> </p>
+<?php 
+
+foreach($user_records as $user):
+$urlname = $user['User']['urlname'];
+$user_ref = "/users/".$urlname;
+
+?>
+<a href="<?php echo $html->url($user_ref)?>"><?php echo $urlname ?></a>&nbsp;&sbquo;&nbsp;
+<?php
+endforeach;
+?>
+
+<p>
+<?php ___('In most cases we would like to discourage people from creating multiple accounts. If the accounts are used to game the system this could lead to getting blocked from the website.')?>
+</p>
+<p><?php ___('What do you want to do?')?></p>
+<a href="<?php echo $html->url('/signup')?>" class="button">Continue</a>  <a href="<?php echo $html->url('/')?>" class="button">Cancel</a>
+</div>

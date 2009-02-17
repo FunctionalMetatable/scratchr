@@ -41,6 +41,7 @@ Router::connect('/oldnotifications', array('controller' => 'oldnotifications', '
 Router::connect('/download', array('controller' => 'dusers', 'action' => 'add'));
 Router::connect('/password_recovery', array('controller' => 'users', 'action' => 'password_recovery'));
 Router::connect('/login', array('controller' => 'users', 'action' => 'login'));
+Router::connect('/confirm_signup', array('controller' => 'users', 'action' => 'confirm_signup'));
 Router::connect('/signup', array('controller' => 'users', 'action' => 'signup'));
 Router::connect('/logout', array('controller' => 'users', 'action' => 'logout'));
 Router::connect('/tags', array('controller' => 'tags', 'action' => 'index'));
