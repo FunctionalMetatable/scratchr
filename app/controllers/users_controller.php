@@ -77,7 +77,7 @@ class UsersController extends AppController {
 		$this->pageTitle = ___("Scratch | Signup", true);
 		$client_ip = ip2long($this->RequestHandler->getClientIP());
 		$user_data = $this->data;
-		
+		$errors = Array(); 
 		$signup_interval = SIGNUP_INTERVAL;
 		$account_from_same_ip = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
 		
@@ -193,6 +193,7 @@ class UsersController extends AppController {
 		$this->set('urlname',$multipleAccount['User']['urlname']);
 		$this->set('isError', $isError);
 		$this->set_signup_variables();
+		$this->set('errors', $errors);
 		$this->render('signup');
 	}
 	
