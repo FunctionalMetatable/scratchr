@@ -40,6 +40,32 @@ Class GalleriesController extends AppController {
 		$this->set('content_status', $this->getContentStatus());
 		$status = $this->getContentStatus();
     }
+	//function to set galleries project count.
+	function update_total_project(){
+		$galleries = $this->Gallery->findAll(null,'id,user_id','id');
+		foreach($galleries as $gallery){
+		//listing ignored user by gallery owner.
+		$gallery_id =$gallery['Gallery']['id'];
+		$owner_id =$gallery['Gallery']['user_id'];
+		$ignored_user_array =array();
+		$ignore_user_list = $this->IgnoredUser->findAll("IgnoredUser.blocker_id = $owner_id",'user_id');
+		foreach($ignore_user_list as $ignore_user)
+		array_push($ignored_user_array,$ignore_user['IgnoredUser']['user_id']);
+		$ignored_list = implode(',',$ignored_user_array);
+		//echo $owner_id.':'.$ignored_list.'<BR>';
+		
+		if(!empty($ignored_list))
+		$conditions = "gallery_id = $gallery_id AND Project.user_id not in (".$ignored_list.") ";
+		else
+		$conditions = "gallery_id = $gallery_id ";
+		$projects_count = $this->GalleryProject->findCount($conditions);
+		$this->Gallery->id =$gallery_id;
+		$this->Gallery->saveField('total_projects',$projects_count);
+		
+		//echo $gallery_id.':'.$projects_count.'<BR>';
+		}//$galleries
+		echo "project count has been updated"; die;
+	}//function
 
 	/**
 	/* GalleryController Index
