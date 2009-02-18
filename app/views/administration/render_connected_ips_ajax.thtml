@@ -1,0 +1,3 @@
+<?php
+	echo $this->renderElement('admin/user_connected_ip_list', array('data' => $data,'user_id'=>$user_id));
+?>

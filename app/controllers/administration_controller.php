@@ -801,6 +801,18 @@
 			$temp_user['User']['reason'] = $ban_record['BlockedUser']['reason'];
 		}
 		
+		//connected ip list
+		$stats = $this->ViewStat->findAll("ViewStat.user_id = $user_id", "DISTINCT user_id, ipaddress");
+		$ips_array = Array();
+		$has_ips =false;
+		foreach ($stats as $current_stat) {
+			$temp_stat = $current_stat;
+			array_push($ips_array,$temp_stat['ViewStat']['ipaddress']);
+		}
+		$ips_list = implode(',',$ips_array);
+		$conditions = "BlockedIp.ip  in (".$ips_list.") ";
+		$has_ips = $this->BlockedIp->hasAny($conditions);
+		$this->set('has_ips',$has_ips);
 		$this->set('user', $temp_user);
 		$this->set('option', $option);
     }
@@ -1920,6 +1932,48 @@
 		$this->set('status', $status);
 		$this->set('data', $final_ips);
 		$this->render('ip_info');
+	}
+	
+	/**
+	* Handles connected user's ip banning
+	**/
+	function connected_ip($user_id) {	
+		$this->autoRender = false;
+				
+		$stats = $this->ViewStat->findAll("ViewStat.user_id = $user_id", "DISTINCT user_id, ipaddress");
+		$ips_array = Array();
+		
+		foreach ($stats as $current_stat) {
+			$temp_stat = $current_stat;
+			array_push($ips_array,$temp_stat['ViewStat']['ipaddress']);
+		}
+		$ips_list = implode(',',$ips_array);
+		$conditions = "BlockedIp.ip  in (".$ips_list.") ";
+		$final_ips = $this->BlockedIp->findAll($conditions);
+		
+		$this->set('user_id', $user_id);
+		$this->set('data', $final_ips);
+		$this->render('connected_ip');
+	}
+	
+	function remove_connected_ban_ip($ip_id,$user_id) {
+		$this->autoRender = false;
+		$this->BlockedIp->del($ip_id);
+		
+		$stats = $this->ViewStat->findAll("ViewStat.user_id = $user_id", "DISTINCT user_id, ipaddress");
+		$ips_array = Array();
+		
+		foreach ($stats as $current_stat) {
+			$temp_stat = $current_stat;
+			array_push($ips_array,$temp_stat['ViewStat']['ipaddress']);
+		}
+		$ips_list = implode(',',$ips_array);
+		$conditions = "BlockedIp.ip  in (".$ips_list.") ";
+		$final_ips = $this->BlockedIp->findAll($conditions);
+		
+		$this->set('user_id', $user_id);
+		$this->set('data', $final_ips);
+		$this->render('render_connected_ips_ajax', 'ajax');
 	}
 	
 	/**

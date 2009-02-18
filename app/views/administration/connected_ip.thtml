@@ -1,0 +1,9 @@
+<div class="fullcontent">
+<h5> Connected IP Info</h5>
+<br/>
+<div id="admin_banlist_results">
+	<?php
+		echo $this->renderElement('admin/user_connected_ip_list');
+	?>
+</div>	
+</div>

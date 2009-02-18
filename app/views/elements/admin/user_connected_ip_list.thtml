@@ -1,0 +1,26 @@
+<div>
+<?php		
+	//print_r($data);
+	 
+	foreach ($data as $ip) {
+		$ip_id = $ip['BlockedIp']['id'];
+		$my_ip = long2ip($ip['BlockedIp']['ip']);
+		$reason = $ip['BlockedIp']['reason'];
+		$remove_address = "/administration/remove_connected_ban_ip/$ip_id/$user_id";
+		
+		echo "<div class='gallerythumb clearme'>\n";
+		echo "\t<div class='admin_leftcolumn'>\n";
+		echo "<span>IP: $my_ip</span>\n";
+		echo "\t</div>";
+		echo "\t<div class='admin_rightcolumn'>\n";
+		echo "<span>Reason: $reason </span>"; echo "<br/>";
+		echo "<span>"; 
+		
+		echo "(" . $ajax->link(___("Unblock", true), '#', 
+			array("url"=>$remove_address, "update"=>"admin_banlist_results"), NULL, false) . ")";
+		echo "</span>\n";
+    	echo "\t</div>\n";
+		echo "</div>\n";
+	}	
+?>
+</div>
