@@ -42,6 +42,8 @@ Class GalleriesController extends AppController {
     }
 	//function to set galleries project count.
 	function update_total_project(){
+		set_time_limit(120);
+		//echo $time =ini_get('max_execution_time'); 
 		$galleries = $this->Gallery->findAll(null,'id,user_id','id');
 		foreach($galleries as $gallery){
 		//listing ignored user by gallery owner.
