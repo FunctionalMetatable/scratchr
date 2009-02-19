@@ -1587,11 +1587,25 @@
 			$user_name = $user['User']['username'];
 			$actual_ip = long2ip($overload);
 		}
-		
+		//list user linked to this ip 
+		$final_users = Array();
+		if($overload){
+			$counter = 0;
+			$stats = $this->ViewStat->findAll("ViewStat.ipaddress = $overload AND ViewStat.user_id != 0", "DISTINCT user_id, ipaddress");
+			foreach ($stats as $current_stat) {
+				$temp_stat = $current_stat;
+				$current_user_id = $temp_stat['ViewStat']['user_id'];
+				$current_user = $this->User->find("User.id = $current_user_id");
+				$temp_stat['User'] = $current_user;
+				$final_users[$counter] = $temp_stat;
+				$counter++;
+			}
+		}
 		$this->set('isError', false);
 		$this->set('errors', Array());
 		$this->set('default_name', $user_name);
 		$this->set('default_ip', $actual_ip);
+		$this->set('users', $final_users);
 		$this->set('data', $final_ips);
 		$this->render('ban_ip');
 	}
