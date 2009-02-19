@@ -20,6 +20,26 @@
     </div>
 	
 </div>
+<?php if(!empty($users)):?>
+<div class="fullcontent">
+<div id="admin_project_header">
+	<h3> All users using <?php e($default_ip); ?> </h3>
+	</div>
+	<div id="admin_project_content">
+	<?php 
+
+		foreach($users as $user):
+		$urlname = $user['User']['User']['urlname'];
+		$user_ref = "/users/".$urlname;
+		
+		?>
+		<a href="<?php echo $html->url($user_ref)?>"><?php echo $urlname ?></a>&nbsp;&sbquo;&nbsp;
+		<?php
+		endforeach;
+		?>
+    </div>
+</div>
+<?php endif;?>
 <div class="fullcontent">
 
 	
