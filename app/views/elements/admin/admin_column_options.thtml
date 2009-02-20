@@ -48,6 +48,7 @@
           <option value="Email">Email</option>
 		  <option value="Birth Date">Birth Date</option>
 		  <option value="Country">Country</option>
+		  <option value="ipaddress">ipaddress</option>
         </select>
 	<?php endif; ?>
 	<?php if($option == "projects"): ?>

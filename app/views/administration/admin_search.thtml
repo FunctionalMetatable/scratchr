@@ -1,3 +1,4 @@
+<h5> Results </h5>
 <div id='ajax_pagination'>
 <div class="gallery_pagination_container">
 	<?php 
