@@ -810,8 +810,10 @@
 			array_push($ips_array,$temp_stat['ViewStat']['ipaddress']);
 		}
 		$ips_list = implode(',',$ips_array);
+		if(!empty($ips_list)):
 		$conditions = "BlockedIp.ip  in (".$ips_list.") ";
 		$has_ips = $this->BlockedIp->hasAny($conditions);
+		endif;
 		$this->set('has_ips',$has_ips);
 		$this->set('user', $temp_user);
 		$this->set('option', $option);

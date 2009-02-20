@@ -1,3 +1,6 @@
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
 <div class="fullcontent">
 <h5> Connected IP Info</h5>
 <br/>
