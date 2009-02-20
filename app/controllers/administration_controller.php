@@ -1249,7 +1249,7 @@
 	**/
 	function execute_search($table) {
 		$this->autoRender = false;
-		
+		$isBanned =false;
 		$search_table = $table;
 		if (!empty($this->params['form'])) {
 			$search_term = htmlspecialchars($this->params['form']['admin_search_textarea']);
@@ -1288,6 +1288,15 @@
 							"direction"=> "DESC", "url" => "/administration/render_results/" . $search_table . "/" . $search_column . "/" . $search_term);
 				list($order,$limit,$page) = $this->Pagination->init("byear = $search_term", Array(), $options);
 				$results = $this->User->findAll("byear = $search_term", null, $order, $limit, $page);
+			}
+			
+			if ($search_column == 'ipaddress') {
+				$search_ip =ip2long($search_term);
+				
+				$options = Array("sortBy"=>"created", "sortByClass" => "User", 
+							"direction"=> "DESC", "url" => "/administration/render_results/" . $search_table . "/" . $search_column . "/" . $search_term);
+				list($order,$limit,$page) = $this->Pagination->init("ipaddress = $search_ip", Array(), $options);
+				$results = $this->User->findAll("ipaddress = $search_ip", null, $order, $limit, $page);
 			}
 		} elseif ($search_table == 'projects') {
 			$this->Pagination->show = 10;
@@ -1356,8 +1365,24 @@
 		$this->set('search_term', $search_term);
 		$this->set('search_column', $search_column);
 		$this->set('search_table', $search_table);
+		if($search_column == 'ipaddress'){
+		$search_ip =ip2long($search_term);
+		$this->set('is_banned',$this->BlockedIp->hasAny("BlockedIp.ip=$search_ip"));
+		$this->set('orig_ip',$search_ip);
+		$this->set('search_term',$search_term);
+		$this->render('admin_search_ip', 'ajax');
+		}
+		else
 		$this->render('admin_search', 'ajax');
 	}
+	
+	function unbolck_ip($ip){
+	$data = $this->BlockedIp->find("BlockedIp.ip=$ip");
+	$ip_id = $data['BlockedIp']['id'];
+	$this->BlockedIp->del($ip_id);
+	$this->redirect('/administration/search');
+	
+	}//function
  
 	/** 
 	* Ajax helper for pagination of search results
@@ -1750,6 +1775,7 @@
 			array_push($final_ips, $temp_ip);
 		}
 		$this->set('data', $final_ips);
+		$this->set('isError', false);
 		$this->render('render_ips_ajax', 'ajax');
 	}
 	
