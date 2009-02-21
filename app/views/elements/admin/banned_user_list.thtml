@@ -25,6 +25,7 @@
 		echo "</span>\n";
 		
 		echo "<br/>";
+		if($isAdmin):
 		echo "<span>"; 
 		?>
 		<a href="<?php echo $html->url($details_address)?>">View Details</a>
@@ -33,7 +34,7 @@
 		echo "</span>\n";
 		
 		echo " | ";
-		
+		endif;
 		echo "<span>"; 
 		echo $ajax->link(___("Remove", true), '#', 
 			array("url"=>$remove_address, "update"=>"admin_banlist_results"), NULL, false);
