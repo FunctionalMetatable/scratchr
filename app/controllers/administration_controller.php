@@ -10,16 +10,18 @@
      * Called before every controller action
 	 * Overrides AppController::beforeFilter()
      */
-    function beforeFilter() {
+   function beforeFilter() {
 		$user_id = $this->getLoggedInUserID();
 		$users_permission =$this->isAnyPermission();
-		if(($this->action =='ban_ip' || $this->action =='ban_user' || $this->action =='index') || $this->isAdmin())
+		$allowed =array('ban_user','add_banned_user','render_banned_users','remove_banned_user','set_banned_users','ban_ip','expand_ip','render_ips','add_ban_ip','remove_ban_ip','index');
+		if (($this->isAdmin() || isset($users_permission['block_IP']) || isset($users_permission['block_account'])))
 		{}
 		else
 		{
 			$this->cakeError('error404');
 		}
-		if (($this->isAdmin() || isset($users_permission['block_IP']) || isset($users_permission['block_account'])))
+		
+		if(in_array($this->action,$allowed) || $this->isAdmin())
 		{}
 		else
 		{
