@@ -4,7 +4,7 @@ class UsersController extends AppController {
 	var $components = array('PaginationTernary','PaginationSecondary', 'Pagination','RequestHandler','FileUploader','Email','Thumb');
 	var $helpers = array('Pagination', 'Ajax', 'Javascript');
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject',
-						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable','Thank');
+						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable','Thank','ForumUser');
 
 
 	function admin_index() {
@@ -355,7 +355,6 @@ class UsersController extends AppController {
 			$this->User->bindPermission();
 			$users_permission = array();
 			$user_record = $this->User->findByUsername($submit_username);
-			  
 			foreach($user_record['Permission'] as $user_permission) {
 				$id = $user_permission['id'];
 				$url_name =$user_permission['short_name'];
@@ -1214,9 +1213,14 @@ class UsersController extends AppController {
 
 		$submit_email_new = $this->params['form']['new_email'];
                 $user_record = $this->User->findById($user_id);
-
+				$forum_data =$this->ForumUser->find(array('username'=>$user_record['User']['urlname'])); 
+			
                 if ($this->isAdmin() || (!empty($user_record['User']['password']) &&  $user_record['User']['password'] == sha1($submit_pwd))) {
-		      $this->User->saveField("email",$submit_email_new);
+		     	 $this->User->saveField("email",$submit_email_new);
+				 if(count($forum_data) > 0){
+					 $this->ForumUser->id = $forum_data['ForumUser']['id'];
+					 $this->ForumUser->saveField("email",$submit_email_new);
+				 }
 	              $this->setFlash(___("Updated email.", true), FLASH_NOTICE_KEY);
                 }
                 else { 
