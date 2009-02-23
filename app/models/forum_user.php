@@ -2,7 +2,7 @@
 Class ForumUser extends AppModel
 {
 	var $name = 'ForumUser';	
-	var $useDbConfig = 'test';
+	var $useDbConfig = 'forum';
 	var $useTable = 'users';
 }
 ?>
