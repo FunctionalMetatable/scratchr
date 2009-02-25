@@ -2190,3 +2190,23 @@ color:#FF0000;
 	padding-left: 40px;
 	font-size:10px;
 }
+
+/***********flags*****/
+.flags {
+width:750px;
+clear:both;
+}
+.flags a{
+float:left;
+padding:5px;
+text-decoration:none;!important;
+}
+.flags h6{
+font-size:10px!important;
+margin:0;
+}
+.flags a img{
+border:1px solid #DDDDDD !important;
+}
+
+
