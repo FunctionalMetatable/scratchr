@@ -1879,7 +1879,7 @@ class UsersController extends AppController {
 	}
 	
 	
-	function flags(){
+	function flag_list(){
 	$this->pageTitle = ___("Scratch | Countries List", true);
 	$this->set_signup_variables();
 	
