@@ -1877,6 +1877,33 @@ class UsersController extends AppController {
 	
 	function updateBaseRating($user_id, $amount) {
 	}
+	
+	
+	function flags(){
+	$this->pageTitle = ___("Scratch | Countries List", true);
+	$this->set_signup_variables();
+	
+	$users = $this->User->query("SELECT count(*)as cnt, country FROM `users` group by country");
+	foreach($users as $user){
+		$cnt = $user['0']['cnt'];
+		$country =$user['users']['country']; 
+		$user_list[$country] = $cnt;
+	}
+	$this->set('user_list',$user_list);
+	}
+	
+	function countries($name=null){
+	$this->pageTitle = "Scratch | ".$name. " | All User";
+	$this->Pagination->show = 50;
+		$this->Pagination->url = "/users/countries/".$name ;
+		
+		$options = Array("sortBy"=>"created", "sortByClass" => "User", "direction"=> "DESC");		
+		$this->modelClass = "User";
+		list($order,$limit,$page) = $this->Pagination->init(array('User.country'=>$name), Array(), $options);
+		$user_record = $this->User->findAll(array('User.country'=>$name), NULL, $order, $limit, $page, NULL);
+		$this->set('user_record',$user_record);
+		$this->set('country',$name);
+	}
 
   }
 ?>

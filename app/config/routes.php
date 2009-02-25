@@ -57,6 +57,7 @@ Router::connect('/robots.txt', array('controller' => 'sitemaps', 'action' => 'ro
 Router::connect('/lang/*', array('controller' => 'p28n', 'action' => 'change'));
 
 // User pages
+Router::connect('/users/flags', array('controller' => 'users', 'action' => 'flags'));
 Router::connect('/users/update', array('controller' => 'users', 'action' => 'update'));
 Router::connect('/users/updatepic/*', array('controller' => 'users', 'action' => 'updatepic'));
 Router::connect('/users/showgalleries/*', array('controller' => 'users', 'action' => 'showgalleries'));
@@ -77,7 +78,9 @@ Router::connect('/users/loginsu/*', array('controller' => 'users', 'action' => '
 Router::connect('/users/pwdreset/*', array('controller' => 'users', 'action' => 'pwdreset'));
 Router::connect('/users/set_email/*', array('controller' => 'users', 'action' => 'set_email'));
 Router::connect('/users/removefavorites', array('controller' => 'users', 'action' => 'removefavorites'));
+Router::connect('/users/countries/*', array('controller' => 'users', 'action' => 'countries'));
 Router::connect('/users/*', array('controller' => 'users', 'action' => 'view'));
+
 
 // Project pages
 
