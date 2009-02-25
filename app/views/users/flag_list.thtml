@@ -7,13 +7,16 @@
 
 <a href="<?php echo $html->url('/users/countries/'.$country)?>">
 <?php echo $html->image('/img/flags/'.$country.'.png',array('alt'=>$country,'width'=>'103','height'=>'61'))?>
+<h6><?php echo $country?>&nbsp;
 <?php if(array_key_exists($country,$user_list)):?>
-<h6><?php echo $country?>&nbsp;:(<?php echo $user_list[$country]?>)</h6></a>
+(<?php echo $user_list[$country]?>)
 <?php else:?>
-<h6><?php echo $country?>&nbsp;:(0)</h6></a>
+(0)
 <?php endif;?>
+</h6></a>
 <?php
 endforeach;
 ?>
 </div>
 </div>
+

@@ -2200,6 +2200,9 @@ clear:both;
 float:left;
 padding:5px;
 text-decoration:none;!important;
+width:170px;
+height:95px;
+text-align:center;
 }
 .flags h6{
 font-size:10px!important;

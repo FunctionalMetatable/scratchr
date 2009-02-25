@@ -57,7 +57,7 @@ Router::connect('/robots.txt', array('controller' => 'sitemaps', 'action' => 'ro
 Router::connect('/lang/*', array('controller' => 'p28n', 'action' => 'change'));
 
 // User pages
-Router::connect('/users/flags', array('controller' => 'users', 'action' => 'flags'));
+Router::connect('/users/flag_list', array('controller' => 'users', 'action' => 'flag_list'));
 Router::connect('/users/update', array('controller' => 'users', 'action' => 'update'));
 Router::connect('/users/updatepic/*', array('controller' => 'users', 'action' => 'updatepic'));
 Router::connect('/users/showgalleries/*', array('controller' => 'users', 'action' => 'showgalleries'));
