@@ -1591,7 +1591,7 @@
 	function ban_ip($user_id = "", $overload = "") {
 		$this->autoRender = false;
 		$this->Pagination->show = 20;
-		
+		$this->checkPermission('block_IP');
 		$this->modelClass = "BlockedIp";
 		$options = Array("sortBy"=>"id", "sortByClass" => "BlockedIp", 
 							"direction"=> "DESC", "url" => "/administration/render_ips/");
