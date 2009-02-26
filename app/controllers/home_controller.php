@@ -177,6 +177,15 @@ Class HomeController extends AppController {
         } else {
             $this->set('tags', $tags);
         }
+		
+		$countries = $memcache->get("$prefix-countries");
+        if ( $countries == "" ) {
+       	    $countriestmp = $this->__getTopCountries();
+            $memcache->set("$prefix-countries", $countriestmp, false, 3600) or die ("Failed to save data at the server");
+            $this->set('countries', $countriestmp);
+        } else {
+            $this->set('countries', $countries);
+        }
 
     	$memcache->close();
 		
@@ -338,5 +347,10 @@ Class HomeController extends AppController {
         $resultset =  $this->Project->query("select count(distinct(user_id)) as totalcreators from projects where user_id");
 	return number_format(0.0 + $resultset[0][0]['totalcreators']);
     }
+	
+	function __getTopCountries(){
+	return $this->User->query("SELECT count(*)as cnt, country FROM `users` group by country order by cnt desc  LIMIT ".NUM_TOP_COUNTRIES);
+	
+	}
 }
 ?>
