@@ -149,6 +149,14 @@ Class Gallery extends AppModel {
 			$this->saveField('total_projects', $new_count);
 		}
 	}
-	
+
+    function register_frontpage($gallery_ids, $type) {
+        if(!empty($gallery_ids)) {
+            //the following code will create some part of the SQL efficiently, sacrificing the readability
+            $values = "(" . implode($gallery_ids, ", '$type'), (") . ", '$type')";
+            $sql = "INSERT IGNORE INTO `galleries_frontpage` ( `gallery_id` ,  `type` ) VALUES ". $values;
+            $this->query($sql);
+        }
+    }
 }
 ?>
