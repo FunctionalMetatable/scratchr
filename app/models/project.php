@@ -718,5 +718,14 @@ Class Project extends AppModel
 			$this->saveField('loveit', $love_its);
 		}
 	}
+
+    function register_frontpage($project_ids, $type) {
+        if(!empty($project_ids)) {
+            //the following code will create some part of the SQL efficiently, sacrificing the readability
+            $values = "(" . implode($project_ids, ", '$type'), (") . ", '$type')";
+            $sql = "INSERT IGNORE INTO `projects_frontpage` ( `project_id` ,  `type` ) VALUES ". $values;
+            $this->query($sql);
+        }
+    }
 }
 ?>

@@ -20,27 +20,32 @@ Class HomeController extends AppController {
         $memcache->connect('localhost', 11211) or die ("Could not connect");
         $prefix = MEMCACHE_PREFIX;
         $project_ids = array();
-
+       
         $home_projects = $memcache->get("$prefix-home_projects");
         if(!$home_projects) {
             $featured       = $this->__getFeaturedProjects();
-            $project_ids = array_merge($project_ids,
-                     Set::extract('/FeaturedProject/project_id', $featured));
+            $featured_ids   = Set::extract('/FeaturedProject/project_id', $featured);
+            $this->Project->register_frontpage($featured_ids, 'featured');
+            $project_ids    = array_merge($project_ids, $featured_ids);
                    
             $topremixed     = $this->__getTopRemixedProjects($project_ids);
-            $project_ids = array_merge($project_ids,
-                     Set::extract('/Project/id', $topremixed));
+            $topremixed_ids = Set::extract('/Project/id', $topremixed);
+            $this->Project->register_frontpage($topremixed_ids, 'top_remixed');
+            $project_ids    = array_merge($project_ids, $topremixed_ids);
 
             $toploved       = $this->__getTopLovedProjects($project_ids);
-            $project_ids = array_merge($project_ids,
-                   Set::extract('/Project/id', $toploved));
+            $toploved_ids   = Set::extract('/Project/id', $toploved);
+            $this->Project->register_frontpage($toploved_ids, 'top_loved');
+            $project_ids    = array_merge($project_ids, $toploved_ids);
 
             $topviewed      = $this->__getTopViewedProjects($project_ids);
-            $project_ids = array_merge($project_ids,
-                           Set::extract('/Project/id', $topviewed));
+            $topviewed_ids  = Set::extract('/Project/id', $topviewed);
+            $this->Project->register_frontpage($topviewed_ids, 'top_viewed');
+            $project_ids    = array_merge($project_ids, $topviewed_ids);
 
             $topdownloaded  = $this->__getTopDownloadedProjects($project_ids);
-                   
+            $topdownloaded_ids  = Set::extract('/Project/id', $topdownloaded);
+            $this->Project->register_frontpage($topdownloaded_ids, 'top_downloaded');
             $home_projects = array('featured' => $featured,
                                    'topremixed' => $topremixed,
                                    'toploved' => $toploved,
@@ -74,14 +79,15 @@ Class HomeController extends AppController {
         }
 
         $toprandoms = $memcache->get("$prefix-toprandoms");
-        if ( $toprandoms == "" ) {
-       	    $toprandomstmp = $this->__getTopRandomProjects();
-            $memcache->set("$prefix-toprandoms", $toprandomstmp, false, 300) or die ("Failed to save data at the server");
-            $this->set('toprandoms', $toprandomstmp);
-        } else {
+        if ( !$toprandoms) {
+       	    $toprandoms = $this->__getTopRandomProjects();
+            $memcache->set("$prefix-toprandoms", $toprandoms, false, 300) or die ("Failed to save data at the server");
+            $toprandoms_ids   = Set::extract('/Project/id', $toprandoms);
+            $this->Project->register_frontpage($toprandoms_ids, 'surprise');
             $this->set('toprandoms', $toprandoms);
         }
-
+        $this->set('toprandoms', $toprandoms);
+        
         $scratch_club = $memcache->get("$prefix-scratch_club");
         if ( $scratch_club == "" ) {
        	    $scratch_clubtmp = $this->__getScratchClub();
@@ -91,15 +97,15 @@ Class HomeController extends AppController {
             $this->set('scratch_club', $scratch_club);
         }
 
-        $featuredthemes = $memcache->get("$prefix-featuredthemes");
-        if ( $featuredthemes == "" ) {
-       	    $featuredthemestmp = $this->__getFeaturedGalleries();
-            $memcache->set("$prefix-featuredthemes", $featuredthemestmp, false, 3600) or die ("Failed to save data at the server");
-            $this->set('featuredthemes', $featuredthemestmp);
-        } else {
-            $this->set('featuredthemes', $featuredthemes);
+        $featuredthemes = false;//$memcache->get("$prefix-featuredthemes");
+        if ( !$featuredthemes ) {
+       	    $featuredthemes = $this->__getFeaturedGalleries();
+            $featuredthemes_ids   = Set::extract('/Gallery/id', $featuredthemes);
+            $this->Gallery->register_frontpage($featuredthemes_ids, 'featured');
+            $memcache->set("$prefix-featuredthemes", $featuredthemes, false, 3600) or die ("Failed to save data at the server");
         }
-
+        $this->set('featuredthemes', $featuredthemes);
+        
         $recentvisitors = $memcache->get("$prefix-recentvisitors");
         if ( $recentvisitors == "" ) {
        	    $recentvisitorstmp = $this->__getRecentVisitors();
