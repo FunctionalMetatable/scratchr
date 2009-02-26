@@ -186,6 +186,26 @@
 		<?php endforeach; ?>
       <p class="more"><a href="/channel/topviewed"><?php ___('See more');?></a> </p>
     </div>
+	
+	 <div id="TopCountries" class="container">
+      <h3><?php ___('Top Countries')?></h3>
+	  <div class="home_flags">
+		<?php //print_r($countries)?>
+		<?php 
+		foreach($countries as $country):
+		$country_name = $country['users']['country'];
+		$total_user = $country['0']['cnt'];
+		?>
+
+		<a href="<?php echo $html->url('/users/countries/'.$country_name)?>">
+		<?php echo $html->image('/img/flags/'.$country_name.'.png',array('alt'=>$country_name,'width'=>'103','height'=>'61'))?>
+		<h6><?php echo $country_name?>&nbsp;(<?php echo $total_user?>)</h6></a>
+		<?php
+		endforeach;
+		?>
+		</div>
+      <p class="more"><a href="/users/flag_list"><?php ___('See more');?></a> </p>
+    </div>
 
   </div>
 <!-- ////// End main content ////// -->

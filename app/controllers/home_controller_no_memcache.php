@@ -35,7 +35,7 @@ Class HomeController extends AppController {
 		$this->__setTotalScripts();
 		$this->__setTotalSprites();
 		$this->__setTotalCreators();
-		
+		$this->__getTopCountries();
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
 		$newest_feed_link = "/feeds/getNewestProjects";
@@ -190,5 +190,9 @@ Class HomeController extends AppController {
         $resultset = $this->Project->query("select count(distinct(user_id)) as totalcreators from projects where user_id");
         $this->set('totalcreators', number_format(0.0 + $resultset[0][0]['totalcreators']));
     }
+	function __getTopCountries(){
+	$countries = $this->User->query("SELECT count(*)as cnt, country FROM `users` group by country order by cnt desc  LIMIT ".NUM_TOP_COUNTRIES);
+	$this->set('countries',$countries);
+	}
 }
 ?>
