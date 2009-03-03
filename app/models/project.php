@@ -60,16 +60,17 @@ Class Project extends AppModel
 	}
 	
 	function addSafeCheck($conditions = null, $content_level = "safe") {
+		$isSafe=$this->getContentStatus();
+		
 		if ($content_level == "overload") {
 			$content_level = "all";
 		} else {
-			if (CONTENT_STATUS == "all") {
+			if ($isSafe == "all") {
 				$content_level = "all";
 			} else {
 				$content_level = "safe";
 			}
 		}
-
 		if ($content_level == "all") {
 			return $conditions;
 		} else {

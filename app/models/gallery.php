@@ -33,7 +33,7 @@ Class Gallery extends AppModel {
 
     function findAll($conditions=null, $fields=null,$order=null,$limit=null,$page=1,$recursive=null, $safe="all", $admin = 0) 
     {
-        return parent::findAll($this->check($conditions, $safe, $admin),$fields,$order,$limit,$page,$recursive);
+		return parent::findAll($this->check($conditions, $safe, $admin),$fields,$order,$limit,$page,$recursive);
     }
 
     function findCount($conditions=null, $recursive=0, $safe="all")
@@ -99,10 +99,12 @@ Class Gallery extends AppModel {
 	}
 	
 	function addSafeCheck($conditions = null, $content_level = "safe") {
+		$isSafe=$this->getContentStatus();
+		
 		if ($content_level == "overload") {
 			$content_level = "all";
 		} else {
-			if (CONTENT_STATUS == "all") {
+			if ($isSafe == "all") {
 				$content_level = "all";
 			} else {
 				$content_level = "safe";

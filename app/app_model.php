@@ -59,5 +59,14 @@ class AppModel extends Model{
 		}
 		return $key;
 	}
+	
+	/* Based on the URL used it will render different content */
+	function getContentStatus() {
+		$host = env('HTTP_HOST');
+		if($host == FILTERED_HOST) {
+			return 'safe';
+		}
+		return 'all';
+	}
 }
 ?>
