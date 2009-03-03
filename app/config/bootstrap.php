@@ -178,6 +178,16 @@ define("SUBTOPIC3", "scrach-feedback@mit");
 define('MAX_LINKS_PER_SITEMAP', 5000);
 define('CACHE_DURATION', '1 day');
 
+/**
+ * Memcache constants
+ */
+define("CHANNEL_RECENT_CACHE_TTL", 30); //0.5 hour
+define("CHANNEL_FEATURED_CACHE_TTL", 30); //0.5 hour
+define("CHANNEL_TOPVIEWED_CACHE_TTL", 30); //0.5 hour
+define("CHANNEL_TOPLOVED_CACHE_TTL", 30); //0.5 hour
+define("CHANNEL_REMIXED_CACHE_TTL", 30); //0.5 hour
+
+
 //Allow people to give thank you after n hours.
 define("THANKS_INTERVAL",5);
 
