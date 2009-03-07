@@ -642,27 +642,35 @@ class UsersController extends AppController {
 	**/
 	function renderFriendProjects($user_id)
 	{
-		$num_friends = $this->Relationship->findAll("user_id = $user_id");
+		$project_list = array();
+		$friends_project =array();
 		
-		$friend_list =array();
-		$friends_project_list =array();
-		foreach($num_friends as $friends)
-		array_push($friend_list,$friends['Relationship']['friend_id']);
-		$friend_ids = implode(',',$friend_list);
+		$config = $this->User->getdbName();
+		$mysqli = new mysqli($config['host'], $config['login'], $config['password'], $config['database']);
+		$rs = $mysqli->query( "CALL top3friendproject($user_id)" );
+		
+		while($row = $rs->fetch_object())
+		{
+			array_push($project_list,$row->project_id);
+		}
+		mysqli_free_result($rs);
+		mysqli_close($mysqli); 
+		
+		$project_ids = implode(',',$project_list);
 		$page_limit = NUM_FRIEND_PROJECTS;
 		$this->PaginationTernary->show = $page_limit;
 		$this->modelClass = "Project";
 		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );	
-
-		list($order,$limit,$page) = $this->PaginationTernary->init("Project.user_id in (".$friend_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
 		
+		if(!empty($project_ids)):
+		list($order,$limit,$page) = $this->PaginationTernary->init("Project.id in (".$project_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
 		
-		$friends_project = $this->Project->findAll("Project.user_id in (".$friend_ids.") ",null,$order, $limit, $page);
-		
+		$friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,$order, $limit, $page);
+		endif;
 		$this->set('friends_project_list',$friends_project);
 		$this->render('render_friend_projects_ajax', 'ajax');
 		return;
-	
+		
 	}
 	
 	function renderProjects($urlname=null, $option = "projects") {
@@ -794,7 +802,7 @@ class UsersController extends AppController {
 
 		$user_id = $user_record['User']['id'];
 		$isMe = $this->activeSession($user_id);
-		$username = $user_record['User']['username'];	
+		$username = $user_record['User']['username'];
 		
 		$user_status = $user_record['User']['status'];
 		if ($user_status == 'delbyadmin') 
@@ -982,22 +990,33 @@ class UsersController extends AppController {
 		} else {
 			$this->set('showmoregalleries' , false);
 		}
-		//populate friends latest project
-		$friend_list =array();
-		$friends_project = array();
-		$friends_project_list =array();
-		foreach($num_friends as $friends)
-		array_push($friend_list,$friends['Relationship']['friend_id']);
-		$friend_ids = implode(',',$friend_list);
+		
+		//populate friends 3 latest project
+		
+		$project_list = array();
+		$friends_project =array();
+		
+		$config = $this->User->getdbName();
+		$mysqli = new mysqli($config['host'], $config['login'], $config['password'], $config['database']);
+		$rs = $mysqli->query( "CALL top3friendproject($user_id)" );
+		
+		while($row = $rs->fetch_object())
+		{
+			array_push($project_list,$row->project_id);
+		}
+		mysqli_free_result($rs);
+		mysqli_close($mysqli); 
+		
+		$project_ids = implode(',',$project_list);
 		$page_limit = NUM_FRIEND_PROJECTS;
 		$this->PaginationTernary->show = $page_limit;
 		$this->modelClass = "Project";
 		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );	
 		
-		if(!empty($friend_ids)):
-		list($order,$limit,$page) = $this->PaginationTernary->init("Project.user_id in (".$friend_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
+		if(!empty($project_ids)):
+		list($order,$limit,$page) = $this->PaginationTernary->init("Project.id in (".$project_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
 		
-		$friends_project = $this->Project->findAll("Project.user_id in (".$friend_ids.") ",null,$order, $limit, $page);
+		$friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,$order, $limit, $page);
 		endif;
 		$this->set('friends_project_list',$friends_project);
 		

@@ -12,7 +12,12 @@ Class User extends AppModel
 		'byear'	  => '/^[0-9]{4}$/'
 	);
 	
-	
+	function getdbName() {
+	   return $this->getDataSource()->config;
+         
+    } 	
+ 
+ 
   /**
    * Returns all user records
    * @return User array => array of user records
