@@ -385,8 +385,12 @@ class ProjectsController extends AppController {
 	* @param string $urlname => user url
 	* @param int $pid => project id
 	*/
-	function markcomment($pid, $comment_id) {
-		$this->autoRender=false;	
+	function markcomment($pid, $comment_id,$delete_flag=null) {
+		$this->autoRender=false;
+		if($delete_flag==1)
+		$isdeleteAll =true;
+		else
+		$isdeleteAll =false;	
 		$isAdmin = $this->isAdmin();
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
@@ -444,6 +448,28 @@ class ProjectsController extends AppController {
 				$subject= "Comment deleted because it was flagged by creator of '$pname'";
 				$msg = "Comment by '$creatorname' deleted because it was flagged by the project owner:\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
 			} elseif ($isAdmin) {
+			    //delete all similar comments
+				if($isdeleteAll)
+				{ 
+					$all_content = $this->Pcomment->findAll(array('content'=>$comment['Pcomment']['content']));
+					
+					foreach($all_content as $pcontent)
+					{
+						$this->Pcomment->id =$pcontent['Pcomment']['content'] ;
+						$content = $pcontent['Pcomment']['id'];
+						$this->Pcomment->query("update pcomments set comment_visibility = 'delbyadmin' where id=".$pcontent['Pcomment']['id'] );
+				$subject= "Comment deleted because it was flagged by an admin";
+				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
+				$this->notify('pcomment_removed', $creator_id,
+								array('project_id' => $pid,
+									'project_owner_name' => $project_creator),
+									array($content));
+								
+					
+					}
+				}
+				else
+				{
 				$this->Pcomment->saveField("comment_visibility", "delbyadmin") ;
 				$subject= "Comment deleted because it was flagged by an admin";
 				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
@@ -451,6 +477,7 @@ class ProjectsController extends AppController {
 								array('project_id' => $pid,
 									'project_owner_name' => $project_creator),
 									array($content));
+				}
 			}
 			if ($inappropriate_count > $max_count) {
 				$this->Mpcomment->bindUser();
