@@ -385,9 +385,9 @@ class ProjectsController extends AppController {
 	* @param string $urlname => user url
 	* @param int $pid => project id
 	*/
-	function markcomment($pid, $comment_id,$delete_flag=null) {
+	function markcomment($pid, $comment_id, $delete_simillar_comment=null) {
 		$this->autoRender=false;
-		if($delete_flag==1)
+		if($delete_simillar_comment==1)
 		$isdeleteAll =true;
 		else
 		$isdeleteAll =false;	

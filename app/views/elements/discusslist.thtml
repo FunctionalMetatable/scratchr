@@ -162,16 +162,17 @@
 			
 				//div containing link to confirm delete all same message
 					echo "<div id='delete_all_$comment_id' style='display:none;'>";
-					___("Do you want to delete all the messages that are exactly the same?");
-					echo "(" . $ajax->link(___("Yes", true), '#', 
-						array("url"=>$mark_address.'/1', 
+					___("Do you also want to delete all the messages that are exactly the same?");
+					echo "<br>";
+					echo  $ajax->link(___("Yes", true), '#', 
+						array('class'=>'button',"url"=>$mark_address.'/1', 
 							"update"=>"$comment_id", "condition"=>"hideComment($comment_id)"), 
-						"Are you sure?", false) . ")";
+						"Are you sure?", false) ;
 						echo " | ";
-						echo "(" . $ajax->link(___("No", true), '#', 
-						array("url"=>$mark_address, 
+						echo  $ajax->link(___("No", true), '#', 
+						array('class'=>'button',"url"=>$mark_address, 
 							"update"=>"$comment_id", "condition"=>"hideComment($comment_id)"), 
-						"Are you sure?", false) . ")";
+						"Are you sure?", false) ;
 						
 					echo "</div>";
 					

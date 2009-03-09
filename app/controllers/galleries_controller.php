@@ -2049,9 +2049,9 @@ Class GalleriesController extends AppController {
 	* @param int $gallery_id => gallery identifier
 	* @param int $comment_id => comment identifier
 	*/
-	function markcomment($gallery_id, $comment_id, $current_page = null,$delete_flag=null) {
+	function markcomment($gallery_id, $comment_id, $current_page = null, $delete_simillar_comment=null) {
 		$this->autoRender=false;
-		if($delete_flag==1)
+		if($delete_simillar_comment==1)
 		$isdeleteAll =true;
 		else
 		$isdeleteAll =false;
