@@ -2049,9 +2049,12 @@ Class GalleriesController extends AppController {
 	* @param int $gallery_id => gallery identifier
 	* @param int $comment_id => comment identifier
 	*/
-	function markcomment($gallery_id, $comment_id, $current_page = null) {
+	function markcomment($gallery_id, $comment_id, $current_page = null,$delete_flag=null) {
 		$this->autoRender=false;
-		
+		if($delete_flag==1)
+		$isdeleteAll =true;
+		else
+		$isdeleteAll =false;
 		$isAdmin = $this->isAdmin();
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
@@ -2097,13 +2100,34 @@ Class GalleriesController extends AppController {
 				$subject= "Comment deleted because it was flagged by creator of '$gallery_name'";
 				$msg = "Comment by '$creatorname' deleted because it was flagged by the project owner:\n$content\nhttp://scratch.mit.edu/galleries/view/$gallery_id";
 			} elseif ($isAdmin) {
-				$this->hide_gcomment($comment_id, "delbyadmin");
-				$subject= "Comment deleted because it was flagged by an admin";
-				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\nhttp://scratch.mit.edu/galleries/view/$gallery_id";
-				$this->notify('gcomment_removed', $creator_id,
-							array('gallery_id' => $gallery_id),
-							array($content)
-						);
+				if($isdeleteAll)
+				{
+					$all_content = $this->Gcomment->findAll(array('content'=>$comment['Gcomment']['content']));
+					
+					foreach($all_content as $gcontent)
+					{
+					$comment_id =$gcontent['Gcomment']['id'];
+					$content = $gcontent['Gcomment']['content'];
+					$this->hide_gcomment($comment_id, "delbyadmin");
+					$subject= "Comment deleted because it was flagged by an admin";
+					$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\nhttp://scratch.mit.edu/galleries/view/$gallery_id";
+					$this->notify('gcomment_removed', $creator_id,
+								array('gallery_id' => $gallery_id),
+								array($content)
+							);
+					
+					}
+				}
+				else
+				{
+					$this->hide_gcomment($comment_id, "delbyadmin");
+					$subject= "Comment deleted because it was flagged by an admin";
+					$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\nhttp://scratch.mit.edu/galleries/view/$gallery_id";
+					$this->notify('gcomment_removed', $creator_id,
+								array('gallery_id' => $gallery_id),
+								array($content)
+							);
+				}			
 			}
 			if ($inappropriate_count > $max_count) {
 				$this->Mgcomment->bindUser();
