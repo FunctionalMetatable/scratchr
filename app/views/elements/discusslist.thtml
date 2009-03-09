@@ -164,13 +164,13 @@
 					echo "<div id='delete_all_$comment_id' style='display:none;'>";
 					___("Do you also want to delete all the messages that are exactly the same?");
 					echo "<br>";
-					echo  $ajax->link(___("Yes", true), '#', 
-						array('class'=>'button',"url"=>$mark_address.'/1', 
+					echo  $ajax->link("<span class='button2'>Yes</span>", '#', 
+						array("url"=>$mark_address.'/1', 
 							"update"=>"$comment_id", "condition"=>"hideComment($comment_id)"), 
 						"Are you sure?", false) ;
-						echo " | ";
-						echo  $ajax->link(___("No", true), '#', 
-						array('class'=>'button',"url"=>$mark_address, 
+						echo"&nbsp;&nbsp;";
+						echo  $ajax->link("<span class='button2'>No</span>", '#', 
+						array("url"=>$mark_address, 
 							"update"=>"$comment_id", "condition"=>"hideComment($comment_id)"), 
 						"Are you sure?", false) ;
 						
