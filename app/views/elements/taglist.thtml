@@ -4,7 +4,7 @@
 	$tagcount=count($tags);
 	foreach($tags as $tag):
 		$project_tag_id = $tag['ProjectTag']['id'];
-		$tag_name = $tag['Tag']['name'];
+		$tag_name = htmlspecialchars($tag['Tag']['name']);
 		$tag_id = $tag['Tag']['id'];
 		$tag_url = "/tags/view/".$tag_name;
 		$flagged = $tag['ProjectTag']['flagged'];
