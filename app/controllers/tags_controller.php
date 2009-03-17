@@ -95,19 +95,22 @@ Class TagsController extends AppController {
         $this->ProjectTag->mc_connect();
         $tag_projects = $this->ProjectTag->mc_get($mc_key);
         if(empty($tag_projects)) {
-            $tag_projects = $this->ProjectTag->findAll($final_criteria, null, $order, $limit, $page, 3);
+            $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+            $this->ProjectTag->unbindModel(
+                array('belongsTo' => array('User'))
+            );
+            $tag_projects = $this->ProjectTag->findAll($final_criteria, null, $order, $limit, $page, 2);
+            $tag_projects = $this->set_projects($tag_projects);
             $ttl = TAG_PAGINATION_CACHE_TTL;
             if($option == 'creation') { //for sort by creation date
                 $ttl = TAG_PAGINATION_CACHE_TTL_CREATION;
             }
-            echo $ttl;
             $this->ProjectTag->mc_set($mc_key, $tag_projects, false, $ttl);
         }
         $this->ProjectTag->mc_close();
 
-        $tag_projects = $this->ProjectTag->findAll($final_criteria, null, $order, $limit, $page, 3);
-        
-		$tag_projects = $this->set_projects($tag_projects);
 		$this->set('option', $option);
         $this->set('tag_projects', $tag_projects);
 		$this->set('tag_name', $tag_name);
