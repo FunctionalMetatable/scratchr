@@ -39,7 +39,9 @@ Class ChannelController extends AppController {
         $mc_key = 'channel-recent-'.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
         if ( !$final_projects) {
-            $this->Project->bindUser();
+            $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
             $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, CHANNEL_RECENT_CACHE_TTL);
@@ -94,7 +96,9 @@ Class ChannelController extends AppController {
         $mc_key = 'channel-topviewed-'.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
         if ( !$final_projects) {
-            $this->Project->bindUser();
+            $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
             $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, CHANNEL_TOPVIEWED_CACHE_TTL);
@@ -120,7 +124,9 @@ Class ChannelController extends AppController {
         $mc_key = 'channel-toploved-'.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
         if ( !$final_projects) {
-            $this->Project->bindUser();
+            $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
             $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, CHANNEL_TOPLOVED_CACHE_TTL);
@@ -170,7 +176,9 @@ Class ChannelController extends AppController {
         $mc_key = 'channel-remixed-'.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
         if ( !$final_projects) {
-            $this->Project->bindUser();
+            $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
             $final_projects = $this->Project->findAll("remixes > 0 AND Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL);
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, CHANNEL_REMIXED_CACHE_TTL);
@@ -202,9 +210,13 @@ Class ChannelController extends AppController {
         $query = "Project.id >= $random AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible'";
         $count = $this->Project->findCount($query);
         if ($count < 10) $query = "Project.id <= ".($random+$count);
-		$final_projects = $this->Project->findAll($query, NULL, "Project.id", 10, 1, NULL);
+
+        $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+        );
+        $final_projects = $this->Project->findAll($query, NULL, "Project.id", 10, 1, NULL);
 		
-		//$final_projects = $this->Project->findAll("remixes > 0", NULL, $order, $limit, $page, NULL);
+        //$final_projects = $this->Project->findAll("remixes > 0", NULL, $order, $limit, $page, NULL);
 		$final_projects = $this->set_projects($final_projects);
 		
 		$remixed_feed_link = "/feeds/getTopRemixedProjects";
