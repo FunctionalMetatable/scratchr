@@ -66,8 +66,10 @@ Class ChannelController extends AppController {
         $mc_key = 'channel-featured-'.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
         if ( !$final_projects) {
-            $this->Project->bindUser();
-            $final_projects = $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, 3, $this->getContentStatus());
+            $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+            $final_projects = $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, 2, $this->getContentStatus());
             $this->Project->mc_set($mc_key, $final_projects, false, CHANNEL_FEATURED_CACHE_TTL);
         }
         $this->set('data', $final_projects);
