@@ -235,10 +235,13 @@
 		<h4><?php ___('Gallery description'); ?></h4>
 		<p id="gdesc">
 			<?php
-			 $notes = htmlspecialchars($theme['description']);
+			$notes = htmlspecialchars($theme['description']);
 			
 			//$pattern = '/[\n\r]/';
-			$pattern = '/[\-]{5}|[\n\r]/';
+			if($isClubbed)
+			$pattern = '/[\-]{2,}|[\n\r]/';
+			else
+			$pattern = '/[\n\r]/';
 			$rep = '<br>';
 			echo preg_replace($pattern, $rep, $notes);
 			?>
