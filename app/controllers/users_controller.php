@@ -76,8 +76,10 @@ class UsersController extends AppController {
 			}
 			$user_ids_accessing_same_ip =array_unique($user_ids_accessing_same_ip);
 			$user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
+			if(!empty($user_ids_accessing_same_ip))
 			$user_records = $this->User->findAll("User.ipaddress = $client_ip or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
-			
+			else
+			$user_records = $this->User->findAll("User.ipaddress = $client_ip ",'urlname','created DESC');
 			/* Check if there was activity from Same IP inside SIGNUP INTERVAL */
 			$creation_from_same_ip_in_signup_interval = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
 			$access_from_same_ip_in_signup_interval = $this->ViewStat->hasAny("ViewStat.timestamp > now() - interval $signup_interval minute  AND  ViewStat.ipaddress = $client_ip");
@@ -119,7 +121,10 @@ class UsersController extends AppController {
 			}
 			$user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
 			$user_ids_accessing_same_ip =array_unique($user_ids_accessing_same_ip);
+			if(!empty($user_ids_accessing_same_ip))
 			$user_records = $this->User->findAll("User.ipaddress = $client_ip or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
+			else
+			$user_records = $this->User->findAll("User.ipaddress = $client_ip ",'urlname','created DESC');
 			
 			/* Check if there was activity from Same IP inside SIGNUP INTERVAL */
 			$creation_from_same_ip_in_signup_interval = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
