@@ -1032,6 +1032,7 @@ Class GalleriesController extends AppController {
 			$this->set('upload_error', $upload_error);
 			$this->Session->del('upload_error');
 		}
+		$this->set('isClubbed',$this->ClubbedGallery->hasAny("gallery_id = $gallery_id"));
 		$this->set('ignored_user_array',$ignored_user_array);
 		$this->set('sessionUID',$sessionUID);
 		$this->set('gallery', $gallery);
