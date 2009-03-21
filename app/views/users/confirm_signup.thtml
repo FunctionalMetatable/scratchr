@@ -1,20 +1,48 @@
 <div class="fullcontent">
-<p><h5><?php ___('The following accounts have already been created from this IP')?> (<?php echo $ip_address?>):</h5> </p>
-<?php 
-
-foreach($user_records as $user):
-$urlname = $user['User']['urlname'];
-$user_ref = "/users/".$urlname;
-
-?>
-<a href="<?php echo $html->url($user_ref)?>"><?php echo $urlname ?></a>&nbsp;&sbquo;&nbsp;
+<p>
 <?php
-endforeach;
+// Create String for Showing Users List
+$users_from_same_ip=array();
+foreach($user_records as $user) {
+	$urlname=$user['User']['urlname'];
+	array_push($users_from_same_ip, $html->link($urlname, '/users/'.$urlname));
+}
+
+$users_from_same_ip = implode(', ', $users_from_same_ip);
+
+if(isset($activity_from_same_ip_signup_interval)) {
+?>
+<div id="signup_notice" >
+  <?php 
+  $user_ref = "/users/".$urlname;
+  ?>
+  <h5><p><?php ___('The following accounts have already been created from this IP')?> (<?php echo $ip_address?>):</h5> 
+  <p><?php echo $users_from_same_ip; ?></p>
+  <p><?php ___('In order to prevent misuse, please wait a few more minutes before creating a new account from')?> <?php echo $ip_address?>.</p>
+</div>
+<?php
+}
+else {
 ?>
 
+<h5><?php ___('The following accounts have already been created from this IP')?> (<?php echo $ip_address?>):</h5> </p>
+<p><?php echo $users_from_same_ip; ?></p>
 <p>
 <?php ___('In most cases we would like to discourage people from creating multiple accounts. If the accounts are used to game the system this could lead to getting blocked from the website.')?>
 </p>
 <p><?php ___('What do you want to do?')?></p>
 <a href="<?php echo $html->url('/signup')?>" class="button">Continue</a>  <a href="<?php echo $html->url('/')?>" class="button">Cancel</a>
+<?php
+}
+?>
 </div>
+<style>
+#signup_notice{
+margin-bottom:10px;
+color:#FF0000;
+}
+#signup_notice p{
+padding:0;!important
+}
+
+</style>
