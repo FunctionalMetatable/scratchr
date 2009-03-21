@@ -4,7 +4,7 @@ class UsersController extends AppController {
 	var $components = array('PaginationTernary','PaginationSecondary', 'Pagination','RequestHandler','FileUploader','Email','Thumb');
 	var $helpers = array('Pagination', 'Ajax', 'Javascript');
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject',
-						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable','Thank','ForumUser');
+						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable','Thank','ForumUser', 'ViewStat');
 
 
 	function admin_index() {
@@ -55,33 +55,95 @@ class UsersController extends AppController {
 	  die;
 	}
 	
-	function confirm_signup(){
-	$this->pageTitle = ___("Scratch | Signup", true);
-	$client_ip = ip2long($this->RequestHandler->getClientIP());
-	$signup_interval = SIGNUP_INTERVAL;
-	$account_from_same_ip = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
-	if($account_from_same_ip){
-	$this->redirect('/signup');
-	}
-	else
-	{
-	$user_records = $this->User->findAll("User.ipaddress = $client_ip",'urlname','created DESC');
-	$this->set('ip_address',long2ip($client_ip));
-	$this->set('user_records',$user_records);
-	}
+	function confirm_signup() {
+		$this->pageTitle = ___("Scratch | Signup", true);
+		$client_ip = ip2long($this->RequestHandler->getClientIP());
 		
+		$signup_interval = SIGNUP_INTERVAL;
+		
+		/* First we find if the IP has been used before or not, if not then simply redirect him to sign up page */
+		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip");
+		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = $client_ip");
 	
+		/* Some Activity from Same IP in past */
+		if($creation_from_same_ip || $access_from_same_ip) {
+	
+			/* Get All the users who have accessed the projects or created a profile using same IP */
+			$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = $client_ip", 'user_id'); 
+			$user_ids_accessing_same_ip = array();
+			foreach($view_stats as $view_stat) {
+				array_push($user_ids_accessing_same_ip, $view_stat['ViewStat']['user_id']); 
+			}
+			$user_ids_accessing_same_ip =array_unique($user_ids_accessing_same_ip);
+			$user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
+			$user_records = $this->User->findAll("User.ipaddress = $client_ip or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
+			
+			/* Check if there was activity from Same IP inside SIGNUP INTERVAL */
+			$creation_from_same_ip_in_signup_interval = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
+			$access_from_same_ip_in_signup_interval = $this->ViewStat->hasAny("ViewStat.timestamp > now() - interval $signup_interval minute  AND  ViewStat.ipaddress = $client_ip");
+	
+			/* Activity from Same IP inside SIGNUP INTERVAL */
+			if ($creation_from_same_ip_in_signup_interval || $access_from_same_ip_in_signup_interval) {
+				$this->set('activity_from_same_ip_signup_interval', true);
+			}			
+			
+			/* Some activity in past from same IP so we need to show the message with user records and ipaddress (send them to view) */
+			$this->set('user_records', $user_records);
+			$this->set('ip_address',long2ip($client_ip));
+		}
+		
+		/* Same IP never used before */
+		else {
+			$this->redirect('/signup');
+		}
 	}
 
 	function signup() {
+				
 		$this->pageTitle = ___("Scratch | Signup", true);
 		$client_ip = ip2long($this->RequestHandler->getClientIP());
 		$user_data = $this->data;
 		$errors = Array(); 
 		$signup_interval = SIGNUP_INTERVAL;
-		$account_from_same_ip = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
+				
+		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip");
+		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = $client_ip");
+	
+		/* Some Activity from Same IP in past */
+		if($creation_from_same_ip || $access_from_same_ip) {
+			/* Get All the users who have accessed the projects or created a profile using same IP */
+			$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = $client_ip", 'user_id'); 
+			$user_ids_accessing_same_ip = array();
+			foreach($view_stats as $view_stat) {
+				array_push($user_ids_accessing_same_ip, $view_stat['ViewStat']['user_id']); 
+			}
+			$user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
+			$user_ids_accessing_same_ip =array_unique($user_ids_accessing_same_ip);
+			$user_records = $this->User->findAll("User.ipaddress = $client_ip or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
+			
+			/* Check if there was activity from Same IP inside SIGNUP INTERVAL */
+			$creation_from_same_ip_in_signup_interval = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
+			$access_from_same_ip_in_signup_interval = $this->ViewStat->hasAny("ViewStat.timestamp > now() - interval $signup_interval minute  AND  ViewStat.ipaddress = $client_ip");
+	
+			/* Activity from Same IP inside SIGNUP INTERVAL */
+			if ($creation_from_same_ip_in_signup_interval || $access_from_same_ip_in_signup_interval) {
+				$this->set('activity_from_same_ip_signup_interval', true);
+			}			
+			
+			/* Some activity in past from same IP so we need to show the message with user records and ipaddress (send them to view) */
+			$this->set('user_records', $user_records);
+			$this->set('ip_address',long2ip($client_ip));
+				
+			if(isset($_SERVER['HTTP_REFERER']))
+			{
+			 	$referers = $_SERVER['HTTP_REFERER'];
+				$referer_array = explode('/',$referers);
+				$refer_from =$referer_array['3'];
+			}	
+			if(!isset($referers)&& $refer_from!="confirm_signup")
+			$this->redirect('/confirm_signup');
 		
-		$multipleAccount = $this->User->find("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
+		}
 		
 		$this->set('username_error', ___('username must be at least 3 letters and/or numbers, no spaces', true));
 		if(!empty($this->data['User'])) {
@@ -158,7 +220,7 @@ class UsersController extends AppController {
 				 //at some point we though of having a urlname
 				 $this->data['User']['urlname'] =  $this->data['User']['username'];
 				 $this->data['User']['ipaddress'] = $client_ip;
-				 if(!$account_from_same_ip){
+				 
 					if ($this->User->save($this->data['User'], false)) {
 						$this->data['User']['id'] = $this->User->getLastInsertID();
 						$this->setFlash(___("Welcome!", true) . " <a href='/pages/download'>" . ___('Download Scratch', true) . "</a>", FLASH_NOTICE_KEY);
@@ -171,11 +233,7 @@ class UsersController extends AppController {
 						$this->data['User']['password2'] = '';
 						$this->setFlash(___("could not save information, try again", true), FLASH_ERROR_KEY);
 					}
-				}
-				else{
-				$this->set('isError', true);
-				$this->redirect('/signup');
-				}
+				
 				
 			} else {
 				if($this->data['User']['email'] == 'rather-not-say@scratchr.org') {
@@ -184,14 +242,7 @@ class UsersController extends AppController {
 				$this->validateErrors($this->User);
 			}
 		}
-		if ($account_from_same_ip) {
-			$isError = true;
-		} else {
-			$isError = false;
-		}
-		$this->set('ip_address',long2ip($client_ip));
-		$this->set('urlname',$multipleAccount['User']['urlname']);
-		$this->set('isError', $isError);
+		
 		$this->set_signup_variables();
 		$this->set('errors', $errors);
 		$this->render('signup');
