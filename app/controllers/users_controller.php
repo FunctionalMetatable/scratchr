@@ -119,8 +119,9 @@ class UsersController extends AppController {
 			foreach($view_stats as $view_stat) {
 				array_push($user_ids_accessing_same_ip, $view_stat['ViewStat']['user_id']); 
 			}
-			$user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
 			$user_ids_accessing_same_ip =array_unique($user_ids_accessing_same_ip);
+			$user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
+			
 			if(!empty($user_ids_accessing_same_ip))
 			$user_records = $this->User->findAll("User.ipaddress = $client_ip or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
 			else
