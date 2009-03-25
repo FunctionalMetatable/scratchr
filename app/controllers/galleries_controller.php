@@ -2137,7 +2137,7 @@ Class GalleriesController extends AppController {
 					$stringwflaggernames .= $flagger['User']['username'] . ",";
 				}
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on the gallery: '$gallery_name'";
-				$msg = "Users '$stringwflaggernames' have flagged this comment by '$creatorname':\n$content\n http://scratch.mit.edu/galleries/view/$gallery_id";
+				$msg = "Users  <a href='http://scratch.mit.edu/users/$stringwflaggernames'>$stringwflaggernames</a> have flagged this comment by  <a href='http://scratch.mit.edu/users/$creatorname'>$creatorname</a> :\n$content\n http://scratch.mit.edu/galleries/view/$gallery_id";
 			}
 			$this->Email->email(REPLY_TO_FLAGGED_GCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_GCOMMENT, $userflagger['User']['email']);
 		}

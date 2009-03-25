@@ -486,7 +486,7 @@ class ProjectsController extends AppController {
 					$stringwflaggernames .= $flagger['User']['username'] . ",";
 				}
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on '$pname'";
-				$msg = "Users '$stringwflaggernames' have flagged this comment by '$creatorname':\n$content\n http://scratch.mit.edu/projects/$project_creator/$pid";
+				$msg = "Users  <a href='http://scratch.mit.edu/users/$stringwflaggernames'>$stringwflaggernames</a> have flagged this comment by  <a href='http://scratch.mit.edu/users/$creatorname'>$creatorname</a> :\n$content\n http://scratch.mit.edu/projects/$project_creator/$pid";
 			}
 			$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
 		}
@@ -888,7 +888,7 @@ class ProjectsController extends AppController {
 				} else {
 					$subject= "Project '$pname' flagged" . " (REVIEWED)";
 				}
-				$msg = "user $flaggername ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid \n Reason: \n " . $msgin;
+				$msg = "user <a href='http://scratch.mit.edu/users/$flaggername'>$flaggername</a> ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid \n Reason: \n " . $msgin;
 			
 				$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  $flaggername, $msg, $subject, TO_FLAGGED_PROJECT, $userflagger['User']['email']);
 				$this->Flagger->save($this->data);
@@ -906,7 +906,7 @@ class ProjectsController extends AppController {
 						$this->Project->censor($pid, $urlname, $this->isAdmin(), $user_id);
 						
 						$msg = "Project *automatically censored* because it reached the maximum number of flags.\n";
-						$msg .= "user $flaggername ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid";
+						$msg .= "user <a href='http://scratch.mit.edu/users/$flaggername'>$flaggername</a> ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid";
 						$subject= "Project '$pname' censored";
 						$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, 'scratch-feedback@media.mit.edu');
 						
