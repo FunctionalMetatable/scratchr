@@ -18,6 +18,7 @@ class EmailComponent extends Object
 	  	$headers .= "X-Sender: <contactus-form@scratch.mit.edu>\n";
 	  	$headers .= "X-Mailer: ScratchR Platform\n";
 	  }
+	  $headers .="Content-Type: text/html\n";
 	  $headers .="Reply-To:$email\n\n";
 	  mail("$f_mail", "$subject", "$f_message",$headers); // send the email
 	}
