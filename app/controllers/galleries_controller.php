@@ -2076,6 +2076,8 @@ Class GalleriesController extends AppController {
 		$isMine = ($user_id == $gallery['User']['id']);
 		$creator = $this->User->find("User.id = '$creator_id'");
 		$creatorname = $creator['User']['username'];
+		$creatorname_href =HREF_USER.$creator['User']['username'];
+		$linked_creatorname = "<a href='$creatorname_href'>".$creator['User']['username']."</a>";
 		$userflagger = $this->User->find("User.id = '$user_id'");
 		$flaggername = $userflagger['User']['username'];
 		$gallery_name = $gallery['Gallery']['name'];
@@ -2099,7 +2101,7 @@ Class GalleriesController extends AppController {
 			if ($isMine) {
 				$this->hide_gcomment($comment_id, "delbyusr");
 				$subject= "Comment deleted because it was flagged by creator of '$gallery_name'";
-				$msg = "Comment by '$creatorname' deleted because it was flagged by the project owner:\n$content\nhttp://scratch.mit.edu/galleries/view/$gallery_id";
+				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\nhttp://scratch.mit.edu/galleries/view/$gallery_id";
 			} elseif ($isAdmin) {
 				if($isdeleteAll)
 				{
@@ -2134,10 +2136,14 @@ Class GalleriesController extends AppController {
 				$this->Mgcomment->bindUser();
 				$allflaggers = $this->Mgcomment->findAll("comment_id = $comment_id");
 				foreach ($allflaggers as $flagger) {
-					$stringwflaggernames .= $flagger['User']['username'] . ",";
+					$user_href =HREF_USER.$flagger['User']['username'];
+					$linked_stringwflaggernames ="<a href ='$user_href'>";
+					$linked_stringwflaggernames .= $flagger['User']['username'] . "</a>,";
 				}
+				
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on the gallery: '$gallery_name'";
-				$msg = "Users  <a href='http://scratch.mit.edu/users/$stringwflaggernames'>$stringwflaggernames</a> have flagged this comment by  <a href='http://scratch.mit.edu/users/$creatorname'>$creatorname</a> :\n$content\n http://scratch.mit.edu/galleries/view/$gallery_id";
+				$msg = "Users  $linked_stringwflaggernames have flagged this comment by  $linked_creatorname :\n$content\n http://scratch.mit.edu/galleries/view/$gallery_id";
+				
 			}
 			$this->Email->email(REPLY_TO_FLAGGED_GCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_GCOMMENT, $userflagger['User']['email']);
 		}
