@@ -422,6 +422,8 @@ class ProjectsController extends AppController {
 		$isMine = ($user_id == $project['User']['id']);
 		$creator = $this->User->find("User.id = '$creator_id'");
 		$creatorname = $creator['User']['username'];
+		$creatorname_href =HREF_USER.$creator['User']['username'];
+		$linked_creatorname = "<a href='$creatorname_href'>".$creator['User']['username']."</a>"; 
 		$userflagger = $this->User->find("User.id = '$user_id'");
 		$flaggername = $userflagger['User']['username'];
 		$pname = htmlspecialchars($project['Project']['name']);
@@ -446,7 +448,7 @@ class ProjectsController extends AppController {
 			if ($isMine) {
 				$this->Pcomment->saveField("comment_visibility", "delbyusr") ;
 				$subject= "Comment deleted because it was flagged by creator of '$pname'";
-				$msg = "Comment by '$creatorname' deleted because it was flagged by the project owner:\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
+				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
 			} elseif ($isAdmin) {
 			    //delete all similar comments
 				if($isdeleteAll)
@@ -483,10 +485,12 @@ class ProjectsController extends AppController {
 				$this->Mpcomment->bindUser();
 				$allflaggers = $this->Mpcomment->findAll("comment_id=$comment_id");
 				foreach ($allflaggers as $flagger) {
-					$stringwflaggernames .= $flagger['User']['username'] . ",";
+					$user_href =HREF_USER.$flagger['User']['username'];
+					$linked_stringwflaggernames ="<a href ='$user_href'>";
+					$linked_stringwflaggernames .= $flagger['User']['username'] . "</a>,";
 				}
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on '$pname'";
-				$msg = "Users  <a href='http://scratch.mit.edu/users/$stringwflaggernames'>$stringwflaggernames</a> have flagged this comment by  <a href='http://scratch.mit.edu/users/$creatorname'>$creatorname</a> :\n$content\n http://scratch.mit.edu/projects/$project_creator/$pid";
+				$msg = "Users  $linked_stringwflaggernames have flagged this comment by  $linked_creatorname :\n$content\n http://scratch.mit.edu/projects/$project_creator/$pid";
 			}
 			$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
 		}
@@ -888,7 +892,12 @@ class ProjectsController extends AppController {
 				} else {
 					$subject= "Project '$pname' flagged" . " (REVIEWED)";
 				}
-				$msg = "user <a href='http://scratch.mit.edu/users/$flaggername'>$flaggername</a> ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid \n Reason: \n " . $msgin;
+					
+				$user_href =HREF_USER.$flaggername;
+				$linked_flaggername ="<a href ='$user_href'>";
+				$linked_flaggername .= $flaggername . "</a>";
+				$msg = "user $linked_flaggername ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid \n Reason: \n " . $msgin;			
+
 			
 				$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  $flaggername, $msg, $subject, TO_FLAGGED_PROJECT, $userflagger['User']['email']);
 				$this->Flagger->save($this->data);
@@ -906,7 +915,7 @@ class ProjectsController extends AppController {
 						$this->Project->censor($pid, $urlname, $this->isAdmin(), $user_id);
 						
 						$msg = "Project *automatically censored* because it reached the maximum number of flags.\n";
-						$msg .= "user <a href='http://scratch.mit.edu/users/$flaggername'>$flaggername</a> ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid";
+						$msg .= "user $linked_flaggername ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid";
 						$subject= "Project '$pname' censored";
 						$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, 'scratch-feedback@media.mit.edu');
 						
@@ -1713,7 +1722,7 @@ class ProjectsController extends AppController {
      * @param int $pid => project id
      */
     function view($urlname=null, $pid=null) {
-        	if ($pid && $urlname) {
+			if ($pid && $urlname) {
             // TODO: make only one call to find in this clause
             // TODO: set global associations to bind model at load-time
             // TODO: get $uid from hidden field when possible / from directory lookup
@@ -2790,5 +2799,6 @@ class ProjectsController extends AppController {
 		}
 
 	}
+
 }
 ?>
