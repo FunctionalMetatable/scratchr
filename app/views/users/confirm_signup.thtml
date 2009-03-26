@@ -31,7 +31,7 @@ else {
 <?php ___('In most cases we would like to discourage people from creating multiple accounts. If the accounts are used to game the system this could lead to getting blocked from the website.')?>
 </p>
 <p><?php ___('What do you want to do?')?></p>
-<a href="<?php echo $html->url('/signup')?>" class="button">Continue</a>  <a href="<?php echo $html->url('/')?>" class="button">Cancel</a>
+<a href="<?php echo $html->url('/signup')?>" ><span class='button2'><?php ___('Continue')?></span></a>  <a href="<?php echo $html->url('/')?>" ><span class='button2'><?php ___('Cancel')?></span></a>
 <?php
 }
 ?>
