@@ -48,11 +48,15 @@ class AppModel extends Model{
 		return $this->memcache->set($this->__get_mc_key($str, $postfix), $value, false, $ttl) or die ("Failed to save data at the server");
 	}
 	
-	function mc_close() {
+	function mc_delete($str, $postfix) {
+        $this->memcache->delete($this->__get_mc_key($str, $postfix));
+	}
+
+    function mc_close() {
 		return $this->memcache->close();
 	}
-	
-	function __get_mc_key($str, $postfix) {
+
+    function __get_mc_key($str, $postfix) {
 		$key = MEMCACHE_PREFIX .'-'. $str;
 		if($postfix) {
 			$key .= '-'.$postfix;

@@ -201,11 +201,10 @@ class Notification extends AppModel {
 	* @param bool $clear_requests	true when we want to clear request related items, false otherwise
 	*/
 	function clear_memcached_notifications($user_id) {
-		$memcache = new Memcache;
-		$memcache->connect('localhost', 11211) or die ("Could not connect");
-		$memcache->delete(MEMCACHE_PREFIX.'-notifications_page1-'.$user_id);
-		$memcache->delete(MEMCACHE_PREFIX.'-notification_count'.-$user_id);
-		$memcache->close();
+		$this->mc_connect();
+        $this->mc_delete('notifications_page1', $user_id);
+        $this->mc_delete('notification_count', $user_id);
+        $this->mc_close();
 	}
 }
 ?>
