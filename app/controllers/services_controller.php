@@ -687,7 +687,7 @@ Class ServicesController extends AppController {
 			}
 		}
 		
-		$condition = "user_id = '$user_shared_id' AND project_id = '$project_shared_id' AND related_user_id != user_id"; 
+		$condition = "user_id = '$user_shared_id' AND project_id = '$project_shared_id' AND related_project_id != project_id"; 
 		$relprojects = $this->ProjectShare->findAll($condition, "id, related_username, related_user_id, related_project_id, related_project_name", "id desc");
 		foreach ($relprojects as $relproject) {
 			if ($relproject['ProjectShare']['related_username']) {
@@ -761,7 +761,7 @@ Class ServicesController extends AppController {
 						$this->Project->saveField("remixes", $total_remixes);
 						$project_record = $this->Project->find(array('name' => $pname));
 						$project_record_id = $project_record['Project']['id'];
-						$project_share_count = $this->ProjectShare->findCount("ProjectShare.related_project_id = $project_record_id AND ProjectShare.user_id = $user_shared_id AND ProjectShare.user_id!=ProjectShare.related_user_id");
+						$project_share_count = $this->ProjectShare->findCount("ProjectShare.related_project_id = $project_record_id AND ProjectShare.user_id = $user_shared_id AND ProjectShare.project_id!=ProjectShare.related_project_id");
 						
 						if($project_share_count ==1)
 						{
