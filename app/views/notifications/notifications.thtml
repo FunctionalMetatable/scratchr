@@ -56,8 +56,5 @@
     <div id="gnotifyDiv">
 		<?php e($this->renderElement("gnotify")); ?>
     </div>
-	<br/>
-	<p><strong><em>You can check your old notifications <a href="/oldnotifications">here</a>. Old notifications are available till Dec 31st.</em></strong></p>
-	<br/>
 </div>
 </div>
