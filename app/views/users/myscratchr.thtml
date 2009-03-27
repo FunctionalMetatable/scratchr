@@ -166,9 +166,9 @@ function langList($countries) {
 	  </p>
 
 			<!--Thank you mechanism-->
-			
+			<!--
 			<div id="thankDiv" class="flag"><?php e($this->renderElement("thank_you",array('isLoggedIn'=>$isLoggedIn,'user_id'=>$user['id'],'isMe'=>$isMe,'thanked_count'=>$thanked_count))); ?></div>
-			
+			//-->
 			<!--Thank you mechanism-->
 			
 		<?php if ($isMe || $isAdmin):?>
@@ -205,7 +205,6 @@ function langList($countries) {
 			<br>
 			<input value="<?php ___('update'); ?>" type="submit" class="button">
 			</form>
-			<br /><a href="<?php echo $html->url('/services/share_project/')?>">Share Project</a>
 		<?php endif;?>
         
         
@@ -521,19 +520,23 @@ function langList($countries) {
 	<!-- ::: End projects ::: -->
 	
 	 <!-- ::: Begin friends projects ::: -->
+	<!--
 	<div class="mystuff_container">
 	<div id="ajax_pagination_ternary">
+	-->
     <!-- ::: Begin projects ::: -->
+		<!--
 		<div class="mystuff_header">
 			<h3><?php  ___("My Friends' Latest Projects"); ?></h3>
 		</div>
 		<?php
-			if(!$isIgnored):
+			/*if(!$isIgnored):
 			e($this->renderElement('friends_project', array('data' => $friends_project_list)));
-			endif;
+			endif;*/
 		?>
 		</div>
 	</div>
+	-->
 	<!-- ::: End friends projects ::: -->
   </div>
   <!-- ////// End main content ////// -->
