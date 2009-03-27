@@ -422,12 +422,12 @@ class ProjectsController extends AppController {
 		$isMine = ($user_id == $project['User']['id']);
 		$creator = $this->User->find("User.id = '$creator_id'");
 		$creatorname = $creator['User']['username'];
-		$creatorname_href =HREF_USER.$creator['User']['username'];
+		$creatorname_href =TOPLEVEL_URL.'/users/'.$creator['User']['username'];
 		$linked_creatorname = "<a href='$creatorname_href'>".$creator['User']['username']."</a>"; 
 		$userflagger = $this->User->find("User.id = '$user_id'");
 		$flaggername = $userflagger['User']['username'];
 		$pname = htmlspecialchars($project['Project']['name']);
-
+		
         $mpcomment_record = $this->Mpcomment->findCount("user_id = $user_id AND comment_id = $comment_id");
 		//checks to see if this user has already marked this comment previously
 		if ($mpcomment_record == 0) {
@@ -443,12 +443,13 @@ class ProjectsController extends AppController {
 		$max_count = NUM_MAX_COMMENT_FLAGS;
 		$stringwflaggernames = "";
 		$inappropriate_count = $this->Mpcomment->findCount("comment_id=$comment_id");
+		$project_creater_url =TOPLEVEL_URL.'/projects/'.$project_creator.'/'.$pid;
 		if ($inappropriate_count > $max_count || $isMine || $isAdmin) {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->Pcomment->saveField("comment_visibility", "delbyusr") ;
 				$subject= "Comment deleted because it was flagged by creator of '$pname'";
-				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
+				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $project_creater_url";
 			} elseif ($isAdmin) {
 			    //delete all similar comments
 				if($isdeleteAll)
@@ -461,7 +462,7 @@ class ProjectsController extends AppController {
 						$content = $pcontent['Pcomment']['id'];
 						$this->Pcomment->query("update pcomments set comment_visibility = 'delbyadmin' where id=".$pcontent['Pcomment']['id'] );
 				$subject= "Comment deleted because it was flagged by an admin";
-				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
+				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
 				$this->notify('pcomment_removed', $creator_id,
 								array('project_id' => $pid,
 									'project_owner_name' => $project_creator),
@@ -474,7 +475,7 @@ class ProjectsController extends AppController {
 				{
 				$this->Pcomment->saveField("comment_visibility", "delbyadmin") ;
 				$subject= "Comment deleted because it was flagged by an admin";
-				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
+				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
 				$this->notify('pcomment_removed', $creator_id,
 								array('project_id' => $pid,
 									'project_owner_name' => $project_creator),
@@ -485,12 +486,12 @@ class ProjectsController extends AppController {
 				$this->Mpcomment->bindUser();
 				$allflaggers = $this->Mpcomment->findAll("comment_id=$comment_id");
 				foreach ($allflaggers as $flagger) {
-					$user_href =HREF_USER.$flagger['User']['username'];
+					$user_href =TOPLEVEL_URL.'/users/'.$flagger['User']['username'];
 					$linked_stringwflaggernames ="<a href ='$user_href'>";
 					$linked_stringwflaggernames .= $flagger['User']['username'] . "</a>,";
 				}
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on '$pname'";
-				$msg = "Users  $linked_stringwflaggernames have flagged this comment by  $linked_creatorname :\n$content\n http://scratch.mit.edu/projects/$project_creator/$pid";
+				$msg = "Users  $linked_stringwflaggernames have flagged this comment by  $linked_creatorname :\n$content\n $project_creater_url";
 			}
 			$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
 		}
@@ -893,10 +894,11 @@ class ProjectsController extends AppController {
 					$subject= "Project '$pname' flagged" . " (REVIEWED)";
 				}
 					
-				$user_href =HREF_USER.$flaggername;
+				$user_href =TOPLEVEL_URL.'/users/'.$flaggername;
 				$linked_flaggername ="<a href ='$user_href'>";
 				$linked_flaggername .= $flaggername . "</a>";
-				$msg = "user $linked_flaggername ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid \n Reason: \n " . $msgin;			
+				$project_url =TOPLEVEL_URL.'/projects/'.$creatorname.'/'.$pid;
+				$msg = "user $linked_flaggername ($user_id) just flagged $project_url \n Reason: \n " . $msgin;			
 
 			
 				$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  $flaggername, $msg, $subject, TO_FLAGGED_PROJECT, $userflagger['User']['email']);
@@ -915,7 +917,7 @@ class ProjectsController extends AppController {
 						$this->Project->censor($pid, $urlname, $this->isAdmin(), $user_id);
 						
 						$msg = "Project *automatically censored* because it reached the maximum number of flags.\n";
-						$msg .= "user $linked_flaggername ($user_id) just flagged http://scratch.mit.edu/projects/$creatorname/$pid";
+						$msg .= "user $linked_flaggername ($user_id) just flagged $project_url";
 						$subject= "Project '$pname' censored";
 						$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, 'scratch-feedback@media.mit.edu');
 						

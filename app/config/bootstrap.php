@@ -137,7 +137,7 @@ $this->params['webservices']
 /**
  * Resource URLs
  */
- define ('HREF_USER', 'http://scratch.mit.edu/users/');
+ define ('TOPLEVEL_URL', 'http://scratch.mit.edu');
 define ('RESOURCE_URL', 'static/');
 define ('HREF_RESOURCE_PROJECT', 'static/projects/');
 define ('HREF_RESOURCE_MINI_THUMBS', 'static/projects/');
