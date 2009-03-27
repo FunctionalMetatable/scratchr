@@ -2096,12 +2096,13 @@ Class GalleriesController extends AppController {
 		//checks to see if the comment has been flagged too many times
 		$max_count = NUM_MAX_COMMENT_FLAGS;
 		$inappropriate_count = $this->Mgcomment->findCount("comment_id = $comment_id");
+		$gallery_creater_url =TOPLEVEL_URL.'/galleries/view/'.$gallery_id;
 		if ($inappropriate_count > $max_count || $isMine || $isAdmin) {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->hide_gcomment($comment_id, "delbyusr");
 				$subject= "Comment deleted because it was flagged by creator of '$gallery_name'";
-				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\nhttp://scratch.mit.edu/galleries/view/$gallery_id";
+				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $gallery_creater_url";
 			} elseif ($isAdmin) {
 				if($isdeleteAll)
 				{
@@ -2113,7 +2114,7 @@ Class GalleriesController extends AppController {
 					$content = $gcontent['Gcomment']['content'];
 					$this->hide_gcomment($comment_id, "delbyadmin");
 					$subject= "Comment deleted because it was flagged by an admin";
-					$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\nhttp://scratch.mit.edu/galleries/view/$gallery_id";
+					$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
 					$this->notify('gcomment_removed', $creator_id,
 								array('gallery_id' => $gallery_id),
 								array($content)
@@ -2125,7 +2126,7 @@ Class GalleriesController extends AppController {
 				{
 					$this->hide_gcomment($comment_id, "delbyadmin");
 					$subject= "Comment deleted because it was flagged by an admin";
-					$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\nhttp://scratch.mit.edu/galleries/view/$gallery_id";
+					$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
 					$this->notify('gcomment_removed', $creator_id,
 								array('gallery_id' => $gallery_id),
 								array($content)
@@ -2136,13 +2137,13 @@ Class GalleriesController extends AppController {
 				$this->Mgcomment->bindUser();
 				$allflaggers = $this->Mgcomment->findAll("comment_id = $comment_id");
 				foreach ($allflaggers as $flagger) {
-					$user_href =HREF_USER.$flagger['User']['username'];
+					$user_href =TOPLEVEL_URL.'/users/'.$flagger['User']['username'];
 					$linked_stringwflaggernames ="<a href ='$user_href'>";
 					$linked_stringwflaggernames .= $flagger['User']['username'] . "</a>,";
 				}
 				
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on the gallery: '$gallery_name'";
-				$msg = "Users  $linked_stringwflaggernames have flagged this comment by  $linked_creatorname :\n$content\n http://scratch.mit.edu/galleries/view/$gallery_id";
+				$msg = "Users  $linked_stringwflaggernames have flagged this comment by  $linked_creatorname :\n$content\n $gallery_creater_url";
 				
 			}
 			$this->Email->email(REPLY_TO_FLAGGED_GCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_GCOMMENT, $userflagger['User']['email']);
