@@ -2300,7 +2300,7 @@ Class GalleriesController extends AppController {
 			$removed = true;
 			$this->GalleryTag->del($gallery_tag_id);
 			$subject = "Attention: the owner of the gallery '$gallery_name' has flagged the tag '$tag_name'";
-			$msg = "$tag_name has been removed because it was flagged by gallery owner $user_name on \n http://scratch.mit.edu/galleries/view/$gallery_id";
+			$msg = "$tag_name has been removed because it was flagged by gallery owner $user_name on \n". TOPLEVEL_URL."/galleries/view/$gallery_id";
 		} else {
 			$stringwflaggernames = "";
 			$mark_count = $this->TagFlag->findCount("tag_id = $tag_id") + 1;
@@ -2327,7 +2327,7 @@ Class GalleriesController extends AppController {
 					}
 				}
 				$subject = "Attention: more than $mark_count users have flagged the tag '$tag_name' on $gallery_name";
-				$msg = "Users '$stringwflaggernames' have flagged the tag-$tag_name on \n http://scratch.mit.edu/galleries/view/$gallery_id";
+				$msg = "Users '$stringwflaggernames' have flagged the tag-$tag_name on \n". TOPLEVEL_URL."/galleries/view/$gallery_id";
 			}
 		}
 

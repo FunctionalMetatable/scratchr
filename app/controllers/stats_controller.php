@@ -1226,7 +1226,7 @@ class StatsController extends AppController {
                                 $age = date('Y', time()) - $flagger['User']['byear'];
                         }
 			if ($puser_name) {
-				$project_url = "http://scratch.mit.edu/projects/$puser_name/$project_id";
+				$project_url = TOPLEVEL_URL."/projects/$puser_name/$project_id";
 			}
 			$reasons = ereg_replace("'","",$reasons);
 			$reasons = ereg_replace(",","",$reasons);

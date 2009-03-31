@@ -5,6 +5,7 @@ var $uses =array();
 
 function about(){
 	$lang_array =array();
+	$about_scratch_url ='http://'.ABOUT_SCRATCH_URL;
 	$cookie_lang = $this->Cookie->read(lang);
 	$pos=strpos($cookie_lang,'-');
 	if($pos===false){
@@ -17,14 +18,15 @@ function about(){
 	
 	}
 	if($lang=='en')
-	$this->redirect('http://info.scratch.mit.edu/About_Scratch');
+	$this->redirect($about_scratch_url);
 	else
-	$this->redirect('http://info.scratch.mit.edu/About_Scratch/'.$lang);
+	$this->redirect($about_scratch_url.'/'.$lang);
 }//about fun
 
 
 function support(){
 	$lang_array =array();
+	$support_url ='http://'.SUPPORT_URL;
 	$cookie_lang = $this->Cookie->read(lang);
 	$pos=strpos($cookie_lang,'-');
 	if($pos===false){
@@ -37,9 +39,9 @@ function support(){
 	
 	}
 	if($lang =='en')
-	$this->redirect('http://info.scratch.mit.edu/Support');
+	$this->redirect($support_url);
 	else
-	$this->redirect('http://info.scratch.mit.edu/Support/'.$lang);
+	$this->redirect($support_url.'/'.$lang);
 }//about support
 
 
