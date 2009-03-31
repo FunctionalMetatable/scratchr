@@ -46,7 +46,7 @@
 				</h5>
 				<p><?php echo $comment_content?></p>
 				<p align="right">
-					<a href="<?php echo $html->url('/galleries/view/'.$gallery_id)?>">Go To Gallery</a>
+					<a href="<?php echo $html->url('/galleries/view/'.$gallery_id.'/?comment='.$comment_id)?>">Go To Gallery</a>
 					<?php
 					e($ajax->link("Delete", '#', 
 							array("url"=>"/administration/delete_comment_ajax/$user_id/$comment_id/gcomment", 

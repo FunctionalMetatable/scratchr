@@ -272,7 +272,7 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 		<div id="ajax_pagination_secondary">
 	    <?php
             e($ajax->div("project_comment_list"));
-				e($this->renderElement('commentlist', array('isLogged'=>$isLogged, 'urlname'=>$urlname, 'comments'=> $comments, 'content_status' => $content_status)));
+				e($this->renderElement('commentlist', array('isLogged'=>$isLogged, 'urlname'=>$urlname, 'comments'=> $comments, 'content_status' => $content_status,'comment_index'=>$comment_index)));
             e($ajax->divEnd("project_comment_list"));
         ?>
 		</div>

@@ -1724,6 +1724,18 @@ class ProjectsController extends AppController {
      * @param int $pid => project id
      */
     function view($urlname=null, $pid=null) {
+			$current_page =null;
+			$comment_index =null;
+			
+			if(isset($this->params['url']['comment'])){
+				$c_id =$this->params['url']['comment'];
+			  	$comment_index =$this->comment_index($c_id);
+			 
+				$all_comment =$this->all_comment($pid);
+				$key = array_search($comment_index['Pcomment']['id'], $all_comment);
+			 	$current_page =$key/PROJECT_COMMENT_PAGE_LIMIT;
+				$current_page =ceil($current_page);
+			}
 			if ($pid && $urlname) {
             // TODO: make only one call to find in this clause
             // TODO: set global associations to bind model at load-time
@@ -1778,7 +1790,7 @@ class ProjectsController extends AppController {
 			$remix_count = count($this->ProjectShare->findAll("related_project_id = $pid group by project_id, user_id")) - 1;
 			$this->Project->saveField("remixes", $remix_count);
 			
-			$final_comments = $this->set_comments($pid, $owner_id, $isLogged);
+			$final_comments = $this->set_comments($pid, $owner_id, $isLogged,$current_page);
 			$this->set_comment_errors(Array());
 
             // set project lovers info
@@ -1944,6 +1956,7 @@ class ProjectsController extends AppController {
 		$this->set('taggers',$taggers);
 
 		$this->set('urlname', $urlname);
+		 $this->set('comment_index',$comment_index['Pcomment']['id']);
 
             $this->render('projectcontent','scratchr_projectpage');
 
@@ -2561,16 +2574,26 @@ class ProjectsController extends AppController {
 	/**
 	* Returns all comments relevant to logged in user viewing a project
 	**/
-	function set_comments($project_id, $creator_id, $isLogged) {
+	function set_comments($project_id, $creator_id, $isLogged,$pages=null) {
 		$user_id = $this->getLoggedInUserID();
 		
-		$this->PaginationSecondary->show = 60;
+		$this->PaginationSecondary->show = PROJECT_COMMENT_PAGE_LIMIT;
 		$this->modelClass = "Pcomment";
+		
+		
+		if($pages){
+		$options = Array("page"=>$pages,"sortBy"=>"created", "sortByClass" => "Pcomment", 
+					"direction"=> "DESC", "url"=>"renderComments/$project_id/0");
+		list($order,$limit,$page) = $this->PaginationSecondary->init("project_id = $project_id AND Pcomment.comment_visibility = 'visible' AND reply_to = -100", Array(), $options);
+		$comments = $this->Pcomment->findAll("project_id = $project_id AND Pcomment.comment_visibility = 'visible' AND reply_to = -100", null, $order, $limit, $page);
+		}
+		else
+		{
 		$options = Array("sortBy"=>"created", "sortByClass" => "Pcomment", 
 					"direction"=> "DESC", "url"=>"renderComments/$project_id/0");
 		list($order,$limit,$page) = $this->PaginationSecondary->init("project_id = $project_id AND Pcomment.comment_visibility = 'visible' AND reply_to = -100", Array(), $options);
 		$comments = $this->Pcomment->findAll("project_id = $project_id AND Pcomment.comment_visibility = 'visible' AND reply_to = -100", null, $order, $limit, $page);
-	
+		}
 		//set comments info
 		$counter = 0;
 		$final_comments = Array();
@@ -2801,6 +2824,33 @@ class ProjectsController extends AppController {
 		}
 
 	}
+	
+	function all_comment($project_id=null){
+			$count =1;
+			$comment_index_array = array();
+			$comments = $this->Pcomment->findAll("project_id = $project_id AND Pcomment.comment_visibility = 'visible' AND reply_to = -100",'id,reply_to','Pcomment.created DESC');
+			
+			foreach($comments as $key=>$value){
+			
+				$index = $key;
+				$comment_id = $value['Pcomment']['id'];
+				$comment_index_array[$count] =$comment_id;
+				$count++;
+			}
+			return $comment_index_array;
+	}
+	function comment_index($c_id=null){
+			
+			 $comment = $this->Pcomment->find("Pcomment.id=$c_id",'id,reply_to');
+			 if($comment['Pcomment']['reply_to']==-100){
+			  return $comment;
+			  }
+			  else
+			  {
+			  return ($this->comment_index($comment['Pcomment']['reply_to']));
+			  }
+			
+	}		
 
 }
 ?>
