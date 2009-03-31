@@ -1765,11 +1765,11 @@ class ProjectsController extends AppController {
 			}
 			
 			$project_visibility = $project['Project']['proj_visibility'];
-
-			if($project_visibility == "delbyusr" || ($project_visibility ==  "delbyadmin" && ! $this->isAdmin()))  {
+			if(!$this->isAdmin()){
+				if($project_visibility == "delbyusr" || $project_visibility ==  "delbyadmin")  {
 				$this->cakeError('error',array('code'=>'404', 'message'=>'project_deleted', 'name' => __('Not Found', true)));
+				}
 			}
-
 			$project_id = $project['Project']['id'];
 			$owner_id = $project['User']['id'];
 			$isMine = $logged_id == $owner_id;
