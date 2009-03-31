@@ -1079,7 +1079,7 @@ class ProjectsController extends AppController {
 			$removed = true;
 			$this->ProjectTag->del($project_tag_id);
 			$subject = "Attention: the owner of the project '$project_name' has flagged the tag '$tag_name'";
-			$msg = "'$tag_name' has been removed because it was flagged by project owner $user_name of \nhttp://scratch.mit.edu/projects/$project_creator/$project_id";
+			$msg = "'$tag_name' has been removed because it was flagged by project owner $user_name of \n".TOPLEVEL_URL."/projects/$project_creator/$project_id";
 		} else {
 			$stringwflaggernames = "";
 			$mark_count = $this->TagFlag->findCount("tag_id = $tag_id") + 1;
@@ -1106,7 +1106,7 @@ class ProjectsController extends AppController {
 					}
 				}
 				$subject = "Attention: more than " . NUM_MAX_TAG_FLAGS . " users have flagged the tag '$tag_name' on $project_name";
-				$msg = "Users '$stringwflaggernames' have flagged the tag-$tag_name on \nhttp://scratch.mit.edu/projects/$project_creator/$project_id";
+				$msg = "Users '$stringwflaggernames' have flagged the tag-$tag_name on \n".TOPLEVEL_URL."/projects/$project_creator/$project_id";
 			}
 		}
 		
