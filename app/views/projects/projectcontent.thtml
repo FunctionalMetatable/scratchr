@@ -15,12 +15,25 @@
   <div id="main">
     <!-- ::: Begin project ::: -->
     <div class="container">
+	<?php if($isAdmin &&($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")):?>
+	<div style="color:#FF0000">Project has been deleted</div>
+	<?php endif?>
       <h2 id="project_title"><?php $project_title =htmlspecialchars($project['Project']['name']); e($project_title);?> </h2>
 		<?php  if ($isMine || $isAdmin) echo $ajax->editor("project_title", "/projects/$urlname/$pid/name", Array("callback"=>"return 'name=' + encodeURIComponent(value)")); ?>
 		<div id="projectwrapper" style="height:482;">
 			<div id="projectload" style="display:block;" align="center">
 				
 				<?php
+				if($isAdmin){
+					if ($proj_visibility == "visible" || $proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr"){
+						$p_path =getBinary($urlname, $pid);
+					 	$embed_project ='../..'.$p_path;
+					 }
+					 else if ($proj_visibility == "censbyadmin" || $proj_visibility == "censbycomm")
+					$embed_project ='../../static/misc/censored.sb';
+				}
+				else
+				{
 				if ($proj_visibility == "visible"){
 				 	$p_path =getBinary($urlname, $pid);
 					$embed_project ='../..'.$p_path;
@@ -29,7 +42,7 @@ else if ($proj_visibility == "censbyadmin" || $proj_visibility == "censbycomm")
 					$embed_project ='../../static/misc/censored.sb';
 else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 					$embed_project ='../../static/misc/deleted.sb';
-					
+				}	
 				?>
 				<applet id="ProjectApplet" style="display:block" code="ScratchApplet" codebase="/static/misc/" archive="ScratchApplet.jar" height="387" width="482"><param name="project" value="<?php echo $embed_project;?>"><h3>Your browser needs java to view projects. Click <a href="http://java.com/getjava/index.jsp">here</a> to install Java.</h3></applet>
 			</div>
