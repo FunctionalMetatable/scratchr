@@ -9,7 +9,13 @@
 <div class="project_pagination_container">
 	
 </div>
+<style type="text/css">
+#comment_<?php echo $comment_index?>{
+background-color:#FFFFCC;
+}
+</style>
 <?php 
+//echo $comment_index;
 if ($comments['0']['Project']['locked'] == 1) {
 			$isLocked = false;
 		} else {
@@ -64,7 +70,9 @@ if ($comments['0']['Project']['locked'] == 1) {
 		}
 		
 		if ($ignored && !$isCommentOwner) {
+		
 			echo "<div id='$comment_id' class='comment'>\n";
+			echo "<div id='comment_$comment_id' >\n";
 			?>	
 				<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
 				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
@@ -76,7 +84,9 @@ if ($comments['0']['Project']['locked'] == 1) {
 				}
 			echo "</h5><p>Comment not displayed. Posted by a muted account.</p></div>";
 		} elseif (!$commented) {
+		
 			echo "<div id='$comment_id' class='comment'>\n";
+			echo "<div id='comment_$comment_id' >\n";
 			?>	
 			<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
 				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
@@ -194,7 +204,7 @@ if ($comments['0']['Project']['locked'] == 1) {
 				
 				
 				
-				
+			echo "</div>";	
 			echo "<div id='reply_to_$comment_id' class='comment_reply_main'>";
 				echo $this->renderElement('projects/comment_reply_form', Array('comment_id' => $comment_id, 'comment_level' => $comment_level));
 			echo "</div>\n";
@@ -228,6 +238,7 @@ if ($comments['0']['Project']['locked'] == 1) {
 ?>
 <div class="project_pagination_container">
 	<?php 
+		
 		$pagination->setPaging($paging_secondary);
 		echo $this->renderElement('pagination_secondary'); 
 	?>

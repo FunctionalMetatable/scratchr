@@ -37,6 +37,8 @@ $this->params['webservices']
  define("COMMENT_SPAM_CLEAR_COMMENTS", 5);
  define("COMMENT_SPAM_CLEAR_MINUTES", 2);
  define("NUM_TOP_COUNTRIES", 6);
+ define("PROJECT_COMMENT_PAGE_LIMIT", 60);
+ define("GALLERY_COMMENT_PAGE_LIMIT", 40);
 /**
  * Email Address Related to Flagging
  */

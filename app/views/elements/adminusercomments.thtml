@@ -25,7 +25,8 @@
 				</h5>
 				<p><?php echo $comment_content;?></p>
 				<p align="right">
-				<a href="<?php echo $html->url('/projects/'.$project_url.'/'.$project_id)?>">Go To Project</a> |
+				
+				<a href="<?php echo $html->url('/projects/'.$project_url.'/'.$project_id.'/?comment='.$comment_id)?>">Go To Project</a> |
 				<?php
 				e($ajax->link("Delete", '#', 
 							array("url"=>"/administration/delete_comment_ajax/$user_id/$comment_id/pcomment", 

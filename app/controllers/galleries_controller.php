@@ -914,6 +914,20 @@ Class GalleriesController extends AppController {
 		$isLogged = $this->isLoggedIn();
 		$user_id = $this->getLoggedInUserID();
 		
+		$current_page =null;
+		$comment_index =null;
+			
+			if(isset($this->params['url']['comment'])){
+				 $c_id =$this->params['url']['comment'];
+			  	$comment_index =$this->comment_index($c_id);
+			
+				$all_comment =$this->all_comment($gallery_id);
+				
+				$key = array_search($comment_index['Gcomment']['id'], $all_comment);
+			 	$current_page =$key/GALLERY_COMMENT_PAGE_LIMIT;
+				$current_page =ceil($current_page);
+			}
+		
 		$this->Gallery->id = $gallery_id;
 		$current_gallery_record = $this->Gallery->findAll("Gallery.id = $gallery_id", null, null, null, null, null, "overload");
 		$content_status = $this->getContentStatus();
@@ -956,7 +970,7 @@ Class GalleriesController extends AppController {
 		foreach($ignore_user_list as $ignore_user)
 		array_push($ignored_user_array,$ignore_user['IgnoredUser']['user_id']);
 		
-		$final_comments = $this->set_comments($gallery_id, $user_id, $isLogged);
+		$final_comments = $this->set_comments($gallery_id, $user_id, $isLogged,$current_page);
 		$this->set_comment_errors(Array());
 		$final_tags = $this->set_tags($gallery_id, $user_id, $isLogged);
 
@@ -1061,6 +1075,7 @@ Class GalleriesController extends AppController {
 		$this->set('isClubbed', $this->ClubbedGallery->hasAny("gallery_id = $gallery_id"));
 		$this->set('isLogged', $isLogged);
 		$this->set('user_status', $user_status);
+		$this->set('comment_index',$comment_index['Gcomment']['id']);
 		$this->render('themepage','scratchr_themepage');
     }
 
@@ -2609,16 +2624,26 @@ Class GalleriesController extends AppController {
 	/**
 	* Returns all comments relevant to logged in user viewing a gallery
 	**/
-	function set_comments($gallery_id, $user_id, $isLogged) {
+	function set_comments($gallery_id, $user_id, $isLogged, $pages=null) {
 		$gallery = $this->Gallery->find("Gallery.id = $gallery_id");
 		$creator_id = $gallery['Gallery']['user_id'];
 		
-		$this->PaginationSecondary->show = 40;
+		$this->PaginationSecondary->show = GALLERY_COMMENT_PAGE_LIMIT;
 		$this->modelClass = "Gcomment";
+		
+		if($pages){
+		$options = Array("page"=>$pages,"sortBy"=>"timestamp", "sortByClass" => "Gcomment",
+						"direction"=> "DESC", "url"=>"/galleries/renderComments/" . $gallery_id);
+		list($order,$limit,$page) = $this->PaginationSecondary->init("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = -100", Array(), $options);
+		$gallery_comments = $this->Gcomment->findAll("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = -100", null, $order, $limit, $page);
+		}
+		else
+		{
 		$options = Array("sortBy"=>"timestamp", "sortByClass" => "Gcomment",
 						"direction"=> "DESC", "url"=>"/galleries/renderComments/" . $gallery_id);
 		list($order,$limit,$page) = $this->PaginationSecondary->init("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = -100", Array(), $options);
 		$gallery_comments = $this->Gcomment->findAll("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = -100", null, $order, $limit, $page);
+		}
 		
 		$counter = 0;
 		$final_comments = Array();
@@ -2909,5 +2934,32 @@ Class GalleriesController extends AppController {
 		}
 		return $return_projects;
 	}
+	
+	function all_comment($gallery_id=null){
+			$count =1;
+			$comment_index_array = array();
+			$comments = $this->Gcomment->findAll("gallery_id = $gallery_id AND Gcomment.comment_visibility = 'visible' AND reply_to = -100",'id,reply_to','Gcomment.timestamp DESC');
+			
+			foreach($comments as $key=>$value){
+			
+				$index = $key;
+				$comment_id = $value['Gcomment']['id'];
+				$comment_index_array[$count] =$comment_id;
+				$count++;
+			}
+			return $comment_index_array;
+	}
+	function comment_index($c_id=null){
+			
+			 $comment = $this->Gcomment->find("Gcomment.id=$c_id",'id,reply_to');
+			 if($comment['Gcomment']['reply_to']==-100){
+			  return $comment;
+			  }
+			  else
+			  {
+			  return ($this->comment_index($comment['Gcomment']['reply_to']));
+			  }
+			
+	}		
 }
 ?>

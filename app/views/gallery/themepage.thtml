@@ -159,7 +159,7 @@
 	<div id="ajax_pagination_secondary">
 	<?php
 		e($ajax->div("theme_comment_list"));
-			e($this->renderElement('discusslist', array('comments'=>$theme_comments, 'page'=>$page)));
+			e($this->renderElement('discusslist', array('comments'=>$theme_comments, 'page'=>$page,'comment_index'=>$comment_index)));
 		e($ajax->divEnd("theme_comment_list"));
 	?>
 	</div>

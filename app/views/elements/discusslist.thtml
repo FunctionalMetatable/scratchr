@@ -6,9 +6,14 @@
 		echo "</div>";
 	}
 ?>
-
+<style type="text/css">
+#comment_<?php echo $comment_index?>{
+background-color:#FFFFCC;
+}
+</style>
 <div id="gallery_comments">
 <?php 
+
 	foreach($comments as $comment) {
 		$commenter_id = $comment['User']['id'];
 		$commenter_urlname = $comment['User']['urlname'];
@@ -58,6 +63,7 @@
 		
 		if ($ignored && !$isCommentOwner) {
 			echo "<div id='$comment_id' class='comment'>\n";
+			echo "<div id='comment_$comment_id' >\n";
 			?>	
 				<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
 				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
@@ -71,6 +77,7 @@
 			</div>";
 		} elseif (!$commented) {
 			echo "<div id='$comment_id' class='comment'>\n";
+			echo "<div id='comment_$comment_id' >\n";
 			?>
 			<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
 				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>	
@@ -176,7 +183,7 @@
 						
 					echo "</div>";
 					
-			
+				echo "</div>";	//div to highlight comment
 			echo "<div id='reply_to_$comment_id' class='comment_reply_main'>";
 				echo $this->renderElement('gallery/comment_reply_form', Array('comment_id' => $comment_id, 'comment_level' => $comment_level));
 			echo "</div>\n";
