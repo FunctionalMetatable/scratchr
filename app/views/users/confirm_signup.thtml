@@ -25,10 +25,13 @@ if(isset($activity_from_same_ip_signup_interval)) {
 else {
 ?>
 
-<h5><?php ___('The following accounts have already been created from this IP')?> (<?php echo $ip_address?>):</h5> </p>
+<h5><?php ___('Hey, seems like there are already these other account(s) using the Scratch website from  this same IP address')?> (<?php echo $ip_address?>):</h5> </p>
 <p><?php echo $users_from_same_ip; ?></p>
 <p>
-<?php ___('In most cases we would like to discourage people from creating multiple accounts. If the accounts are used to game the system this could lead to getting blocked from the website.')?>
+<?php ___("We just want to make sure people do not create multiple accounts to post inappropriate content, avoid the block of another account, impersonate others or artificially increase the number of love-it's, downloads, remixes, etc."); ?>
+</p>
+
+<p><b><?php ___("If you are not trying to do any of those or you do not recognize any of those accounts, don't worry! Just ignore this message and go ahead an create the account!"); ?></b></p>
 </p>
 <p><?php ___('What do you want to do?')?></p>
 <a href="<?php echo $html->url('/signup')?>" ><span class='button2'><?php ___('Continue')?></span></a>  <a href="<?php echo $html->url('/')?>" ><span class='button2'><?php ___('Cancel')?></span></a>
