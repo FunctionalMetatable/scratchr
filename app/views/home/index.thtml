@@ -186,20 +186,20 @@
 		<?php endforeach; ?>
       <p class="more"><a href="/channel/topviewed"><?php ___('See more');?></a> </p>
     </div>
-	<?php if($count=count($fevorites) >=3):?>
-	<div id="TopViewedLately" class="container">
-      <h3><?php echo $username;echo "'s";___(' Fevorites')?></h3>
+	<?php if(isset($favorites) && $count=count($favorites) >=3):?>
+	<div id="Favorites" class="container">
+      <h3><?php echo $username;echo "'s";___(' Favorites')?></h3>
 		<?php
 		/**
 		 * Populate top viewed projects
 		 */
-		foreach ($fevorites as $topview):
-		$pid = $topview['Project']['id'];
-		$owner = $topview['Project']['User']['urlname'];
+		foreach ($favorites as $favorite):
+		$pid = $favorite['Project']['id'];
+		$owner = $favorite['Project']['User']['urlname'];
 		$project_link = "/projects/".$owner."/".$pid;
 		$thumbnail_src = getThumbnailImg($owner, $pid);
 		$user_link = "/users/".$owner;
-		$project_name = htmlspecialchars($topview['Project']['name']);
+		$project_name = htmlspecialchars($favorite['Project']['name']);
 		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ?  substr($project_name,0,15) . "&#0133;" : $project_name;
 		?>
 		<div class="thumb">

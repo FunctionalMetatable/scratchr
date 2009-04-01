@@ -187,17 +187,17 @@ Class HomeController extends AppController {
             $this->set('countries', $countries);
         }
 		
-		$fevorites = $memcache->get("$prefix-favorites");
+		$favorites = $memcache->get("$prefix-favorites");
 		$curator_name = $memcache->get("$prefix-curator_name");
-        if ( $fevorites == "" || $curator_name =="") {
-       	    $curator_fevorites = $this->__getCuratorFevorites();
+        if ( $favorites == "" || $curator_name =="") {
+       	    $curator_favorites = $this->__getCuratorFavorites();
 			$curator_name = $this->___getCuratorName();
-            $memcache->set("$prefix-favorites", $curator_fevorites, false, 3600) or die ("Failed to save data at the server");
+            $memcache->set("$prefix-favorites", $curator_favorites, false, 3600) or die ("Failed to save data at the server");
 			$memcache->set("$prefix-curator_name", $curator_name, false, 3600) or die ("Failed to save data at the server");
-            $this->set('fevorites', $curator_fevorites);
+            $this->set('fevorites', $curator_favorites);
 			$this->set('username',$curator_name);
         } else {
-            $this->set('fevorites', $fevorites);
+            $this->set('favorites', $favorites);
 			$this->set('username',$curator_name);
         }
 
@@ -367,9 +367,11 @@ Class HomeController extends AppController {
 	
 	}
 	
-	function __getCuratorFevorites(){
+	function __getCuratorFavorites(){
+		$favorites =array();
 		$curator =$this->Curator->find(null,array(),'Curator.id DESC');
 	 	$curator_id =$curator['Curator']['user_id'];
+		if($curator_id)
 		$favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.user_id <>$curator_id", null, 'Favorite.timestamp DESC', 3 ,null,2);
 		return  $favorites;
 	}
