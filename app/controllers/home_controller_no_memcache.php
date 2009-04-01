@@ -4,7 +4,7 @@ Class HomeController extends AppController {
      * Home Page Controller
      */
 	var $pageTitle = "Scratch | Home | imagine, program, share";
-    var $uses = array("Project","User","FeaturedProject", "ClubbedGallery","UserStat", "Gallery", "Theme", "FeaturedGallery", "Tag", "Notification");
+    var $uses = array("Project","User","FeaturedProject", "ClubbedGallery","UserStat", "Gallery", "Theme", "FeaturedGallery", "Tag", "Notification","Curator","Favorite");
     var $helpers = array("Tagcloud", 'Cache');
     var $cacheAction = "1 hour";
 	
@@ -36,6 +36,7 @@ Class HomeController extends AppController {
 		$this->__setTotalSprites();
 		$this->__setTotalCreators();
 		$this->__getTopCountries();
+		$this->__getCuratorFevorites();
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
 		$newest_feed_link = "/feeds/getNewestProjects";
@@ -193,6 +194,16 @@ Class HomeController extends AppController {
 	function __getTopCountries(){
 	$countries = $this->User->query("SELECT count(*)as cnt, country FROM `users` group by country order by cnt desc  LIMIT ".NUM_TOP_COUNTRIES);
 	$this->set('countries',$countries);
+	}
+	function __getCuratorFevorites(){
+	
+	 $curator =$this->Curator->find(null,array(),'Curator.id DESC');
+	
+	 $curator_id =$curator['Curator']['user_id'];
+	$favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.user_id <>$curator_id", null, 'Favorite.timestamp DESC', 3 ,null,2);
+	$this->set('username',$curator['User']['urlname']);
+	$this->set('favorites',$favorites);	
+	
 	}
 }
 ?>

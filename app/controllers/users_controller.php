@@ -4,7 +4,7 @@ class UsersController extends AppController {
 	var $components = array('PaginationTernary','PaginationSecondary', 'Pagination','RequestHandler','FileUploader','Email','Thumb');
 	var $helpers = array('Pagination', 'Ajax', 'Javascript');
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject',
-						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable','Thank','ForumUser', 'ViewStat');
+						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable','Thank','ForumUser', 'ViewStat','Curator');
 
 
 	function admin_index() {
@@ -1107,7 +1107,7 @@ class UsersController extends AppController {
 			$this->Session->del('upload_error');
 		}
 		
-		
+		$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id"));
 		$this->set('isIgnored',$isIgnored);
 		$this->set('similar_sender', $similar_sender);
 		$this->set('comment_count', $comment_count);
@@ -1979,6 +1979,41 @@ class UsersController extends AppController {
 		$user_record = $this->User->findAll(array('User.country'=>$name), NULL, $order, $limit, $page, NULL);
 		$this->set('user_record',$user_record);
 		$this->set('country',$name);
+	}
+	
+	function curator($user_id=null){
+		$this->User->id = $user_id;
+        $user = $this->User->read();
+		if (empty($user)){
+			$this->cakeError('error404');
+		}
+		if (!$this->isAdmin()) {
+			$this->__err();
+		}
+		
+		if ($this->isAdmin()){
+		$this->data['Curator']['user_id'] = $user_id;
+		$this->Curator->save($this->data);
+		}
+	$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id"));
+	$this->redirect('/users/'.$user['User']['urlname']);
+	}
+	function uncurator($user_id=null){
+		$this->User->id = $user_id;
+        $user = $this->User->read();
+		if (empty($user)){
+			$this->cakeError('error404');
+		}
+		if (!$this->isAdmin()) {
+			$this->__err();
+		}
+		
+		if ($this->isAdmin()){
+		$curator = $this->Curator->find("user_id=$user_id");
+		$this->Curator->del($curator['Curator']['id']);
+		}
+	$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id"));
+	$this->redirect('/users/'.$user['User']['urlname']);
 	}
 
   }

@@ -16,7 +16,7 @@
     </div>
 <!-- ::: End intro  ::: -->
 
-
+<?php //print_r($favorites)?>
     <div id="NewestProjects" class="container">
       <h3><?php ___('Newest Projects');?></h3>
 		<?php
@@ -186,7 +186,30 @@
 		<?php endforeach; ?>
       <p class="more"><a href="/channel/topviewed"><?php ___('See more');?></a> </p>
     </div>
-	
+	<?php if($count=count($fevorites) >=3):?>
+	<div id="TopViewedLately" class="container">
+      <h3><?php echo $username;echo "'s";___(' Fevorites')?></h3>
+		<?php
+		/**
+		 * Populate top viewed projects
+		 */
+		foreach ($fevorites as $topview):
+		$pid = $topview['Project']['id'];
+		$owner = $topview['Project']['User']['urlname'];
+		$project_link = "/projects/".$owner."/".$pid;
+		$thumbnail_src = getThumbnailImg($owner, $pid);
+		$user_link = "/users/".$owner;
+		$project_name = htmlspecialchars($topview['Project']['name']);
+		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ?  substr($project_name,0,15) . "&#0133;" : $project_name;
+		?>
+		<div class="thumb">
+		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
+		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
+		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
+		</div>
+		<?php endforeach; ?>
+    </div>
+	<?php endif;?>
 	 <div id="TopCountries" class="container">
       <h3><?php ___('Top Countries')?></h3>
 	  <div class="home_flags">
