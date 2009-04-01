@@ -103,6 +103,7 @@ Router::connect('/projects/set_attribute/*', array('controller' => 'projects', '
 Router::connect('/projects/expandDescription/*', array('controller' => 'projects', 'action' => 'expandDescription'));
 Router::connect('/projects/deltag/*', array('controller' => 'projects', 'action' => 'deltag'));
 Router::connect('/projects/markTag/*', array('controller' => 'projects', 'action' => 'markTag'));
+Router::connect('/projects/upgradeTag/*', array('controller' => 'projects', 'action' => 'upgradeTag'));
 Router::connect('/projects/moreprojects/*', array('controller' => 'projects', 'action' => 'moreprojects'));
 Router::connect('/projects/renderComments/*', array('controller' => 'projects', 'action' => 'renderComments'));
 Router::connect('/projects/:username/:id', array('controller' => 'projects', 'action' => 'view'),

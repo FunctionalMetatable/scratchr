@@ -17,9 +17,10 @@ class Pcomment extends AppModel {
         return parent::read($fields, $id);
     }
 
-    function findAll($conditions=null, $fields=null,$order=null,$limit=null,$page=1,$recursive=null, $safe="all", $admin = 0) 
+    function findAll($conditions=null, $fields=null, $order=null, $limit=null, $page=1, $recursive=null, $safe="all", $admin = 0, $allowAll = false)
     {
-        return parent::findAll($this->check($conditions, $safe, $admin),$fields,$order,$limit,$page,$recursive);
+        return parent::findAll($this->check($conditions, $safe, $admin, $allowAll),
+                                $fields,$order,$limit,$page,$recursive);
     }
 
     function findCount($conditions=null, $recursive=0, $safe="all")
@@ -45,10 +46,15 @@ class Pcomment extends AppModel {
 		}
 	}
 
-	function check($conditions = null, $safe, $admin = 0) {
-		$temp_conditions = $this->addVisCheck($conditions, $admin);
-		$return_cond = $this->addSafeCheck($temp_conditions, $safe);
-		return $return_cond;
+	function check($conditions = null, $safe, $admin = 0, $allowAll = false) {
+        //use allowAll to bypass
+        if($allowAll) {
+            return $conditions;
+        }
+        
+        $temp_conditions = $this->addVisCheck($conditions, $admin);
+        $return_cond = $this->addSafeCheck($temp_conditions, $safe);
+        return $return_cond;
 	}
 	
 	function addSafeCheck($conditions = null, $content_level = "safe") {

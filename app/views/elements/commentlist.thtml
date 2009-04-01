@@ -1,245 +1,140 @@
-<?php 
-	if($isCommentError) {
-		echo "<div class='comment_error'>";
-			$error = $commentErrors[0];
-			echo $error;
-		echo "</div>";
-	}
+<?php
+    $ignored_commenter_text = 'Comment not displayed. Posted by a muted account.';
+    $ignored_commment_text = 'You have flagged this comment';
+    $reply_link = '(<a onclick="showReplyBox(%1$s, 0); addProjectCharCounter(%1$s); return false;" id="reply_hide_link_%1$s" href="#">reply</a>)';
+    $more_reply_link = '<span id="view_hide_link_frame_%s" class="visible_element">(<strong>%s</strong>)</span>';
+    $admin_flag_link = '(<a href="#" onclick="$(\'%s\').toggle(); return false;">%s</a>)';
+    $is_comment_reply_enabled = $isLogged && !$isLocked;
 ?>
-<div class="project_pagination_container">
-	
+<?php if($isCommentError): ?>
+<div class='comment_error'>
+    <?= $commentErrors[0]; ?>
 </div>
-<style type="text/css">
-#comment_<?php echo $comment_index?>{
-background-color:#FFFFCC;
-}
-</style>
-<?php 
-//echo $comment_index;
-if ($comments['0']['Project']['locked'] == 1) {
-			$isLocked = false;
-		} else {
-			$isLocked = true;
-		}
+<?php endif; ?>
 
-	foreach($comments as $comment) {
-		$commenter_id = $comment['User']['id'];
-		$commenter_urlname = $comment['User']['urlname'];
-		$commenter_username = $comment['User']['username'];
-		$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $content_status, $comment['User']['timestamp']);
-		$commenter_url = "/users/".$commenter_urlname;
-		$comment_type = isset($comment['Pcomment']);
-		$comment_id = $comment['Pcomment']['id'];
-		$pre_content = $comment['Pcomment']['content'];
-		$comment_content = $pre_content;
-		$timestamp = $comment['Pcomment']['timestamp'];
-		$mark_address = '/projects/' . 'markcomment/' . $project_id . '/' . $comment_id;
-		$replies_address = '/projects/display_replies/' . $comment_id . '/0';
-		$reply_address = '/projects/show_comment_reply/' . $comment_id . '/0';
-		
-		$replylist = $comment['Pcomment']['replylist'];
-		
-		if (empty($replylist)) {
-			$show_replies = false;
-		} else {
-			$show_replies = true;
-		}
-		
-		$commented = false;
-		$comment_level = 0;
-		$date = friendlyDate($timestamp);
-		if (isset($comment['Pcomment']['replies'])) {
-			$replies = $comment['Pcomment']['replies'];
-		} else {
-			$replies = 0;
-		}
-		
-		$comment_owner_id = $comment['User']['id'];
-		if ($comment_owner_id == $loggedInUID) {
-			$isCommentOwner = true;
-		} else {
-			$isCommentOwner = false;
-		}
-		
-		if ($comment_type && $isLogged) {
-			$commented = $comment['Pcomment']['commented'];
-			$ignored = $comment['Pcomment']['ignored'];
-		} else {
-			$commented = false;
-			$ignored = $comment['Pcomment']['ignored'];
-		}
-		
-		if ($ignored && !$isCommentOwner) {
-		
-			echo "<div id='$comment_id' class='comment'>\n";
-			echo "<div id='comment_$comment_id' >\n";
-			?>	
-				<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
-				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
-				
-				<?php
-				if ($date == "Now") {
-				} else {
-					printf(___('%s ago', true), friendlyDate($timestamp)); 
-				}
-			echo "</h5><p>Comment not displayed. Posted by a muted account.</p></div>";
-		} elseif (!$commented) {
-		
-			echo "<div id='$comment_id' class='comment'>\n";
-			echo "<div id='comment_$comment_id' >\n";
-			?>	
-			<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
-				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
-				
-			<?php
-			if ($date == "Now") {
-			} else {
-				printf(___('%s ago', true), friendlyDate($timestamp)); 
-			}
-			echo "</h5><p>$comment_content</p>";
-			
-			echo "<span class='flag_comment'>";
-			if ($isLogged) {
-				$form_id = "project_comment_reply_input_" . $comment_id;
-				if($isLocked)
-				{
-				echo "(" . "<a href='#' id='reply_hide_link_$comment_id' onclick='showReplyBox($comment_id, 0); addProjectCharCounter($comment_id); return false;'>reply</a>" . ")";
-				echo " | ";
-				}
-				if ($replies > NUM_COMMENT_REPLY) {
-					echo "<span id='view_hide_link_frame_$comment_id' class='visible_element'>";
-					echo "(<strong>" . $ajax->link(___("view all replies", true), '#', 
-						array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
-								"id"=>"view_hide_link_$comment_id",
-								"complete"=>"showReplyList($comment_id);",
-								"condition"=>"checkLogin()"), 
-								NULL, false) . "</strong>)";
-					echo " | ";
-					echo "</span>";
-				} 
-				
-				
-				/*else {
-					echo "<span id='view_hide_link_frame_$comment_id' class='hidden_element'>";
-					echo "(" . $ajax->link(___("view all replies", true), '#', 
-						array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
-								"id"=>"view_hide_link_$comment_id",
-								"complete"=>"showReplyList($comment_id);",
-								"condition"=>"checkLogin()"), 
-								NULL, false) . ")";
-					echo " | ";
-					echo "</span>";
-				}*/
-				
-				if(!$isCommentOwner) {
-					if($isAdmin){
-					$delete_comment_id = 'delete_all_'.$comment_id;
-					
-					?>
-					<a href="#" onclick="$('<?php echo $delete_comment_id ?>').toggle();return false;"><?php ___('Flag as inappropriate'); ?></a> |</h5>
-					
-					<?php
-					}
-					else
-					{
-						echo "(" . $ajax->link(___("flag as inappropriate", true), '#', 
-							array("url"=>$mark_address, 
-								"update"=>"$comment_id", "condition"=>"hideComment($comment_id)"), 
-							"Are you sure?", false) . ")";
-						
-						echo " | ";
-					}
-				}
-				
-				if ($isAdmin || $isProjectOwner || isset($users_permission['delete_project_comments'])) {
-					e($ajax->link("(x)", '#', 
-							array("url"=>"/projects/delete_comment/$project_id/$comment_id", 
-							"update"=>"$comment_id", 
-								"condition"=>"checkLogin()"), NULL, false));
-				}
-				echo "</p>\n";
-			} else {
-				if ($replies > NUM_COMMENT_REPLY) {
-					echo "<span id='view_hide_link_frame_$comment_id' class='visible_element'>";
-					echo "(" . $ajax->link(___("view all replies", true), '#', 
-						array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
-								"id"=>"view_hide_link_$comment_id",
-								"complete"=>"showReplyList($comment_id);"), 
-								NULL, false) . ")";
-					echo "</span>";
-				} 
-				/*else {
-					echo "<span id='view_hide_link_frame_$comment_id' class='hidden_element'>";
-					echo "(" . $ajax->link(___("view all replies", true), '#', 
-						array("url"=>$replies_address, "update"=>"reply_list_$comment_id", 
-								"id"=>"view_hide_link_$comment_id",
-								"complete"=>"showReplyList($comment_id);"), 
-								NULL, false) . ")";
-					echo "</span>";
-				}*/
-			}
-			echo "</span>";
-			
-			
-			
-			
-			if(!$isCommentOwner) {
-					
-					echo "<div id='delete_all_$comment_id' style='display:none;'>";
-					___("Do you also want to delete all the messages that are exactly the same?");
-					echo "<br>";
-					echo  $ajax->link("<span class='button2'>Yes</span>", '#', 
-						array("url"=>$mark_address.'/1', 
-							"update"=>"$comment_id", "condition"=>"hideComment($comment_id)"), 
-						"Are you sure?", false) ;
-						echo"&nbsp;&nbsp;";
-						echo  $ajax->link("<span class='button2'>No</span>", '#', 
-						array("url"=>$mark_address, 
-							"update"=>"$comment_id", "condition"=>"hideComment($comment_id)"), 
-						"Are you sure?", false) ;
-						
-					echo "</div>";
-				}	
-				
-				
-				
-				
-			echo "</div>";	
-			echo "<div id='reply_to_$comment_id' class='comment_reply_main'>";
-				echo $this->renderElement('projects/comment_reply_form', Array('comment_id' => $comment_id, 'comment_level' => $comment_level));
-			echo "</div>\n";
-			
-			if ($show_replies) {
-				echo "<div id='reply_list_$comment_id' class='comment_reply_main_visible'>";
-					echo $this->renderElement('projects/reply_list', Array('comments' => $replylist, 'comment_level' => $comment_level + 1));
-				echo "</div>\n";
-			} else {
-				echo "<div id='reply_list_$comment_id' class='comment_reply_main'>";
-				echo "</div>\n";
-			}
-			
-			echo "</div>\n";
+<?php foreach($comments as $comment): ?>
+<?php
+$comment_id = $comment['Pcomment']['id'];
+$comment_level = 0;
 
-		} else {
-			echo "<div id='$comment_id' class='comment'>\n";
-			?>	
-			<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
-				<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>
-				
-			<?php
-			if ($date == "Now") {
-			} else {
-				printf(___('%s ago', true), friendlyDate($timestamp)); 
-			}
-			echo "</h5><p>You have flagged this comment</p>
-			</div>";
-		}
-	}
+$commenter_icon = getBuddyIconBySize($comment['User']['id'], 'mini', $content_status,
+                    $comment['User']['timestamp']);
+$is_comment_owner = ($comment['User']['id'] == $loggedInUID);
+
+$is_commenter_ignored = (in_array($comment['User']['id'], $ignored_commenters)
+                        && !$is_comment_owner);
+$is_comment_ignored = in_array($comment['Pcomment']['id'], $ignored_comments);
+$is_comment_ok = (!$is_commenter_ignored && !$is_comment_ignored);
+$markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
 ?>
+<div class="comment" id="<?= $comment_id ?>">
+    <h5>
+        <?php echo $html->image($commenter_icon,
+                array('alt' => $comment['User']['username'], 'width'=>'28', 'height'=>'28')); ?>
+        <a href="<?= $html->url( '/users/' . $comment['User']['urlname'] ); ?>">
+            <?= $comment['User']['username']; ?>
+        </a>
+        <?php if (empty($date) || (isset($date) && $date != "Now")):
+            printf(___('%s ago', true), friendlyDate($comment['Pcomment']['timestamp']));
+        endif; ?>
+    </h5>
+
+    <p>
+    <?php if ($is_comment_ok): ?>
+        <?= $comment['Pcomment']['content']; ?>
+    <?php elseif ($is_comment_ignored): ?>
+        <?= $ignored_commment_text; ?>
+    <?php else: ?>
+        <?= $ignored_commenter_text; ?>
+    <?php endif; ?>
+    </p>
+
+    <span class="flag_comment">
+    <?php if ($is_comment_ok):
+        $comment_links = array();
+        if($is_comment_reply_enabled) {
+            $comment_links[] = sprintf($reply_link, $comment_id);
+        }
+        if ($comment['Pcomment']['replies'] > NUM_COMMENT_REPLY) {
+            $comment_links[] = sprintf($more_reply_link, $comment_id,
+                    $ajax->link(___('view all replies', true), '#',
+                        array(  'url'       => '/projects/display_replies/' . $comment_id . '/0',
+                                'update'    => 'reply_list_'.$comment_id,
+                                'id'        => 'view_hide_link_'.$comment_id,
+                                'complete'  => "showReplyList($comment_id);",
+                                'condition' => 'checkLogin()'),
+                                NULL, false)
+                        );
+        }
+
+        if($isLogged && !$is_comment_owner) {
+            if($isAdmin) {
+                $comment_links[] = sprintf($admin_flag_link,
+                            'delete_all_'.$comment_id,  ___('flag as inappropriate', true));
+            }
+            else {
+                $comment_links[] = '('. $ajax->link(___('flag as inappropriate', true), '#',
+                        array('url' => $markcomment_url,
+                            'update'    =>  "$comment_id",
+                            'condition' =>"hideComment($comment_id)"),
+                            'Are you sure?', false) .')';
+            }
+        }
+
+        if ($isLogged && ($isAdmin || $isProjectOwner
+            || isset($users_permission['delete_project_comments']))) {
+            $comment_links[] = $ajax->link('(x)', '#',
+            array('url' => '/projects/delete_comment/'.$project_id.'/'.$comment_id,
+                            'update' => "$comment_id",
+                            'condition' => 'checkLogin()'),
+                            'Are you sure?', false);
+        }
+
+        echo implode(' | ', $comment_links);
+
+    endif; ?>
+    </span>
+    <?php if($isAdmin): ?>
+        <div id="delete_all_<?= $comment_id ?>" style='display:none;'>
+        <p><?php ___("Do you also want to delete all the messages that are exactly the same?"); ?></p>
+        <?=
+            $ajax->link('<span class="button2">Yes</span>', '#',
+                        array('url' => $markcomment_url.'/1',
+                            'update'    =>  "$comment_id",
+                            'condition' =>"hideComment($comment_id)"),
+                            'Are you sure?', false);
+        ?>
+        &nbsp; &nbsp;
+        <?=
+            $ajax->link('<span class="button2">No</span>', '#',
+                        array('url' => $markcomment_url.'/1',
+                            'update'    =>  "$comment_id",
+                            'condition' =>"hideComment($comment_id)"),
+                            'Are you sure?', false);
+        ?>
+        </div>
+    <?php endif; ?>
+    
+    <?php if($is_comment_reply_enabled): ?>
+    <div class="comment_reply_main" id="reply_to_<?= $comment_id; ?>">
+        <?= $this->renderElement('projects/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
+    </div>
+    <?php endif; ?>
+    <div class="comment_reply_main_visible" id="reply_list_<?= $comment_id; ?>">
+        <?php if(!empty($comment['Pcomment']['replylist'])): ?>
+            <?= $this->renderElement('projects/reply_list',
+                array('comments' => $comment['Pcomment']['replylist']['comments'],
+                    'ignored_commenters' => $comment['Pcomment']['replylist']['ignored_commenters'],
+                    'ignored_comments' => $comment['Pcomment']['replylist']['ignored_comments'],
+                        'comment_level' => ($comment_level + 1), 'isLocked' => $isLocked)); ?>
+        <?php endif;  ?>
+     </div>
+</div>
+<?php endforeach; ?>
+
 <div class="project_pagination_container">
-	<?php 
-		
+	<?php
 		$pagination->setPaging($paging_secondary);
-		echo $this->renderElement('pagination_secondary'); 
+		echo $this->renderElement('pagination_secondary');
 	?>
 </div>

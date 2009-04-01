@@ -1,3 +1,7 @@
-<?php
-	echo $this->renderElement('projects/reply_list', Array('comments' => $comments, 'comment_level' => $comment_level, 'project_id' => $project_id));
-?>
+<?php if(!empty($replies)): ?>
+    <?= $this->renderElement('projects/reply_list',
+            array('comments' => $replies['comments'],
+                'ignored_commenters' => $replies['ignored_commenters'],
+                'ignored_comments' => $replies['ignored_comments'],
+                'comment_level' => $comment_level, 'isLocked' => $isLocked)); ?>
+<?php endif;  ?>

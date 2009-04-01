@@ -48,7 +48,7 @@ class AppModel extends Model{
 		return $this->memcache->set($this->__get_mc_key($str, $postfix), $value, false, $ttl) or die ("Failed to save data at the server");
 	}
 	
-	function mc_delete($str, $postfix) {
+	function mc_delete($str, $postfix = false) {
         $this->memcache->delete($this->__get_mc_key($str, $postfix));
 	}
 
@@ -72,5 +72,11 @@ class AppModel extends Model{
 		}
 		return 'all';
 	}
+
+    //little hack to create mysql IN clause string from an array
+    function createString($array) {
+        $array = array_unique($array);
+        return '("'.implode('" , "', $array).'")';
+    }
 }
 ?>

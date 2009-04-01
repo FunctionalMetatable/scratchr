@@ -1,4 +1,26 @@
+<?php if($isCommentError): ?>
+<div class='comment_error'>
+    <?= $commentErrors[0]; ?>
+</div>
+<?php endif; ?>
+
 <?php
-    $params = array('comments' => $comments, 'isLogged'=>$isLogged, 'urlname'=>$urlname);
-    e($this->renderElement('commentlist', $params));
+if(isset($comment) && $comment['Pcomment']['comment_visibility'] == 'visible'):
+    $comment_id = $comment['Pcomment']['id'];
+    $commenter_icon = getBuddyIconBySize($comment['User']['id'], 'mini', $content_status,
+                    $comment['User']['timestamp']);
 ?>
+    <div class="comment" id="<?= $comment_id ?>">
+        <h5>
+            <?php echo $html->image($commenter_icon,
+                    array('alt' => $comment['User']['username'], 'width'=>'28', 'height'=>'28')); ?>
+            <a href="<?= $html->url( '/users/' . $comment['User']['urlname'] ); ?>">
+                <?= $comment['User']['username']; ?>
+            </a>
+        </h5>
+
+        <p>
+            <?= $comment['Pcomment']['content']; ?>
+        </p>
+    </div>
+<?php endif; ?>
