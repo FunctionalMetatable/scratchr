@@ -1,4 +1,3 @@
 <?php
-	$params = Array('isMine' => $isMine, 'isLogged' => $isLogged, 'urlname'=>$urlname, 'comments'=> $comments);
-	e($this->renderElement('commentlist', $params));
+e($this->renderElement('commentlist'));
 ?>

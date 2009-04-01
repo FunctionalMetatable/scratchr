@@ -1,15 +1,14 @@
- <?php
-  
-	if ($isLocked) {
-		$lock = 1;
-	} else {
-		$lock = 0;
-	}
-	if ($user_status == "normal") {
-		$user_locked = 0;
-	} else {
-		$user_locked = 1;
-	}
+<?php
+if ($isLocked) {
+    $lock = 1;
+} else {
+    $lock = 0;
+}
+if ($user_status == "normal") {
+    $user_locked = 0;
+} else {
+    $user_locked = 1;
+}
 ?>
   <!-- |||||| Begin content area ||||||| -->
   <div id="main">
@@ -20,7 +19,7 @@
 	<?php endif?>
       <h2 id="project_title"><?php $project_title =htmlspecialchars($project['Project']['name']); e($project_title);?> </h2>
 		<?php  if ($isMine || $isAdmin) echo $ajax->editor("project_title", "/projects/$urlname/$pid/name", Array("callback"=>"return 'name=' + encodeURIComponent(value)")); ?>
-		<div id="projectwrapper" style="height:482;">
+		<div id="projectwrapper" style="height:482px;">
 			<div id="projectload" style="display:block;" align="center">
 				
 				<?php
@@ -106,11 +105,13 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 	</div>
 
 	<!-- ::: Begin license ::: -->
-	<div id="licenseDiv"><a href="http://creativecommons.org/licenses/by-sa/2.0/">
+	<div id="licenseDiv">
+    <a href="http://creativecommons.org/licenses/by-sa/2.0/">
 	<?php echo $html->image('/img/cc_icon_attribution_small.gif',array('alt'=>'Attribution','title'=>'Attribution'))?>
 	<?php echo $html->image('/img/cc_icon_sharealike_small.gif',array('alt'=>'Share Alike','title'=>'Share Alike'))?>
-	
-	<a href="<?php  echo $html->url('/pages/license')?>"><?php ___('Some rights reserved'); ?></a></div>
+	</a>
+	<a href="<?php  echo $html->url('/pages/license')?>"><?php ___('Some rights reserved'); ?></a>
+    </div>
 	<!-- ::: End license ::: -->
 </div>
 
@@ -279,13 +280,19 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 
 			<p><textarea id='pcomment_textarea' name="pcomment_textarea" cols="55" rows="3"></textarea>
 			<div id="counter-pcomment_textarea"></div></p>
-			<?php echo $ajax->submit(___('Add', true), array('id' => 'pcomment_submit', "condition"=>"(checkAll('pcomment_textarea', $lock, $user_locked))", "class"=>"button","url"=>"/projects/$urlname/$pid/comment", "update"=>"ajax_pagination_secondary", "loading" => "document.getElementById('pcomment_submit').disabled = true;", "complete" => "document.getElementById('pcomment_textarea').value = ''; document.getElementById('pcomment_submit').disabled = false;" ));?>
+			<?php echo $ajax->submit(___('Add', true), 
+                array('id' => 'pcomment_submit', "condition"=>"(checkAll('pcomment_textarea', $lock, $user_locked))",
+                    "class"=>"button","url"=>"/projects/$urlname/$pid/comment", "update"=>"ajax_pagination_secondary",
+                    "loading" => "document.getElementById('pcomment_submit').disabled = true;",
+                    'position' => 'top',
+                    "complete" => "document.getElementById('pcomment_textarea').value = ''; document.getElementById('pcomment_submit').disabled = false;" ));?>
 		</form>
 	   <?php endif; ?>
+       <br />
 		<div id="ajax_pagination_secondary">
 	    <?php
             e($ajax->div("project_comment_list"));
-				e($this->renderElement('commentlist', array('isLogged'=>$isLogged, 'urlname'=>$urlname, 'comments'=> $comments, 'content_status' => $content_status,'comment_index'=>$comment_index)));
+            e($this->renderElement('commentlist'));
             e($ajax->divEnd("project_comment_list"));
         ?>
 		</div>

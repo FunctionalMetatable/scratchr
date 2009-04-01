@@ -7,7 +7,7 @@
 	$comment_type = isset($comment['Pcomment']);
 	$comment_id = ($comment_type) ? $comment['Pcomment']['id']:$comment['id'];
 	$comment_content = ($comment_type) ? $comment['Pcomment']['content']:$comment['content'];
-	$timestamp = ($comment_type) ? $comment['Pcomment']['timestamp']:$comment['timestamp'];
+	$timestamp = ($comment_type) ? $comment['Pcomment']['created']:$comment['created'];
 	?>	
 	<h5><?php echo $html->image($commenter_icon,array('alt'=>$commenter_username,'width'=>'28','height'=>'28'))?>
 	<a href="<?php echo $html->url($commenter_url)?>"><?php echo $commenter_username?></a>

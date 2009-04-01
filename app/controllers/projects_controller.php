@@ -333,6 +333,8 @@ class ProjectsController extends AppController {
 					} else {
 						$new_pcomment = array('Pcomment'=>array('id' => null, 'project_id'=>$pid, 'user_id'=>$commenter_id, 'content'=>$comment, 'comment_visibility' => $vis, 'reply_to_id'=>$comment_id, 'created' => date("Y-m-d G:i:s") ));
 						$this->Pcomment->save($new_pcomment);
+                        $new_pcomment['Pcomment']['id'] = $this->Pcomment->getInsertID();
+                        $this->deleteCommentsFromMemcache($pid);
 					}
 				}
             }
@@ -366,17 +368,12 @@ class ProjectsController extends AppController {
 			}
 		}
 		
-		$final_comments = $this->set_comments($pid, $project_owner_id, $isLogged);
 		$this->set_comment_errors($errors);
-
-		$isLogged = $this->isLoggedIn();
-		$this->set('isLogged',$isLogged);
-		$this->set('pid', $pid);
-		$this->set('project_id', $pid);
-		$this->set('isProjectOwner', $logged_id == $project['User']['id']);
-		$this->set('isMine', $logged_id == $project['User']['id']);
-		$this->set('comments',$final_comments);
-		$this->set('urlname', $urlname);
+		//the comment is saved
+        if(!empty($new_pcomment)) {
+          $new_pcomment['User'] =  $commenter_userrecord['User'];
+          $this->set('comment', $new_pcomment);
+        }
 		$this->render('projectcomments_ajax', 'ajax');
 		return;
     }
@@ -495,7 +492,7 @@ class ProjectsController extends AppController {
 			}
 			$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
 		}
-		
+		$this->deleteCommentsFromMemcache($pid);
 		$final_comments = Array();
 		$this->set('urlname', $urlname);
 		$this->set('isLogged', $isLogged);
@@ -520,58 +517,6 @@ class ProjectsController extends AppController {
 		$this->render('reply_comment_ajax', 'ajax');
 	}
 	
-	/** Deletes a comment (AJAX)
-	* @param string $urlname => user url
-	* @param int $pid => project id
-	*/
-	function delcomment($urlname=null, $pid=null)
-	{
-		$user_id = $this->getLoggedInUserID();
-		$isLogged = $this->isLoggedIn();
-
-		$this->exitOnInvalidArgCount(2);
-		$this->autoRender=false;
-
-		if (empty($this->params['url']['cid']))
-			$this->cakeError('error404');
-			
-		$comment_id = $this->params['url']['cid'];
-		$user_id = $this->getLoggedInUserID();
-
-		$this->Project->bindUser();
-		$this->Project->id=$pid;
-		$project = $this->Project->read();
-		
-		$comment = $this->Pcomment->find("Pcomment.id = $comment_id");
-		$comment_owner_id = $comment['User']['user_id'];
-		$project_owner_id = $project['User']['user_id'];
-		$isProjectOwner = $project_owner_id == $user_id;
-		$isCommentOwner = $comment_owner_id == $user_id;
-
-		if (empty($project))
-			$this->cakeError('error404');
-						
-		if (!($this->isAdmin() || $isProjectOwner || $isCommentOwner))
-			$this->cakeError('error404');
-			
-		$this->Pcomment->id = $comment_id;
-		if ($this->isAdmin()) {
-			$this->Pcomment->saveField("comment_visibility", "delbyadmin");
-		} else {
-			$this->Pcomment->saveField("comment_visibility", "delbyusr");
-		}
-	
-		$final_comments = $this->set_comments($project_id, $user_id, $isLogged);
-
-		$this->set('urlname', $urlname);
-		$this->set('isLogged', $isLogged);
-		$this->set('comments', $final_comments);	
-		$this->set('pid', $pid);
-		$this->set('isMine', $user_id == $project['User']['id']);
-		$this->render('projectcomments_ajax', 'ajax');
-	}
-
-
 	/**
      * Download project
      * @param string $urlname => user url
@@ -1724,123 +1669,156 @@ class ProjectsController extends AppController {
      * @param int $pid => project id
      */
     function view($urlname=null, $pid=null) {
-			$current_page =null;
-			$comment_index =null;
-			
-			if(isset($this->params['url']['comment'])){
-				$c_id =$this->params['url']['comment'];
-			  	$comment_index =$this->comment_index($c_id);
-			 
-				$all_comment =$this->all_comment($pid);
-				$key = array_search($comment_index['Pcomment']['id'], $all_comment);
-			 	$current_page =$key/PROJECT_COMMENT_PAGE_LIMIT;
-				$current_page =ceil($current_page);
-			}
-			if ($pid && $urlname) {
-            // TODO: make only one call to find in this clause
-            // TODO: set global associations to bind model at load-time
-            // TODO: get $uid from hidden field when possible / from directory lookup
+        if ($pid && $urlname) {
+            //TODO: make only one call to find in this clause
+            //TODO: set global associations to bind model at load-time
+            //TODO: get $uid from hidden field when possible / from directory lookup
 
-            // bind comment, user, and tag models
-            // $this->Project->bindBinary();
-			$isLogged = $this->isLoggedIn();
-			$logged_id = $this->getLoggedInUserID();
-			$current_user_id = $logged_id;
-			$project_id = $pid;
-			
-			// forgive missmatch in upper/lower case of urlname
-			$usrobj = $this->User->find(array('urlname' =>  $urlname),'username');
-			if ($usrobj && $usrobj['User']['username']) 
+            $isLogged   = $this->isLoggedIn();
+            $logged_id  = $this->getLoggedInUserID();
+            $project_id = $pid;
+            $current_user_id = $logged_id;
+
+            //TODO: Cache username
+            //forgive missmatch in upper/lower case of urlname
+            $usrobj = $this->User->find(array('urlname' =>  $urlname), 'username');
+			if ($usrobj && $usrobj['User']['username']) {
 				$urlname = $usrobj['User']['username'];
+            }
 
-			$this->Project->id=$pid;
+            $this->Project->id = $pid;
 			$content_status = $this->getContentStatus();
-			$projects = $this->Project->findAll("Project.id = $project_id", null, null, null, 1, null, "all", 1);
+            //$this->Project->mc_connect();
+            //$project = $this->Project->mc_get('project', $project_id);
+            //if(!$project) {
+                //unbind GalleryProject, we don't need it here
+                $this->Project->unbindModel(
+                    array('hasMany' => array('GalleryProject'))
+                );
+                $projects = $this->Project->findAll("Project.id = $project_id", null, null, null, 1, null, "all", 1);
+                if(empty($projects)) {
+                  $project = false;
+                } else {
+                    $project = $projects[0];
+                }
+                //$this->Project->mc_set('project', $project, $project_id);
+            //}
 
-			if (empty($projects)) {
+            //project is empty when project id is invalid
+            if (empty($project)) {
 				$this->cakeError('error',array('code'=>'404', 'message'=>'project_not_found', 'name' => __('Not Found', true)));
-			} 
-			else {
-				$project = $projects[0];
 			}
-			
-			$project_visibility = $project['Project']['proj_visibility'];
-			if(!$this->isAdmin()){
-				if($project_visibility == "delbyusr" || $project_visibility ==  "delbyadmin")  {
-				$this->cakeError('error',array('code'=>'404', 'message'=>'project_deleted', 'name' => __('Not Found', true)));
-				}
-			}
+			//if projects owner name mismatches with urlname
+            if ($project['User']['urlname'] !== $urlname) {
+				$this->cakeError('error404');
+            }
+			//if project is not visible redirect the non-admin user to 404
+            $project_visibility = $project['Project']['proj_visibility'];
+            if(!$this->isAdmin()) {
+                if($project_visibility == "delbyusr" || ($project_visibility ==  "delbyadmin" && ! $this->isAdmin()))  {
+                    $this->cakeError('error',array('code'=>'404', 'message'=>'project_deleted', 'name' => __('Not Found', true)));
+                }
+            }
+
 			$project_id = $project['Project']['id'];
 			$owner_id = $project['User']['id'];
 			$isMine = $logged_id == $owner_id;
-			
-			if ($project['User']['urlname'] !== $urlname)
-				$this->cakeError('error404');
-			 $viewcount = $project['Project']['views'];
-	   		 $client_ip = ip2long($this->RequestHandler->getClientIP());
-			if ($isLogged) {
-				$viewstat = array('ViewStat' => array("id" => null, "user_id" => $logged_id,"project_id" => $project_id, "ipaddress" => $client_ip));
-				$this->ViewStat->save($viewstat);
-				if($this->ViewStat->findCount("ipaddress = '$client_ip' && project_id = $pid")==1) {
-					$viewcount++;
-				}
-				$this->Project->saveField('views', $viewcount);
-			}
-			
-			$remix_count = count($this->ProjectShare->findAll("related_project_id = $pid group by project_id, user_id")) - 1;
-			$this->Project->saveField("remixes", $remix_count);
-			
-			$final_comments = $this->set_comments($pid, $owner_id, $isLogged,$current_page);
-			$this->set_comment_errors(Array());
 
-            // set project lovers info
+            $client_ip = ip2long($this->RequestHandler->getClientIP());
+            if ($isLogged) {
+                //logged user did not visit this project before
+                if($this->ViewStat->findCount("ipaddress = '$client_ip' && project_id = $pid") == 0) {
+                    $project['Project']['views']++;
+                    //increment the viewcount in database
+                    $this->Project->saveField('views', $project['Project']['views']);
+                    //increment the count in memcache
+                    //$this->Project->mc_set('project', $project, $project_id);
+                }
+
+                //store project view statistics in database
+                $viewstat = array('ViewStat' => array("id" => null, "user_id" => $logged_id,"project_id" => $project_id, "ipaddress" => $client_ip));
+                $this->ViewStat->save($viewstat);
+            }
+
+            //do we need this? it's already implement in line #759-761 in services_controller
+            /*$remix_count = count($this->ProjectShare->findAll("related_project_id = $pid group by project_id, user_id")) - 1;
+			$this->Project->saveField("remixes", $remix_count);*/
+
+			//fetch out comment data
+            $comment_data = $this->set_comments($pid, $owner_id, $isLogged);
+            $this->set_comment_errors(array());
+            $this->set('comments', $comment_data['comments']);
+            $this->set('ignored_commenters', $comment_data['ignored_commenters']);
+            $this->set('ignored_comments', $comment_data['ignored_comments']);
+
+            //TODO: we can move it to the upper part,
+            //if an user visits a project for the first time
+            //we can assume he has not loved, favorited or flagged the project before
+            //set project lovers info, project flaggers info, favorites info
             $already_loved = null;
-            if ($current_user_id)
-                $already_loved = $this->Lover->hasAny("project_id = $pid AND user_id = $current_user_id");
-         
-
-            // set project flaggers info
             $already_flagged = null;
-            if ($current_user_id)
-                $already_flagged = $this->Flagger->hasAny("project_id = $pid AND user_id = $current_user_id");
+            $already_favorited = null;
+            if ($current_user_id) {
+                $already_loved      = $this->Lover->hasAny("project_id = $pid AND user_id = $current_user_id");
+                $already_flagged    = $this->Flagger->hasAny("project_id = $pid AND user_id = $current_user_id");
+                $already_favorited  = $this->Favorite->hasAny("Favorite.project_id = $pid AND Favorite.user_id = $current_user_id");
+            }
+            $this->set('already_loved', $already_loved);
             $this->set('already_flagged', $already_flagged);
-			$this->set('flagges_count', (int)$project['Project']['flagit']);
-
-            // get favorites info
-			$already_favorited = null;
-            if ($current_user_id)
-                $already_favorited = $this->Favorite->hasAny("Favorite.project_id = $pid AND Favorite.user_id = $current_user_id");
-			$this->set('already_favorited', $already_favorited);
+            $this->set('already_favorited', $already_favorited);
+			$this->set('lovers_count', (int)$project['Project']['loveit']);
+            $this->set('flagges_count', (int)$project['Project']['flagit']);
             $this->set('favorite_count', (int)$project['Project']['num_favoriters']);
 
-            // get content for "more project" browser
+            //TODO: we can cache "more projects" data
+            //get content for "more projects" browser
 			$this->Pagination->show = 5;
 			$this->modelClass = "Project";
-			$options = Array("sortBy"=>"created", "sortByClass" => "Project", 
+			$options = array("sortBy"=>"created", "sortByClass" => "Project",
 						"direction"=> "DESC", "url"=>"moreprojects/$urlname");
 			list($order,$limit,$page) = $this->Pagination->init("Project.id != $pid AND user_id = $owner_id AND proj_visibility = 'visible'", Array(), $options);
-			$user_projects = $this->Project->findAll("Project.id != $pid AND user_id = $owner_id AND proj_visibility = 'visible'", null, $order, $limit, $page);
-			
-			if ($this->ProjectFlag->findCount("project_id = $pid") == 0) {
-				$project_flags = null;
-			} else {
-				$project_flags = $this->ProjectFlag->find("project_id = $pid");
-			}
-			
+			$user_projects = $this->Project->findAll("Project.id != $pid AND user_id = $owner_id AND proj_visibility = 'visible'", null, $order, $limit, $page, -1);
 
-            // set generic project info
+            //we need project flags etc only for admins, we can have a check here
+            $users_permission = $this->isAnyPermission();
+            if ($this->isAdmin()
+            || isset($users_permission['censor_projects'])
+            || isset($users_permission['feature_projects'])
+            || isset($users_permission['project_view_permission'])) {
+                $this->ProjectFlag->belongsTo = null;
+                $this->ProjectFlag->bindModel(array('belongsTo' => array('User' => array('className' => 'User', 'foreignKey' => 'admin_id')
+                    )));
+                $project_flags = $this->ProjectFlag->find("project_id = $pid", 'ProjectFlag.*, User.username', 'ProjectFlag.id DESC');
+                $this->set('flags', $project_flags);
+
+                $admin_name = $project_flags['User']['username'];
+                $this->set('admin_name', $admin_name);
+
+                $actual_time = '';
+                if($project_flags['ProjectFlag']['admin_id']) {
+                    $actual_time = stampToDate($project_flags['ProjectFlag']['timestamp']);
+                }
+                $feature_time = '';
+                $feature_on = '';
+                if ($project_flags['ProjectFlag']['feature_admin_id']) {
+                    $feature_on = $final_flags['ProjectFlag']['feature_timestamp'];
+                    $feature_time = stampToDate($feature_on);
+                }
+
+                $this->set('admin_time', $actual_time);
+                $this->set('feature_on', $feature_on);
+                $this->set('feature_time', $feature_time);
+            }
+
+			// set generic project info
 			if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm') {
 				$isCensored = true;
 			} else {
 				$isCensored = false;
 			}
-			
-			//sets the last altered admin's name
-			$final_flags = $this->ProjectFlag->find("ProjectFlag.project_id = $pid");
-			
-			$admin_name = $this->get_admin_name($pid);
-			
-		// setting related work/projects strings
+
+            //TODO: we can definately optimize the following section, avoid the loop
+            //setting related work/projects strings
 			$this->set('related_username', $project['Project']['related_username']);
 			if($project['Project']['related_username'])  {
 				$related_user = $this->User->find(array('username' => $project['Project']['related_username']));
@@ -1853,115 +1831,111 @@ class ProjectsController extends AppController {
 					$this->set('related_original_project_id', $relproject['ProjectShare']['related_project_id']);
 				}
 			}
-		
-		/**
-		* project locking
-		**/
-		if ($project['Project']['locked'] == 0) {
-			$isLocked = false;
-		} else {
-			$isLocked = true;
-		}
-		
-		/*Generate ribbon thumbnail for featured project
-		@ author Ashok Gond
-		*/
-		if(SHOW_RIBBON ==1):
-		$isFeaturedProject = $this->FeaturedProject->hasAny("project_id = $pid");
-		if($isFeaturedProject)
-		{
-			$timestamp = $this->FeaturedProject->field('timestamp',"project_id = $pid");
-			
-			 $text =$this->convertDate($timestamp);
-			 $image_name =$this->ribbonImageName($timestamp);
-			 $this->Thumb->generateThumb($ribbon_image='project_ribbon.gif',$text,$dir="large_ribbon",$image_name,$dimension='50x40',125,125);
-			 $this->set('image_name',$image_name);
-		}//if $isFeaturedProject
-		endif;
-		//sets the tags relating to this project
-		$project_tags = $this->ProjectTag->findAll("project_id = $project_id");
-		
-		$final_tags = Array();
-		$all_tags = Array();
-		$counter = 0;
-		foreach ($project_tags as $current_tag) {
-			$tag_id = $current_tag['ProjectTag']['tag_id'];
-			$current_tag_id = $current_tag['Tag']['id'];
-			$current_tag = $this->set_tag($project_id, $logged_id, $current_tag);
-			
-			if (in_array($current_tag_id, $all_tags)) {
-			} else {
-				array_push($all_tags, $current_tag_id);
-				$final_tags[$counter] = $current_tag;
-				$counter++;
-			}
-		}
-		
-		$user_status = 'normal';
-		if ($isLogged) {
-			$current_user = $this->User->find("User.id = $logged_id");
-			$user_status = $current_user['User']['status'];
-		}
-		
-		
-		$isProjectOwner = $owner_id == $logged_id;
-		$gallery_count = 0;
-		if ($isLogged) {
-			$gallery_count = $this->Gallery->findCount("Gallery.user_id = $logged_id");
-		}
-		
-		if ($gallery_count == 0) {
-			$isGalleryOwner = false;
-		} else {
-			$isGalleryOwner = true;
-		}
-		
-		$mpcomments = Array();
-		if ($isLogged) {
-			$mpcomments = $this->Mpcomment->findAll("user_id = $current_user_id");
-		}
-		$this->set_admin_name($pid);
-		$this->set_admin_time($pid);
-		$this->set('isProjectOwner', $isProjectOwner);
-		$this->set('isGalleryOwner', $isGalleryOwner);
-		$this->set('already_loved', $already_loved);
-		$this->set('lovers_count', (int)$project['Project']['loveit']);
-		$this->set('project_tags', $final_tags);
-		$this->set('user_status', $user_status);
-		$this->set('isLocked', $isLocked);
-		$this->set('viewcount', $viewcount);
-		$this->set('user_projects', $user_projects);
-        $this->set('proj_visibility', $project['Project']['proj_visibility']);
-        $this->set('gallerylist', $this->getGalleryList($pid));
-		$this->set('comments', $final_comments);
-		$this->set('mpcomments',$mpcomments);
-		$this->set('isLogged', $isLogged);
-		$this->set('admin_name', $admin_name);
-		$this->set('isCensored', $isCensored);
-		$this->set('status', $project['Project']['status']);
-		$this->set('flags', $project_flags);
-        $this->set('pid', $pid);
-        $this->set('owner_id', $project['User']['id']);
-        $this->set('urlname', $urlname);
-        $this->set('project',$project);
-		$this->set('isProjectOwner', $this->activeSession($project['User']['id']));
-		$this->set('isMine', $this->activeSession($project['User']['id']));
-		$this->set('isFeatured', $this->FeaturedProject->hasAny("project_id = $pid"));
-		$this->set('date', friendlyDate($project['Project']['created']));
-		$this->set('relatedcount', count($this->ProjectShare->findAll("related_project_id = $pid AND related_project_id != project_id group by project_id, user_id")));
-		$this->set('downloadcount', $this->Downloader->findCount(array('project_id' => $pid)));
-		$this->set('project_id', $project['Project']['id']);
-		$taggers_data = $this->ProjectTag->query("SELECT COUNT(DISTINCT user_id) FROM `project_tags` AS `ProjectTag` WHERE project_id = '".$pid."'");
-		$taggers = $taggers_data[0][0]['COUNT(DISTINCT user_id)'];
-		$this->set('taggers',$taggers);
 
-		$this->set('urlname', $urlname);
-		 $this->set('comment_index',$comment_index['Pcomment']['id']);
+            //project locking
+            if ($project['Project']['locked'] == 0) {
+                $isLocked = false;
+            } else {
+                $isLocked = true;
+            }
+
+            //make one single call to FeaturedProject, we don't need hasAny
+            $featured_timestamp = $this->FeaturedProject->field('timestamp',"project_id = $pid");
+            $isFeatured = !empty($featured);
+            $this->set('isFeatured', $isFeatured);
+
+            /*Generate ribbon thumbnail for featured project
+            @ author Ashok Gond
+            */
+            if(SHOW_RIBBON ==1) {
+                if($featured_timestamp)
+                {
+                    $text =$this->convertDate($featured_timestamp);
+                    $image_name =$this->ribbonImageName($featured_timestamp);
+                    $this->Thumb->generateThumb($ribbon_image='project_ribbon.gif', $text, $dir="large_ribbon", $image_name, $dimension='50x40', 125, 125);
+                    $this->set('image_name',$image_name);
+                }
+            }
+
+            //sets the tags and taggers relating to this project
+            //$tag_data = $this->Project->mc_get('project_tag', $project_id);
+            //if(!$tag_data) {
+                $tag_data = array();
+
+                //find all project tags
+                $temp_tags = $this->ProjectTag->findAll("project_id = $project_id GROUP BY tag_id",
+                        'ProjectTag.id, ProjectTag.tag_id, Tag.id, Tag.name, User.id');
+                $project_tags = array();
+                $counter = 0;
+                foreach ($temp_tags as $current_tag) {
+                    $current_tag = $this->set_tag($project_id, $logged_id, $current_tag);
+                    $project_tags[$counter] = $current_tag;
+                    $counter++;
+                }
+
+                //find taggers
+                $taggers_data = $this->ProjectTag->query("SELECT COUNT(DISTINCT user_id) FROM `project_tags` AS `ProjectTag` WHERE project_id = '".$pid."'");
+                $taggers = $taggers_data[0][0]['COUNT(DISTINCT user_id)'];
+
+                //store them to memcache
+                $tag_data['project_tags'] = $project_tags;
+                $tag_data['taggers']      = $taggers;
+
+                //$this->Project->mc_set('project_tag', $tag_data, $project_id);
+            //}
+            $this->set('taggers', $tag_data['taggers']);
+            $this->set('project_tags', $tag_data['project_tags']);
+
+            //setting user status
+            $user_status = 'normal';
+            if ($isLogged) {
+                $user_status = $this->User->find("User.id = $logged_id", 'User.status');
+                $user_status = $user_status['User']['status'];
+            }
+
+            $isProjectOwner = $owner_id == $logged_id;
+
+            $gallery_count = 0;
+            if ($isLogged) {
+                $gallery_count = $this->Gallery->findCount("Gallery.user_id = $logged_id");
+            }
+            $isGalleryOwner = !empty($gallery_count);
+
+            //TODO: we only need number of galleries, we can avoid 4 queries here
+            $gallery_list = $this->getGalleryList($pid);
+            $this->set('gallerylist', $gallery_list);
+
+            $this->set('downloadcount', $this->Downloader->findCount(array('project_id' => $pid)));
+
+            //TODO: i think we can avoid this query, we have already fetced out related projects?
+            $this->set('relatedcount', count($this->ProjectShare->findAll("related_project_id = $pid AND related_project_id != project_id group by project_id, user_id")));
+
+            //close memcache connection
+            //$this->Project->mc_close();
+
+            $this->set('isProjectOwner', $isProjectOwner);
+            $this->set('isGalleryOwner', $isGalleryOwner);
+            $this->set('user_status', $user_status);
+            $this->set('isLocked', $isLocked);
+            $this->set('viewcount', $project['Project']['views']);
+            $this->set('user_projects', $user_projects);
+            $this->set('proj_visibility', $project['Project']['proj_visibility']);
+            $this->set('isLogged', $isLogged);
+            $this->set('isCensored', $isCensored);
+            $this->set('status', $project['Project']['status']);
+            $this->set('pid', $pid);
+            $this->set('owner_id', $project['User']['id']);
+            $this->set('urlname', $urlname);
+            $this->set('project',$project);
+            $this->set('isProjectOwner', $this->activeSession($project['User']['id']));
+            $this->set('isMine', $this->activeSession($project['User']['id']));
+            $this->set('date', friendlyDate($project['Project']['created']));
+            $this->set('project_id', $project['Project']['id']);
+            $this->set('urlname', $urlname);
 
             $this->render('projectcontent','scratchr_projectpage');
-
-		} else if ($urlname) {
-
+        }
+        else if ($urlname) {
 			// url = /projects/urlname
 
 			// render user specify projects listing page (i.e. user home page)
@@ -1988,9 +1962,8 @@ class ProjectsController extends AppController {
 			*/
 
 			$this->cakeError('error404');
-
-        } else {
-
+        }
+        else {
 			// url = /projects
 
 			/*
@@ -2292,25 +2265,29 @@ class ProjectsController extends AppController {
 	function renderComments($project_id, $current_page = null) {
 		$current_page = null;
 		$this->autoRender = false;
-		$this->Project->id=$project_id;
+		
+        $this->Project->unbindModel(
+                    array('hasMany' => array('GalleryProject'))
+                );
+        $this->Project->id = $project_id;
         $project = $this->Project->read();
-		$owner_id = $project['User']['id'];
-		$user_id = $this->getLoggedInUserID();	
-		$isLogged = $this->isLoggedIn();
-
+        $owner_id = $project['User']['id'];
+        $isLogged = $this->isLoggedIn();
+    
         if (empty($project)) exit();
 		
-		$final_comments = $this->set_comments($project_id, $owner_id, $isLogged);
-		$this->set_comment_errors(Array());
-		
-		$this->set('isProjectOwner', $user_id == $project['User']['id']);
-		$this->set('isMine', $user_id == $project['User']['id']);
-		$this->set('urlname', $project['User']['urlname']);
-		$this->set('isLogged', $isLogged);
-		$this->set('pid', $project_id);
-		$this->set('project_id', $project_id);
-		$this->set('comments', $final_comments);
-		$this->render('render_comments_ajax', 'ajax');
+        $comment_data = $this->set_comments($project_id, $owner_id, $isLogged);
+        $this->set_comment_errors(array());
+
+        $this->set('comments', $comment_data['comments']);
+        $this->set('ignored_commenters', $comment_data['ignored_commenters']);
+        $this->set('ignored_comments', $comment_data['ignored_comments']);
+        $this->set('isLogged', $isLogged);
+        $this->set('isLocked', $project['Project']['locked']);
+        $this->set('project_id', $project_id);
+        $this->set('isProjectOwner', $this->getLoggedInUserID() == $owner_id);
+        
+        $this->render('render_comments_ajax', 'ajax');
 	}
 	
 	/**
@@ -2396,25 +2373,29 @@ class ProjectsController extends AppController {
 	/**
 	* Adds a reply to a comment
 	**/
-	function comment_reply($source_id, $comment_level) {
+	function comment_reply($parent_id, $comment_level) {
 		$this->autoRender = false;
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
-		$source_comment = $this->Pcomment->find("Pcomment.id = $source_id");
-		$project_id = $source_comment['Pcomment']['project_id'];
-		$project = $this->Project->find("Project.id = $project_id");
+		$parent_comment = $this->Pcomment->find("Pcomment.id = $parent_id");
+		$project_id = $parent_comment['Pcomment']['project_id'];
+        $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+		$project = $this->Project->find("Project.id = $project_id",
+            'Project.id, Project.name, Project.locked, User.id, User.urlname');
 		$project_name = htmlspecialchars($project['Project']['name']);
 		$urlname = $project['User']['urlname'];
 		$commenter_id = $this->getLoggedInUserID();
 		$project_owner_id = $project['User']['id'];
-		$comment_owner_id = $source_comment['User']['id'];
+		$comment_owner_id = $parent_comment['User']['id'];
 		
 		$project_url = "/projects/$urlname/$project_id";
 		$project_link = "<a href='$project_url'>$project_name</a>";
 
         if (!empty($this->params['form'])) {
             if ($user_id) {
-				$content_name = 'project_comment_reply_input_' . $source_id;
+				$content_name = 'project_comment_reply_input_' . $parent_id;
                 $comment = htmlspecialchars($this->params['form'][$content_name]);
 
 				// SPAM checking
@@ -2483,9 +2464,9 @@ class ProjectsController extends AppController {
 					
 					if ($duplicate) {
 					} else {
-						$new_reply = array('Pcomment'=>array('id' => null, 'project_id'=>$project_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $source_id));
+						$new_reply = array('Pcomment'=>array('id' => null, 'project_id'=>$project_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $parent_id));
 						$this->Pcomment->save($new_reply);
-					
+                        $this->deleteCommentsFromMemcache($project_id);
 						$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND (IgnoredUser.blocker_id = $project_owner_id OR IgnoredUser.blocker_id = $comment_owner_id)");
 						if ($ignore_count == 0 && $vis == 'visible') {
 							//user is not replying to his own comment
@@ -2512,13 +2493,14 @@ class ProjectsController extends AppController {
 			}
 		}
 		
-		
-		$final_comments = $this->set_replies($project_id, $source_id, $user_id);
+		$replies = $this->set_replies($project_id, $project['User']['id'],
+                                        $parent_id, $user_id);
 
-		$this->set('project_id', $project_id);
+        $this->set('replies', $replies);
 		$this->set('isProjectOwner', $user_id == $project['User']['id']);
-		$this->set('comments', $final_comments);
+		$this->set('project_id', $project_id);
 		$this->set('comment_level', $comment_level + 1);
+        $this->set('isLocked', $project['Project']['locked']);
 		$this->set('isLogged', $isLogged);
 		$this->render('comment_reply_ajax', 'ajax');
 	}
@@ -2526,20 +2508,25 @@ class ProjectsController extends AppController {
 	/**
 	* Displays the list of replies for a comment
 	**/
-	function display_replies($source_id, $comment_level) {
+	function display_replies($parent_id, $comment_level) {
 		$this->autoRender = false;
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
-		$source_comment = $this->Pcomment->find("Pcomment.id = $source_id");
-		$project_id = $source_comment['Pcomment']['project_id'];
-		$project = $this->Project->find("Project.id = $project_id");
+
+        //get project info
+        $project_id = $this->Pcomment->field('project_id', 'Pcomment.id = '.$parent_id);
+        $this->Project->recursive = -1;
+        $project = $this->Project->find('Project.id = '.$project_id,
+                                            'Project.user_id, Project.locked');
 		
-		$final_comments = $this->set_replies($project_id, $source_id, $user_id);
-		
-		$this->set('isProjectOwner', $user_id == $project['User']['id']);
+		$replies = $this->set_replies($project_id, $project['Project']['user_id'],
+                                        $parent_id, $user_id);
+
+        $this->set('replies', $replies);
+		$this->set('isProjectOwner', $user_id == $project['Project']['user_id']);
 		$this->set('project_id', $project_id);
-		$this->set('comments', $final_comments);
 		$this->set('comment_level', $comment_level + 1);
+        $this->set('isLocked', $project['Project']['locked']);
 		$this->set('isLogged', $isLogged);
 		$this->render('comment_reply_ajax', 'ajax');
 	}
@@ -2568,76 +2555,108 @@ class ProjectsController extends AppController {
 		}
 		
 		$this->Pcomment->del($comment_id);
+        $this->deleteCommentsFromMemcache($project_id);
 		exit;
 	}
 	
 	/**
 	* Returns all comments relevant to logged in user viewing a project
 	**/
-	function set_comments($project_id, $creator_id, $isLogged,$pages=null) {
-		$user_id = $this->getLoggedInUserID();
-		
-		$this->PaginationSecondary->show = PROJECT_COMMENT_PAGE_LIMIT;
-		$this->modelClass = "Pcomment";
-		
-		
-		if($pages){
-		$options = Array("page"=>$pages,"sortBy"=>"created", "sortByClass" => "Pcomment", 
-					"direction"=> "DESC", "url"=>"renderComments/$project_id/0");
-		list($order,$limit,$page) = $this->PaginationSecondary->init("project_id = $project_id AND Pcomment.comment_visibility = 'visible' AND reply_to = -100", Array(), $options);
-		$comments = $this->Pcomment->findAll("project_id = $project_id AND Pcomment.comment_visibility = 'visible' AND reply_to = -100", null, $order, $limit, $page);
-		}
-		else
-		{
-		$options = Array("sortBy"=>"created", "sortByClass" => "Pcomment", 
-					"direction"=> "DESC", "url"=>"renderComments/$project_id/0");
-		list($order,$limit,$page) = $this->PaginationSecondary->init("project_id = $project_id AND Pcomment.comment_visibility = 'visible' AND reply_to = -100", Array(), $options);
-		$comments = $this->Pcomment->findAll("project_id = $project_id AND Pcomment.comment_visibility = 'visible' AND reply_to = -100", null, $order, $limit, $page);
-		}
-		//set comments info
-		$counter = 0;
-		$final_comments = Array();
-		foreach ($comments as $current_comment) {
-			$temp_comment = $current_comment;
-			$current_id = $temp_comment['Pcomment']['id'];
-			$commenter_id = $temp_comment['Pcomment']['user_id'];
-			$temp_comment['Pcomment']['ignored'] = false;
-			$temp_comment['Pcomment']['commented'] = false;
-			
-			$comment_content = $current_comment['Pcomment']['content'];
-			$comment_content = $this->set_comment_content($comment_content);
-			$temp_comment['Pcomment']['content'] = $comment_content;
-			
-			$reply_count = $this->Pcomment->findCount("project_id = $project_id AND reply_to = $current_id");
-			$temp_comment['Pcomment']['replies'] = $reply_count;
-			
-			if ($isLogged) {
-				$mp_count = $this->Mpcomment->findCount("user_id = $user_id AND comment_id = $current_id");
-				if ($mp_count > 0) {
-					$temp_comment['Pcomment']['commented'] = true;
-				}
-				
-				$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $user_id AND IgnoredUser.user_id = $commenter_id");
-				$ignore_count = $ignore_count + $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $creator_id AND IgnoredUser.user_id = $commenter_id");
-				if ($ignore_count > 0) {
-					$temp_comment['Pcomment']['ignored'] = true;
-				} else {
-					$temp_comment['Pcomment']['ignored'] = false;
-				}
-			} else {
-				$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $creator_id AND IgnoredUser.user_id = $commenter_id");
-				if ($ignore_count > 0) {
-					$temp_comment['Pcomment']['ignored'] = true;
-				} else {
-					$temp_comment['Pcomment']['ignored'] = false;
-				}
-			}
-			$all_replies = $this->set_replies($project_id, $current_id, $user_id, NUM_COMMENT_REPLY);
-			$temp_comment['Pcomment']['replylist'] = $all_replies;
-			$final_comments[$counter] = $temp_comment;
-			$counter++;
-		}
-		return $final_comments;
+	function set_comments($project_id, $creator_id, $isLoggedIn) {
+		////do pagination stuffs
+        $this->PaginationSecondary->show = 6;
+        $this->modelClass = 'Pcomment';
+        $options = array('sortBy' => 'created', 'sortByClass' => 'Pcomment',
+                    'direction' => 'DESC', 'url' => 'renderComments/' . $project_id . '/0');
+        list($order, $limit, $page) = $this->PaginationSecondary->init(
+                                        'project_id = ' . $project_id
+                                       .' AND Pcomment.comment_visibility = "visible"'
+                                       .' AND reply_to = -100', array(), $options);
+
+        //check memcache
+        $this->Pcomment->mc_connect();
+        $mc_key = $project_id.'_'.$isLoggedIn.'_'.$page;
+        $num_cache_pages = PCOMMENT_CACHE_NUMPAGE; //we will store only first few pages
+        
+        $comment_data = false;
+        if($page <= $num_cache_pages) {
+            $comment_data = $this->Pcomment->mc_get('pcomments', $mc_key);
+        }
+        
+        //not yet cached
+        if($comment_data === false) {
+            $this->Pcomment->unbindModel( array('belongsTo' => array('Project')) );
+            $comments = $this->Pcomment->findAll( 'project_id = ' . $project_id
+                . ' AND Pcomment.comment_visibility = "visible" AND reply_to = -100',
+                'Pcomment.*, User.id, User.username, User.urlname, User.timestamp',
+                $order, $limit, $page, 1, 'all', 0, true);
+
+            //set comments info
+            $commenter_ids = array();
+            $comment_ids = array();
+
+            foreach ($comments as $key => $comment) {
+                $commenter_ids[] = $comment['Pcomment']['user_id'];
+                $comment_ids[]   = $comment['Pcomment']['id'];
+
+                $comment['Pcomment']['content'] = $this->set_comment_content($comment['Pcomment']['content']);
+
+                $comment['Pcomment']['replies'] = $this->Pcomment->findCount('project_id = '
+                    . $project_id . ' AND reply_to = '. $comment['Pcomment']['id']);
+
+                $comment['Pcomment']['replylist'] = array();
+                if($comment['Pcomment']['replies'] > 0) {
+                    $comment['Pcomment']['replylist'] = $this->set_replies($project_id,
+                        $creator_id, $comment['Pcomment']['id'], $this->getLoggedInUserID(), NUM_COMMENT_REPLY);
+                }
+
+                //replace the comment in $comments list
+                $comments[$key] = $comment;
+            }
+
+            $commenter_ids  = $this->IgnoredUser->createString($commenter_ids);
+            $comment_ids    = $this->IgnoredUser->createString($comment_ids);
+
+            $this->IgnoredUser->recursive = -1;
+            $ignored_commenters = $this->IgnoredUser->find('list',
+                array('conditions' =>
+                'blocker_id = '. $creator_id . ' AND user_id IN ' . $commenter_ids,
+                'fields' => 'user_id'));
+            
+            $comment_data = array();
+            $comment_data['comments'] = $comments;
+            $comment_data['ignored_commenters'] = $ignored_commenters;
+            $comment_data['ignored_comments'] = array();
+            $comment_data['commenter_ids'] = $commenter_ids;
+            $comment_data['comment_ids'] = $comment_ids;
+
+            //we will store only first 2 pages
+            if($page <= $num_cache_pages) {
+                $this->Pcomment->mc_set('pcomments', $comment_data, $mc_key);
+            }
+        }
+        //close memcache connection
+        $this->Pcomment->mc_close();
+
+        //if the user is logged in
+        if($isLoggedIn) {
+            $this->IgnoredUser->recursive = -1;
+            $user_ignored_commenters = $this->IgnoredUser->find('list',
+                array('conditions' =>
+                'blocker_id = '. $this->getLoggedInUserID(). ' AND user_id IN ' . $comment_data['commenter_ids'],
+                'fields' => 'user_id'));
+            
+            $this->Mpcomment->recursive = -1;
+            $user_ignored_comments = $this->Mpcomment->find('list',
+                array('conditions' =>
+                'user_id = ' . $this->getLoggedInUserID() . ' AND comment_id IN ' . $comment_data['comment_ids'],
+                'fields' => 'comment_id'));
+            
+            $comment_data['ignored_commenters'] = $comment_data['ignored_commenters'] + $user_ignored_commenters;
+            $comment_data['ignored_comments']   = $comment_data['ignored_comments'] + $user_ignored_comments;
+        }
+
+        return $comment_data;
 	}
 	
 	function set_comment_errors($errors = Array()) {
@@ -2649,58 +2668,67 @@ class ProjectsController extends AppController {
 			$this->set('commentErrors', $errors);
 		}
 	}
-	/**
+
+    /**
 	* Returns all replies relevant to logged in user viewing a project
 	**/
-	function set_replies($project_id, $source_id, $user_id, $limit = 0) {
-		$project = $this->Project->find("Project.id = $project_id");
-		$creator_id = $project['Project']['user_id'];
-		
-		$all_replies = $this->Pcomment->findAll("project_id = $project_id AND comment_visibility = 'visible' AND reply_to = $source_id",null,'Pcomment.created DESC',$limit);
-		$isLogged = $this->isLoggedIn();
-		
-		$counter = 0;
-		$final_comments = Array();
-		foreach ($all_replies as $current_comment) {
-			$temp_comment = $current_comment;
-			$current_id = $temp_comment['Pcomment']['id'];
-			$temp_comment['Pcomment']['commented'] = false;
-			$temp_comment['Pcomment']['ignored'] = false;
-			$commenter_id = $temp_comment['Pcomment']['user_id'];
-			
-			$comment_content = $current_comment['Pcomment']['content'];
-			$comment_content = $this->set_comment_content($comment_content);
-			$temp_comment['Pcomment']['content'] = $comment_content;
-			
-			$reply_count = $this->Pcomment->findCount("project_id = $project_id AND reply_to = $current_id");
-			$temp_comment['Pcomment']['replies'] = $reply_count;
-			if ($isLogged) {
-				$mp_count = $this->Mpcomment->findCount("user_id = $user_id AND comment_id = $current_id");
-				if ($mp_count > 0) {
-					$temp_comment['Pcomment']['commented'] = true;
-				}
-				
-				$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $user_id AND IgnoredUser.user_id = $commenter_id");
-				$ignore_count = $ignore_count + $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $creator_id AND IgnoredUser.user_id = $commenter_id");
-				if ($ignore_count > 0) {
-					$temp_comment['Pcomment']['ignored'] = true;
-				} else {
-					$temp_comment['Pcomment']['ignored'] = false;
-				}
-			} else {
-				$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $creator_id AND IgnoredUser.user_id = $commenter_id");
-				if ($ignore_count > 0) {
-					$temp_comment['Pcomment']['ignored'] = true;
-				} else {
-					$temp_comment['Pcomment']['ignored'] = false;
-				}
-			}
-			$final_comments[$counter] = $temp_comment;
-			$counter++;
-		}
-		
-		
-		return $final_comments;
+	function set_replies($project_id, $creator_id, $parent_id, $user_id, $limit = 0) {
+        $this->Pcomment->unbindModel( array('belongsTo' => array('Project')) );
+        $comments = $this->Pcomment->findAll( 'project_id = ' . $project_id
+                . ' AND Pcomment.comment_visibility = "visible" AND reply_to = ' . $parent_id,
+                'Pcomment.*, User.id, User.username, User.urlname, User.timestamp',
+                'Pcomment.created DESC', $limit, 1, 1, 'all', 0, true);
+
+        //set comments info
+        $commenter_ids = array();
+        $comment_ids = array();
+
+        foreach ($comments as $key => $comment) {
+            $commenter_ids[] = $comment['Pcomment']['user_id'];
+            $comment_ids[]   = $comment['Pcomment']['id'];
+
+            $comment['Pcomment']['content'] = $this->set_comment_content($comment['Pcomment']['content']);
+
+            $comment['Pcomment']['replies'] = $this->Pcomment->findCount('project_id = '
+                . $project_id . ' AND reply_to = '. $comment['Pcomment']['id']);
+
+            //replace the comment in $comments list
+            $comments[$key] = $comment;
+        }
+
+        $commenter_ids  = $this->IgnoredUser->createString($commenter_ids);
+        $comment_ids    = $this->IgnoredUser->createString($comment_ids);
+
+        $this->IgnoredUser->recursive = -1;
+        $ignored_commenters = $this->IgnoredUser->find('list',
+                array('conditions' =>
+                'blocker_id = '. $creator_id . ' AND user_id IN ' . $commenter_ids,
+                'fields' => 'user_id'));
+
+        $comment_data = array();
+        $comment_data['comments'] = $comments;
+        $comment_data['ignored_commenters'] = $ignored_commenters;
+        $comment_data['ignored_comments'] = array();
+        
+        //if the user is logged in
+        if($user_id) {
+            $this->IgnoredUser->recursive = -1;
+            $user_ignored_commenters = $this->IgnoredUser->find('list',
+                array('conditions' =>
+                'blocker_id = '. $this->getLoggedInUserID()
+                . ' AND user_id IN ' . $commenter_ids,
+                'fields' => 'user_id'));
+
+            $this->Mpcomment->recursive = -1;
+            $user_ignored_comments = $this->Mpcomment->findAll(
+                'user_id = ' . $this->getLoggedInUserID() . ' AND comment_id IN ' . $comment_ids,
+                'comment_id');
+                
+            $comment_data['ignored_commenters'] = $comment_data['ignored_commenters'] + $user_ignored_commenters;
+            $comment_data['ignored_comments']   = $comment_data['ignored_comments'] + $user_ignored_comments;
+        }
+
+        return $comment_data;
 	}
 	
 	/**
@@ -2839,7 +2867,8 @@ class ProjectsController extends AppController {
 			}
 			return $comment_index_array;
 	}
-	function comment_index($c_id=null){
+
+    function comment_index($c_id=null){
 			
 			 $comment = $this->Pcomment->find("Pcomment.id=$c_id",'id,reply_to');
 			 if($comment['Pcomment']['reply_to']==-100){
@@ -2852,5 +2881,15 @@ class ProjectsController extends AppController {
 			
 	}		
 
+    function deleteCommentsFromMemcache($project_id) {
+        $this->Pcomment->mc_connect();
+        for($i=1; $i<=PCOMMENT_CACHE_NUMPAGE; $i++) {
+            $mc_key = $project_id.'__'.$i;
+            $this->Pcomment->mc_delete('pcomments', $mc_key);
+            $mc_key = $project_id.'_1_'.$i;
+            $this->Pcomment->mc_delete('pcomments', $mc_key);
+        }
+        $this->Pcomment->mc_close();
+    }
 }
 ?>
