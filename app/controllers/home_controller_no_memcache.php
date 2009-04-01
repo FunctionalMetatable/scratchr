@@ -196,10 +196,10 @@ Class HomeController extends AppController {
 	$this->set('countries',$countries);
 	}
 	function __getCuratorFevorites(){
-	
+	$favorites =array();
 	 $curator =$this->Curator->find(null,array(),'Curator.id DESC');
-	
 	 $curator_id =$curator['Curator']['user_id'];
+	 if($curator_id)
 	$favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.user_id <>$curator_id", null, 'Favorite.timestamp DESC', 3 ,null,2);
 	$this->set('username',$curator['User']['urlname']);
 	$this->set('favorites',$favorites);	
