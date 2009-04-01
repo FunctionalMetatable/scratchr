@@ -220,6 +220,17 @@ function langList($countries) {
         
 
 		<?php if ($isLoggedIn && $isAdmin):?>
+		<br /><br />
+		<?php if (!$isCuratored): ?>
+		<form id="Curator" action="<?php echo $html->url('/users/curator/')?><?php e($user['id'])?>" method="post">
+			<input type="submit" class="button" <?php echo 'onclick="if (confirm(' . "'" . ___('Are you sure?', true) . "'" . ')) return true; return false;"'; ?> value="<?php ___('Set as curator'); ?>">
+		</form>
+		<?php endif; ?>
+		<?php if ($isCuratored): ?>
+		<form id="Curator" action="<?php echo $html->url('/users/uncurator/')?><?php e($user['id'])?>" method="post">
+			<input type="submit" class="button" <?php echo 'onclick="if (confirm(' . "'" . ___('Are you sure?', true) . "'" . ')) return true; return false;"'; ?> value="<?php ___('Un-set as curator'); ?>">
+		</form>
+		<?php endif; ?>
 		<script>
 		function showTemplate() {
 			var dropdownValue = $('admin_notifications')[$('admin_notifications').selectedIndex].value;

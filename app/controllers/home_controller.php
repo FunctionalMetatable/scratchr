@@ -4,7 +4,7 @@ Class HomeController extends AppController {
      * Home Page Controller
      */
 	var $pageTitle = "Scratch | Home | imagine, program, share";
-    var $uses = array("Project","User","FeaturedProject", "ClubbedGallery","UserStat", "Gallery", "Theme", "FeaturedGallery", "Tag", "Notification");
+    var $uses = array("Project","User","FeaturedProject", "ClubbedGallery","UserStat", "Gallery", "Theme", "FeaturedGallery", "Tag", "Notification","Curator","Favorite");
     var $helpers = array("Tagcloud");
    	
 	/**
@@ -186,6 +186,20 @@ Class HomeController extends AppController {
         } else {
             $this->set('countries', $countries);
         }
+		
+		$fevorites = $memcache->get("$prefix-favorites");
+		$curator_name = $memcache->get("$prefix-curator_name");
+        if ( $fevorites == "" || $curator_name =="") {
+       	    $curator_fevorites = $this->__getCuratorFevorites();
+			$curator_name = $this->___getCuratorName();
+            $memcache->set("$prefix-favorites", $curator_fevorites, false, 3600) or die ("Failed to save data at the server");
+			$memcache->set("$prefix-curator_name", $curator_name, false, 3600) or die ("Failed to save data at the server");
+            $this->set('fevorites', $curator_fevorites);
+			$this->set('username',$curator_name);
+        } else {
+            $this->set('fevorites', $fevorites);
+			$this->set('username',$curator_name);
+        }
 
     	$memcache->close();
 		
@@ -351,6 +365,17 @@ Class HomeController extends AppController {
 	function __getTopCountries(){
 	return $this->User->query("SELECT count(*)as cnt, country FROM `users` group by country order by cnt desc  LIMIT ".NUM_TOP_COUNTRIES);
 	
+	}
+	
+	function __getCuratorFevorites(){
+		$curator =$this->Curator->find(null,array(),'Curator.id DESC');
+	 	$curator_id =$curator['Curator']['user_id'];
+		$favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.user_id <>$curator_id", null, 'Favorite.timestamp DESC', 3 ,null,2);
+		return  $favorites;
+	}
+	function ___getCuratorName(){
+	$curator =$this->Curator->find(null,array(),'Curator.id DESC');
+	return $curator['User']['urlname'];
 	}
 }
 ?>
