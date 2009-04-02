@@ -54,5 +54,6 @@ else {
 	echo $this->renderElement('ajax_indicator');
 ?>
 </body>
+<!-- powered by ScratchR http://scratch.mit.edu/scratchr //-->
 </html>
 
