@@ -33,6 +33,9 @@ else {
 
 <p><b><?php ___("If you are not trying to do any of those or you do not recognize any of those accounts, don't worry! Just ignore this message and go ahead an create the account!"); ?></b></p>
 </p>
+
+<p><b><?php ___("If you're a school or household sharing the same IP for multiple people, no worries, you're welcome to create multiple accounts");?></b>
+</p> 
 <p><?php ___('What do you want to do?')?></p>
 <a href="<?php echo $html->url('/signup')?>" ><span class='button2'><?php ___('Continue')?></span></a>  <a href="<?php echo $html->url('/')?>" ><span class='button2'><?php ___('Cancel')?></span></a>
 <?php
