@@ -2563,8 +2563,8 @@ class ProjectsController extends AppController {
 	* Returns all comments relevant to logged in user viewing a project
 	**/
 	function set_comments($project_id, $creator_id, $isLoggedIn) {
-		////do pagination stuffs
-        $this->PaginationSecondary->show = 6;
+		//do pagination stuffs
+        $this->PaginationSecondary->show = 60;
         $this->modelClass = 'Pcomment';
         $options = array('sortBy' => 'created', 'sortByClass' => 'Pcomment',
                     'direction' => 'DESC', 'url' => 'renderComments/' . $project_id . '/0');
