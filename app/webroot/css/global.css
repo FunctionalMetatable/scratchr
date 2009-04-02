@@ -329,6 +329,11 @@ legend{
 	width: 100%;
 }
 
+#ipaddress {
+	font-size: 8px;
+	font-color: grey;
+}
+
 #info{
 	color: #666666;
 	font-size: 12px;
