@@ -5,7 +5,7 @@ var $uses =array();
 
 function about(){
 	$lang_array =array();
-	$about_scratch_url ='http://'.ABOUT_SCRATCH_URL;
+	$about_scratch_url = 'http://' . ABOUT_SCRATCH_URL;
 	$cookie_lang = $this->Cookie->read(lang);
 	$pos=strpos($cookie_lang,'-');
 	if($pos===false){
@@ -17,17 +17,19 @@ function about(){
 	 	$lang = $lang_array['0'];
 	
 	}
-	if($lang=='en')
-	$this->redirect($about_scratch_url);
-	else
+/*
+	if($lang=='de')
 	$this->redirect($about_scratch_url.'/'.$lang);
+	else
+*/
+	$this->redirect($about_scratch_url);
 }//about fun
 
 
 function support(){
 	$lang_array =array();
 	$support_url ='http://'.SUPPORT_URL;
-	$cookie_lang = $this->Cookie->read(lang);
+	$cookie_lang = $this->Cookie->read('lang');
 	$pos=strpos($cookie_lang,'-');
 	if($pos===false){
 		$lang = $cookie_lang;
@@ -38,10 +40,10 @@ function support(){
 	 	$lang = $lang_array['0'];
 	
 	}
-	if($lang =='en')
-	$this->redirect($support_url);
+	if($lang =='de')
+		$this->redirect($support_url.'/'.$lang);
 	else
-	$this->redirect($support_url.'/'.$lang);
+		$this->redirect($support_url);
 }//about support
 
 
