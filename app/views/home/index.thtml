@@ -210,26 +210,6 @@
 		<?php endforeach; ?>
     </div>
 	<?php endif;?>
-	 <div id="TopCountries" class="container">
-      <h3><?php ___('Top Countries')?></h3>
-	  <div class="home_flags">
-		<?php //print_r($countries)?>
-		<?php 
-		foreach($countries as $country):
-		$country_name = $country['users']['country'];
-		$total_user = $country['0']['cnt'];
-		?>
-
-		<a href="<?php echo $html->url('/users/countries/'.$country_name)?>">
-		<?php echo $html->image('/img/flags/'.$country_name.'.png',array('alt'=>$country_name,'width'=>'103','height'=>'61'))?>
-		<h6><?php echo $country_name?>&nbsp;(<?php echo $total_user?>)</h6></a>
-		<?php
-		endforeach;
-		?>
-		</div>
-      <p class="more"><a href="/users/flag_list"><?php ___('See more');?></a> </p>
-    </div>
-
   </div>
 <!-- ////// End main content ////// -->
 
@@ -242,6 +222,12 @@
       <h2><?php ___('Download Scratch'); ?> 1.3.1</h2> <p><a href="/download"><img src="/img/download_scratch.gif" alt="Download Scratch 1.3.1" width="74" height="32"></a><?php printf(___('Get the %slatest version of Scratch%s for<br /> Windows or Mac.', true), '<a href="/download">', '</a>');?></p>
     </div>
 
+            <div id="club" class="sidecontainer">
+      <h4><?php ___('Scratch Day'); ?></h4>
+        <p><a href="http://day.scratch.mit.edu/"><img src="http://download.scratch.mit.edu/logo/scratchdaylog
+o.png" alt="Scratch Day" width="90"></a><?php ___('Be a part of Scratch Day - a worldwide network of gatherings, where people will come together to meet, share, and learn more about Scratch.'); ?></p>
+      <p class="more"><a href="http://day.scratch.mit.edu/"><?php ___('Find out more');?></a> </p>
+     </div>
 
     <div  id="club" class="sidecontainer">
 	<?php
@@ -298,20 +284,12 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
     </div>
 
 
-	    <div id="conference" class="sidecontainer">
-      <h4><?php ___('Scratch@MIT Conference'); ?></h4>
-      <ul class="sidelist">
-				<li><?php ___('Educators, researchers, and other members of the worldwide Scratch community gathered for three days.'); ?>
-      <p class="more"><a href="/conference"><?php ___('See what happened');?></a> </p>
-				</li>
-      </ul>
-     </div>
 
 	<div id="socialmedia" class="sidecontainer">
-      <h4><?php ___('Social Media'); ?></h4>
+      <h4><?php ___('Blog'); ?></h4>
       <ul class="sidelist">
-				<li><?php ___('The latest posts on blogs, microblogs, photo and video sharing sites by the Scratch Team and fans!'); ?>
-      <p class="more"><a href="/socialmedia"><?php ___('Take a look');?></a> </p>
+				<li><?php ___('The official blog of the Scratch Team with links to our social media page'); ?>
+      <p class="more"><a href="http://blog.scratch.mit.edu/"><?php ___('Take a look');?></a> </p>
 				</li>
       </ul>
      </div>
