@@ -35,7 +35,7 @@ class AppModel extends Model{
 	
 	function mc_connect() {
 		$this->memcache = new Memcache();
-		$this->memcache->connect('localhost', 11211) or die ("Could not connect");
+		$this->memcache->connect('localhost', 11211) or die ("OMG. Scratch could not connect to memcached. Please try again later.");
 	}
 	
 	function mc_get($str, $postfix = false) {
@@ -45,7 +45,7 @@ class AppModel extends Model{
 	//$ttl = mins
 	function mc_set($str, $value, $postfix = false, $ttl = 0) {
 		$ttl = $ttl * 60;
-		return $this->memcache->set($this->__get_mc_key($str, $postfix), $value, false, $ttl) or die ("Failed to save data at the server");
+		return $this->memcache->set($this->__get_mc_key($str, $postfix), $value, false, $ttl) or die ("Oops, failed to save to memcached. Please try again later.");
 	}
 	
 	function mc_delete($str, $postfix = false) {
