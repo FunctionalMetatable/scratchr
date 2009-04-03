@@ -22,10 +22,11 @@ Class FeaturedProject extends AppModel {
         return parent::findAll($this->check($conditions, $safe, $admin),$fields,$order,$limit,$page,$recursive);
     }
 
-    function findCount($conditions=null, $recursive=0, $safe="all")
+    function findCount($conditions=null, $recursive=0, $safe="all", $allowAll = false)
     {
-       return parent::findCount($this->check($conditions, $safe), $recursive);
+       return parent::findCount($this->check($conditions, $safe, $allowAll), $recursive);
     }
+
 
     function addVisCheck($conditions = null, $admin = 0) 
     {	
@@ -45,8 +46,11 @@ Class FeaturedProject extends AppModel {
 		}
 	}
 
-	function check($conditions = null, $safe, $admin = 0) {
-		$temp_conditions = $this->addVisCheck($conditions, $admin);
+	function check($conditions = null, $safe, $admin = 0, $allowAll = false) {
+		if($allowAll) {
+            return $conditions;
+        }
+        $temp_conditions = $this->addVisCheck($conditions, $admin);
 		$return_cond = $this->addSafeCheck($temp_conditions, $safe);
 		return $return_cond;
 	}

@@ -33,10 +33,16 @@ Class ChannelController extends AppController {
         $this->pageTitle = "Scratch | Newest projects";
         $this->modelClass = "Project";
         $options = array("sortBy"=>"created", "direction" => "DESC");
-        list($order,$limit,$page) = $this->Pagination->init("Project.proj_visibility = 'visible'", Array(), $options);
-       
+        
+        $key = 'channel-recent-';
+        $ttl = CHANNEL_RECENT_CACHE_TTL;
+        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"',
+                                                $key, $ttl);
+        list($order, $limit, $page) = $this->Pagination->init(null, array(),
+                                            $options, $projects_count);
+
         $this->Project->mc_connect();
-        $mc_key = 'channel-recent-'.$limit.'-'.$page;
+        $mc_key = $key.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
         if ( !$final_projects) {
             $this->Project->unbindModel(
@@ -44,7 +50,7 @@ Class ChannelController extends AppController {
             );
             $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
-            $this->Project->mc_set($mc_key, $final_projects, false, CHANNEL_RECENT_CACHE_TTL);
+            $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
         $this->set('data', $final_projects);
         $this->Project->mc_close();
@@ -62,17 +68,23 @@ Class ChannelController extends AppController {
 		$this->pageTitle = ___("Scratch | Featured projects", true);
         $this->modelClass = "FeaturedProject";
 		$options = array("sortByClass" => "FeaturedProject", "sortBy"=>"timestamp", "direction" => "DESC");
-        list($order,$limit,$page) = $this->Pagination->init("Project.proj_visibility = 'visible'", Array(), $options);
 
+        $key = 'channel-featured-';
+        $ttl = CHANNEL_FEATURED_CACHE_TTL;
+        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"',
+                                                $key, $ttl, 0);
+        list($order, $limit, $page) = $this->Pagination->init(null, array(),
+                                            $options, $projects_count);
+                                        
         $this->Project->mc_connect();
-        $mc_key = 'channel-featured-'.$limit.'-'.$page;
+        $mc_key = $key.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
         if ( !$final_projects) {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
             $final_projects = $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, 2, $this->getContentStatus());
-            $this->Project->mc_set($mc_key, $final_projects, false, CHANNEL_FEATURED_CACHE_TTL);
+            $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
         $this->set('data', $final_projects);
         $this->Project->mc_close();
@@ -90,10 +102,16 @@ Class ChannelController extends AppController {
         $this->pageTitle = ___("Scratch | Top viewed projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"views", "direction" => "DESC");
-        list($order,$limit,$page) = $this->Pagination->init("Project.proj_visibility = 'visible'", Array(), $options);
 
+        $key = 'channel-topviewed-';
+        $ttl = CHANNEL_TOPVIEWED_CACHE_TTL;
+        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"',
+                                                $key, $ttl);
+        list($order, $limit, $page) = $this->Pagination->init(null, array(),
+                                            $options, $projects_count);
+                                            
         $this->Project->mc_connect();
-        $mc_key = 'channel-topviewed-'.$limit.'-'.$page;
+        $mc_key = $key.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
         if ( !$final_projects) {
             $this->Project->unbindModel(
@@ -101,7 +119,7 @@ Class ChannelController extends AppController {
             );
             $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
-            $this->Project->mc_set($mc_key, $final_projects, false, CHANNEL_TOPVIEWED_CACHE_TTL);
+            $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
         $this->set('data', $final_projects);
         $this->Project->mc_close();
@@ -118,10 +136,17 @@ Class ChannelController extends AppController {
         $this->pageTitle = ___("Scratch | Top loved projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"loveit", "direction" => "DESC");
-        list($order,$limit,$page) = $this->Pagination->init("loveit > 0 AND Project.proj_visibility = 'visible'", Array(), $options);
+
+
+        $key = 'channel-toploved-';
+        $ttl = CHANNEL_TOPLOVED_CACHE_TTL;
+        $projects_count = $this->_getProjectsCount('loveit > 0 AND proj_visibility = "visible"',
+                                                $key, $ttl);
+        list($order, $limit, $page) = $this->Pagination->init(null, array(),
+                                            $options, $projects_count);
 
         $this->Project->mc_connect();
-        $mc_key = 'channel-toploved-'.$limit.'-'.$page;
+        $mc_key = $key.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
         if ( !$final_projects) {
             $this->Project->unbindModel(
@@ -129,7 +154,7 @@ Class ChannelController extends AppController {
             );
             $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
-            $this->Project->mc_set($mc_key, $final_projects, false, CHANNEL_TOPLOVED_CACHE_TTL);
+            $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
         $this->set('data', $final_projects);
         $this->Project->mc_close();
@@ -170,10 +195,16 @@ Class ChannelController extends AppController {
 		$this->pageTitle = ___("Scratch | Most Remixed projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"remixes", "direction" => "DESC");
-        list($order,$limit,$page) = $this->Pagination->init("remixes > 0 AND Project.proj_visibility = 'visible'", Array(), $options);
-		
+
+        $key = 'channel-remixed-';
+        $ttl = CHANNEL_REMIXED_CACHE_TTL;        
+        $projects_count = $this->_getProjectsCount('remixes > 0 AND proj_visibility = "visible"',
+                                                $key, $ttl);
+        list($order, $limit, $page) = $this->Pagination->init(null, array(),
+                                            $options, $projects_count);
+
 		$this->Project->mc_connect();
-        $mc_key = 'channel-remixed-'.$limit.'-'.$page;
+        $mc_key = $key.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
         if ( !$final_projects) {
             $this->Project->unbindModel(
@@ -181,7 +212,7 @@ Class ChannelController extends AppController {
             );
             $final_projects = $this->Project->findAll("remixes > 0 AND Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL);
             $final_projects = $this->set_projects($final_projects);
-            $this->Project->mc_set($mc_key, $final_projects, false, CHANNEL_REMIXED_CACHE_TTL);
+            $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
         $this->set('data', $final_projects);
         $this->Project->mc_close();
@@ -250,5 +281,18 @@ Class ChannelController extends AppController {
 		}
 		return $return_projects;
 	}
+
+    function _getProjectsCount($condition, $key, $ttl, $recursion = -1) {
+        $this->Project->mc_connect();
+        $model_class = $this->modelClass;
+        $mc_key = $key.'count';
+        $projects_count = $this->Project->mc_get($mc_key);
+        if(!$projects_count) {
+            $projects_count = $this->$model_class->findCount($condition, $recursion, 'all', true);
+            $this->Project->mc_set($mc_key, $projects_count, false, $ttl);
+        }
+        $this->Project->mc_close();
+        return $projects_count;
+    }
 }
 ?>
