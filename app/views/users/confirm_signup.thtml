@@ -38,6 +38,7 @@ else {
 </p> 
 <p><?php ___('What do you want to do?')?></p>
 <a href="<?php echo $html->url('/signup')?>" ><span class='button2'><?php ___('Continue')?></span></a>  <a href="<?php echo $html->url('/')?>" ><span class='button2'><?php ___('Cancel')?></span></a>
+<a href="<?php echo $html->url('/users/send_request')?>">Send request for create multiple account from same Ip</a>
 <?php
 }
 ?>
