@@ -1,0 +1,13 @@
+//Table structure for string ip address of user in the case of 
+when they request for create multiple account from same id.
+ 
+CREATE TABLE `whitelisted_ip_addresses` (
+`id` INT NOT NULL AUTO_INCREMENT ,
+`ipaddress` INT NOT NULL ,
+`contact_name` VARCHAR( 255 ) NOT NULL ,
+`email` CHAR( 100 ) NOT NULL ,
+`school_name` VARCHAR( 255 ) NOT NULL ,
+`comments` MEDIUMTEXT NOT NULL ,
+`no_of_student` VARCHAR( 255 ) NOT NULL ,
+PRIMARY KEY ( `id` )
+) 
