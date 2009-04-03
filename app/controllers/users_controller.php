@@ -2052,7 +2052,7 @@ class UsersController extends AppController {
 							$msg = $msg.___("No. of Student : ".$no_of_students,true). "<BR>";
 							
 							$this->Email->email('scratch-feedback@media.mit.edu',$contact_name, $msg, $subject,'scratch-feedback@media.mit.edu',$email);
-				$this->Session->setFlash(__('Mail has been send', true));
+				$this->Session->setFlash(__('Request has been send.Now you can create multiple account from same Ip', true));
 				$this->redirect('/users/send_request');
 				}
 			}
