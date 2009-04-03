@@ -1,3 +1,7 @@
+<?php
+$comment_level = 0;
+$reply_link = '(<a onclick="showReplyBox(%1$s, 0); addProjectCharCounter(%1$s); return false;" id="reply_hide_link_%1$s" href="#">reply</a>)';
+?>
 <?php if($isCommentError): ?>
 <div class='comment_error'>
     <?= $commentErrors[0]; ?>
@@ -22,5 +26,15 @@ if(isset($comment) && $comment['Pcomment']['comment_visibility'] == 'visible'):
         <p>
             <?= $comment['Pcomment']['content']; ?>
         </p>
+
+        <span class="flag_comment">
+            <?php printf($reply_link, $comment_id); ?>
+        </span>
+        
+        <div class="comment_reply_main" id="reply_to_<?= $comment_id; ?>">
+            <?= $this->renderElement('projects/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
+        </div>
+        <div class="comment_reply_main_visible" id="reply_list_<?= $comment_id; ?>">
+        </div>
     </div>
 <?php endif; ?>
