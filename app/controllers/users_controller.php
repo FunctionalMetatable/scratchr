@@ -3,8 +3,10 @@ class UsersController extends AppController {
 
 	var $components = array('PaginationTernary','PaginationSecondary', 'Pagination','RequestHandler','FileUploader','Email','Thumb');
 	var $helpers = array('Pagination', 'Ajax', 'Javascript');
-	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject',
-						'AdminComment', 'User','Project','Favorite', 'Pcomment','UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification', 'Shariable','Thank','ForumUser', 'ViewStat','Curator');
+	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 
+	'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject','AdminComment', 'User','Project','Favorite', 'Pcomment',
+	'UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification',
+	'Shariable','Thank','ForumUser', 'ViewStat','Curator','WhitelistedIpAddress');
 
 
 	function admin_index() {
@@ -64,9 +66,9 @@ class UsersController extends AppController {
 		/* First we find if the IP has been used before or not, if not then simply redirect him to sign up page */
 		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip");
 		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = $client_ip");
-	
+		$whitelisted_ip = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = $client_ip");
 		/* Some Activity from Same IP in past */
-		if($creation_from_same_ip || $access_from_same_ip) {
+		if(($creation_from_same_ip || $access_from_same_ip) && !$whitelisted_ip) {
 	
 			/* Get All the users who have accessed the projects or created a profile using same IP */
 			$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = $client_ip", 'user_id'); 
@@ -2015,6 +2017,50 @@ class UsersController extends AppController {
 	$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id"));
 	$this->redirect('/users/'.$user['User']['urlname']);
 	}
-
+	
+	//function to send request for create multiple account from same ip.
+	function send_request(){
+	$this->pageTitle = "Scratch | Send Request";
+	
+		if (!empty($this->data)) {
+			$contact_name = $this->data['WhitelistedIpAddress']['contact_name'];
+			$email = $this->data['WhitelistedIpAddress']['email'];
+			$school_name =$this->data['WhitelistedIpAddress']['school_name'];
+			$comments = $this->data['WhitelistedIpAddress']['comments'];
+			$no_of_students = $this->data['WhitelistedIpAddress']['no_of_student'];
+			if(empty($this->data['WhitelistedIpAddress']['contact_name']))
+			$this->WhitelistedIpAddress->invalidate('contact_name','Enter contact name');
+			if(!empty($this->data['WhitelistedIpAddress']['email']))
+			{
+				if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $this->data['WhitelistedIpAddress']['email']))
+				$this->WhitelistedIpAddress->invalidate('email','Enter valid Email id.');
+			}
+			else
+			$this->WhitelistedIpAddress->invalidate('email','Enter  Email id.');
+			if(empty($this->data['WhitelistedIpAddress']['school_name']))
+			$this->WhitelistedIpAddress->invalidate('school_name','Enter Schhol name');
+			if(empty($this->data['WhitelistedIpAddress']['comments']))
+			$this->WhitelistedIpAddress->invalidate('comments','Enter Comments');
+			if(empty($this->data['WhitelistedIpAddress']['no_of_student']))
+			$this->WhitelistedIpAddress->invalidate('no_of_student','Enter No. of student');
+			if($this->WhitelistedIpAddress->validates($this->data['WhitelistedIpAddress'])){
+				$this->data['WhitelistedIpAddress']['ipaddress'] = ip2long($this->data['WhitelistedIpAddress']['ipaddress']);
+				if ($this->WhitelistedIpAddress->save($this->data)) {
+							$subject = ___("Request for creating multiple account from same Ip",true);
+							$msg = $comments. "<BR>";
+							$msg = $msg.___("School Name : ".$school_name,true). "<BR>";
+							$msg = $msg.___("No. of Student : ".$no_of_students,true). "<BR>";
+							
+							$this->Email->email('scratch-feedback@media.mit.edu',$contact_name, $msg, $subject,'scratch-feedback@media.mit.edu',$email);
+				$this->Session->setFlash(__('Mail has been send', true));
+				$this->redirect('/users/send_request');
+				}
+			}
+			
+			
+		}//!empty
+		
+	  $this->set('client_ip' ,$this->RequestHandler->getClientIP());
+	}//function
   }
 ?>
