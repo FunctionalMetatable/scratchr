@@ -19,7 +19,7 @@ if ($user_status == "normal") {
 	<?php endif?>
       <h2 id="project_title"><?php $project_title =htmlspecialchars($project['Project']['name']); e($project_title);?> </h2>
 		<?php  if ($isMine || $isAdmin) echo $ajax->editor("project_title", "/projects/$urlname/$pid/name", Array("callback"=>"return 'name=' + encodeURIComponent(value)")); ?>
-		<div id="projectwrapper" style="height:482px;">
+		<div id="projectwrapper">
 			<div id="projectload" style="display:block;" align="center">
 				
 				<?php
