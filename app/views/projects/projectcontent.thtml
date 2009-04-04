@@ -288,7 +288,7 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
                     "complete" => "document.getElementById('pcomment_textarea').value = ''; document.getElementById('pcomment_submit').disabled = false;" ));?>
 		</form>
 	   <?php endif; ?>
-       <br />
+       <div style="height:9px;">&nbsp</div>
 		<div id="ajax_pagination_secondary">
 	    <?php
             e($ajax->div("project_comment_list"));
