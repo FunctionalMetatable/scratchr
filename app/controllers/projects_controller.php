@@ -373,6 +373,8 @@ class ProjectsController extends AppController {
         if(!empty($new_pcomment)) {
           $new_pcomment['User'] =  $commenter_userrecord['User'];
           $this->set('comment', $new_pcomment);
+          $this->set('isProjectOwner', $user_id == $logged_id);
+          $this->set('project_id', $pid);
         }
 		$this->render('projectcomments_ajax', 'ajax');
 		return;

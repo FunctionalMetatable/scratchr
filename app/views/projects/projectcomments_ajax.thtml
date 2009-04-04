@@ -29,6 +29,16 @@ if(isset($comment) && $comment['Pcomment']['comment_visibility'] == 'visible'):
 
         <span class="flag_comment">
             <?php printf($reply_link, $comment_id); ?>
+            <?php
+                if ($isLogged && ($isAdmin || $isProjectOwner
+                || isset($users_permission['delete_project_comments']))) {
+                echo $ajax->link('(x)', '#',
+                array('url' => '/projects/delete_comment/'.$project_id.'/'.$comment_id,
+                                'update' => "$comment_id",
+                                'condition' => 'checkLogin()'),
+                                'Are you sure?', false);
+                }
+            ?>
         </span>
         
         <div class="comment_reply_main" id="reply_to_<?= $comment_id; ?>">
