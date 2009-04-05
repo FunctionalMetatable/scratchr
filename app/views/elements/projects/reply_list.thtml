@@ -68,8 +68,7 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
                                 array('url' => '/projects/display_replies/' . $comment_id . '/' . $comment_level,
                                     'update' => 'reply_list_'.$comment_id,
                                     'id' => 'view_hide_link_'.$comment_id,
-                                    'complete' => 'showReplyList('.$comment_id.');',
-                                    'condition' => 'checkLogin()'),
+                                    'complete' => 'showReplyList('.$comment_id.');'),
                                     null, false)
                             );
         }
