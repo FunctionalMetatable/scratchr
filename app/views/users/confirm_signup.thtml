@@ -19,6 +19,7 @@ if(isset($activity_from_same_ip_signup_interval)) {
   <h5><p><?php ___('The following accounts have already been created from this IP')?> (<?php echo $ip_address?>):</h5> 
   <p><?php echo $users_from_same_ip; ?></p>
   <p><?php ___('In order to prevent misuse, please wait a few more minutes before creating a new account from')?> <?php echo $ip_address?>.</p>
+  <p><a href="<?php echo $html->url('/users/send_request')?>">Send request for create multiple account from same Ip</a></p>
 </div>
 <?php
 }
