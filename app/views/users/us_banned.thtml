@@ -1,0 +1,43 @@
+<div class="fullcontent">
+<?php if($isBannedUser):?>
+<h3><?php ___("We noticed that your might be using the same computer or network as the account '$blockedusername' which was blocked due to '$reasonsforblocking'. Please contact to talk more about this.")?></h3>
+<?php endif?>
+<?php
+			echo "<div id='success_msg'>";
+				if ($session->check('Message.flash')):
+						$session->flash();
+				endif;
+				echo "</div>";
+			
+?>
+
+<form method="post" enctype="multipart/form-data" action="<?php echo $html->url('/users/us_banned')?>">
+
+<div id="main">
+<p>
+	<?php echo $form->input('User.name',array('size'=>25))?>
+	
+</p>
+<p>
+<?php echo $form->input('User.email',array('size'=>25))?>
+	
+</p>
+
+<p>
+	<?php echo $form->input('User.subject',array('size'=>25))?>
+	
+</p>
+
+<p>
+   <?php echo $form->input('User.message',array('type'=>'textArea','rows'=>10,'cols'=>25))?>
+   
+</p>
+<p >
+<input type="submit" value="<?php ___('Send email')?>" />
+   
+</p>
+</form>
+</div>
+
+</div>
+<!--- End Content --->

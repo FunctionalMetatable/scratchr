@@ -60,6 +60,7 @@ Router::connect('/lang/*', array('controller' => 'p28n', 'action' => 'change'));
 Router::connect('/users/flag_list', array('controller' => 'users', 'action' => 'flag_list'));
 Router::connect('/users/update', array('controller' => 'users', 'action' => 'update'));
 Router::connect('/users/send_request', array('controller' => 'users', 'action' => 'send_request'));
+Router::connect('/users/us_banned', array('controller' => 'users', 'action' => 'us_banned'));
 Router::connect('/users/updatepic/*', array('controller' => 'users', 'action' => 'updatepic'));
 Router::connect('/users/curator/*', array('controller' => 'users', 'action' => 'curator'));
 Router::connect('/users/uncurator/*', array('controller' => 'users', 'action' => 'uncurator'));
