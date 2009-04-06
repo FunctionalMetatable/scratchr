@@ -63,6 +63,12 @@ class UsersController extends AppController {
 		
 		$signup_interval = SIGNUP_INTERVAL;
 		
+		 $isBlocked_from_this_ip =$this->User->hasAny("User.ipaddress = $client_ip and User.status='locked'");
+		if($isBlocked_from_this_ip)
+		{
+			$this->redirect("/users/us_banned");
+			return;
+		}
 		/* First we find if the IP has been used before or not, if not then simply redirect him to sign up page */
 		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip");
 		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = $client_ip");
@@ -2056,11 +2062,57 @@ class UsersController extends AppController {
 				$this->redirect('/users/send_request');
 				}
 			}
-			
-			
 		}//!empty
-		
 	  $this->set('client_ip' ,$this->RequestHandler->getClientIP());
+	}//function
+	
+	function us_banned(){
+			$this->autoRender = false;
+			$this->pageTitle = ___('Scratch | Blocked Account | Contact us', true);
+			$client_ip = ip2long($this->RequestHandler->getClientIP());
+			$blocked_record =$this->User->find("User.ipaddress = $client_ip and User.status='locked'",array(),'User.timestamp DESC');
+			$blocked_user_id =$blocked_record['User']['id'];
+			$blockedusername =$blocked_record['User']['urlname'];
+			$ban_record = $this->BlockedUser->find("BlockedUser.user_id = $blocked_user_id");
+			$reasonsforblocking = $ban_record['BlockedUser']['reason'];
+			$this->set('reasonsforblocking',$reasonsforblocking);
+			$this->set('blockedusername',$blockedusername);
+			$this->set('isBannedUser',true);
+			
+			if (!empty($this->data)) {
+			$name = $this->data['User']['name'];
+			$email = $this->data['User']['email'];
+			$subject =$this->data['User']['subject'];
+			$message = $this->data['User']['message'];
+			
+			if(empty($this->data['User']['name']))
+			$this->User->invalidate('name','Enter contact name');
+			if(!empty($this->data['User']['email']))
+			{
+				if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $this->data['User']['email']))
+				$this->User->invalidate('email','Enter valid Email id.');
+			}
+			else
+			$this->User->invalidate('email','Enter  Email id.');
+			if(empty($this->data['User']['subject']))
+			$this->User->invalidate('subject','Enter Subject');
+			if(empty($this->data['User']['message']))
+			$this->User->invalidate('message','Enter Message');
+			
+			if($this->User->validates($this->data['User'])){
+				$this->Email->email($email,$name, $message, $subject,'TO_REQUEST_FOR_MULTIPLE_ACCOUNT',$email);
+				$this->Session->setFlash(__('The message was sent.', true));
+				$this->set('isBannedUser',false);
+				$this->data['User']['name'] = '';
+				$this->data['User']['email'] = '';
+				$this->data['User']['subject'] = '';
+				$this->data['User']['message'] ='';
+				
+			}
+		}//!empty
+			
+			
+			$this->render('us_banned');
 	}//function
   }
 ?>
