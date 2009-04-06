@@ -52,6 +52,8 @@ $this->params['webservices']
  define("TO_FLAGGED_PTAG", "scratch-caution@mit");
  define("REPLY_TO_FLAGGED_GTAG", "scratch-feedback@mit");
  define("TO_FLAGGED_GTAG", "scratch-caution@mit");
+ //Emais id to send mail to request create multiple account using same ip.
+ define("TO_REQUEST_FOR_MULTIPLE_ACCOUNT", "scratch-feedback@media.mit.edu");
  
  /**
   * Themes config
