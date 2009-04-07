@@ -2091,7 +2091,7 @@ Class GalleriesController extends AppController {
 		$isMine = ($user_id == $gallery['User']['id']);
 		$creator = $this->User->find("User.id = '$creator_id'");
 		$creatorname = $creator['User']['username'];
-		$creatorname_href =HREF_USER.$creator['User']['username'];
+		$creatorname_href =TOPLEVEL_URL.'/users/'.$creator['User']['username'];
 		$linked_creatorname = "<a href='$creatorname_href'>".$creator['User']['username']."</a>";
 		$userflagger = $this->User->find("User.id = '$user_id'");
 		$flaggername = $userflagger['User']['username'];
