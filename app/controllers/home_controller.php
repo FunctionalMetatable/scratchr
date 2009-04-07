@@ -20,37 +20,55 @@ Class HomeController extends AppController {
         $memcache->connect('localhost', 11211) or die ("Could not connect");
         $prefix = MEMCACHE_PREFIX;
         $project_ids = array();
-       
+       	$user_ids =array();
         $home_projects = $memcache->get("$prefix-home_projects");
         if(!$home_projects) {
-            $featured       = $this->__getFeaturedProjects();
+			$curator_name = $this->___getCuratorName();
+			
+			$curator_favorites = $this->__getCuratorFavorites();
+			$curator_favorites_id = Set::extract('/Project/id', $curator_favorites);
+			$this->Project->register_frontpage($curator_favorites_id, 'curator_favorites');
+			$project_ids    = array_merge($project_ids, $curator_favorites_id);
+		
+            $featured       = $this->__getFeaturedProjects($project_ids);
             $featured_ids   = Set::extract('/FeaturedProject/project_id', $featured);
+			$featured_project_owner_ids   = Set::extract('/Project/user_id', $featured);
             $this->Project->register_frontpage($featured_ids, 'featured');
             $project_ids    = array_merge($project_ids, $featured_ids);
-                   
-            $topremixed     = $this->__getTopRemixedProjects($project_ids);
+            $user_ids       =array_merge($user_ids, $featured_project_owner_ids);
+			
+            $topremixed     = $this->__getTopRemixedProjects($project_ids, $user_ids);
             $topremixed_ids = Set::extract('/Project/id', $topremixed);
+			$topremixed_user_ids = Set::extract('/Project/user_id', $topremixed);
             $this->Project->register_frontpage($topremixed_ids, 'top_remixed');
             $project_ids    = array_merge($project_ids, $topremixed_ids);
-
-            $toploved       = $this->__getTopLovedProjects($project_ids);
+			$user_ids       =array_merge($user_ids, $topremixed_user_ids);
+			
+            $toploved       = $this->__getTopLovedProjects($project_ids, $user_ids);
             $toploved_ids   = Set::extract('/Project/id', $toploved);
+			$toploved_user_ids   = Set::extract('/Project/user_id', $toploved);
             $this->Project->register_frontpage($toploved_ids, 'top_loved');
             $project_ids    = array_merge($project_ids, $toploved_ids);
-
-            $topviewed      = $this->__getTopViewedProjects($project_ids);
+			$user_ids       =array_merge($user_ids, $toploved_user_ids);
+			
+            $topviewed      = $this->__getTopViewedProjects($project_ids, $user_ids);
             $topviewed_ids  = Set::extract('/Project/id', $topviewed);
+			$topviewed_user_ids  = Set::extract('/Project/id', $topviewed);
             $this->Project->register_frontpage($topviewed_ids, 'top_viewed');
             $project_ids    = array_merge($project_ids, $topviewed_ids);
+			$user_ids       =array_merge($user_ids, $topviewed_user_ids);
 
-            $topdownloaded  = $this->__getTopDownloadedProjects($project_ids);
+            $topdownloaded  = $this->__getTopDownloadedProjects($project_ids, $user_ids);
             $topdownloaded_ids  = Set::extract('/Project/id', $topdownloaded);
             $this->Project->register_frontpage($topdownloaded_ids, 'top_downloaded');
-            $home_projects = array('featured' => $featured,
+		 
+			$home_projects = array('featured' => $featured,
                                    'topremixed' => $topremixed,
                                    'toploved' => $toploved,
                                    'topviewed' => $topviewed,
                                    'topdownloaded' => $topdownloaded,
+								   'favorites' => $curator_favorites,
+								   'curator_name' =>$curator_name
                                 );
                                 
             $memcache->set("$prefix-home_projects", $home_projects, false, 3600) or die ("Failed to save data at the server");
@@ -61,13 +79,17 @@ Class HomeController extends AppController {
             $toploved       = $home_projects['toploved'];
             $topviewed      = $home_projects['topviewed'];
             $topdownloaded  = $home_projects['topdownloaded'];
+			$favorites      = $home_projects['favorites'];
+			$curator_name   = $home_projects['curator_name'];
         }
-
+		
         $this->set('featuredprojects', $featured);
         $this->set('topremixed', $topremixed);
         $this->set('toploved', $toploved);
         $this->set('topviewed', $topviewed);
         $this->set('topdownloaded', $topdownloaded);
+		$this->set('favorites', $favorites);
+		$this->set('username',$curator_name);
 
         $newprojects = $memcache->get("$prefix-newprojects");
         if ( $newprojects == "" ) {
@@ -187,7 +209,7 @@ Class HomeController extends AppController {
             $this->set('countries', $countries);
         }
 		
-		$favorites = $memcache->get("$prefix-favorites");
+		/*$favorites = $memcache->get("$prefix-favorites");
 		$curator_name = $memcache->get("$prefix-curator_name");
         if ( $favorites == "" || $curator_name =="") {
        	    $curator_favorites = $this->__getCuratorFavorites();
@@ -199,7 +221,7 @@ Class HomeController extends AppController {
         } else {
             $this->set('favorites', $favorites);
 			$this->set('username',$curator_name);
-        }
+        }*/
 
     	$memcache->close();
 		
@@ -225,15 +247,23 @@ Class HomeController extends AppController {
         return $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'", null, "Project.created DESC", NUM_NEW_PROJECTS, 1, null, $this->getContentStatus());
     }
 
-    function __getFeaturedProjects() {
+    function __getFeaturedProjects($exclude_project_ids) {
+	$exclude_clause = '';
+	 if(!empty($exclude_project_ids)) {
+            $exclude_clause = ' AND FeaturedProject.project_id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+        }
         $this->Project->bindUser();
-        return $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'", NULL, "FeaturedProject.id DESC", NUM_FEATURED_PROJECTS, NULL, 2);
+        return $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'".$exclude_clause, NULL, "FeaturedProject.id DESC", NUM_FEATURED_PROJECTS, NULL, 2);
     }
 
-    function __getTopViewedProjects($exclude_project_ids) {
+    function __getTopViewedProjects($exclude_project_ids, $exclude_user_ids) {
         $exclude_clause = '';
+		$exclude_user_id_clause = '';
         if(!empty($exclude_project_ids)) {
             $exclude_clause = ' AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+        }
+		if(!empty($exclude_user_ids)) {
+            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
         $this->Project->bindUser();
         if ($this->getContentStatus() =='safe') {
@@ -241,13 +271,17 @@ Class HomeController extends AppController {
         } else {
 		    $days = 4;
         }
-        return  $this->Project->findAll("Project.created > now() - interval $days  day AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'".$exclude_clause, NULL, "Project.views DESC", NUM_TOP_VIEWED, 1, NULL, $this->getContentStatus());
+        return  $this->Project->findAll("Project.created > now() - interval $days  day AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'".$exclude_clause.$exclude_user_id_clause, NULL, "Project.views DESC", NUM_TOP_VIEWED, 1, NULL, $this->getContentStatus());
     }
 
-    function __getTopRemixedProjects($exclude_project_ids) {
+    function __getTopRemixedProjects($exclude_project_ids, $exclude_user_ids) {
         $exclude_clause = '';
+		$exclude_user_id_clause = '';
         if(!empty($exclude_project_ids)) {
             $exclude_clause = ' AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+        }
+		if(!empty($exclude_user_ids)) {
+            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
         $this->Project->bindUser();
         if ($this->getContentStatus() =='safe') {
@@ -255,22 +289,30 @@ Class HomeController extends AppController {
         } else {
 		    $days = 10;
 	}
-        return $this->Project->findAll("Project.created > now() - interval $days  day AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.remixer > 0 AND Project.status <> 'notsafe'".$exclude_clause, NULL, "Project.remixer DESC", NUM_TOP_REMIXED, 1, NULL, $this->getContentStatus());
+        return $this->Project->findAll("Project.created > now() - interval $days  day AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.remixer > 0 AND Project.status <> 'notsafe'".$exclude_clause.$exclude_user_id_clause, NULL, "Project.remixer DESC", NUM_TOP_REMIXED, 1, NULL, $this->getContentStatus());
     }
 
-    function __getTopLovedProjects($exclude_project_ids) {
+    function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids) {
         $exclude_clause = '';
+		$exclude_user_id_clause = '';
         if(!empty($exclude_project_ids)) {
             $exclude_clause = ' AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
         }
+		if(!empty($exclude_user_ids)) {
+            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
+        }
         $this->Project->bindUser();
-        return $this->Project->findAll("Project.created > now() - interval 10 day AND  Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'".$exclude_clause, NULL, "Project.loveit DESC", NUM_TOP_RATED, 1, NULL, $this->getContentStatus());
+        return $this->Project->findAll("Project.created > now() - interval 10 day AND  Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'".$exclude_clause.$exclude_user_id_clause, NULL, "Project.loveit DESC", NUM_TOP_RATED, 1, NULL, $this->getContentStatus());
     }
 
-    function __getTopDownloadedProjects($exclude_project_ids) {
+    function __getTopDownloadedProjects($exclude_project_ids, $exclude_user_ids) {
         $exclude_clause = '';
+		$exclude_user_id_clause = '';
         if(!empty($exclude_project_ids)) {
            $exclude_clause = ' AND projects.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+        }
+		if(!empty($exclude_user_ids)) {
+           $exclude_user_id_clause = ' AND projects.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
 
         $this->Project->bindUser();
@@ -281,7 +323,7 @@ Class HomeController extends AppController {
         else {
             $onlysafesql =  " AND projects.status <> 'notsafe'";
         }
-        $topdpids =  $this->Project->query("SELECT project_id, COUNT(*) FROM `downloaders`,`projects` WHERE projects.created > now()  - interval 7 day AND projects.id = downloaders.project_id AND proj_visibility = 'visible' $exclude_clause $onlysafesql GROUP BY project_id ORDER BY COUNT(*) DESC LIMIT 3");
+        $topdpids =  $this->Project->query("SELECT project_id, COUNT(*) FROM `downloaders`,`projects` WHERE projects.created > now()  - interval 7 day AND projects.id = downloaders.project_id AND proj_visibility = 'visible' $exclude_clause $exclude_user_id_clause $onlysafesql GROUP BY project_id ORDER BY COUNT(*) DESC LIMIT 3");
 		$sqlor = "Project.id = " . (isset($topdpids[0]['downloaders']['project_id'])?$topdpids[0]['downloaders']['project_id']:-1) . " OR ";
 		$sqlor .= "Project.id = " . (isset($topdpids[1]['downloaders']['project_id'])?$topdpids[1]['downloaders']['project_id']:-1) . " OR ";
 		$sqlor .= "Project.id = " . (isset($topdpids[2]['downloaders']['project_id'])?$topdpids[2]['downloaders']['project_id']:-1);		
