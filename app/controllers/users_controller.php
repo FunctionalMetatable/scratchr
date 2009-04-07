@@ -57,7 +57,7 @@ class UsersController extends AppController {
 	  die;
 	}
 	
-	function confirm_signup() {
+	function multiaccountwarn() {
 		$this->pageTitle = ___("Scratch | Signup", true);
 		$client_ip = ip2long($this->RequestHandler->getClientIP());
 		
@@ -154,8 +154,8 @@ class UsersController extends AppController {
 				$referer_array = explode('/',$referers);
 				$refer_from =$referer_array['3'];
 			}	
-			if(!isset($referers)&& $refer_from!="confirm_signup")
-			$this->redirect('/confirm_signup');
+			if(!isset($referers)&& $refer_from!="multiaccountwarn")
+			$this->redirect('/multiaccountwarn');
 		
 		}
 		
