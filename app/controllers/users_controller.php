@@ -1058,6 +1058,7 @@ class UsersController extends AppController {
 		
 		//populate friends 3 latest project
 		
+/*
 		$project_list = array();
 		$friends_project =array();
 		
@@ -1084,7 +1085,7 @@ class UsersController extends AppController {
 		$friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,$order, $limit, $page);
 		endif;
 		$this->set('friends_project_list',$friends_project);
-		
+*/		
 		//sets the admin_comment if one exists for this user
 		$admin_comment_record = $this->AdminComment->findCount("user_id = $user_id");
 		$admin_comment_full = $this->AdminComment->find("user_id = $user_id");
@@ -2025,7 +2026,7 @@ class UsersController extends AppController {
 	}
 	
 	//function to send request for create multiple account from same ip.
-	function send_request(){
+	function whitelistip(){
 	$this->pageTitle = "Scratch | Send Request";
 	
 		if (!empty($this->data)) {
@@ -2059,7 +2060,7 @@ class UsersController extends AppController {
 							
 							$this->Email->email($email,$contact_name, $msg, $subject,'TO_REQUEST_FOR_MULTIPLE_ACCOUNT',$email);
 				$this->Session->setFlash(__('Request has been send.Now you can create multiple account from same Ip', true));
-				$this->redirect('/users/send_request');
+				$this->redirect('/users/whitelistip');
 				}
 			}
 		}//!empty
