@@ -26,3 +26,9 @@ CREATE TABLE `projects_frontpage` (
   UNIQUE KEY `project_id_2` (`project_id`,`type`),
   KEY `project_id` (`project_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+//Alter projects_fronpage table to store curator favorites project .
+
+ALTER TABLE `projects_frontpage` CHANGE `type` `type` ENUM( 'top_loved', 'top_viewed', 'top_downloaded', 'top_remixed', 'featured', 'surprise', 'feature_gallery', 'curator_favorites' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL 
