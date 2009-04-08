@@ -25,8 +25,8 @@ Class HomeController extends AppController {
         if(!$home_projects) {
 			$curator_name = $this->___getCuratorName();
 			
-			$curator_favorites = $this->__getCuratorFavorites();
-			$curator_favorites_id = Set::extract('/Project/id', $curator_favorites);
+			$favorites = $this->__getCuratorFavorites();
+			$curator_favorites_id = Set::extract('/Project/id', $favorites);
 			$this->Project->register_frontpage($curator_favorites_id, 'curator_favorites');
 			$project_ids    = array_merge($project_ids, $curator_favorites_id);
 		
@@ -67,7 +67,7 @@ Class HomeController extends AppController {
                                    'toploved' => $toploved,
                                    'topviewed' => $topviewed,
                                    'topdownloaded' => $topdownloaded,
-								   'favorites' => $curator_favorites,
+								   'favorites' => $favorites,
 								   'curator_name' =>$curator_name
                                 );
                                 
