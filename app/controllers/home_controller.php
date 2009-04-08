@@ -4,7 +4,7 @@ Class HomeController extends AppController {
      * Home Page Controller
      */
 	var $pageTitle = "Scratch | Home | imagine, program, share";
-    var $uses = array("Project","User","FeaturedProject", "ClubbedGallery","UserStat", "Gallery", "Theme", "FeaturedGallery", "Tag", "Notification","Curator","Favorite");
+    var $uses = array("Project","User","FeaturedProject", "ClubbedGallery","UserStat", "Gallery", "Theme", "FeaturedGallery", "Tag", "Notification","Curator","Favorite", "BlockedUserFrontpage");
     var $helpers = array("Tagcloud");
    	
 	/**
@@ -25,12 +25,16 @@ Class HomeController extends AppController {
         if(!$home_projects) {
 			$curator_name = $this->___getCuratorName();
 			
-			$favorites = $this->__getCuratorFavorites();
+			$frontpage_blocked_user = $this->__getBlockedUserFrontpage();
+			$frontpage_blocked_user_id = Set::extract('/BlockedUserFrontpage/user_id', $frontpage_blocked_user);
+			$user_ids       =array_merge($user_ids, $frontpage_blocked_user_id);
+			
+			$favorites = $this->__getCuratorFavorites($user_ids);
 			$curator_favorites_id = Set::extract('/Project/id', $favorites);
 			$this->Project->register_frontpage($curator_favorites_id, 'curator_favorites');
 			$project_ids    = array_merge($project_ids, $curator_favorites_id);
 		
-            $featured       = $this->__getFeaturedProjects($project_ids);
+            $featured       = $this->__getFeaturedProjects($project_ids, $user_ids);
             $featured_ids   = Set::extract('/FeaturedProject/project_id', $featured);
 			$featured_project_owner_ids   = Set::extract('/Project/user_id', $featured);
             $this->Project->register_frontpage($featured_ids, 'featured');
@@ -234,8 +238,7 @@ Class HomeController extends AppController {
 		$this->set('featured_feed_link', $featured_feed_link);
 		$this->set('ishomepage', true);
     }
-
-
+	
 	function __getScratchClub() {
         $club = $this->ClubbedGallery->find(NULL, NULL, "ClubbedGallery.id DESC");
 		$club = $this->finalize_gallery($club);
@@ -247,13 +250,21 @@ Class HomeController extends AppController {
         return $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'", null, "Project.created DESC", NUM_NEW_PROJECTS, 1, null, $this->getContentStatus());
     }
 
-    function __getFeaturedProjects($exclude_project_ids) {
+    function __getBlockedUserFrontpage(){
+	return $this->BlockedUserFrontpage->findAll(null,'BlockedUserFrontpage.user_id');
+	}
+	
+	function __getFeaturedProjects($exclude_project_ids, $exclude_user_ids) {
 	$exclude_clause = '';
+	$exclude_user_id_clause = '';
 	 if(!empty($exclude_project_ids)) {
             $exclude_clause = ' AND FeaturedProject.project_id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
         }
+	if(!empty($exclude_user_ids)) {
+            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
+        }	
         $this->Project->bindUser();
-        return $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'".$exclude_clause, NULL, "FeaturedProject.id DESC", NUM_FEATURED_PROJECTS, NULL, 2);
+        return $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'".$exclude_clause.$exclude_user_id_clause, NULL, "FeaturedProject.id DESC", NUM_FEATURED_PROJECTS, NULL, 2);
     }
 
     function __getTopViewedProjects($exclude_project_ids, $exclude_user_ids) {
@@ -409,12 +420,20 @@ Class HomeController extends AppController {
 	
 	}
 	
-	function __getCuratorFavorites(){
+	function __getCuratorFavorites($exclude_user_ids){
+	
+	$exclude_user_id_clause = '';
+       
+		if(!empty($exclude_user_ids)) {
+           $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
+        }
+
+	
 		$favorites =array();
 		$curator =$this->Curator->find(null,array(),'Curator.id DESC');
 	 	$curator_id =$curator['Curator']['user_id'];
 		if($curator_id)
-		$favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.user_id <>$curator_id", null, 'Favorite.timestamp DESC', 3 ,null,2);
+		$favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.user_id <>$curator_id".$exclude_user_id_clause, null, 'Favorite.timestamp DESC', 3 ,null,2);
 		return  $favorites;
 	}
 	function ___getCuratorName(){

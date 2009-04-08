@@ -12,7 +12,8 @@
 	<br/>
 	</form>
 	 <a href="<?php echo $html->url('/administration/viewuser/')?><?php echo $user_id?>">View Details</a><br />
-	 <a href="<?php echo $html->url('/administration/set_permission/')?><?php echo $user_id?>">Set Permissions</a>
+	 <a href="<?php echo $html->url('/administration/set_permission/')?><?php echo $user_id?>">Set Permissions</a><br />
+	 <a href="<?php echo $html->url('/administration/ban_user_frontpage/')?><?php echo $user_id?>">Ban User from Frontpage</a>
 	<br/>
 	<?php
 		$project_rating = $karma_ratings['KarmaRating']['project_rating'];
