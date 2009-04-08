@@ -1,0 +1,39 @@
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	<h3> Frontpage User Ban </h3>
+	</div>
+	<div id="admin_project_content">
+    <?php if($isError): ?>
+		<div id="ignore_user_error">
+			<?php $error = $errors[0]; ?>
+            <h5 style="background-color:#FFFF99"><?= $error ?></h5>
+		</div>
+	<?php endif; ?>
+	<form id="admin_banuser" action="<?=e("/administration/add_banned_user_frontpage")?>" method="post">
+		<p>Username: <br/><textarea id='admin_banuser_name' name="admin_banuser_name" cols="60" rows="2" tabindex="1"><?php e($default_name); ?></textarea></p>
+		<p>Reason: <br/><textarea id='admin_banuser_reason' name="admin_banuser_reason" cols="60" rows="4" tabindex="2"><?php e($default_reason); ?></textarea></p>
+		<?php 
+			e($ajax->submit('Ban', array('id' => 'admin_banuser_submit', 
+			'class'=>'button', 'url' => "/administration/add_banned_user_frontpage", 
+			'update' => 'ban_user_wrapper',
+			"loading" => "document.getElementById('admin_banuser_name').disabled = true;", 
+			"complete" => "document.getElementById('admin_banuser_name').disabled = false;")));
+		?>
+	</form>
+    </div>
+</div>
+<div class="fullcontent">
+	<div class="top_header">
+	<h5> Frontpage Banned Users </h5>
+	</div>
+	<div id="admin_banlist_results">
+		<div id='ajax_pagination'>
+			<?php
+				echo $this->renderElement('admin/banned_user_frontpage_list', Array('data' => $data));
+			?>
+		</div>
+	</div>
+</div>

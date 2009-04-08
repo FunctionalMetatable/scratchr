@@ -1,0 +1,47 @@
+<div>
+<?php		
+	$pagination->setPaging($paging);
+	echo $this->renderElement('pagination'); 
+	
+	foreach ($data as $user) {
+		$user_id = $user['User']['id'];
+		$user_name = $user['User']['username'];
+		$reason = $user['User']['reason'];
+		$direct_address = "/users/$user_name";
+		$details_address = "/administration/viewuser/$user_id";
+		$remove_address = "/administration/remove_banned_user_frontpage/$user_id";
+		
+		echo "<div class='gallerythumb clearme'>\n";
+		echo "\t<div class='admin_leftcolumn'>\n";
+		?>
+		<span><a href="<?php echo $html->url($direct_address)?>"><?php echo $user_name?></a></span>
+		
+		<?php
+		echo "\t</div>";
+		echo "\t<div class='admin_rightcolumn'>\n";
+		
+		echo "<span>"; 
+			echo $reason;
+		echo "</span>\n";
+		
+		echo "<br/>";
+		if($isAdmin):
+		echo "<span>"; 
+		?>
+		<a href="<?php echo $html->url($details_address)?>">View Details</a>
+		<?php
+		
+		echo "</span>\n";
+		
+		echo " | ";
+		endif;
+		echo "<span>"; 
+		echo $ajax->link(___("Remove", true), '#', 
+			array("url"=>$remove_address, "update"=>"admin_banlist_results"), NULL, false);
+		echo "</span>\n";
+			
+    	echo "\t</div>\n";
+		echo "</div>\n";
+	}
+?>
+</div>

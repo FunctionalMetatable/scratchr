@@ -2,7 +2,10 @@
  class AdministrationController extends AppController {
     var $name = 'Administration';
    
-    var $uses = array('AdminTag', 'KarmaSetting', 'KarmaRating', 'KarmaEvent', 'KarmaRank', 'Mgcomment', 'RemixedProject', 'GalleryMembership', 'BlockedUser', 'ViewStat', 'Gcomment', 'BlockedIp', 'ProjectFlag', 'Announcement', 'AdminComment', 'Apcomment', 'Mpcomment', 'Project', 'FeaturedGallery', 'ClubbedGallery', 'Pcomment', 'User', 'Gallery', 'Tag', 'Flagger', 'Downloader', 'Favorite', 'Lover', 'Notification','Permission','PermissionUser');
+    var $uses = array('AdminTag', 'KarmaSetting', 'KarmaRating', 'KarmaEvent', 'KarmaRank', 'Mgcomment', 'RemixedProject', 'GalleryMembership', 
+	'BlockedUser', 'ViewStat', 'Gcomment', 'BlockedIp', 'ProjectFlag', 'Announcement', 'AdminComment', 'Apcomment', 'Mpcomment', 'Project', 
+	'FeaturedGallery', 'ClubbedGallery', 'Pcomment', 'User', 'Gallery', 'Tag', 'Flagger', 'Downloader', 'Favorite', 'Lover', 'Notification',
+	'Permission','PermissionUser', 'BlockedUserFrontpage');
     var $components = array('RequestHandler','Pagination', 'Email');
     var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination', 'Template');
 
@@ -1948,6 +1951,169 @@
 			array_push($return_array, $temp_user);
 		}
 		return $return_array;
+	}
+	
+	/**
+	* Handles username banning from front page
+	**/
+	function ban_user_frontpage($user_id = "", $overload = "") {	
+		$this->autoRender = false;
+		$this->User->id = $user_id;
+		
+		$banned_users = $this->set_banned_users_frontpage();
+		
+		if ($user_id == "" && $overload == "") {
+			$user_name = "";
+			$reason = "";
+		} else {
+			$user = $this->User->find("User.id = $user_id");
+			$user_name = $user['User']['username'];
+			$reason = $overload;
+		}
+		
+		
+		$this->set('isError', false);
+		$this->set('errors', Array());
+		$this->set('default_name', $user_name);
+		$this->set('default_reason', $reason);
+		$this->set('data', $banned_users);
+		$this->render('ban_user_frontpage');
+	}
+	
+	/**
+	* Adds an user to the banned users list
+    * used in administration/ban_user form
+	**/
+	function add_banned_user_frontpage() {
+		$this->autoRender = false;
+		$admin_id = $this->getLoggedInUserID();
+		$errors = Array();
+		
+		if (!empty($this->params['form']['admin_banuser_name'])) {
+			$username = $this->params['form']['admin_banuser_name'];
+			$reason = htmlspecialchars($this->params['form']['admin_banuser_reason']);
+			
+			$user_record = $this->User->find("User.username = '$username'");
+			
+			if (empty($user_record)) {
+				array_push($errors, "That user does not exist.");
+			} else {
+				$current_user_id = $user_record['User']['id'];
+				$blocked_record = $this->BlockedUserFrontpage->find("BlockedUserFrontpage.user_id = $current_user_id");
+				//not already blocked
+                if (empty($blocked_record)) {
+					$this->User->id = $current_user_id;
+					
+                        $info = Array('BlockedUserFrontpage' => Array('id' => null, 'user_id' => $current_user_id, 'admin_id' => $admin_id, 'reason' => $reason));
+                        $this->BlockedUserFrontpage->save($info);
+                    
+				}
+                else {
+					array_push($errors, "That user has already been banned.");
+				}
+			}
+        } else {
+			array_push($errors, "Please enter a valid username.");
+		}
+	
+		if (empty($errors)) {
+			$isError = false;
+		} else {
+			$isError = true;
+		}
+		
+		if ($isError) {
+			$banned_users = $this->set_banned_users_frontpage();
+		} else {
+			$banned_users = $this->set_banned_users_frontpage("", $current_user_id, $reason);
+		}
+		
+
+		$this->set('isError', $isError);
+		$this->set('errors', $errors);
+		$this->set('default_name', "");
+		$this->set('default_reason', "");
+		$this->set('data', $banned_users);
+		$this->render('render_banned_users_frontpage_list_ajax', 'ajax');
+	}
+	
+	/**
+	* Pagination helper for rendering banned users
+	**/
+	function render_banned_users_frontpage() {
+		$this->autoRender = false;
+		
+		$banned_users = $this->set_banned_users_frontpage();
+		
+		$this->set('data', $banned_users);
+		$this->set('default_name', "");
+		$this->set('default_reason', "");
+		$this->render('render_banned_users_frontpage_ajax', 'ajax');
+	}
+	
+	
+	/**
+	* Helper for setting additional data needed for banned users
+	**/
+	function set_banned_users_frontpage($banned_users = "", $overload_id = "", $overload_reason = "") {
+		$this->modelClass = "BlockedUserFrontpage";
+		$this->Pagination->show = 20;
+		$options = Array("sortBy"=>"timestamp", "sortByClass" => "BlockedUserFrontpage", 
+							"direction"=> "DESC", "url" => "/administration/render_banned_users_frontpage/");
+							
+		list($order,$limit,$page) = $this->Pagination->init("User.id > 0", Array(), $options);
+		$banned_users = $this->BlockedUserFrontpage->findAll(null, null, $order, $limit, $page);
+		
+		$return_array = Array();
+		foreach ($banned_users as $banned_user) {
+			$temp_user = $banned_user;
+			$current_user_id = $banned_user['User']['id'];
+			$ban_record = $this->BlockedUserFrontpage->find("BlockedUserFrontpage.user_id = $current_user_id");
+			$status = $banned_user['User']['status'];
+			
+			if ($overload_id == $current_user_id) {
+				$temp_user['User']['reason'] = $overload_reason;
+			} else {
+				$temp_user['User']['reason'] = $ban_record['BlockedUserFrontpage']['reason'];
+			}
+			if ($status == 'locked') {
+				if (empty($ban_record)) {
+					$default_reason = "You have violated our Terms of Service. ";
+					if ($overload_id == "" && $overload_reason == "") {
+						$temp_user['User']['reason'] = $default_reason;
+					} else {
+						if ($overload_id == $current_user_id) {
+							$temp_user['User']['reason'] = $overload_reason;
+						}
+					}
+				} else {
+					$temp_user['User']['reason'] = $ban_record['BlockedUserFrontpage']['reason'];
+				}
+			}
+			
+			array_push($return_array, $temp_user);
+		}
+		return $return_array;
+	}
+	
+	/**
+	* Remove frontpage banned user
+	**/
+	function remove_banned_user_frontpage($banned_id) {
+		$this->autoRender = false;
+		$user_id = $this->getLoggedInUserID();
+		
+		$ban_record = $this->BlockedUserFrontpage->find("BlockedUserFrontpage.user_id = $banned_id");
+		$ban_id = $ban_record['BlockedUserFrontpage']['id'];
+		
+		$this->BlockedUserFrontpage->del($ban_id);
+		
+		$banned_users = $this->set_banned_users_frontpage();
+		
+		$this->set('data', $banned_users);
+		$this->set('default_name', "");
+		$this->set('default_reason', "");
+		$this->render('render_banned_users_frontpage_ajax', 'ajax');
 	}
 
 	/**
