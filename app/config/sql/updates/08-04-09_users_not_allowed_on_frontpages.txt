@@ -1,4 +1,4 @@
-CREATE TABLE `blocked_user_fronpages` (
+CREATE TABLE `blocked_user_frontpages` (
 `id` INT NOT NULL AUTO_INCREMENT ,
 `user_id` INT NULL ,
 `admin_id` INT NULL ,
