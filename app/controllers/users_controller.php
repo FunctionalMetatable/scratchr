@@ -2031,8 +2031,7 @@ class UsersController extends AppController {
 	
 	//function to send request for create multiple account from same ip.
 	function whitelistip(){
-	$this->pageTitle = "Scratch | Send Request";
-	
+		$this->pageTitle = ___('Scratch | Whitelistip', true);
 		if (!empty($this->data)) {
 			$contact_name = $this->data['WhitelistedIpAddress']['contact_name'];
 			$email = $this->data['WhitelistedIpAddress']['email'];
@@ -2076,14 +2075,17 @@ class UsersController extends AppController {
 			$this->pageTitle = ___('Scratch | Blocked Account | Contact us', true);
 			$client_ip = ip2long($this->RequestHandler->getClientIP());
 			$blocked_record =$this->User->find("User.ipaddress = $client_ip and User.status='locked'",array(),'User.timestamp DESC');
-			$blocked_user_id =$blocked_record['User']['id'];
-			$blockedusername =$blocked_record['User']['urlname'];
-			$ban_record = $this->BlockedUser->find("BlockedUser.user_id = $blocked_user_id");
-			$reasonsforblocking = $ban_record['BlockedUser']['reason'];
-			$this->set('reasonsforblocking',$reasonsforblocking);
-			$this->set('blockedusername',$blockedusername);
-			$this->set('isBannedUser',true);
-			
+			if($blocked_record){
+				$blocked_user_id =$blocked_record['User']['id'];
+				$blockedusername =$blocked_record['User']['urlname'];
+				$ban_record = $this->BlockedUser->find("BlockedUser.user_id = $blocked_user_id");
+				$reasonsforblocking = $ban_record['BlockedUser']['reason'];
+				$this->set('reasonsforblocking',$reasonsforblocking);
+				$this->set('blockedusername',$blockedusername);
+				$this->set('isBannedUser',true);
+			}
+			else
+			$this->set('isBannedUser',false);
 			if (!empty($this->data)) {
 			$name = $this->data['User']['name'];
 			$email = $this->data['User']['email'];
@@ -2091,22 +2093,22 @@ class UsersController extends AppController {
 			$message = $this->data['User']['message'];
 			
 			if(empty($this->data['User']['name']))
-			$this->User->invalidate('name','Enter contact name');
+			$this->User->invalidate('name',___('Enter contact name.',true));
 			if(!empty($this->data['User']['email']))
 			{
 				if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $this->data['User']['email']))
-				$this->User->invalidate('email','Enter valid Email id.');
+				$this->User->invalidate('email',___('Enter valid Email id.',true));
 			}
 			else
-			$this->User->invalidate('email','Enter  Email id.');
+			$this->User->invalidate('email',___('Enter  Email id.',true));
 			if(empty($this->data['User']['subject']))
-			$this->User->invalidate('subject','Enter Subject');
+			$this->User->invalidate('subject',___('Enter Subject',true));
 			if(empty($this->data['User']['message']))
-			$this->User->invalidate('message','Enter Message');
+			$this->User->invalidate('message',___('Enter Message.',true));
 			
 			if($this->User->validates($this->data['User'])){
 				$this->Email->email($email,$name, $message, $subject,'TO_REQUEST_FOR_MULTIPLE_ACCOUNT',$email);
-				$this->Session->setFlash(__('The message was sent.', true));
+				$this->Session->setFlash(___('The message was sent.', true));
 				$this->set('isBannedUser',false);
 				$this->data['User']['name'] = '';
 				$this->data['User']['email'] = '';

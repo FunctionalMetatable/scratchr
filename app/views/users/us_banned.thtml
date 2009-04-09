@@ -15,21 +15,25 @@
 
 <div id="main">
 <p>
-	<?php echo $form->input('User.name',array('size'=>25))?>
+	 <label for="User" ><?php ___('Name'); ?>&nbsp;:</label>
+	<?php echo $form->input('User.name',array('size'=>25,'label'=>''))?>
 	
 </p>
 <p>
-<?php echo $form->input('User.email',array('size'=>25))?>
-	
-</p>
-
-<p>
-	<?php echo $form->input('User.subject',array('size'=>25))?>
+ <label for="User" ><?php ___('Email'); ?>&nbsp;:</label>
+<?php echo $form->input('User.email',array('size'=>25,'label'=>''))?>
 	
 </p>
 
 <p>
-   <?php echo $form->input('User.message',array('type'=>'textArea','rows'=>10,'cols'=>25))?>
+	<label for="User" ><?php ___('Subject'); ?>&nbsp;:</label>
+	<?php echo $form->input('User.subject',array('size'=>25,'label'=>''))?>
+	
+</p>
+
+<p>
+   <label for="User" ><?php ___('Message'); ?>&nbsp;:</label>
+   <?php echo $form->input('User.message',array('type'=>'textArea','rows'=>10,'cols'=>25,'label'=>''))?>
    
 </p>
 <p >
