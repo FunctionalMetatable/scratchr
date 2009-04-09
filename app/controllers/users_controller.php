@@ -6,8 +6,8 @@ class UsersController extends AppController {
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 
 	'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject','AdminComment', 'User','Project','Favorite', 'Pcomment',
 	'UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification',
-	'Shariable','Thank','ForumUser', 'ViewStat','Curator','WhitelistedIpAddress');
-
+	'Shariable','Thank', 'ViewStat','Curator','WhitelistedIpAddress');
+	
 
 	function admin_index() {
 	  if (!$this->isAdmin())
@@ -850,6 +850,7 @@ class UsersController extends AppController {
 	**/
 	function view($urlname=null, $option = "projects") {
 		$this->autoRender = false;
+		$this->modelNames =array('User','ForumUser');
 		if(!$urlname)
 		$this->cakeError('error404');
 		$content_status = $this->getContentStatus();
@@ -1298,14 +1299,17 @@ class UsersController extends AppController {
 
 		$submit_email_new = $this->params['form']['new_email'];
                 $user_record = $this->User->findById($user_id);
-				$forum_data =$this->ForumUser->find(array('username'=>$user_record['User']['urlname'])); 
-			
-                if ($this->isAdmin() || (!empty($user_record['User']['password']) &&  $user_record['User']['password'] == sha1($submit_pwd))) {
+				 if ($this->isAdmin() || (!empty($user_record['User']['password']) &&  $user_record['User']['password'] == sha1($submit_pwd))) {
 		     	 $this->User->saveField("email",$submit_email_new);
-				 if(count($forum_data) > 0){
-					 $this->ForumUser->id = $forum_data['ForumUser']['id'];
-					 $this->ForumUser->saveField("email",$submit_email_new);
-				 }
+				 if(ENABLE_TO_CHANGE_FORUM_EMAIL == 1)
+				 {
+					$this->loadModel('ForumUser');
+					$forum_data =$this->ForumUser->find(array('username'=>$user_record['User']['urlname'])); 
+					 if(count($forum_data) > 0){
+						 $this->ForumUser->id = $forum_data['ForumUser']['id'];
+						 $this->ForumUser->saveField("email",$submit_email_new);
+					 }
+				  }	 
 	              $this->setFlash(___("Updated email.", true), FLASH_NOTICE_KEY);
                 }
                 else { 

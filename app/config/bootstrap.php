@@ -54,6 +54,8 @@ $this->params['webservices']
  define("TO_FLAGGED_GTAG", "scratch-caution@mit");
  //Emais id to send mail to request create multiple account using same ip.
  define("TO_REQUEST_FOR_MULTIPLE_ACCOUNT", "scratch-feedback@media.mit.edu");
+ //Put on/off change of email on MyStuff should also change it on the forums.1 for ON and 0 for OFF.
+ define("ENABLE_TO_CHANGE_FORUM_EMAIL", 1);
  
  /**
   * Themes config
