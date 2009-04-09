@@ -2040,20 +2040,20 @@ class UsersController extends AppController {
 			$comments = $this->data['WhitelistedIpAddress']['comments'];
 			$no_of_students = $this->data['WhitelistedIpAddress']['no_of_student'];
 			if(empty($this->data['WhitelistedIpAddress']['contact_name']))
-			$this->WhitelistedIpAddress->invalidate('contact_name','Enter contact name');
+			$this->WhitelistedIpAddress->invalidate('contact_name',___('Enter contact name.',true));
 			if(!empty($this->data['WhitelistedIpAddress']['email']))
 			{
 				if (!eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $this->data['WhitelistedIpAddress']['email']))
-				$this->WhitelistedIpAddress->invalidate('email','Enter valid Email id.');
+				$this->WhitelistedIpAddress->invalidate('email',___('Enter valid Email id.',true));
 			}
 			else
-			$this->WhitelistedIpAddress->invalidate('email','Enter  Email id.');
+			$this->WhitelistedIpAddress->invalidate('email',___('Enter  Email id.',true));
 			if(empty($this->data['WhitelistedIpAddress']['school_name']))
-			$this->WhitelistedIpAddress->invalidate('school_name','Enter Schhol name');
+			$this->WhitelistedIpAddress->invalidate('school_name',___('Enter Schhol name.',true));
 			if(empty($this->data['WhitelistedIpAddress']['comments']))
-			$this->WhitelistedIpAddress->invalidate('comments','Enter Comments');
+			$this->WhitelistedIpAddress->invalidate('comments',___('Enter Comments.',true));
 			if(empty($this->data['WhitelistedIpAddress']['no_of_student']))
-			$this->WhitelistedIpAddress->invalidate('no_of_student','Enter No. of student');
+			$this->WhitelistedIpAddress->invalidate('no_of_student',___('Enter No. of student.',true));
 			if($this->WhitelistedIpAddress->validates($this->data['WhitelistedIpAddress'])){
 				$this->data['WhitelistedIpAddress']['ipaddress'] = ip2long($this->data['WhitelistedIpAddress']['ipaddress']);
 				if ($this->WhitelistedIpAddress->save($this->data)) {
@@ -2063,7 +2063,7 @@ class UsersController extends AppController {
 							$msg = $msg.___("No. of Student : ".$no_of_students,true). "<BR>";
 							
 							$this->Email->email($email,$contact_name, $msg, $subject,'TO_REQUEST_FOR_MULTIPLE_ACCOUNT',$email);
-				$this->Session->setFlash(__('Request has been send.Now you can create multiple account from same Ip', true));
+				$this->Session->setFlash(___('Request has been send.Now you can create multiple account from same Ip.', true));
 				$this->redirect('/users/whitelistip');
 				}
 			}
