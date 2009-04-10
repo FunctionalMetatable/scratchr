@@ -23,9 +23,20 @@
 
 <!-- |||||| Begin main content area ||||||| -->
 <div class="fullcontent" id="SignUpForm">
+<?php if($ipNotAllnowed){//if ip address is 127.0.0.1?>
+<?php
+			echo "<div id='error_message' >";
+				if ($session->check('Message.flash')):
+						$session->flash();
+				endif;
+				echo "</div>";
+			
+?>
+<?php }else{?>
   <form action="signup" method="POST" accept-charset="UTF-8" name="downform" id="downform">
   <div class="signup_header">
 	<h3><?php ___('Create an account'); ?></h3>
+	
   </div>
   <div class="signup_row">
 		<div class="signup_label">
@@ -206,6 +217,12 @@
 	</div>
   </div>
   </form>
+  <?php }?>
 </div>
 <!-- ////// End main content ////// -->
+<style>
+#error_message .message{
+width:100% !important;
+}
+</style>
 

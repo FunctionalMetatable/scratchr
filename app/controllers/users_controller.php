@@ -115,6 +115,12 @@ class UsersController extends AppController {
 		$user_data = $this->data;
 		$errors = Array(); 
 		$signup_interval = SIGNUP_INTERVAL;
+		$ipNotAllnowed =false;
+		if($client_ip == 2130706433)
+		{
+			$ipNotAllnowed =true;
+			$this->setFlash(___("We are unable to identify your IP address. Please  <a href='/contact/us/'>contact us</a>.", true));
+		}
 				
 		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip");
 		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = $client_ip");
@@ -223,7 +229,7 @@ class UsersController extends AppController {
 				
 			$age = date("Y") - $this->data['User']['byear'];
 
-			if ($this->User->validates($this->data['User'])) {
+			if ($this->User->validates($this->data['User']) && $client_ip == 2130706433) {
 				$this->data['User']['password'] = sha1($this->data['User']['password']);
 
 				//These fields don't have default values and should be validated
@@ -256,7 +262,7 @@ class UsersController extends AppController {
 				$this->validateErrors($this->User);
 			}
 		}
-		
+		$this->set('ipNotAllnowed',$ipNotAllnowed);
 		$this->set_signup_variables();
 		$this->set('errors', $errors);
 		$this->render('signup');
