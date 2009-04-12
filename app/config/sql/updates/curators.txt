@@ -2,4 +2,6 @@
 `id` INT NOT NULL AUTO_INCREMENT ,
 `user_id` INT NOT NULL ,
 PRIMARY KEY ( `id` )
-) 
+);
+
+ALTER TABLE `projects_frontpage` CHANGE `type` `type` ENUM( 'top_loved', 'top_viewed', 'top_downloaded', 'top_remixed', 'featured', 'surprise', 'feature_gallery', 'curator_favorites' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
