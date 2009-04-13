@@ -26,20 +26,20 @@ if(isset($activity_from_same_ip_signup_interval)) {
 else {
 ?>
 
-<h5><?php ___('Hey, seems like there are already these other account(s) using the Scratch website from  this same IP address')?> (<?php echo $ip_address?>):</h5> </p>
+<p><?php ___('Seems like the following accounts were created from the same computer or network:')?> </p>
 <p><?php echo $users_from_same_ip; ?></p>
 <p>
-<?php ___("We just want to make sure people do not create multiple accounts to post inappropriate content, avoid the block of another account, impersonate others or artificially increase the number of love-it's, downloads, remixes, etc."); ?>
-</p>
-
-<p><b><?php ___("If you are not trying to do any of those or you do not recognize any of those accounts, don't worry! Just ignore this message and go ahead an create the account!"); ?></b></p>
+<?php ___("Please note that creating multiple accounts can lead to blocking of your computer or network if they are used to post inappropriate content, harass others, avoid a block on another account or try to trick the system to get to front page."); ?>
 </p>
 
 <p><b><?php ___("If you're a school or household sharing the same IP for multiple people, no worries, you're welcome to create multiple accounts");?></b>
 </p> 
 <p><?php ___('What do you want to do?')?></p>
-<a href="<?php echo $html->url('/signup')?>" ><span class='button2'><?php ___('Continue')?></span></a>  <a href="<?php echo $html->url('/')?>" ><span class='button2'><?php ___('Cancel')?></span></a>
-<a href="<?php echo $html->url('/users/whitelistip')?>">Send request for create multiple account from same Ip</a>
+<a href="<?php echo $html->url('/signup')?>" ><span class='button2'><?php ___('Create account')?></span></a>
+<a href="<?php echo $html->url('/password_recovery')?>" ><span class='button2'><?php ___('Recover password for existing account')?></span></a>
+<a href="<?php echo $html->url('/')?>" ><span class='button2'><?php ___('Cancel')?></span></a>
+
+<!-- <a href="<?php echo $html->url('/users/whitelistip')?>">Send request for create multiple account from same Ip</a> //-->
 <?php
 }
 ?>
