@@ -23,10 +23,13 @@ if ($user_status == "normal") {
 			<div id="projectload" style="display:block;" align="center">
 				
 				<?php
+				
 				if($isAdmin){
 					if ($proj_visibility == "visible" || $proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr"){
 						$p_path =getBinary($urlname, $pid);
-					 	$embed_project ='../..'.$p_path;
+						$verson = $project['Project']['version'];
+						$embed_project ='../..'.$p_path.'?version='.$verson;
+					 	
 					 }
 					 else if ($proj_visibility == "censbyadmin" || $proj_visibility == "censbycomm")
 					$embed_project ='../../static/misc/censored.sb';
@@ -35,7 +38,8 @@ if ($user_status == "normal") {
 				{
 				if ($proj_visibility == "visible"){
 				 	$p_path =getBinary($urlname, $pid);
-					$embed_project ='../..'.$p_path;
+					$verson = $project['Project']['version'];
+					$embed_project ='../..'.$p_path.'?version='.$verson;
 					}
 else if ($proj_visibility == "censbyadmin" || $proj_visibility == "censbycomm")
 					$embed_project ='../../static/misc/censored.sb';
