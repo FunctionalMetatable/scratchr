@@ -1844,7 +1844,7 @@ class ProjectsController extends AppController {
 
             //make one single call to FeaturedProject, we don't need hasAny
             $featured_timestamp = $this->FeaturedProject->field('timestamp',"project_id = $pid");
-            $isFeatured = !empty($featured);
+            $isFeatured = !empty($featured_timestamp);
             $this->set('isFeatured', $isFeatured);
 
             /*Generate ribbon thumbnail for featured project
@@ -2317,7 +2317,7 @@ class ProjectsController extends AppController {
 		if ($option == 'lock') {
 			$this->Project->saveField('locked', 1);
 			$isLocked = true;
-		} elseif ($option = 'unlock') {
+		} elseif ($option == 'unlock') {
 			$this->Project->saveField('locked', 0);
 			$isLocked = false;
 		}
