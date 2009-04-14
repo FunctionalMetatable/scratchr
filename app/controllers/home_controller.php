@@ -433,7 +433,7 @@ Class HomeController extends AppController {
 		$curator =$this->Curator->find(null,array(),'Curator.id DESC');
 	 	$curator_id =$curator['Curator']['user_id'];
 		if($curator_id)
-		$favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.user_id <>$curator_id".$exclude_user_id_clause, null, 'Favorite.timestamp DESC', 3 ,null,2);
+		$favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.user_id <>$curator_id".$exclude_user_id_clause, null, 'Favorite.timestamp DESC', 3 ,null,2);
 		return  $favorites;
 	}
 	function ___getCuratorName(){
