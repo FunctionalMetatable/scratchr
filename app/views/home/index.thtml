@@ -186,6 +186,8 @@
 		<?php endforeach; ?>
       <p class="more"><a href="/channel/topviewed"><?php ___('See more');?></a> </p>
     </div>
+
+<!--
 	<?php if(isset($favorites) && $count=count($favorites) >=3):?>
 	<div id="Favorites" class="container">
       <h3><?php echo $username;echo "'s";___(' Favorites')?></h3>
@@ -210,6 +212,8 @@
 		<?php endforeach; ?>
     </div>
 	<?php endif;?>
+//--->
+
   </div>
 <!-- ////// End main content ////// -->
 
@@ -225,7 +229,7 @@
             <div id="club" class="sidecontainer">
       <h4><?php ___('Scratch Day'); ?></h4>
         <p><a href="http://day.scratch.mit.edu/"><img src="http://download.scratch.mit.edu/logo/scratchdaylog
-o.png" alt="Scratch Day" width="90"></a><?php ___('Be a part of Scratch Day - a worldwide network of gatherings, where people will come together to meet, share, and learn more about Scratch.'); ?></p>
+o.png" alt="Scratch Day" width="77"></a><?php ___('Be a part of Scratch Day - a worldwide network of gatherings, where people will come together to meet, share, and learn more about Scratch.'); ?></p>
       <p class="more"><a href="http://day.scratch.mit.edu/"><?php ___('Find out more');?></a> </p>
      </div>
 
