@@ -30,37 +30,39 @@ Class HomeController extends AppController {
 			$user_ids       =array_merge($user_ids, $frontpage_blocked_user_id);
 			
 			$favorites = $this->__getCuratorFavorites($user_ids);
-			$curator_favorites_id = Set::extract('/Project/id', $favorites);
-			$this->Project->register_frontpage($curator_favorites_id, 'curator_favorites');
-			$project_ids    = array_merge($project_ids, $curator_favorites_id);
-		
+			$favorites_id = Set::extract('/Project/id', $favorites);
+			$favorites_user_ids   = Set::extract('/Project/user_id', $favorites);
+            $this->Project->register_frontpage($favorites_id, 'curator_favorites');
+			$project_ids    = array_merge($project_ids, $favorites_id);
+            $user_ids       = array_merge($user_ids, $favorites_user_ids);
+            
             $featured       = $this->__getFeaturedProjects($project_ids, $user_ids);
             $featured_ids   = Set::extract('/FeaturedProject/project_id', $featured);
-			$featured_project_owner_ids   = Set::extract('/Project/user_id', $featured);
+			$featured_user_ids   = Set::extract('/Project/user_id', $featured);
             $this->Project->register_frontpage($featured_ids, 'featured');
             $project_ids    = array_merge($project_ids, $featured_ids);
-            $user_ids       =array_merge($user_ids, $featured_project_owner_ids);
+            $user_ids       = array_merge($user_ids, $featured_user_ids);
 			
             $topremixed     = $this->__getTopRemixedProjects($project_ids, $user_ids);
             $topremixed_ids = Set::extract('/Project/id', $topremixed);
 			$topremixed_user_ids = Set::extract('/Project/user_id', $topremixed);
             $this->Project->register_frontpage($topremixed_ids, 'top_remixed');
             $project_ids    = array_merge($project_ids, $topremixed_ids);
-			$user_ids       =array_merge($user_ids, $topremixed_user_ids);
+			$user_ids       = array_merge($user_ids, $topremixed_user_ids);
 			
             $toploved       = $this->__getTopLovedProjects($project_ids, $user_ids);
             $toploved_ids   = Set::extract('/Project/id', $toploved);
 			$toploved_user_ids   = Set::extract('/Project/user_id', $toploved);
             $this->Project->register_frontpage($toploved_ids, 'top_loved');
             $project_ids    = array_merge($project_ids, $toploved_ids);
-			$user_ids       =array_merge($user_ids, $toploved_user_ids);
+			$user_ids       = array_merge($user_ids, $toploved_user_ids);
 			
             $topviewed      = $this->__getTopViewedProjects($project_ids, $user_ids);
             $topviewed_ids  = Set::extract('/Project/id', $topviewed);
 			$topviewed_user_ids  = Set::extract('/Project/id', $topviewed);
             $this->Project->register_frontpage($topviewed_ids, 'top_viewed');
             $project_ids    = array_merge($project_ids, $topviewed_ids);
-			$user_ids       =array_merge($user_ids, $topviewed_user_ids);
+			$user_ids       = array_merge($user_ids, $topviewed_user_ids);
 
             $topdownloaded  = $this->__getTopDownloadedProjects($project_ids, $user_ids);
             $topdownloaded_ids  = Set::extract('/Project/id', $topdownloaded);
@@ -255,16 +257,21 @@ Class HomeController extends AppController {
 	}
 	
 	function __getFeaturedProjects($exclude_project_ids, $exclude_user_ids) {
-	$exclude_clause = '';
-	$exclude_user_id_clause = '';
-	 if(!empty($exclude_project_ids)) {
+        $exclude_clause = '';
+        $exclude_user_id_clause = '';
+        if(!empty($exclude_project_ids)) {
             $exclude_clause = ' AND FeaturedProject.project_id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
         }
-	if(!empty($exclude_user_ids)) {
+        if(!empty($exclude_user_ids)) {
             $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }	
-        $this->Project->bindUser();
-        return $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'".$exclude_clause.$exclude_user_id_clause, NULL, "FeaturedProject.id DESC", NUM_FEATURED_PROJECTS, NULL, 2);
+        $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+        return $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'"
+                                                . $exclude_clause . $exclude_user_id_clause
+                                                . ' GROUP BY Project.user_id',
+            NULL, "FeaturedProject.id DESC", NUM_FEATURED_PROJECTS, NULL, 2);
     }
 
     function __getTopViewedProjects($exclude_project_ids, $exclude_user_ids) {
@@ -282,7 +289,12 @@ Class HomeController extends AppController {
         } else {
 		    $days = 4;
         }
-        return  $this->Project->findAll("Project.created > now() - interval $days  day AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'".$exclude_clause.$exclude_user_id_clause, NULL, "Project.views DESC", NUM_TOP_VIEWED, 1, NULL, $this->getContentStatus());
+        $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+        return $this->Project->findAll("Project.created > now() - interval $days  day AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'"
+                                . $exclude_clause . $exclude_user_id_clause . ' GROUP BY Project.user_id',
+                                NULL, "Project.views DESC", NUM_TOP_VIEWED, 1, NULL, $this->getContentStatus());
     }
 
     function __getTopRemixedProjects($exclude_project_ids, $exclude_user_ids) {
@@ -299,8 +311,13 @@ Class HomeController extends AppController {
 		    $days = 20;
         } else {
 		    $days = 10;
-	}
-        return $this->Project->findAll("Project.created > now() - interval $days  day AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.remixer > 0 AND Project.status <> 'notsafe'".$exclude_clause.$exclude_user_id_clause, NULL, "Project.remixer DESC", NUM_TOP_REMIXED, 1, NULL, $this->getContentStatus());
+        }
+        $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+        return $this->Project->findAll("DATE_SUB(NOW(), INTERVAL $days DAY) <= Project.created AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.remixer > 0 AND Project.status <> 'notsafe'"
+                                        . $exclude_clause . $exclude_user_id_clause . ' GROUP BY Project.user_id',
+                                        NULL, "Project.remixer DESC", NUM_TOP_REMIXED, 1, NULL, $this->getContentStatus());
     }
 
     function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids) {
@@ -312,8 +329,12 @@ Class HomeController extends AppController {
 		if(!empty($exclude_user_ids)) {
             $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
-        $this->Project->bindUser();
-        return $this->Project->findAll("Project.created > now() - interval 10 day AND  Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'".$exclude_clause.$exclude_user_id_clause, NULL, "Project.loveit DESC", NUM_TOP_RATED, 1, NULL, $this->getContentStatus());
+        $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+        return $this->Project->findAll("Project.created > now() - interval 10 day AND  Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'"
+                                        . $exclude_clause . $exclude_user_id_clause . ' GROUP BY Project.user_id',
+                                        NULL, "Project.loveit DESC", NUM_TOP_RATED, 1, NULL, $this->getContentStatus());
     }
 
     function __getTopDownloadedProjects($exclude_project_ids, $exclude_user_ids) {
@@ -338,7 +359,11 @@ Class HomeController extends AppController {
 		$sqlor = "Project.id = " . (isset($topdpids[0]['downloaders']['project_id'])?$topdpids[0]['downloaders']['project_id']:-1) . " OR ";
 		$sqlor .= "Project.id = " . (isset($topdpids[1]['downloaders']['project_id'])?$topdpids[1]['downloaders']['project_id']:-1) . " OR ";
 		$sqlor .= "Project.id = " . (isset($topdpids[2]['downloaders']['project_id'])?$topdpids[2]['downloaders']['project_id']:-1);		
-		return $this->Project->findAll($sqlor, NULL, NULL, 3, 1, NULL, $this->getContentStatus());
+
+        $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+        return $this->Project->findAll($sqlor . ' GROUP BY Project.user_id', NULL, NULL, 3, 1, NULL, $this->getContentStatus());
     }
 
 	/* Selects NUM_TOP_RATED random projects, consecutively */	
@@ -421,19 +446,22 @@ Class HomeController extends AppController {
 	}
 	
 	function __getCuratorFavorites($exclude_user_ids){
-	
-	$exclude_user_id_clause = '';
+		$exclude_user_id_clause = '';
        
 		if(!empty($exclude_user_ids)) {
            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
 
-	
-		$favorites =array();
-		$curator =$this->Curator->find(null,array(),'Curator.id DESC');
-	 	$curator_id =$curator['Curator']['user_id'];
-		if($curator_id)
-		$favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.user_id <>$curator_id".$exclude_user_id_clause, null, 'Favorite.timestamp DESC', 3 ,null,2);
+        $favorites =array();
+		$curator = $this->Curator->find(null, array(), 'Curator.id DESC');
+	 	$curator_id  = $curator['Curator']['user_id'];
+		if($curator_id) {
+            $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+            $favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.user_id <> $curator_id"
+                .$exclude_user_id_clause.' GROUP BY Project.user_id', null, 'Favorite.timestamp DESC', 3, null, 2);
+        }
 		return  $favorites;
 	}
 	function ___getCuratorName(){
