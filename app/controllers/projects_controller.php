@@ -1814,7 +1814,7 @@ class ProjectsController extends AppController {
             }
 
 			// set generic project info
-			if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm') {
+			if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm' || $project['Project']['status'] == 'censored') {
 				$isCensored = true;
 			} else {
 				$isCensored = false;
