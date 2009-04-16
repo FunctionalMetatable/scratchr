@@ -826,16 +826,17 @@ Class ServicesController extends AppController {
 		
 		$retval = str_replace('!undefined!', '', $retval);
 		list($date, $event, $pname , $username, $savername) = explode("\t", $retval);
-				
-		$project = $this->Project->find(array('Project.name'=>$pname),'id,user_id');
-		$project_id = $project['Project']['id'];
-		$project_user_id = $project['Project']['user_id'];
+		if ($event == 'share') {		
+			$project = $this->Project->find(array('Project.name'=>$pname),'id,user_id');
+			$project_id = $project['Project']['id'];
+			$project_user_id = $project['Project']['user_id'];
 		
-		if($user_shared_id != $project_user_id){
-		$record = array('id'=> null, 'remix_project_id'	=> $project_shared_id);	// project shared 
-		$record['original_project_id'] = $project_id;
-		$this->Remix->save($record);
-		}
+			if($user_shared_id != $project_user_id){
+				$record = array('id'=> null, 'remix_project_id'	=> $project_shared_id);	// project shared 
+				$record['original_project_id'] = $project_id;
+				$this->Remix->save($record);
+			}
+		}	
 		
 	}//function
 	
