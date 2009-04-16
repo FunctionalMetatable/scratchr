@@ -1,0 +1,7 @@
+ CREATE TABLE `remixes` (
+`id` INT NOT NULL AUTO_INCREMENT ,
+`remix_project_id` INT NOT NULL ,
+`original_project_id` INT NOT NULL ,
+`timestamp` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+PRIMARY KEY ( `id` )
+)  
