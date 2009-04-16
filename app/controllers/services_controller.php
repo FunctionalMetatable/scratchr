@@ -15,7 +15,7 @@ define("USER_BLOCKED_ERROR", 408);
 define("IP_BLOCKED_ERROR", 409);
 Class ServicesController extends AppController {
 	// var $components = array("Security");
-    var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave','ProjectScript','BlockedIp');
+    var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave','ProjectScript','BlockedIp','Remix');
 	var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
 	 var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
     var $doc = null;
@@ -680,12 +680,19 @@ Class ServicesController extends AppController {
 			return false; 
 		}
 //$this->log(print_r($retvals,true));
+		$counter = 1;
 		foreach ($retvals as $retval) {
 			if(! $this->isempty($retval)) {
-//				$this->log("calling storehistory");
 				$this->storehistory($project_shared_id, $user_shared_id, $retval);
+				if($counter ==count($retvals)-2){
+				$this->storeremix($project_shared_id, $user_shared_id, $retval);
+				}
+				$counter++;
 			}
+			
 		}
+		
+		
 		
 		$condition = "user_id = '$user_shared_id' AND project_id = '$project_shared_id' AND related_project_id != project_id"; 
 		$relprojects = $this->ProjectShare->findAll($condition, "id, related_username, related_user_id, related_project_id, related_project_name", "id desc");
@@ -815,6 +822,23 @@ Class ServicesController extends AppController {
 	}
 
 
+	function storeremix($project_shared_id, $user_shared_id, $retval) {
+		
+		$retval = str_replace('!undefined!', '', $retval);
+		list($date, $event, $pname , $username, $savername) = explode("\t", $retval);
+				
+		$project = $this->Project->find(array('Project.name'=>$pname),'id,user_id');
+		$project_id = $project['Project']['id'];
+		$project_user_id = $project['Project']['user_id'];
+		
+		if($user_shared_id != $project_user_id){
+		$record = array('id'=> null, 'remix_project_id'	=> $project_shared_id);	// project shared 
+		$record['original_project_id'] = $project_id;
+		$this->Remix->save($record);
+		}
+		
+	}//function
+	
 	
 	function isempty($var) {
 		if (((is_null($var) || rtrim($var) == "") && $var !== false) || (is_array($var) && empty($var)) ) {
