@@ -195,7 +195,7 @@ define("CHANNEL_FEATURED_CACHE_TTL", 30); //0.5 hour
 define("CHANNEL_TOPVIEWED_CACHE_TTL", 30); //0.5 hour
 define("CHANNEL_TOPLOVED_CACHE_TTL", 30); //0.5 hour
 define("CHANNEL_REMIXED_CACHE_TTL", 30); //0.5 hour
-
+define("FRIENDS_PROJECT_CACHE_TTL", 30); //0.5 hour
 define('PCOMMENT_CACHE_NUMPAGE', 3); //cache first 2 project comment pages
 
 //Allow people to give thank you after n hours.

@@ -1065,7 +1065,7 @@ class UsersController extends AppController {
 		
 		//populate friends 3 latest project
 		
-/*
+
 		$project_list = array();
 		$friends_project =array();
 		
@@ -1079,20 +1079,38 @@ class UsersController extends AppController {
 		}
 		mysqli_free_result($rs);
 		mysqli_close($mysqli); 
+		$key = 'friends-project-';
+        $ttl = FRIENDS_PROJECT_CACHE_TTL;  
 		
+       
 		$project_ids = implode(',',$project_list);
 		$page_limit = NUM_FRIEND_PROJECTS;
 		$this->PaginationTernary->show = $page_limit;
 		$this->modelClass = "Project";
 		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );	
-		
-		if(!empty($project_ids)):
+		#fetch friends froject without memchached
+		/*if(!empty($project_ids)):
 		list($order,$limit,$page) = $this->PaginationTernary->init("Project.id in (".$project_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
-		
 		$friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,$order, $limit, $page);
 		endif;
 		$this->set('friends_project_list',$friends_project);
-*/		
+		*/
+		#fetch friends froject using memchached.
+		if(!empty($project_ids)):
+		$projects_count = $this->_getFriendsProjectsCount("Project.id in (".$project_ids.") ". " AND Project.proj_visibility = 'visible'",
+                                                $key, $ttl);
+		list($order,$limit,$page) = $this->PaginationTernary->init("Project.id in (".$project_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options, $projects_count);
+		$this->Project->mc_connect();
+		$mc_key = $key.$limit.'-'.$page;
+		$friends_project = $this->Project->mc_get($mc_key, $user_id);
+		if(!$friends_project){
+			$friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,$order, $limit, $page);
+			$this->Project->mc_set($mc_key, $friends_project, $user_id, $ttl);
+		}
+		endif;
+		$this->set('friends_project_list',$friends_project);
+		$this->Project->mc_close();
+		
 		//sets the admin_comment if one exists for this user
 		$admin_comment_record = $this->AdminComment->findCount("user_id = $user_id");
 		$admin_comment_full = $this->AdminComment->find("user_id = $user_id");
@@ -2120,12 +2138,22 @@ class UsersController extends AppController {
 				$this->data['User']['email'] = '';
 				$this->data['User']['subject'] = '';
 				$this->data['User']['message'] ='';
-				
 			}
 		}//!empty
-			
-			
 			$this->render('us_banned');
 	}//function
+	
+	function _getFriendsProjectsCount($condition, $key, $ttl, $recursion = -1) {
+        $this->Project->mc_connect();
+        $model_class = 'Project';
+        $mc_key = $key.'count';
+        $projects_count = $this->Project->mc_get($mc_key);
+        if(!$projects_count) {
+            $projects_count = $this->$model_class->findCount($condition, $recursion, 'all', true);
+            $this->Project->mc_set($mc_key, $projects_count, false, $ttl);
+        }
+        $this->Project->mc_close();
+        return $projects_count;
+    }
   }
 ?>
