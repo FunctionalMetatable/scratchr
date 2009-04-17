@@ -12,6 +12,20 @@
 </div>
 <?php endif; ?>
 
+<?php if($single_thread): ?>
+    <div style="padding:5px; background:#F2F2F2; margin-bottom:10px">
+        you are viewing a single comment's thread <br/>
+        <a href="<?php echo $html->url('/projects/'.$urlname.'/'.$pid)?>">click here</a> to see all comments <br/>
+    </div>
+    <script>
+        //little heck to scroll the browser down to comment thread
+        var loc = window.location.toString();
+        if(!loc.match(new RegExp('#project_comment_list$'))) {
+            window.location = loc + '#project_comment_list';
+        }
+    </script>
+<?php endif; ?>
+
 <?php foreach($comments as $comment): ?>
 <?php
 $comment_id = $comment['Pcomment']['id'];
@@ -28,6 +42,8 @@ $is_comment_ok = (!$is_commenter_ignored && !$is_comment_ignored);
 $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
 ?>
 <div class="comment" id="<?= $comment_id ?>">
+
+    <div <?php if($single_thread): ?>style="background:#ffffcc"<?php endif; ?>>
     <h5>
         <?php echo $html->image($commenter_icon,
                 array('alt' => $comment['User']['username'], 'width'=>'28', 'height'=>'28')); ?>
@@ -119,6 +135,8 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
         <?= $this->renderElement('projects/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
     </div>
     <?php endif; ?>
+    </div>
+    
     <div class="comment_reply_main_visible" id="reply_list_<?= $comment_id; ?>">
         <?php if(!empty($comment['Pcomment']['replylist'])): ?>
             <?= $this->renderElement('projects/reply_list',
@@ -131,9 +149,11 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
 </div>
 <?php endforeach; ?>
 
+<?php if(!$single_thread): ?>
 <div class="project_pagination_container">
 	<?php
 		$pagination->setPaging($paging_secondary);
 		echo $this->renderElement('pagination_secondary');
 	?>
 </div>
+<?php endif; ?>
