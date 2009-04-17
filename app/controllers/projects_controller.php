@@ -1748,11 +1748,16 @@ class ProjectsController extends AppController {
 			$this->Project->saveField("remixes", $remix_count);*/
 
 			//fetch out comment data
-            $comment_data = $this->set_comments($pid, $owner_id, $isLogged);
+            $comment_id = null;
+            if(isset($this->params['url']['comment'])) {
+                $comment_id = $this->params['url']['comment'];
+            }
+            $comment_data = $this->set_comments($pid, $owner_id, $isLogged, $comment_id);
             $this->set_comment_errors(array());
             $this->set('comments', $comment_data['comments']);
             $this->set('ignored_commenters', $comment_data['ignored_commenters']);
             $this->set('ignored_comments', $comment_data['ignored_comments']);
+            $this->set('single_thread', $comment_data['single_thread']);
 
             //TODO: we can move it to the upper part,
             //if an user visits a project for the first time
@@ -2565,32 +2570,45 @@ class ProjectsController extends AppController {
 	/**
 	* Returns all comments relevant to logged in user viewing a project
 	**/
-	function set_comments($project_id, $creator_id, $isLoggedIn) {
-		//do pagination stuffs
-        $this->PaginationSecondary->show = 60;
-        $this->modelClass = 'Pcomment';
-        $options = array('sortBy' => 'created', 'sortByClass' => 'Pcomment',
-                    'direction' => 'DESC', 'url' => 'renderComments/' . $project_id . '/0');
-        list($order, $limit, $page) = $this->PaginationSecondary->init(
-                                        'project_id = ' . $project_id
-                                       .' AND Pcomment.comment_visibility = "visible"'
-                                       .' AND reply_to = -100', array(), $options);
-
-        //check memcache
-        $this->Pcomment->mc_connect();
-        $mc_key = $project_id.'_'.$isLoggedIn.'_'.$page;
-        $num_cache_pages = PCOMMENT_CACHE_NUMPAGE; //we will store only first few pages
+	function set_comments($project_id, $creator_id, $isLoggedIn, $comment_id = null) {
+		$comment_data = false;
         
-        $comment_data = false;
-        if($page <= $num_cache_pages) {
-            $comment_data = $this->Pcomment->mc_get('pcomments', $mc_key);
+        //no comment id is set that means we are not fetching a specific comment thread
+        if(empty($comment_id)) {
+            //do pagination stuffs
+            $this->PaginationSecondary->show = 60;
+            $this->modelClass = 'Pcomment';
+            $options = array('sortBy' => 'created', 'sortByClass' => 'Pcomment',
+                        'direction' => 'DESC', 'url' => 'renderComments/' . $project_id . '/0');
+            list($order, $limit, $page) = $this->PaginationSecondary->init(
+                                            'project_id = ' . $project_id
+                                           .' AND Pcomment.comment_visibility = "visible"'
+                                           .' AND reply_to = -100', array(), $options);
+
+            //check memcache
+            $this->Pcomment->mc_connect();
+            $mc_key = $project_id.'_'.$isLoggedIn.'_'.$page;
+            $num_cache_pages = PCOMMENT_CACHE_NUMPAGE; //we will store only first few pages
+
+            if($page <= $num_cache_pages) {
+                $comment_data = $this->Pcomment->mc_get('pcomments', $mc_key);
+            }
+
+            $comment_condition = '';
+        }
+        //comment id is set, we are fetching a specific comment thread
+        else {
+            $comment_condition = ' AND Pcomment.id = ' . $comment_id;
+            $order = null;
+            $limit = 1;
+            $page = null;
         }
         
         //not yet cached
         if($comment_data === false) {
             $this->Pcomment->unbindModel( array('belongsTo' => array('Project')) );
             $comments = $this->Pcomment->findAll( 'project_id = ' . $project_id
-                . ' AND Pcomment.comment_visibility = "visible" AND reply_to = -100',
+                . ' AND Pcomment.comment_visibility = "visible" AND reply_to = -100'.$comment_condition,
                 'Pcomment.*, User.id, User.username, User.urlname, User.timestamp',
                 $order, $limit, $page, 1, 'all', 0, true);
 
@@ -2633,13 +2651,16 @@ class ProjectsController extends AppController {
             $comment_data['commenter_ids'] = $commenter_ids;
             $comment_data['comment_ids'] = $comment_ids;
 
-            //we will store only first 2 pages
-            if($page <= $num_cache_pages) {
+            //we will store the data of first few pages if comment id is not set
+            if(empty($comment_id) && $page <= $num_cache_pages) {
                 $this->Pcomment->mc_set('pcomments', $comment_data, $mc_key);
             }
         }
-        //close memcache connection
-        $this->Pcomment->mc_close();
+
+        if(empty($comment_id)) {
+            //close memcache connection
+            $this->Pcomment->mc_close();
+        }
 
         //if the user is logged in
         if($isLoggedIn) {
@@ -2659,6 +2680,7 @@ class ProjectsController extends AppController {
             $comment_data['ignored_comments']   = $comment_data['ignored_comments'] + $user_ignored_comments;
         }
 
+        $comment_data['single_thread'] = !empty($comment_id);
         return $comment_data;
 	}
 	
