@@ -680,18 +680,36 @@ Class ServicesController extends AppController {
 			return false; 
 		}
 //$this->log(print_r($retvals,true));
-		$counter = 1;
+		
 		foreach ($retvals as $retval) {
 			if(! $this->isempty($retval)) {
 				$this->storehistory($project_shared_id, $user_shared_id, $retval);
-				if($counter ==count($retvals)-2){
-				$this->storeremix($project_shared_id, $user_shared_id, $retval);
-				}
-				$counter++;
+				
 			}
 			
 		}
 		
+		$revretvals = array_reverse($retvals);
+		foreach ($revretvals as $retval) {
+		$retval = str_replace('!undefined!', '', $retval);
+		list($date, $event, $pname , $username, $savername) = explode("\t", $retval);
+		if ($event == 'share') {
+		if ($this->isempty($pname) || $this->isempty($username)) {
+				// No point in adding record if there is no way to refer to another project
+				$this->log("\n<br>!MISSINGDATA-SH!:date:$date,pname:$pname,username:$username<br>\n");
+			} else {
+			$eventuser = $this->User->find(array('username' => $username),'id');
+			$eventuser_id = $eventuser['User']['id'];
+			$citedproject = $this->Project->find(array('user_id' => $eventuser_id,'name' => $pname));
+			$citedproject_id =$citedproject['Project']['id'];
+			if($project_shared_id != $citedproject_id  || $user_shared_id != $eventuser_id){
+					$this->storeremix($project_shared_id, $citedproject_id);
+					break;
+				}
+			}//else
+		}//event
+		
+		}//foreach revretvals
 		
 		
 		$condition = "user_id = '$user_shared_id' AND project_id = '$project_shared_id' AND related_project_id != project_id"; 
@@ -822,22 +840,12 @@ Class ServicesController extends AppController {
 	}
 
 
-	function storeremix($project_shared_id, $user_shared_id, $retval) {
-		
-		$retval = str_replace('!undefined!', '', $retval);
-		list($date, $event, $pname , $username, $savername) = explode("\t", $retval);
-		if ($event == 'share') {		
-			$project = $this->Project->find(array('Project.name'=>$pname),'id,user_id');
-			$project_id = $project['Project']['id'];
-			$project_user_id = $project['Project']['user_id'];
-		
-			if($user_shared_id != $project_user_id){
-				$record = array('id'=> null, 'remix_project_id'	=> $project_shared_id);	// project shared 
-				$record['original_project_id'] = $project_id;
-				$this->Remix->save($record);
-			}
-		}	
-		
+	function storeremix($remix_project_id, $original_project_id) {
+		$record = array('id'=> null, 'remix_project_id'	=> $remix_project_id, 'original_project_id' => $original_project_id);
+		$remix_count = $this->Remix->findCount(array('remix_project_id'=>$remix_project_id, 'original_project_id' => $original_project_id));
+		if($remix_count ==0)
+		$this->Remix->save($record);
+				
 	}//function
 	
 	
