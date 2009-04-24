@@ -198,7 +198,12 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
 			// look at chunk below
 			$poFile = $this->__output . $file . DS . 'LC_MESSAGES' . DS . 'default.po';
 			if (is_file($poFile) && is_writable($poFile)) {
+				// outputting into intermediate file ".updated"
+				// just because msgmerge has problems when it generates
+				// the new file from the source po file
 				exec($this->__msgmerge . ' ' . $poFile . ' ' . $poTemplateFullPath . ' > ' . $poFile . '.updated');
+				// now just rename it
+				rename($poFile . '.updated', $poFile);
 			}
 
 			/*$nextLevel = opendir($this->__output . $file . DS . 'LC_MESSAGES');
@@ -239,8 +244,16 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
  */
 	function __extractTokens() {
 		foreach ($this->files as $file) {
-			if ($file === __FILE__) {
-				$this->out(sprintf(__('...Omitting this script\'s file %s...', true), $file));
+			if (false !== strpos($file, $this->path . DS . 'vendors')) {
+				continue;
+			}
+			if (false !== strpos($file, $this->path . DS . 'tmp')) {
+				continue;
+			}
+			if (false !== strpos($file, $this->path . DS . 'tests')) {
+				continue;
+			}
+			if (false !== strpos($file, $this->path . DS . 'webroot')) {
 				continue;
 			}
 			$this->__file = $file;
