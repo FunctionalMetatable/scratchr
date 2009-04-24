@@ -291,6 +291,7 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
 			}
 			unset($allTokens);
 			$this->basic();
+			$this->basic('___');
 			$this->basic('__c');
 			$this->extended();
 			$this->extended('__dc', 2);
