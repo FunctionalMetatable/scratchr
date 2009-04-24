@@ -1,4 +1,6 @@
 <?php
+
+ini_set('memory_limit', '20M');
 /**
  * Note from Bakyt Niyazov
  *
@@ -201,9 +203,10 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
 				// outputting into intermediate file ".updated"
 				// just because msgmerge has problems when it generates
 				// the new file from the source po file
-				shell_exec($this->__msgmerge . ' ' . $poFile . ' ' . $poTemplateFullPath . ' > ' . $poFile . '.updated');
+				shell_exec($this->__msgmerge . ' ' . $poTemplateFullPath . ' ' . $poFile . ' -o ' . $poFile . '.updated');
 				// now just rename it
 				copy($poFile . '.updated', $poFile);
+				unlink($poFile . '.updated');
 			}
 
 			/*$nextLevel = opendir($this->__output . $file . DS . 'LC_MESSAGES');
