@@ -1,1 +1,1 @@
-___("New string");
+<?php ___("New string"); ?>
