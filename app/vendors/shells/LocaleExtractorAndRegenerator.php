@@ -203,10 +203,15 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
 				// outputting into intermediate file ".updated"
 				// just because msgmerge has problems when it generates
 				// the new file from the source po file
-				shell_exec($this->__msgmerge . ' ' . $poTemplateFullPath . ' ' . $poFile . ' -o ' . $poFile . '.updated');
-				// now just rename it
-				copy($poFile . '.updated', $poFile);
-				unlink($poFile . '.updated');
+                shell_exec($this->__msgmerge . ' ' . $poTemplateFullPath . ' ' . $poFile . ' -o ' . $poFile . '.pot2po');
+                shell_exec($this->__msgmerge . ' ' . $poFile . ' ' . $poTemplateFullPath . ' -o ' . $poFile . '.po2pot');
+                shell_exec($this->__msgmerge . ' ' . $poFile . '.pot2po' . ' ' . $poFile . '.po2pot' . ' -o ' . $poFile . '.final');
+                // now just rename it
+                copy($poFile . '.final', $poFile);
+                unlink($poFile . '.final');
+                unlink($poFile . '.pot2po');
+                unlink($poFile. '.po2pot');
+
 			}
 
 			/*$nextLevel = opendir($this->__output . $file . DS . 'LC_MESSAGES');
