@@ -291,7 +291,6 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
 			}
 			unset($allTokens);
 			$this->basic();
-			$this->basic('___');
 			$this->basic('__c');
 			$this->extended();
 			$this->extended('__dc', 2);
@@ -309,7 +308,7 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
  * @param string $functionName Function name that indicates translatable string (e.g: '__')
  * @access public
  */
-	function basic($functionName = '__') {
+	function basic($functionName = '___') {
 		$count = 0;
 		$tokenCount = count($this->__tokens);
 
