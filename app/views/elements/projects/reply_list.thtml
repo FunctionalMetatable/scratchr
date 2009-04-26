@@ -6,7 +6,7 @@
     $admin_flag_link = '(<a href="#" onclick="$(\'%s\').toggle(); return false;">%s</a>)';
     $is_comment_reply_enabled = ($isLogged && !$isLocked && $comment_level <= 1);
 
-    $view_replies_link = '<span id="view_hide_link_frame_%s" class="%s_element">(%s)</span>'
+    $view_replies_link = '<span id="view_hide_link_frame_%s" class="%s_element">(%s)</span>';
 ?>
 <?php if(!empty($isCommentError)): ?>
 <div class='comment_error'>

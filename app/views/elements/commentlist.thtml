@@ -4,7 +4,8 @@
     $reply_link = '(<a onclick="showReplyBox(%1$s, 0); addProjectCharCounter(%1$s); return false;" id="reply_hide_link_%1$s" href="#">reply</a>)';
     $more_reply_link = '<span id="view_hide_link_frame_%s" class="visible_element">(<strong>%s</strong>)</span>';
     $admin_flag_link = '(<a href="#" onclick="$(\'%s\').toggle(); return false;">%s</a>)';
-    $is_comment_reply_enabled = $isLogged && !$isLocked;
+    $comment_level = isset($comment_level) ? $comment_level : 0;
+    $is_comment_reply_enabled = ($isLogged && !$isLocked && $comment_level <= 1);
 ?>
 <?php if($isCommentError): ?>
 <div class='comment_error'>
@@ -12,24 +13,9 @@
 </div>
 <?php endif; ?>
 
-<?php if($single_thread): ?>
-    <div style="padding:5px; background:#F2F2F2; margin-bottom:10px">
-        you are viewing a single comment's thread <br/>
-        <a href="<?php echo $html->url('/projects/'.$urlname.'/'.$pid)?>">click here</a> to see all comments <br/>
-    </div>
-    <script>
-        //little heck to scroll the browser down to comment thread
-        var loc = window.location.toString();
-        if(!loc.match(new RegExp('#project_comment_list$'))) {
-            window.location = loc + '#project_comment_list';
-        }
-    </script>
-<?php endif; ?>
-
 <?php foreach($comments as $comment): ?>
 <?php
 $comment_id = $comment['Pcomment']['id'];
-$comment_level = 0;
 
 $commenter_icon = getBuddyIconBySize($comment['User']['id'], 'mini', $content_status,
                     $comment['User']['timestamp']);
@@ -71,7 +57,7 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
         if($is_comment_reply_enabled) {
             $comment_links[] = sprintf($reply_link, $comment_id);
         }
-        if ($comment['Pcomment']['replies'] > NUM_COMMENT_REPLY) {
+        if ($comment['Pcomment']['replies'] > NUM_COMMENT_REPLY && empty($comment['Pcomment']['replylist'])) {
             $comment_links[] = sprintf($more_reply_link, $comment_id,
                     $ajax->link(___('view all replies', true), '#',
                         array(  'url'       => '/projects/display_replies/' . $comment_id . '/0',
@@ -136,7 +122,6 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
     </div>
     <?php endif; ?>
     </div>
-    
     <div class="comment_reply_main_visible" id="reply_list_<?= $comment_id; ?>">
         <?php if(!empty($comment['Pcomment']['replylist'])): ?>
             <?= $this->renderElement('projects/reply_list',
