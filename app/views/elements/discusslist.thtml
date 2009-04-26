@@ -6,11 +6,6 @@
 		echo "</div>";
 	}
 ?>
-<style type="text/css">
-#comment_<?php echo $comment_index?>{
-background-color:#FFFFCC;
-}
-</style>
 <div id="gallery_comments">
 <?php 
 

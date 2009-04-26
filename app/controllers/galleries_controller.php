@@ -908,44 +908,34 @@ Class GalleriesController extends AppController {
 	 * @param $option => sorting option
 	 * @param $criteria => ASC or DESC
 	 */
-    function view($gallery_id=null, $option="added", $criteria = null) {
+    function view($gallery_id = null, $option="added", $criteria = null) {
 		$this->autoRender = false;
-		$isAdmin = $this->isAdmin();
 		$isLogged = $this->isLoggedIn();
+        $isAdmin = $this->isAdmin();
 		$user_id = $this->getLoggedInUserID();
 		
-		$current_page =null;
-		$comment_index =null;
-			
-			if(isset($this->params['url']['comment'])){
-				 $c_id =$this->params['url']['comment'];
-			  	$comment_index =$this->comment_index($c_id);
-			
-				$all_comment =$this->all_comment($gallery_id);
-				
-				$key = array_search($comment_index['Gcomment']['id'], $all_comment);
-			 	$current_page =$key/GALLERY_COMMENT_PAGE_LIMIT;
-				$current_page =ceil($current_page);
-			}
-		
 		$this->Gallery->id = $gallery_id;
-		$current_gallery_record = $this->Gallery->findAll("Gallery.id = $gallery_id", null, null, null, null, null, "overload");
-		$content_status = $this->getContentStatus();
-		
-		if (empty($current_gallery_record)) {
+		$gallery = $this->Gallery->find("Gallery.id = $gallery_id", null, null, null, null, null, "overload");
+        $content_status = $this->getContentStatus();
+
+        $timestamp = $gallery['Gallery']['timestamp'];
+		$actual_creation_date = friendlyDate($timestamp);
+        
+        $isFeatured = false;
+        $isClubbed  = false;
+        
+		if (empty($gallery)) {
 			$this->cakeError('error404');
-		} else {
-			$current_gallery = $current_gallery_record[0];
-			$gallery = $current_gallery;
-			$gallery_content_level = $current_gallery['Gallery']['status'];
-			$gallery_visibility = $current_gallery['Gallery']['visibility'];
-			if ($gallery_visibility != 'visible' && !$isAdmin) {
+		}
+        else {
+			if ($gallery['Gallery']['visibility'] != 'visible' && !$isAdmin) {
 				$this->cakeError('error404');
 			}
-			if ($gallery_content_level == "safe") {
-			} else {
-				$isFeatured = $this->FeaturedGallery->hasAny("gallery_id = $gallery_id");
-				$isClubbed = $this->ClubbedGallery->hasAny("gallery_id = $gallery_id");
+			
+            $isFeatured = $this->FeaturedGallery->hasAny("gallery_id = $gallery_id");
+            $isClubbed  = $this->ClubbedGallery->hasAny("gallery_id  = $gallery_id");
+
+            if ($gallery['Gallery']['status'] != "safe") {
 				if ($content_status == "safe") {
 					if (!$isFeatured && !$isClubbed) {
 						$this->cakeError('error404');
@@ -953,38 +943,29 @@ Class GalleriesController extends AppController {
 				}
 			}
 		}
-		if ($user_id) {
-			$current_user = $this->User->find("id = $user_id");
-			$user_status = $current_user['User']['status'];
-		} else {
-			$user_status = "normal";
-		}
-		
-		$isMine = ($user_id == $current_gallery['User']['id']);
-		$owner_id = $current_gallery['Gallery']['user_id'];
-		$total_projects = $this->GalleryProject->findCount("gallery_id = $gallery_id");
-		
-		//listing ignored user by gallery owner.
-		$ignored_user_array =array();
-		$ignore_user_list = $this->IgnoredUser->findAll("IgnoredUser.blocker_id = $owner_id",'user_id');
-		foreach($ignore_user_list as $ignore_user)
-		array_push($ignored_user_array,$ignore_user['IgnoredUser']['user_id']);
-		
-		$final_comments = $this->set_comments($gallery_id, $user_id, $isLogged,$current_page);
-		$this->set_comment_errors(Array());
-		$final_tags = $this->set_tags($gallery_id, $user_id, $isLogged);
 
-		//Information for addprojectmember popup
-		$sessionUID = $this->getLoggedInUserID();
-		$this->User->id = $sessionUID;
-		$current_user = $this->User->read();
-		$isThemeOwner = $gallery['User']['id'] == $sessionUID;
-		$isPublic = false;
+        
+        $url        = strtolower(env('SERVER_NAME'));
+		$feed_link  = "/feeds/getRecentGalleryProjects/$gallery_id";
+        $gallery_usage = $gallery['Gallery']['usage'];
+        $owner_id = $gallery['Gallery']['user_id'];
+        $gallery = $this->finalize_gallery($gallery);
+		$page = $this->set_gallery_projects_full($gallery_id, $option, $criteria);
+        
+        //gallery membership
+        $isPublic = ($gallery['Gallery']['type'] == 0);
+        $isMine = ($user_id == $owner_id);
+        $isFriend = false;
 		$isThemeMember = false;
 		$membership_type = 10;
-		
-		if ($isLogged) {
-			$member_record = $this->GalleryMembership->find("GalleryMembership.gallery_id = $gallery_id AND GalleryMembership.user_id = $sessionUID");
+        $user_status = 'normal';
+        $user_name = '';
+
+		if ($user_id) {
+			$current_user   = $this->User->find("id = $user_id");
+			$user_status    = $current_user['User']['status'];
+            $user_name      = $current_user['User']['username'];
+            $member_record = $this->GalleryMembership->find("GalleryMembership.gallery_id = $gallery_id AND GalleryMembership.user_id = $user_id");
 			if (!empty($member_record)) {
 				$membership_type = $member_record['GalleryMembership']['type'];
 				$membership_rank = $member_record['GalleryMembership']['rank'];
@@ -992,90 +973,78 @@ Class GalleriesController extends AppController {
 					$isThemeMember = true;
 				}
 			}
-		}
-		if ($gallery['Gallery']['type'] == 0) {
-			$isPublic = true;
-		}
-		
-		//sets the last altered admin's name
-		$final_flags = $this->GalleryFlag->find("gallery_id = $gallery_id");
-
-		$admin_id = $final_flags['GalleryFlag']['admin_id'];
-		if ($admin_id == 0) {
-			$admin_name = "None";
-		} else {
-			$admin = $this->User->find("id = $admin_id");
-			$admin_name = $admin['User']['username'];
+            if ($gallery_usage == 'friends') {
+                $friend = $this->Relationship->find("Relationship.user_id = $owner_id AND Relationship.friend_id = $user_id");
+                if (!empty($friend)) {
+                    $isFriend = true;
+                }
+            }
 		}
 
-		if ($this->GalleryFlag->findCount("gallery_id = $gallery_id") == 0) {
-			$final_flags = null;
-		} else {
+        //listing ignored user by gallery owner.
+		$ignored_user_array = $this->IgnoredUser->find('list',
+            array(
+            'conditions'=> array('blocker_id' => $owner_id),
+            'fields' => array('id', 'user_id')
+            )
+        );
 
-		}
+		//commments
+        $comment_id = null;
+        if(isset($this->params['url']['comment'])) {
+            $comment_id = $this->params['url']['comment'];
+        }
+        $comments = $this->set_comments($gallery_id, $user_id, $isLogged, $comment_id);
+		$this->set_comment_errors(array());
+
+        //tags
+		$tags = $this->set_tags($gallery_id, $user_id, $isLogged);
 		
-		$gallery_usage = $gallery['Gallery']['usage'];
-		$url = env('SERVER_NAME');
-		$url = strtolower($url);
-		$feed_link = "/feeds/getRecentGalleryProjects/$gallery_id";
-		
-		if ($isLogged) {
-			$friend_record = $this->Relationship->find("Relationship.user_id = $owner_id AND Relationship.friend_id = $user_id");
-		} else {
-			$friend_record = Array();
-		}
-		
-		if (empty($friend_record)) {
-			$isFriend = 0;
-		} else {
-			if ($gallery_usage == 'friends') {
-				$isFriend = 1;
-			} else {
-				$isFriend = 0;
-			}
-		}
-		
-		$timestamp = $gallery['Gallery']['timestamp'];
-		$actual_creation_date = friendlyDate($timestamp);
-		
-		$gallery = $this->finalize_gallery($gallery);
-		$page = $this->set_gallery_projects_full($gallery_id, $option, $criteria);
-		
+		//sets flags and the last altered admin's name
+		$flags = $this->GalleryFlag->find("gallery_id = $gallery_id");
+        $admin_name = "None";
+        if(!empty($flags)) {
+            if ($flags['GalleryFlag']['admin_id'] != 0) {
+                $admin_name = $this->User->field('username', "id = $admin_id");
+            }
+        }
+
+        //if there was an upload error
 		$upload_error = $this->Session->read('upload_error');
 		if(!empty($upload_error)) {
 			$this->set('upload_error', $upload_error);
 			$this->Session->del('upload_error');
 		}
-		$this->set('isClubbed',$this->ClubbedGallery->hasAny("gallery_id = $gallery_id"));
-		$this->set('ignored_user_array',$ignored_user_array);
-		$this->set('sessionUID',$sessionUID);
-		$this->set('gallery', $gallery);
-		$this->set('gallery_usage', $gallery_usage);
-		$this->set('actual_creation_date', $actual_creation_date);
-		$this->set('isThemeMember', $isThemeMember);
+
+		$this->set('sessionUID', $user_id);
+        $this->set('isLogged', $isLogged);
+        $this->set('gallery_id', $gallery_id);
+        $this->set('theme_id', $gallery_id);
+        $this->set('theme_owner', $gallery['User']);
+        $this->set('session_username', $user_name);
+        $this->set('gallery', $gallery);
+        $this->set('actual_creation_date', $actual_creation_date);
+        $this->set('gallery_usage', $gallery_usage);
+        $this->set('theme', $gallery['Gallery']);
+        $this->set('status', $gallery['Gallery']['status']);
+        $this->set('feed_link', $feed_link);
+        $this->set('isClubbed', $isClubbed);
+        $this->set('isFeatured', $isFeatured);
+        $this->set('isThemeMember', $isThemeMember);
 		$this->set('isPublic', $isPublic);
-		$this->set('membership_type', $membership_type);
-		$this->set('isFriend', $isFriend);
+        $this->set('membership_type', $membership_type);
+        $this->set('isFriend', $isFriend);
 		$this->set('isMine', $isMine);
-		$this->set('feed_link', $feed_link);
+        $this->set('isThemeOwner', $isMine);
+        $this->set('user_status', $user_status);
+        $this->set('theme_comments', $comments);
+        $this->set('ignored_user_array', $ignored_user_array);
 		$this->set('admin_name', $admin_name);
-		$this->set('status', $gallery['Gallery']['status']);
-		$this->set('flags', $final_flags);
+		$this->set('flags', $flags);
 		$this->set('page', $page);
-		$this->set('gallery_tags', $final_tags);
-		$this->set('theme', $gallery['Gallery']);
-		$this->set('gallery_id', $gallery_id);
-		$this->set('theme_id', $gallery_id);
-		$this->set('theme_owner', $gallery['User']);
-		$this->set('theme_comments', $final_comments);
+		$this->set('gallery_tags', $tags);
 		$this->set('option', $option);
-		$this->set('isThemeOwner', $isThemeOwner);
-		$this->set('isFeatured', $this->FeaturedGallery->hasAny("gallery_id = $gallery_id"));
-		$this->set('session_username', $current_user['User']['username']);
-		$this->set('isClubbed', $this->ClubbedGallery->hasAny("gallery_id = $gallery_id"));
-		$this->set('isLogged', $isLogged);
-		$this->set('user_status', $user_status);
-		$this->set('comment_index',$comment_index['Gcomment']['id']);
+		
 		$this->render('themepage','scratchr_themepage');
     }
 
@@ -2624,26 +2593,23 @@ Class GalleriesController extends AppController {
 	/**
 	* Returns all comments relevant to logged in user viewing a gallery
 	**/
-	function set_comments($gallery_id, $user_id, $isLogged, $pages=null) {
-		$gallery = $this->Gallery->find("Gallery.id = $gallery_id");
-		$creator_id = $gallery['Gallery']['user_id'];
-		
+	function set_comments($gallery_id, $user_id, $isLogged, $comment_id = null) {
 		$this->PaginationSecondary->show = GALLERY_COMMENT_PAGE_LIMIT;
-		$this->modelClass = "Gcomment";
-		
-		if($pages){
-		$options = Array("page"=>$pages,"sortBy"=>"timestamp", "sortByClass" => "Gcomment",
-						"direction"=> "DESC", "url"=>"/galleries/renderComments/" . $gallery_id);
-		list($order,$limit,$page) = $this->PaginationSecondary->init("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = -100", Array(), $options);
-		$gallery_comments = $this->Gcomment->findAll("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = -100", null, $order, $limit, $page);
-		}
-		else
-		{
-		$options = Array("sortBy"=>"timestamp", "sortByClass" => "Gcomment",
-						"direction"=> "DESC", "url"=>"/galleries/renderComments/" . $gallery_id);
-		list($order,$limit,$page) = $this->PaginationSecondary->init("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = -100", Array(), $options);
-		$gallery_comments = $this->Gcomment->findAll("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = -100", null, $order, $limit, $page);
-		}
+		$this->modelClass = 'Gcomment';
+		$options = Array('sortBy' => 'timestamp', 'sortByClass' => 'Gcomment',
+						'direction' => 'DESC', 'url' => '/galleries/renderComments/' . $gallery_id);
+		list($order, $limit, $page) = $this->PaginationSecondary->init(
+            'gallery_id = ' . $gallery_id . ' AND comment_visibility = "visible" AND reply_to = -100',
+            array(), $options);
+
+        $this->Gcomment->unbindModel( array('belongsTo' => array('Gallery')) );
+        $comments = $this->Gcomment->findAll('gallery_id = ' . $gallery_id
+            . ' AND comment_visibility = "visible" AND reply_to = -100',
+            null, $order, $limit, $page);
+
+        //$gallery = $this->Gallery->find("Gallery.id = $gallery_id");
+		//$creator_id = $gallery['Gallery']['user_id'];
+		//$gallery_comments = $this->Gcomment->findAll("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = -100", null, $order, $limit, $page);
 		
 		$counter = 0;
 		$final_comments = Array();
@@ -2685,6 +2651,7 @@ Class GalleriesController extends AppController {
 			$final_comments[$counter] = $temp_comment;
 			$counter++;
 		}
+        
 		return $final_comments;
 	}
 	
