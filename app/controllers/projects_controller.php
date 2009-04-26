@@ -1759,6 +1759,49 @@ class ProjectsController extends AppController {
             $this->set('ignored_comments', $comment_data['ignored_comments']);
             $this->set('single_thread', $comment_data['single_thread']);
 
+             //project locking
+            if ($project['Project']['locked'] == 0) {
+                $isLocked = false;
+            } else {
+                $isLocked = true;
+            }
+            $this->set('isLocked', $isLocked);
+
+            //setting user status
+            $user_status = 'normal';
+            if ($isLogged) {
+                $user_status = $this->User->find("User.id = $logged_id", 'User.status');
+                $user_status = $user_status['User']['status'];
+            }
+            $this->set('user_status', $user_status);
+
+            //setting url name, pid
+            $this->set('urlname', $urlname);
+            $this->set('project',$project);
+            $this->set('pid', $pid);
+            $this->set('project_id', $project['Project']['id']);
+            $this->set('owner_id', $project['User']['id']);
+            $this->set('date', friendlyDate($project['Project']['created']));
+            $isProjectOwner = $owner_id == $logged_id;
+            $this->set('isProjectOwner', $isProjectOwner);
+
+            if($comment_id) {
+                $comment_level = 0;
+                if($comment_data['comments'][0]['Pcomment']['reply_to']!=-100) {
+                   $reply_to = $this->Pcomment->field('reply_to', 'id = '. $comment_data['comments'][0]['Pcomment']['reply_to']);
+                   if($reply_to == -100) {
+                       $comment_level = 1;
+                   }
+                   else {
+                       $comment_level = 2;
+                   }
+                }
+                $this->set('highlight_comment_id', $comment_id);
+                $this->set('comment_level', $comment_level);
+                $this->render('comment_thread','scratchr_projectpage');
+                return;
+            }
+           
             //TODO: we can move it to the upper part,
             //if an user visits a project for the first time
             //we can assume he has not loved, favorited or flagged the project before
@@ -1840,13 +1883,6 @@ class ProjectsController extends AppController {
 				}
 			}
 
-            //project locking
-            if ($project['Project']['locked'] == 0) {
-                $isLocked = false;
-            } else {
-                $isLocked = true;
-            }
-
             //make one single call to FeaturedProject, we don't need hasAny
             $featured_timestamp = $this->FeaturedProject->field('timestamp',"project_id = $pid");
             $isFeatured = !empty($featured_timestamp);
@@ -1894,13 +1930,6 @@ class ProjectsController extends AppController {
             $this->set('taggers', $tag_data['taggers']);
             $this->set('project_tags', $tag_data['project_tags']);
 
-            //setting user status
-            $user_status = 'normal';
-            if ($isLogged) {
-                $user_status = $this->User->find("User.id = $logged_id", 'User.status');
-                $user_status = $user_status['User']['status'];
-            }
-
             $isProjectOwner = $owner_id == $logged_id;
 
             $gallery_count = 0;
@@ -1921,24 +1950,14 @@ class ProjectsController extends AppController {
             //close memcache connection
             //$this->Project->mc_close();
 
-            $this->set('isProjectOwner', $isProjectOwner);
             $this->set('isGalleryOwner', $isGalleryOwner);
-            $this->set('user_status', $user_status);
-            $this->set('isLocked', $isLocked);
             $this->set('viewcount', $project['Project']['views']);
             $this->set('user_projects', $user_projects);
             $this->set('proj_visibility', $project['Project']['proj_visibility']);
             $this->set('isLogged', $isLogged);
             $this->set('isCensored', $isCensored);
             $this->set('status', $project['Project']['status']);
-            $this->set('pid', $pid);
-            $this->set('owner_id', $project['User']['id']);
-            $this->set('urlname', $urlname);
-            $this->set('project',$project);
-            $this->set('isProjectOwner', $this->activeSession($project['User']['id']));
             $this->set('isMine', $this->activeSession($project['User']['id']));
-            $this->set('date', friendlyDate($project['Project']['created']));
-            $this->set('project_id', $project['Project']['id']);
             $this->set('urlname', $urlname);
 
             $this->render('projectcontent','scratchr_projectpage');
@@ -2594,7 +2613,8 @@ class ProjectsController extends AppController {
                 $comment_data = $this->Pcomment->mc_get('pcomments', $mc_key);
             }
 
-            $comment_condition = '';
+            $comment_condition = ' AND reply_to = -100';
+            $reply_limit = NUM_COMMENT_REPLY;
         }
         //comment id is set, we are fetching a specific comment thread
         else {
@@ -2602,13 +2622,14 @@ class ProjectsController extends AppController {
             $order = null;
             $limit = 1;
             $page = null;
+            $reply_limit = null;
         }
         
         //not yet cached
         if($comment_data === false) {
             $this->Pcomment->unbindModel( array('belongsTo' => array('Project')) );
             $comments = $this->Pcomment->findAll( 'project_id = ' . $project_id
-                . ' AND Pcomment.comment_visibility = "visible" AND reply_to = -100'.$comment_condition,
+                . ' AND Pcomment.comment_visibility = "visible"'.$comment_condition,
                 'Pcomment.*, User.id, User.username, User.urlname, User.timestamp',
                 $order, $limit, $page, 1, 'all', 0, true);
 
@@ -2628,7 +2649,7 @@ class ProjectsController extends AppController {
                 $comment['Pcomment']['replylist'] = array();
                 if($comment['Pcomment']['replies'] > 0) {
                     $comment['Pcomment']['replylist'] = $this->set_replies($project_id,
-                        $creator_id, $comment['Pcomment']['id'], $this->getLoggedInUserID(), NUM_COMMENT_REPLY);
+                        $creator_id, $comment['Pcomment']['id'], $this->getLoggedInUserID(), $reply_limit);
                 }
 
                 //replace the comment in $comments list
