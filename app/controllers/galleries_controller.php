@@ -480,9 +480,9 @@ Class GalleriesController extends AppController {
 
 		if ($this->isAdmin() || $gallery['Gallery']['user_id'] == $user_id) {
 			if ($this->isAdmin()) {
-				$this->hide_gallery($gallery_id, "delbyusr");
-			} else {
 				$this->hide_gallery($gallery_id, "delbyadmin");
+			} else {
+				$this->hide_gallery($gallery_id, "delbyusr");
 			}
 			$this->redirect('/users/showgalleries/' . $user_id);
 		} else {
