@@ -821,7 +821,8 @@ ini_restore ("memory_limit");
 		$this->Gallery->id = $gallery_id;
 		$gallery = $this->Gallery->read();
 		$this->Gallery->saveField("visibility", $visibility);
-		
+		$this->Gallery->bindHABTMProject();
+		$this->Gallery->_deleteLinks($gallery_id);
 		$gallery_memberships = $this->GalleryMembership->findAll("gallery_id = $gallery_id");
 		foreach ($gallery_memberships as $record) {
 			$this->GalleryMembership->delete($record['GalleryMembership']['id']);
