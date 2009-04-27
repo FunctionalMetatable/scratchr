@@ -1875,12 +1875,24 @@ class ProjectsController extends AppController {
 				$related_user = $this->User->find(array('username' => $project['Project']['related_username']));
 				$this->set('related_user_id', $related_user['User']['id']);
 				$this->set('related_project_id', $project['Project']['related_project_id']);
-				$condition = "user_id = '" . $project['User']['id'] . "' AND project_id = '$pid' AND related_user_id != $owner_id AND related_username != '" .  $project['Project']['related_username'] . "'";
+				$original_project_id = $this->findOriginalProject($pid);
+				$this->Project->mc_connect();
+            	$relproject = $this->Project->mc_get('relproject', $project_id);
+				if(!$relproject)
+				{
+				$relproject = $this->Project->query("SELECT User.username,Project.id FROM projects as Project,users as User WHERE Project.id=$original_project_id and Project.user_id =User.id");
+				$this->Project->mc_set('relproject', $relproject, $project_id);
+				}
+				if($relproject && $original_project_id != $project['Project']['related_project_id']){
+				$this->set('related_original_username', $relproject['0']['User']['username']);
+				$this->set('related_original_project_id', $relproject['0']['Project']['id']);
+				}
+				/*$condition = "user_id = '" . $project['User']['id'] . "' AND project_id = '$pid' AND related_user_id != $owner_id AND related_username != '" .  $project['Project']['related_username'] . "'";
 				$relprojects = $this->ProjectShare->findAll($condition, "id, related_username, related_user_id, related_project_id, related_project_name", "id asc");
 				foreach ($relprojects as $relproject) {
 					$this->set('related_original_username', $relproject['ProjectShare']['related_username']);
 					$this->set('related_original_project_id', $relproject['ProjectShare']['related_project_id']);
-				}
+				}*/
 			}
 
             //make one single call to FeaturedProject, we don't need hasAny
@@ -1944,11 +1956,18 @@ class ProjectsController extends AppController {
 
             $this->set('downloadcount', $this->Downloader->findCount(array('project_id' => $pid)));
 
-            //TODO: i think we can avoid this query, we have already fetced out related projects?
-            $this->set('relatedcount', count($this->ProjectShare->findAll("related_project_id = $pid AND related_project_id != project_id group by project_id, user_id")));
+            //set remixes and remixer
+			$this->Project->mc_connect();
+            $project_history = $this->Project->mc_get('project_history', $project_id);
+			if(!$project_history){
+			$project_history = $this->Project->query("SELECT  count(*)as original_remixes,count(distinct user_id)as remixer FROM `projects` WHERE related_project_id=$pid");
+			$this->Project->mc_set('project_history', $project_history, $project_id);
+			}
+			$this->set('relatedcount', $project_history['0']['0']['original_remixes']);
+            $this->set('remixer', $project_history['0']['0']['remixer']);
 
             //close memcache connection
-            //$this->Project->mc_close();
+            $this->Project->mc_close();
 
             $this->set('isGalleryOwner', $isGalleryOwner);
             $this->set('viewcount', $project['Project']['views']);
@@ -2126,10 +2145,20 @@ class ProjectsController extends AppController {
 	
 	function mods($urlnameignored = null, $pid = null) {
 		$this->exitOnInvalidArgCount(2);
-		
-		$modpids = $this->ProjectShare->findAll("related_project_id = $pid AND related_project_id != project_id group by project_id, user_id");
-		
-		foreach ($modpids as $modpid) {	
+		$this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+		$modpids = $this->Project->findAll("related_project_id = $pid");
+		foreach ($modpids as $project) {
+		if ($project['User']['username']){
+				$mods['linkable'][] = array('username' => $project['User']['username'], 'pid'  => $project['Project']['id']); 
+			}
+			 else {
+					$mods['unlinkable'][] = array('user_id' => $project['Project']['user_id'], 'pid' => $project['Project']['id']);  
+				}
+			
+		}//foreach
+		/*foreach ($modpids as $modpid) {	
 			$this->Project->bindUser();
 			$this->Project->id = $modpid['ProjectShare']['project_id'];
 			$project = $this->Project->read();
@@ -2144,7 +2173,8 @@ class ProjectsController extends AppController {
 				}
 			}
 			$this->set('mods', $mods);
-		}
+		}*/
+		$this->set('mods', $mods);
 		$this->render('mods', 'scratchr_default');
 		return;
 	}	
@@ -2937,5 +2967,21 @@ class ProjectsController extends AppController {
         }
         $this->Pcomment->mc_close();
     }
+	
+	function findOriginalProject($pid){
+	$this->Project->mc_connect();
+    $project = $this->Project->mc_get('original_project', $pid);
+	if(!$project){
+	$project =$this->Project->find("Project.id = $pid","id,user_id,related_project_id,related_username");
+		if($project['Project']['related_project_id'] ==""){
+			$this->Project->mc_set('original_project', $project['Project']['id'], $pid);
+			$this->Project->mc_close();
+			return $project['Project']['id'];
+		}
+		else
+		return ($this->findOriginalProject($project['Project']['related_project_id']));
+	  }
+	  return $project;
+	}
 }
 ?>
