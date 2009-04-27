@@ -169,7 +169,7 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 		}
 		
 		// for real remixes
-		$remixer =$project['Project']['remixer'];
+		//$remixer =$project['Project']['remixer'];
 		$remixertag = $html->url('/projects/'.$urlname.'/'.$pid.'/'.'real'.'/mods');
 
 		if(!empty($remixer)) {
