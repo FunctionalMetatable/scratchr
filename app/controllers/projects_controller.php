@@ -1960,7 +1960,7 @@ class ProjectsController extends AppController {
 			$this->Project->mc_connect();
             $project_history = $this->Project->mc_get('project_history', $project_id);
 			if(!$project_history){
-			$project_history = $this->Project->query("SELECT  count(*)as original_remixes,count(distinct user_id)as remixer FROM `projects` WHERE related_project_id=$pid");
+			$project_history = $this->Project->query("SELECT  count(*)as original_remixes,count(distinct user_id)as remixer FROM `projects` WHERE (proj_visibility='visible' OR proj_visibility='censbycomm' OR proj_visibility='censbyadmin') AND related_project_id=$pid");
 			$this->Project->mc_set('project_history', $project_history, $project_id);
 			}
 			$this->set('relatedcount', $project_history['0']['0']['original_remixes']);
