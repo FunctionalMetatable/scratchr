@@ -1,4 +1,3 @@
 <?php
-	$params = Array('theme_id' => $theme_id, 'comments' => $theme_comments, 'page' => $page);
-	e($this->renderElement('discusslist', $params));
+	e($this->renderElement('discusslist'));
 ?>

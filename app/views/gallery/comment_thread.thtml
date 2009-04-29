@@ -1,0 +1,57 @@
+<?php
+    $user_locked = ($user_status == "normal") ? 0 : 1;
+?>
+<!-- |||||| Begin content area ||||||| -->
+<div id="main">
+<div class="container">
+  <h3><span id="gallery_title"><?php e(htmlspecialchars($theme['name']))?></span></h3>
+  <div id="projectload"></div>
+</div>
+
+
+<!-- ::: Begin comments ::: -->
+<div id="comments" class="container">
+  <h3><?php ___('Comments'); ?></h3>
+    <div style="height:9px;">&nbsp</div>
+    <div style="padding:5px; background:#F2F2F2; margin-bottom:10px">
+    you are viewing a single comment's thread <br/>
+    <a href="<?php echo $html->url('/galleries/view/'.$theme_id)?>">click here</a> to see all comments <br/>
+    </div>
+    <div id="ajax_pagination_secondary">
+	<?php
+		e($ajax->div("theme_comment_list"));
+			e($this->renderElement('discusslist'));
+		e($ajax->divEnd("theme_comment_list"));
+	?>
+	</div>
+
+</div>
+<!-- ::: End comments ::: -->
+
+</div>
+ <!-- ////// End main content ////// -->
+
+
+
+<!-- |||||| Begin sidebar ||||||| -->
+<div id="sidebar">
+
+	<!-- ::: Begin info ::: -->
+    <div class="sidecontainer">
+	  <?php
+		$gallery_icon_src = $gallery['Gallery']['icon_src'];
+	  ?>
+	  <?php echo $html->image($gallery_icon_src,array('title'=>htmlspecialchars($theme['name']),'alt'=>htmlspecialchars($theme['name']),'width'=>'90','height'=>'90'))?>
+	  
+
+
+	<h5><?php ___('Gallery owner'); ?>: <a href="<?php echo $html->url('/users/')?><?php e($theme_owner['urlname'])?>"><?php e($theme_owner['username'])?>
+	<?php echo $html->image(getBuddyIconBySize($theme_owner['id'],'mini', $content_status, $theme_owner['timestamp']),array('title'=>$theme_owner['username'],'alt'=>$theme_owner['username'],'width'=>'28','height'=>'28'))?>
+	</a></h5>
+	<?php echo "<p> <strong>"; ___('Created'); echo "</strong>: $actual_creation_date " . ___("ago", 'false') . "</p>"; ?>
+	
+	</div>
+    <!-- ::: End info ::: -->
+    
+</div>
+<!-- ////// End main sidebar ////// -->

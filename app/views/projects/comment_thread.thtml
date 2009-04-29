@@ -32,34 +32,7 @@
 	<?php if($content_status == "all"): ?>
     <div id="comments" class="container">
       <h3><?php ___('Comments'); ?></h3>
-	   <?php 
-	     if (!$isLogged) {
-			echo "<h5>You need to be logged in to post comments</h5>";
-		 } elseif($user_locked) {
-			echo "<h5>Your account has been locked and you can no longer post comments</h5>";
-		 } elseif ($isLocked) {
-			echo "<h5>The creator of this project has locked it so new comments are no longer accepted</h5>";
-		 }
-	   ?>
-
-       <!--
-	   <?php if(!$isLocked && !$user_locked || $isMine): ?>
-		<h4><?php ___('Add a Comment'); ?> </h4>	  
-		<form id="pcomment" action="<?=e("/projects/$urlname/$pid/comment")?>" method="post">
-
-			<p><textarea id='pcomment_textarea' name="pcomment_textarea" cols="55" rows="3"></textarea>
-			<div id="counter-pcomment_textarea"></div></p>
-			<?php echo $ajax->submit(___('Add', true), 
-                array('id' => 'pcomment_submit', "condition"=>"(checkAll('pcomment_textarea', $lock, $user_locked))",
-                    "class"=>"button","url"=>"/projects/$urlname/$pid/comment", "update"=>"ajax_pagination_secondary",
-                    "loading" => "document.getElementById('pcomment_submit').disabled = true;",
-                    'position' => 'top',
-                    "complete" => "document.getElementById('pcomment_textarea').value = ''; document.getElementById('pcomment_submit').disabled = false;" ));?>
-		</form>
-	   <?php endif; ?>
-       -->
-       
-        <div style="height:9px;">&nbsp</div>
+	    <div style="height:9px;">&nbsp</div>
         <div style="padding:5px; background:#F2F2F2; margin-bottom:10px">
         you are viewing a single comment's thread <br/>
         <a href="<?php echo $html->url('/projects/'.$urlname.'/'.$pid)?>">click here</a> to see all comments <br/>
