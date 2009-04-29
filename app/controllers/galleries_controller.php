@@ -591,19 +591,16 @@ Class GalleriesController extends AppController {
 						$new_tcomment = array('Gcomment'=>array('id' => null, 'gallery_id'=>$gallery_id, 'user_id'=>$commenter_id, 'content'=>$comment, 'comment_visibility'=>$vis));
 						$this->Gcomment->id=null;
 						$this->Gcomment->save($new_tcomment);
+                        $new_tcomment['Gcomment']['id'] = $this->Gcomment->getInsertID();
+                        $this->deleteCommentsFromMemcache($gallery_id);
 						$this->updateGallery($gallery_id);
-						  }
+					}
 				}
             }
         } else {
 			array_push($errors, "Please enter a valid comment.");
 		}
 		$this->Gcomment->bindUser();
-
-		$final_comments = $this->set_comments($gallery_id, $user_id, $isLogged);
-		$this->set_comment_errors($errors);
-		$page = 0;
-
 		$commenter_userrecord = $this->User->find("id = $commenter_id");
 		$commenter_username = $commenter_userrecord['User']['username'];
 		$user_id = $gallery['Gallery']['user_id'];
@@ -630,13 +627,14 @@ Class GalleriesController extends AppController {
 			}
 		}
 		
-		$this->set('gallery_id', $gallery_id);
-		$this->set('theme_id', $gallery_id);
-		$this->set('isThemeOwner', $commenter_id == $gallery['Gallery']['user_id']);
-		$this->set('isLogged', $isLogged);
-		$this->set('page', $page);
-		$this->set('theme_comments', $final_comments);
-
+		$this->set_comment_errors($errors);
+		//the comment is saved
+        if(!empty($new_tcomment)) {
+          $new_tcomment['User'] =  $commenter_userrecord['User'];
+          $this->set('comment', $new_tcomment);
+          $this->set('isThemeOwner', $user_id == $user_id);
+          $this->set('gallery_id', $gallery_id);
+        }
 		$this->render('themecomments_ajax', 'ajax');
 		return;
 	}
@@ -671,7 +669,7 @@ Class GalleriesController extends AppController {
 		$this->Gcomment->id = $comment_id;
 		$this->Gcomment->saveField("visibility", null) ;
 
-		$final_comments = $this->set_comments($gallery_id, $user_id, $isLogged);
+		$final_comments = $this->set_comments($gallery_id, $gallery_owner_id, $user_id, $isLogged);
 		$this->set_comment_errors(Array());
 		
 		$this->set('isLogged', $isLogged);
@@ -710,6 +708,7 @@ Class GalleriesController extends AppController {
 		} else {
 			$this->hide_gcomment($comment_id, "delbyadmin");
 		}
+        $this->deleteCommentsFromMemcache($gallery_id);
 		exit;
 	}
 
@@ -881,26 +880,30 @@ Class GalleriesController extends AppController {
 	*
 	*/
 	function renderComments($gallery_id, $current_page = null) {
-		$this->autoRender = false;
-		$this->Gallery->id=$gallery_id;
+		$current_page = null;
+        $this->autoRender = false;
+		
+        $this->Gallery->id = $gallery_id;
         $gallery = $this->Gallery->read();
-		$user_id = $this->getLoggedInUserID();
-		$isLogged = $this->isLoggedIn();
-
-
+		
         if (empty($gallery)) exit();
-		
-		$final_comments = $this->set_comments($gallery_id, $user_id, $isLogged);
-		$this->set_comment_errors(Array());
-		
-		$this->set('gallery_id', $gallery_id);
-		$this->set('page', $current_page);
-		$this->set('isLogged', $isLogged);
+
+        $owner_id = $gallery['User']['id'];
+        $isLogged = $this->isLoggedIn();
+        $user_id = $this->getLoggedInUserID();
+        $comment_data = $this->set_comments($gallery_id, $owner_id, $user_id, $isLogged);
+		$this->set_comment_errors(array());
+
+        $this->set('comments', $comment_data['comments']);
+		$this->set('ignored_commenters', $comment_data['ignored_commenters']);
+        $this->set('ignored_comments', $comment_data['ignored_comments']);
+        $this->set('isLogged', $isLogged);
+        $this->set('isThemeOwner', $this->getLoggedInUserID() == $owner_id);
 		$this->set('theme_id', $gallery_id);
-		$this->set('theme_comments', $final_comments);
-		$this->render('render_comments_ajax', 'ajax');
-		return;
+		
+        $this->render('render_comments_ajax', 'ajax');
 	}
+
 
 	/**
 	 * Renders a gallery page's content
@@ -944,28 +947,69 @@ Class GalleriesController extends AppController {
 			}
 		}
 
-        
-        $url        = strtolower(env('SERVER_NAME'));
-		$feed_link  = "/feeds/getRecentGalleryProjects/$gallery_id";
-        $gallery_usage = $gallery['Gallery']['usage'];
-        $owner_id = $gallery['Gallery']['user_id'];
         $gallery = $this->finalize_gallery($gallery);
 		$page = $this->set_gallery_projects_full($gallery_id, $option, $criteria);
+        $owner_id = $gallery['Gallery']['user_id'];
+        $isMine = ($user_id == $owner_id);
+        $this->set('theme', $gallery['Gallery']);
+        $this->set('theme_id', $gallery_id);
+        $this->set('gallery_id', $gallery_id);
+        $this->set('isThemeOwner', $isMine);
+        $this->set('theme_owner', $gallery['User']);
+        $this->set('gallery', $gallery);
+        $this->set('actual_creation_date', $actual_creation_date);
+
+        $user_status = 'normal';
+        $user_name = '';
+        if($user_id) {
+            $current_user   = $this->User->find("id = $user_id");
+			$user_status    = $current_user['User']['status'];
+            $user_name      = $current_user['User']['username'];
+        }
+        $this->set('session_username', $user_name);
+        $this->set('user_status', $user_status);
+        
+        //commments
+        $comment_id = null;
+        if(isset($this->params['url']['comment'])) {
+            $comment_id = $this->params['url']['comment'];
+        }
+        $comment_data = $this->set_comments($gallery_id, $owner_id, $user_id, $isLogged, $comment_id);
+        $this->set_comment_errors(array());
+        $this->set('comments', $comment_data['comments']);
+        $this->set('ignored_commenters', $comment_data['ignored_commenters']);
+        $this->set('ignored_comments', $comment_data['ignored_comments']);
+        $this->set('single_thread', $comment_data['single_thread']);
+
+        if($comment_id) {
+            $comment_level = 0;
+            if($comment_data['comments'][0]['Gcomment']['reply_to']!=-100) {
+               $reply_to = $this->Pcomment->field('reply_to', 'id = '. $comment_data['comments'][0]['Gcomment']['reply_to']);
+               if($reply_to == -100) {
+                   $comment_level = 1;
+               }
+               else {
+                   $comment_level = 2;
+               }
+            }
+            $this->set('comment_level', $comment_level);
+            $this->render('comment_thread','scratchr_themepage');
+            return;
+        }
+
+        $url = strtolower(env('SERVER_NAME'));
+		$feed_link  = "/feeds/getRecentGalleryProjects/$gallery_id";
+        $gallery_usage = $gallery['Gallery']['usage'];
         
         //gallery membership
         $isPublic = ($gallery['Gallery']['type'] == 0);
-        $isMine = ($user_id == $owner_id);
         $isFriend = false;
 		$isThemeMember = false;
 		$membership_type = 10;
-        $user_status = 'normal';
-        $user_name = '';
-
+        $isUserIgnored = false;
+        
 		if ($user_id) {
-			$current_user   = $this->User->find("id = $user_id");
-			$user_status    = $current_user['User']['status'];
-            $user_name      = $current_user['User']['username'];
-            $member_record = $this->GalleryMembership->find("GalleryMembership.gallery_id = $gallery_id AND GalleryMembership.user_id = $user_id");
+			$member_record = $this->GalleryMembership->find("GalleryMembership.gallery_id = $gallery_id AND GalleryMembership.user_id = $user_id");
 			if (!empty($member_record)) {
 				$membership_type = $member_record['GalleryMembership']['type'];
 				$membership_rank = $member_record['GalleryMembership']['rank'];
@@ -979,23 +1023,16 @@ Class GalleriesController extends AppController {
                     $isFriend = true;
                 }
             }
+
+            //if the logged in user is in gallery owner's ignored list
+            $isUserIgnored = $this->IgnoredUser->find('first',
+                                array(
+                                'conditions'=> array('blocker_id' => $owner_id, 'user_id' => $user_id),
+                                'fields' => array('id')
+                                )
+                            );
+            $isUserIgnored = !empty($isUserIgnored);
 		}
-
-        //listing ignored user by gallery owner.
-		$ignored_user_array = $this->IgnoredUser->find('list',
-            array(
-            'conditions'=> array('blocker_id' => $owner_id),
-            'fields' => array('id', 'user_id')
-            )
-        );
-
-		//commments
-        $comment_id = null;
-        if(isset($this->params['url']['comment'])) {
-            $comment_id = $this->params['url']['comment'];
-        }
-        $comments = $this->set_comments($gallery_id, $user_id, $isLogged, $comment_id);
-		$this->set_comment_errors(array());
 
         //tags
 		$tags = $this->set_tags($gallery_id, $user_id, $isLogged);
@@ -1005,7 +1042,7 @@ Class GalleriesController extends AppController {
         $admin_name = "None";
         if(!empty($flags)) {
             if ($flags['GalleryFlag']['admin_id'] != 0) {
-                $admin_name = $this->User->field('username', "id = $admin_id");
+                $admin_name = $this->User->field('username', 'id = ' . $flags['GalleryFlag']['admin_id']);
             }
         }
 
@@ -1018,14 +1055,7 @@ Class GalleriesController extends AppController {
 
 		$this->set('sessionUID', $user_id);
         $this->set('isLogged', $isLogged);
-        $this->set('gallery_id', $gallery_id);
-        $this->set('theme_id', $gallery_id);
-        $this->set('theme_owner', $gallery['User']);
-        $this->set('session_username', $user_name);
-        $this->set('gallery', $gallery);
-        $this->set('actual_creation_date', $actual_creation_date);
         $this->set('gallery_usage', $gallery_usage);
-        $this->set('theme', $gallery['Gallery']);
         $this->set('status', $gallery['Gallery']['status']);
         $this->set('feed_link', $feed_link);
         $this->set('isClubbed', $isClubbed);
@@ -1035,10 +1065,7 @@ Class GalleriesController extends AppController {
         $this->set('membership_type', $membership_type);
         $this->set('isFriend', $isFriend);
 		$this->set('isMine', $isMine);
-        $this->set('isThemeOwner', $isMine);
-        $this->set('user_status', $user_status);
-        $this->set('theme_comments', $comments);
-        $this->set('ignored_user_array', $ignored_user_array);
+        $this->set('isUserIgnored', $isUserIgnored);
 		$this->set('admin_name', $admin_name);
 		$this->set('flags', $flags);
 		$this->set('page', $page);
@@ -2134,7 +2161,7 @@ Class GalleriesController extends AppController {
 		}
 		
 		$this->set_comment_errors($errors);
-		
+		$this->deleteCommentsFromMemcache($gallery_id);
 		$this->set('comment', $this->Gcomment->find("Gcomment.id = $comment_id"));
 		$this->set('comment_id', $comment_id);
 		$this->set('urlname', $urlname);
@@ -2517,7 +2544,7 @@ Class GalleriesController extends AppController {
 					} else {
 						$new_reply = array('Gcomment'=>array('id' => null, 'gallery_id'=>$gallery_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $source_id));
 						$this->Gcomment->save($new_reply);
-					
+                        $this->deleteCommentsFromMemcache($gallery_id);
 						$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND (IgnoredUser.blocker_id = $gallery_owner_id OR IgnoredUser.blocker_id = $comment_owner_id)");
 						
 						if ($ignore_count == 0 && $vis == 'visible') {
@@ -2544,13 +2571,14 @@ Class GalleriesController extends AppController {
 			}
 		}
 
-		$final_comments = $this->set_replies($gallery_id, $source_id, $user_id, $isLogged);
-		$this->set_comment_errors(Array());
+		$replies = $this->set_replies($gallery_id, $gallery_owner_id, $source_id, $user_id, $isLogged);
+		$this->set_comment_errors(array());
 		
-		$this->set('gallery_id', $gallery_id);
-		$this->set('comments', $final_comments);
+		$this->set('replies', $replies);
+		$this->set('isThemeOwner', $user_id == $gallery['User']['id']);
+		$this->set('theme_id', $gallery_id);
 		$this->set('comment_level', $comment_level + 1);
-		$this->set('isLogged', $isLogged);
+        $this->set('isLogged', $isLogged);
 		$this->render('comment_reply_ajax', 'ajax');
 	}
 
@@ -2561,16 +2589,26 @@ Class GalleriesController extends AppController {
 		$this->autoRender = false;
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
-		$source_comment = $this->Gcomment->find("Gcomment.id = $source_id");
-		$gallery_id = $source_comment['Gcomment']['gallery_id'];
-		
-		$final_comments = $this->set_replies($gallery_id, $source_id, $user_id, $isLogged);
 
-		$this->set('gallery_id', $gallery_id);
+        $gallery_id = $this->Gcomment->field('gallery_id', 'Gcomment.id = '. $source_id);
+        $this->Gallery->recursive = -1;
+        $gallery = $this->Gallery->find('Gallery.id = '.$gallery_id,
+                                            'Gallery.user_id');
+		$replies = $this->set_replies($gallery_id, $gallery['Gallery']['user_id'],
+                                                $source_id, $user_id, $isLogged);
+
+		$this->set('replies', $replies);
+		$this->set('isThemeOwner', $user_id == $gallery['Gallery']['user_id']);
+		$this->set('theme_id', $gallery_id);
+		$this->set('comment_level', $comment_level + 1);
+        $this->set('isLogged', $isLogged);
+		$this->render('comment_reply_ajax', 'ajax');
+        
+        /*$this->set('gallery_id', $gallery_id);
 		$this->set('comments', $final_comments);
 		$this->set('comment_level', $comment_level + 1);
 		$this->set('isLogged', $isLogged);
-		$this->render('comment_reply_ajax', 'ajax');
+		$this->render('comment_reply_ajax', 'ajax');*/
 	}
 
 	/**
@@ -2593,66 +2631,115 @@ Class GalleriesController extends AppController {
 	/**
 	* Returns all comments relevant to logged in user viewing a gallery
 	**/
-	function set_comments($gallery_id, $user_id, $isLogged, $comment_id = null) {
-		$this->PaginationSecondary->show = GALLERY_COMMENT_PAGE_LIMIT;
-		$this->modelClass = 'Gcomment';
-		$options = Array('sortBy' => 'timestamp', 'sortByClass' => 'Gcomment',
-						'direction' => 'DESC', 'url' => '/galleries/renderComments/' . $gallery_id);
-		list($order, $limit, $page) = $this->PaginationSecondary->init(
-            'gallery_id = ' . $gallery_id . ' AND comment_visibility = "visible" AND reply_to = -100',
-            array(), $options);
-
-        $this->Gcomment->unbindModel( array('belongsTo' => array('Gallery')) );
-        $comments = $this->Gcomment->findAll('gallery_id = ' . $gallery_id
-            . ' AND comment_visibility = "visible" AND reply_to = -100',
-            null, $order, $limit, $page);
-
-        //$gallery = $this->Gallery->find("Gallery.id = $gallery_id");
-		//$creator_id = $gallery['Gallery']['user_id'];
-		//$gallery_comments = $this->Gcomment->findAll("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = -100", null, $order, $limit, $page);
-		
-		$counter = 0;
-		$final_comments = Array();
-		foreach ($gallery_comments as $current_comment) {
-			$temp_comment = $current_comment;
-			$current_id = $temp_comment['Gcomment']['id'];
-			$commenter_id = $temp_comment['Gcomment']['user_id'];
-			$temp_comment['Gcomment']['commented'] = false;
-			
-			$comment_content = $current_comment['Gcomment']['content'];
-			$comment_content = $this->set_comment_content($comment_content);
-			$temp_comment['Gcomment']['content'] = $comment_content;
-			
-			$reply_count = $this->Gcomment->findCount("gallery_id = $gallery_id AND reply_to = $current_id");
-			$temp_comment['Gcomment']['replies'] = $reply_count;
-			
-			if ($isLogged) {
-				$mp_count = $this->Mgcomment->findCount("user_id = $user_id AND comment_id = $current_id");
-				if ($mp_count > 0) {
-					$temp_comment['Gcomment']['commented'] = true;
-				}
-				
-				$ignore_count = $this->IgnoredUser->findCount("(IgnoredUser.blocker_id = $user_id OR IgnoredUser.blocker_id = $creator_id) AND IgnoredUser.user_id = $commenter_id");
-				if ($ignore_count > 0) {
-					$temp_comment['Gcomment']['ignored'] = true;
-				} else {
-					$temp_comment['Gcomment']['ignored'] = false;
-				}
-			} else {
-				$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $creator_id AND IgnoredUser.user_id = $commenter_id");
-				if ($ignore_count > 0) {
-					$temp_comment['Gcomment']['ignored'] = true;
-				} else {
-					$temp_comment['Gcomment']['ignored'] = false;
-				}
-			}
-			$all_replies = $this->set_replies($gallery_id, $current_id, $user_id, $isLogged, NUM_COMMENT_REPLY);
-			$temp_comment['Gcomment']['replylist'] = $all_replies;
-			$final_comments[$counter] = $temp_comment;
-			$counter++;
-		}
+	function set_comments($gallery_id, $owner_id, $user_id, $isLoggedIn, $comment_id = null) {
+		$comment_data = false;
         
-		return $final_comments;
+        //no comment id is set that means we are not fetching a specific comment thread
+        if(empty($comment_id)) {
+            //do pagination stuffs
+            $this->PaginationSecondary->show = GALLERY_COMMENT_PAGE_LIMIT;
+            $this->modelClass = 'Gcomment';
+            $options = array('sortBy' => 'timestamp', 'sortByClass' => 'Gcomment',
+						'direction' => 'DESC', 'url' => '/galleries/renderComments/' . $gallery_id);
+            list($order, $limit, $page) = $this->PaginationSecondary->init( 'gallery_id = '
+                . $gallery_id . ' AND comment_visibility = "visible" AND reply_to = -100',
+                array(), $options);
+
+            //check memcache
+            $this->Gcomment->mc_connect();
+            $mc_key = $gallery_id.'_'.$isLoggedIn.'_'.$page;
+            $num_cache_pages = GCOMMENT_CACHE_NUMPAGE; //we will store only first few pages
+
+            if($page <= $num_cache_pages) {
+                $comment_data = $this->Gcomment->mc_get('gcomments', $mc_key);
+            }
+            
+            $comment_condition = ' AND reply_to = -100';
+        }
+        //comment id is set, we are fetching a specific comment thread
+        else {
+            $comment_condition = ' AND Gcomment.id = ' . $comment_id;
+            $order = null;
+            $limit = 1;
+            $page = null;
+        }
+
+        //not yet cached
+        if($comment_data === false) {
+            $this->Gcomment->unbindModel( array('belongsTo' => array('Gallery')) );
+            $comments = $this->Gcomment->findAll('gallery_id = ' . $gallery_id
+                . ' AND comment_visibility = "visible"' . $comment_condition,
+                null, $order, $limit, $page);
+
+            $commenter_ids = array();
+            $comment_ids = array();
+
+            foreach ($comments as $key => $comment) {
+                $commenter_ids[] = $comment['Gcomment']['user_id'];
+                $comment_ids[]   = $comment['Gcomment']['id'];
+
+                $comment['Gcomment']['content'] = $this->set_comment_content($comment['Gcomment']['content']);
+
+                $comment['Gcomment']['replies'] = $this->Gcomment->findCount('gallery_id = '
+                    . $gallery_id . ' AND reply_to = '. $comment['Gcomment']['id']);
+
+                $comment['Gcomment']['replylist'] = array();
+                if($comment['Gcomment']['replies'] > 0) {
+                    $comment['Gcomment']['replylist'] = $this->set_replies($gallery_id,
+                        $owner_id, $comment['Gcomment']['id'], $user_id, $isLoggedIn, NUM_COMMENT_REPLY);
+                }
+
+                //replace the comment in $comments list
+                $comments[$key] = $comment;
+            }
+
+            $commenter_ids  = $this->IgnoredUser->createString($commenter_ids);
+            $comment_ids    = $this->IgnoredUser->createString($comment_ids);
+
+            $this->IgnoredUser->recursive = -1;
+            $ignored_commenters = $this->IgnoredUser->find('list',
+                array('conditions' =>
+                'blocker_id = '. $owner_id . ' AND user_id IN ' . $commenter_ids,
+                'fields' => 'user_id'));
+
+            $comment_data = array();
+            $comment_data['comments'] = $comments;
+            $comment_data['ignored_commenters'] = $ignored_commenters;
+            $comment_data['ignored_comments'] = array();
+            $comment_data['commenter_ids'] = $commenter_ids;
+            $comment_data['comment_ids'] = $comment_ids;
+            
+            //we will store the data of first few pages if comment id is not set
+            if(empty($comment_id) && $page <= $num_cache_pages) {
+                $this->Gcomment->mc_set('gcomments', $comment_data, $mc_key);
+            }
+        }
+
+        if(empty($comment_id)) {
+            //close memcache connection
+            $this->Gcomment->mc_close();
+        }
+        
+        //if the user is logged in
+        if($isLoggedIn) {
+            $this->IgnoredUser->recursive = -1;
+            $user_ignored_commenters = $this->IgnoredUser->find('list',
+                    array('conditions' =>
+                    'blocker_id = '. $user_id. ' AND user_id IN ' . $comment_data['commenter_ids'],
+                    'fields' => 'user_id'));
+
+            $this->Mgcomment->recursive = -1;
+            $user_ignored_comments = $this->Mgcomment->find('list',
+                array('conditions' =>
+                'user_id = ' . $user_id . ' AND comment_id IN ' . $comment_data['comment_ids'],
+                'fields' => 'comment_id'));
+
+            $comment_data['ignored_commenters'] = $comment_data['ignored_commenters'] + $user_ignored_commenters;
+            $comment_data['ignored_comments']   = $comment_data['ignored_comments'] + $user_ignored_comments;
+        }
+
+        $comment_data['single_thread'] = !empty($comment_id);
+		return $comment_data;
 	}
 	
 	/**
@@ -2729,52 +2816,64 @@ Class GalleriesController extends AppController {
 	/**
 	* Returns all replies relevant to logged in user viewing a gallery
 	**/
-	function set_replies($gallery_id, $source_id, $user_id, $isLogged, $limit = 0) {
-		$gallery = $this->Gallery->find("Gallery.id = $gallery_id");
-		$creator_id = $gallery['Gallery']['user_id'];
-		$all_replies = $this->Gcomment->findAll("gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = $source_id",null,'Gcomment.timestamp DESC',$limit);
+	function set_replies($gallery_id, $owner_id, $parent_id, $user_id, $isLoggedIn, $limit = 0) {
+		$this->Gcomment->unbindModel( array('belongsTo' => array('Gallery')) );
+        $comments = $this->Gcomment->findAll('gallery_id = ' . $gallery_id
+            . ' AND comment_visibility = "visible" AND reply_to = ' . $parent_id,
+            null, 'Gcomment.timestamp DESC', $limit);
 
-		$counter = 0;
-		$final_comments = Array();
-		foreach ($all_replies as $current_comment) {
-			$temp_comment = $current_comment;
-			$current_id = $temp_comment['Gcomment']['id'];
-			$temp_comment['Gcomment']['commented'] = false;
-			$temp_comment['Gcomment']['ignored'] = false;
-			
-			$comment_content = $current_comment['Gcomment']['content'];
-			$comment_content = $this->set_comment_content($comment_content);
-			$temp_comment['Gcomment']['content'] = $comment_content;
-			
-			$reply_count = $this->Gcomment->findCount("gallery_id = $gallery_id AND reply_to = $current_id");
-			$temp_comment['Gcomment']['replies'] = $reply_count;
-			$commenter_id = $temp_comment['Gcomment']['user_id'];
-			if ($isLogged) {
-				$mp_count = $this->Mgcomment->findCount("user_id = $user_id AND comment_id = $current_id");
-				if ($mp_count > 0) {
-					$temp_comment['Gcomment']['commented'] = true;
-				}
-				
-				$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $user_id AND IgnoredUser.user_id = $commenter_id");
-				$ignore_count = $ignore_count + $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $creator_id AND IgnoredUser.user_id = $commenter_id");
-				if ($ignore_count > 0) {
-					$temp_comment['Gcomment']['ignored'] = true;
-				} else {
-					$temp_comment['Gcomment']['ignored'] = false;
-				}
-			} else {
-				$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $creator_id AND IgnoredUser.user_id = $commenter_id");
-				if ($ignore_count > 0) {
-					$temp_comment['Gcomment']['ignored'] = true;
-				} else {
-					$temp_comment['Gcomment']['ignored'] = false;
-				}
-			}
-			$final_comments[$counter] = $temp_comment;
-			$counter++;
-		}
-		
-		return $final_comments;
+        //set comments info
+        $commenter_ids = array();
+        $comment_ids = array();
+
+        foreach ($comments as $key => $comment) {
+            $commenter_ids[] = $comment['Gcomment']['user_id'];
+            $comment_ids[]   = $comment['Gcomment']['id'];
+
+            $comment['Gcomment']['content'] = $this->set_comment_content($comment['Gcomment']['content']);
+
+            $comment['Gcomment']['replies'] = $this->Gcomment->findCount('gallery_id = '
+                . $gallery_id . ' AND reply_to = '. $comment['Gcomment']['id']);
+
+            //replace the comment in $comments list
+            $comments[$key] = $comment;
+        }
+
+        $commenter_ids  = $this->IgnoredUser->createString($commenter_ids);
+        $comment_ids    = $this->IgnoredUser->createString($comment_ids);
+
+        $this->IgnoredUser->recursive = -1;
+        $ignored_commenters = $this->IgnoredUser->find('list',
+            array('conditions' =>
+            'blocker_id = '. $owner_id . ' AND user_id IN ' . $commenter_ids,
+            'fields' => 'user_id'));
+
+        $comment_data = array();
+        $comment_data['comments'] = $comments;
+        $comment_data['ignored_commenters'] = $ignored_commenters;
+        $comment_data['ignored_comments'] = array();
+        $comment_data['commenter_ids'] = $commenter_ids;
+        $comment_data['comment_ids'] = $comment_ids;
+
+        //if the user is logged in
+        if($isLoggedIn) {
+            $this->IgnoredUser->recursive = -1;
+            $user_ignored_commenters = $this->IgnoredUser->find('list',
+                    array('conditions' =>
+                    'blocker_id = '. $user_id. ' AND user_id IN ' . $comment_data['commenter_ids'],
+                    'fields' => 'user_id'));
+
+            $this->Mgcomment->recursive = -1;
+            $user_ignored_comments = $this->Mgcomment->find('list',
+                array('conditions' =>
+                'user_id = ' . $user_id . ' AND comment_id IN ' . $comment_data['comment_ids'],
+                'fields' => 'comment_id'));
+
+            $comment_data['ignored_commenters'] = $comment_data['ignored_commenters'] + $user_ignored_commenters;
+            $comment_data['ignored_comments']   = $comment_data['ignored_comments'] + $user_ignored_comments;
+        }
+
+		return $comment_data;
 	}
 	
 	/**
@@ -2927,6 +3026,17 @@ Class GalleriesController extends AppController {
 			  return ($this->comment_index($comment['Gcomment']['reply_to']));
 			  }
 			
-	}		
+	}
+
+    function deleteCommentsFromMemcache($gallery_id) {
+        $this->Gcomment->mc_connect();
+        for($i=1; $i<=GCOMMENT_CACHE_NUMPAGE; $i++) {
+            $mc_key = $gallery_id.'__'.$i;
+            $this->Gcomment->mc_delete('gcomments', $mc_key);
+            $mc_key = $gallery_id.'_1_'.$i;
+            $this->Gcomment->mc_delete('gcomments', $mc_key);
+        }
+        $this->Gcomment->mc_close();
+    }
 }
 ?>
