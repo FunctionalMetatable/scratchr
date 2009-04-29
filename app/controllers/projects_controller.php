@@ -1796,7 +1796,6 @@ class ProjectsController extends AppController {
                        $comment_level = 2;
                    }
                 }
-                $this->set('highlight_comment_id', $comment_id);
                 $this->set('comment_level', $comment_level);
                 $this->render('comment_thread','scratchr_projectpage');
                 return;
@@ -2328,11 +2327,11 @@ class ProjectsController extends AppController {
                 );
         $this->Project->id = $project_id;
         $project = $this->Project->read();
+        
+        if (empty($project)) exit();
+
         $owner_id = $project['User']['id'];
         $isLogged = $this->isLoggedIn();
-    
-        if (empty($project)) exit();
-		
         $comment_data = $this->set_comments($project_id, $owner_id, $isLogged);
         $this->set_comment_errors(array());
 
@@ -2625,7 +2624,7 @@ class ProjectsController extends AppController {
         //no comment id is set that means we are not fetching a specific comment thread
         if(empty($comment_id)) {
             //do pagination stuffs
-            $this->PaginationSecondary->show = 60;
+            $this->PaginationSecondary->show = PROJECT_COMMENT_PAGE_LIMIT;
             $this->modelClass = 'Pcomment';
             $options = array('sortBy' => 'created', 'sortByClass' => 'Pcomment',
                         'direction' => 'DESC', 'url' => 'renderComments/' . $project_id . '/0');
@@ -2644,7 +2643,6 @@ class ProjectsController extends AppController {
             }
 
             $comment_condition = ' AND reply_to = -100';
-            $reply_limit = NUM_COMMENT_REPLY;
         }
         //comment id is set, we are fetching a specific comment thread
         else {
@@ -2652,7 +2650,6 @@ class ProjectsController extends AppController {
             $order = null;
             $limit = 1;
             $page = null;
-            $reply_limit = null;
         }
         
         //not yet cached
@@ -2679,7 +2676,7 @@ class ProjectsController extends AppController {
                 $comment['Pcomment']['replylist'] = array();
                 if($comment['Pcomment']['replies'] > 0) {
                     $comment['Pcomment']['replylist'] = $this->set_replies($project_id,
-                        $creator_id, $comment['Pcomment']['id'], $this->getLoggedInUserID(), $reply_limit);
+                        $creator_id, $comment['Pcomment']['id'], $this->getLoggedInUserID(), NUM_COMMENT_REPLY);
                 }
 
                 //replace the comment in $comments list
