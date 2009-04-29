@@ -34,7 +34,7 @@ function showReplyBox(comment_id, showReplies, toggle) {
 			link.innerHTML = 'hide';
 		}
 	}
-
+    
 	if (showReplies) {
 		text_input.value = "";	
 		list.style.display = 'block';
