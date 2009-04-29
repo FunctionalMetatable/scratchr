@@ -9,6 +9,7 @@ function showReplyBox(comment_id, showReplies, toggle) {
 	var element_name = 'reply_to_' + comment_id;
 	var popup = document.getElementById(element_name);
 	var frame = document.getElementById('gallery_comment_reply_frame_' + comment_id);
+    console.log(frame);
 	var target = document.getElementById(comment_id);
 	var link = document.getElementById('reply_hide_link_' + comment_id);
 	var topframe = document.getElementById('reply_to_' + comment_id);
@@ -34,14 +35,14 @@ function showReplyBox(comment_id, showReplies, toggle) {
 			link.innerHTML = 'hide';
 		}
 	}
-	
+    var button = document.getElementById('gallery_comment_reply_submit_' + comment_id);
+    console.log(button);
 	if (showReplies) {
-		list.style.display = 'block';
+		text_input.value = "";
+        list.style.display = 'block';
 		linkb.innerHTML = 'hide replies';
 		var button = document.getElementById('gallery_comment_reply_submit_' + comment_id);
-		text_input.value = "";
 		button.disabled = false;
-		
 		if (view_hide_frame.style.display != 'inline') {
 			view_hide_frame.style.display = 'inline'
 		}
@@ -91,7 +92,7 @@ function enableReply(comment_id) {
 	button.disabled = false;
 }
 function disableReply(comment_id) {
-	var button = document.getElementById('gallery_comment_reply_submit_' + comment_id);
+    var button = document.getElementById('gallery_comment_reply_submit_' + comment_id);
 	button.disabled = true;
 }
 
