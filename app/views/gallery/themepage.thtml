@@ -147,19 +147,23 @@
   <?php if(!$user_locked): ?>
 	<h4><?php ___('Add a Comment'); ?> </h4>
 	<form id="tcomment" action="/galleries/comment/<?php e($theme['id'])?>" method="post">
-		<p><textarea name="tcomment_textarea" id="tcomment_textarea"  cols="55" rows="3"></textarea>
-<div id="counter-tcomment_textarea"></div></p>
+		<p>
+        <textarea name="tcomment_textarea" id="tcomment_textarea"  cols="55" rows="3"></textarea>
+        <div id="counter-tcomment_textarea"></div>
+        </p>
 		<?php echo $ajax->submit(___('Add', true), 
-		array('id' => 'tcomment_submit', "condition"=>"(checkAll('tcomment_textarea', $user_locked))", 
-		"loading" => "document.getElementById('tcomment_submit').disabled = true;",
-		"class"=>"button","url"=>"/galleries/comment/".$theme['id'], 
-		"update"=>"theme_comment_list", "complete" => "document.getElementById('tcomment_textarea').value = ''; document.getElementById('tcomment_submit').disabled = false;"));?>
- </form>
+		array('id' => 'tcomment_submit', 'condition' => '(checkAll("tcomment_textarea", ' . $user_locked . '))',
+		'class' => 'button', 'url' => '/galleries/comment/'.$theme['id'], 'update' => 'ajax_pagination_secondary',
+        'loading' => 'document.getElementById("tcomment_submit").disabled = true;',
+		'position' => 'top',
+		"complete" => "document.getElementById('tcomment_textarea').value = ''; document.getElementById('tcomment_submit').disabled = false;"));?>
+    </form>
 	<?php endif; ?>
+    <br />
 	<div id="ajax_pagination_secondary">
 	<?php
 		e($ajax->div("theme_comment_list"));
-			e($this->renderElement('discusslist', array('comments'=>$theme_comments, 'page'=>$page)));
+			e($this->renderElement('discusslist'));
 		e($ajax->divEnd("theme_comment_list"));
 	?>
 	</div>
@@ -223,7 +227,7 @@
 	<div class="sidecontainer">
 		<div id="action_wrapper">
 			<?php
-				echo $this->renderElement('gallery/user_actions',array('ignored_user_array'=>$ignored_user_array,'sessionUID'=>$sessionUID));
+				echo $this->renderElement('gallery/user_actions');
 			?>
 		</div>
 	</div>

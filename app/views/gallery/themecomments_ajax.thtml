@@ -1,4 +1,52 @@
 <?php
-    $params = array('comments' => $theme_comments);
-    e($this->renderElement('discusslist', $params));
+$comment_level = 0;
+$reply_link = '(<a onclick="showReplyBox(%1$s, 0); addGalleryCharCounter(%1$s); return false;" id="reply_hide_link_%1$s" href="#">reply</a>)';
 ?>
+<?php if($isCommentError): ?>
+<div class='comment_error'>
+    <?= $commentErrors[0]; ?>
+</div>
+<?php endif; ?>
+
+<?php
+if(isset($comment) && $comment['Gcomment']['comment_visibility'] == 'visible'):
+    $comment_id = $comment['Gcomment']['id'];
+    $commenter_icon = getBuddyIconBySize($comment['User']['id'], 'mini', $content_status,
+                    $comment['User']['timestamp']);
+?>
+    <div class="comment" id="<?= $comment_id ?>">
+        <h5>
+            <?php echo $html->image($commenter_icon,
+                    array('alt' => $comment['User']['username'], 'width'=>'28', 'height'=>'28')); ?>
+            <a href="<?= $html->url( '/users/' . $comment['User']['urlname'] ); ?>">
+                <?= $comment['User']['username']; ?>
+            </a>
+        </h5>
+
+        <p>
+            <?= $comment['Gcomment']['content']; ?>
+        </p>
+
+        <span class="flag_comment">
+            <?php $comment_links[] = sprintf($reply_link, $comment_id); ?>
+            <?php
+                if ($isLogged && ($isAdmin || $isThemeOwner
+                    || isset($users_permission['delete_gallery_comments']))) {
+                    $comment_links[] = $ajax->link('(x)', '#',
+                    array('url' => '/galleries/delete_comment/'.$gallery_id.'/'.$comment_id,
+                                    'update' => "$comment_id",
+                                    'condition' => 'checkLogin()'),
+                                    'Are you sure?', false);
+                }
+            ?>
+
+            <?php echo implode(' | ', $comment_links); ?>
+        </span>
+
+        <div class="comment_reply_main" id="reply_to_<?= $comment_id; ?>">
+            <?= $this->renderElement('gallery/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
+        </div>
+        <div class="comment_reply_main_visible" id="reply_list_<?= $comment_id; ?>">
+        </div>
+    </div>
+<?php endif; ?>

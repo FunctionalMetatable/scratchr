@@ -1,3 +1,7 @@
-<?php
-	echo $this->renderElement('gallery/reply_list', Array('comments' => $comments, 'comment_level' => $comment_level, 'gallery_id' => $gallery_id));
-?>
+<?php if(!empty($replies)): ?>
+    <?= $this->renderElement('gallery/reply_list',
+            array('comments' => $replies['comments'],
+                'ignored_commenters' => $replies['ignored_commenters'],
+                'ignored_comments' => $replies['ignored_comments'],
+                'comment_level' => $comment_level)); ?>
+<?php endif;  ?>

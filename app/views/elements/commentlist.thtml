@@ -57,7 +57,7 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
         if($is_comment_reply_enabled) {
             $comment_links[] = sprintf($reply_link, $comment_id);
         }
-        if ($comment['Pcomment']['replies'] > NUM_COMMENT_REPLY && empty($comment['Pcomment']['replylist'])) {
+        if ($comment['Pcomment']['replies'] > NUM_COMMENT_REPLY) {
             $comment_links[] = sprintf($more_reply_link, $comment_id,
                     $ajax->link(___('view all replies', true), '#',
                         array(  'url'       => '/projects/display_replies/' . $comment_id . '/0',
