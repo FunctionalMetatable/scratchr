@@ -215,20 +215,6 @@ Class HomeController extends AppController {
             $this->set('countries', $countries);
         }
 		
-		/*$favorites = $memcache->get("$prefix-favorites");
-		$curator_name = $memcache->get("$prefix-curator_name");
-        if ( $favorites == "" || $curator_name =="") {
-       	    $curator_favorites = $this->__getCuratorFavorites();
-			$curator_name = $this->___getCuratorName();
-            $memcache->set("$prefix-favorites", $curator_favorites, false, 3600) or die ("Failed to save data at the server");
-			$memcache->set("$prefix-curator_name", $curator_name, false, 3600) or die ("Failed to save data at the server");
-            $this->set('fevorites', $curator_favorites);
-			$this->set('username',$curator_name);
-        } else {
-            $this->set('favorites', $favorites);
-			$this->set('username',$curator_name);
-        }*/
-
     	$memcache->close();
 		
 		$url = env('SERVER_NAME');
