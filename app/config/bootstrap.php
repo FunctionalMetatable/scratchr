@@ -190,6 +190,8 @@ define('CACHE_DURATION', '1 day');
 /**
  * Memcache constants
  */
+define("MEMCACHE_SERVER", 'localhost'); //0.5 hour
+define("MEMCACHE_PORT", 11211); //0.5 hour
 define("CHANNEL_RECENT_CACHE_TTL", 30); //0.5 hour
 define("CHANNEL_FEATURED_CACHE_TTL", 30); //0.5 hour
 define("CHANNEL_TOPVIEWED_CACHE_TTL", 30); //0.5 hour
