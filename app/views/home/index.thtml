@@ -187,7 +187,7 @@
       <p class="more"><a href="/channel/topviewed"><?php ___('See more');?></a> </p>
     </div>
 
-<!--
+	
 	<?php if(isset($favorites) && $count=count($favorites) >=3):?>
 	<div id="Favorites" class="container">
       <h3><?php echo $username;echo "'s";___(' Favorites')?></h3>
@@ -212,7 +212,7 @@
 		<?php endforeach; ?>
     </div>
 	<?php endif;?>
-//--->
+
 
   </div>
 <!-- ////// End main content ////// -->
