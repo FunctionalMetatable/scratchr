@@ -209,13 +209,26 @@ class ProjectsController extends AppController {
 			}
 			else
 			{
-				if ($this->Project->saveField('name',$newtitle)) {
-				   	$this->set('ptitle', $newtitle); // note: 'title' is pre-defed var for cake layout
-					$this->render('projecttitle_ajax', 'ajax');  // alternative: echo $newTitle
-					return;// suppresses display of page generation time i.e. <!--0.129.s-->
+				$isNameExist =$this->Project->hasAny(array('Project.name' =>$newtitle, 'Project.user_id'=>$project['Project']['user_id']));
+				if(!$isNameExist){
+					if ($this->Project->saveField('name',$newtitle)) {
+						$this->set('ptitle', $newtitle); // note: 'title' is pre-defed var for cake layout
+						$this->set('nameExist', false);
+						$this->render('projecttitle_ajax', 'ajax');  // alternative: echo $newTitle
+						return;// suppresses display of page generation time i.e. <!--0.129.s-->
+					}
 				}
+				else{
+					$this->set('ptitle', $project['Project']['name']);
+					$this->set('newtitle', $newtitle);
+					$this->set('nameExist', true);
+					$this->render('projecttitle_ajax', 'ajax');
+					return;	
+				}
+				
 			}
 		}
+		$this->set('nameExist', false);
         $this->set('ptitle', $project['Project']['name']);
         $this->render('projecttitle_ajax','ajax');
         return;

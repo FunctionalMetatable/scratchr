@@ -1,1 +1,6 @@
+
 <?php e($ptitle); ?>
+<?php if($nameExist):?>
+<div style="color:#FF0000; font-size:11px">
+<?php printf(___('Project name %s is all ready exist.Try again with another name.',true),'"'.$newtitle.'"')?></div>
+<?php endif; ?>
