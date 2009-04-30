@@ -20,7 +20,8 @@ class TemplateHelper extends Helper
 			else {
 				$search = array('{to_user_name}','{from_user_name}',
 							'{gallery_id}', '{gallery_name}',
-							'{project_id}', '{project_owner_name}', '{project_name}');
+							'{project_id}', '{project_owner_name}', '{project_name}',
+                            '{comment_id}');
 				$message = str_replace($search,
 							array(
 								$username,
@@ -29,7 +30,8 @@ class TemplateHelper extends Helper
 								$notification['gallery_name'],
 								$notification['project_id'],
 								$notification['project_owner_name'],
-								$notification['project_name']
+								$notification['project_name'],
+                                $notification['comment_id']
 							),
 							$notification['template']
 						);
