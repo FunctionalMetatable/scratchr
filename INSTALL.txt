@@ -9,24 +9,34 @@ Apache needs mod-rewrite enabled and PHP needs php5-mysql
 2. Install an SVN client on your computer
 (for Windows I recommend TortoiseSVN)
 
-3. Download CakePHP 1.2 
-
-4. Do an "svn checkout" of our code into CakePHP's directory structure:
+3. Do an "svn checkout" of our code:
    svn co http://svn.assembla.com/svn/scratchr
 
-5. Create a MySQL database based on sql/dbstructure.sql
-    mysql -u root -p name_of_database < app/config/sql/dbstructure.sql
-
-6. Based on app/config/database.php.default create
+4. Create a MySQL database based on sql/db-structure.sql:
+    mysql -u root -p name_of_database < app/config/sql/db-structure.sql
+   Execute all SQL files you find under app/config/sql/updates one by one (if any)
+   (first sort all the files by modified/filename to maintain the right order)
+    
+5. Based on app/config/database.php.default create
 configuration file called app/config/database.php with the
 approrpiate access info for your database.
 
+6. Install memcached:
+    apt-get install memcached (for Ubuntu)
+   Enable the memcached extension for PHP
+   Start memcached daemon:
+    memcached -d
+   Set your memcache configuration in app/config/bootstrap.php:
+    define("MEMCACHE_SERVER", 'localhost');  //memcache server
+    define("MEMCACHE_PORT", 11211);  //memcache port
+   
 7. Configure Apache to point to app/webroot
 
-8. Send an email to andresmh@media.mit.edu letting us know that you have 
+8. Make app/tmp/ directory writable
+
+9. Send an email to andresmh@media.mit.edu letting us know that you have 
 succeded and how you're planning to use the site, we'll be very happy to hear from you. 
 Don't forget to read the LICENSE.TXT!!!
 
 If you make any improvements to the source code let us know so we 
 can all benefit from your improvements.
-
