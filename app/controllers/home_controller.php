@@ -17,7 +17,7 @@ Class HomeController extends AppController {
 	
     function index() {
         $memcache = new Memcache;
-        $memcache->connect('localhost', 11211) or die ("Could not connect");
+        $memcache->connect(MEMCACHE_SERVER, MEMCACHE_PORT) or die ("Could not connect");
         $prefix = MEMCACHE_PREFIX;
         $project_ids = array();
        	$user_ids =array();
