@@ -1641,7 +1641,7 @@ INSERT INTO `notification_types` (`id`, `type`, `template`, `is_admin`) VALUES
 (28, 'bulk', '', '1'),
 (29, 'blank', '', '1');
 
-INSERT INTO `permissions` (`id`, `name`, `short_name`) VALUES
+INSERT INTO `permissions` (`id`, `name`, `url_name`) VALUES
 (1, 'censor projects', 'censor_projects'),
 (2, 'censor galleries', 'censor_galleries'),
 (3, 'set projects as "for everyone"  or "not for everyone"', 'project_view_permission'),
