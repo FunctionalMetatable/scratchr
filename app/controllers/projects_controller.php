@@ -362,7 +362,9 @@ class ProjectsController extends AppController {
 				if($logged_id != $puser_id) {
 					$this->notify('new_pcomment', $puser_id,
 									array('project_id' => $pid,
-										'from_user_name' => $commenter_username)
+										'from_user_name' => $commenter_username,
+                                        'comment_id' => $new_pcomment['Pcomment']['id']
+                                        )
 							);
 				}
 			}
@@ -2522,6 +2524,7 @@ class ProjectsController extends AppController {
 					} else {
 						$new_reply = array('Pcomment'=>array('id' => null, 'project_id'=>$project_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $parent_id));
 						$this->Pcomment->save($new_reply);
+                        $pcomment_id = $this->Pcomment->getInsertID();
                         $this->deleteCommentsFromMemcache($project_id);
 						$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND (IgnoredUser.blocker_id = $project_owner_id OR IgnoredUser.blocker_id = $comment_owner_id)");
 						if ($ignore_count == 0 && $vis == 'visible') {
@@ -2531,7 +2534,9 @@ class ProjectsController extends AppController {
 								$this->notify('new_pcomment_reply', $comment_owner_id,
 										array('project_id' => $project_id,
 										'project_owner_name' => $urlname,
-										'from_user_name' => $this->getLoggedInUsername())
+										'from_user_name' => $this->getLoggedInUsername(),
+                                        'comment_id' => $pcomment_id
+                                        )
 									);
 							}
 							//send notification to project owner if project owner and comment owner are differnt
@@ -2540,7 +2545,9 @@ class ProjectsController extends AppController {
 								$this->notify('new_pcomment_reply_to_owner', $project_owner_id,
 											array('project_id' => $project_id,
 											'project_owner_name' => $urlname,
-											'from_user_name' => $this->getLoggedInUsername())
+											'from_user_name' => $this->getLoggedInUsername(),
+                                            'comment_id' => $pcomment_id
+                                            )
 										);
 							}
 						}

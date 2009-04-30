@@ -621,7 +621,9 @@ Class GalleriesController extends AppController {
 				if($guser_id != $commenter_id) {
 					$this->notify('new_gcomment', $guser_id,
 								array('gallery_id' => $gallery_id,
-								'from_user_name' => $commenter_username)
+								'from_user_name' => $commenter_username,
+                                'comment_id' => $new_tcomment['Gcomment']['id']
+                                )
 							);
 				}
 			}
@@ -2544,6 +2546,7 @@ Class GalleriesController extends AppController {
 					} else {
 						$new_reply = array('Gcomment'=>array('id' => null, 'gallery_id'=>$gallery_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $source_id));
 						$this->Gcomment->save($new_reply);
+                        $gcomment_id = $this->Gcomment->getInsertID();
                         $this->deleteCommentsFromMemcache($gallery_id);
 						$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND (IgnoredUser.blocker_id = $gallery_owner_id OR IgnoredUser.blocker_id = $comment_owner_id)");
 						
@@ -2553,7 +2556,9 @@ Class GalleriesController extends AppController {
 								//comment reply notification to comment_owner
 								$this->notify('new_gcomment_reply', $comment_owner_id,
 										array('gallery_id' => $gallery_id,
-										'from_user_name' => $this->getLoggedInUsername())
+										'from_user_name' => $this->getLoggedInUsername(),
+                                        'comment_id' => $gcomment_id
+                                        )
 									);
 							}
 							//send notification to gallery owner if gallery owner and comment owner are differnt
@@ -2562,7 +2567,9 @@ Class GalleriesController extends AppController {
 								//comment notification to gallery_owner
 								$this->notify('new_gcomment_reply_to_owner', $gallery_owner_id,
 										array('gallery_id' => $gallery_id,
-										'from_user_name' => $this->getLoggedInUsername())
+										'from_user_name' => $this->getLoggedInUsername(),
+                                        'comment_id' => $gcomment_id
+                                        )
 									);
 							}
 						}
