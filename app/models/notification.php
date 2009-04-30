@@ -38,7 +38,8 @@ class Notification extends AppModel {
 			$notification_query = 
 				'SELECT `Notification`.`id`, `Notification`.`from_user_name`, `Notification`.`created`,'
 				.' `Notification`.`to_user_id`,  `Notification`.`project_id`, `Notification`.`project_owner_name`,'
-				.' `Notification`.`gallery_id`, `Notification`.`extra`, `Notification`.`notification_type_id`,'
+				.' `Notification`.`gallery_id`, `Notification`.`comment_id`,'
+                .' `Notification`.`extra`, `Notification`.`notification_type_id`,'
 				.' `Notification`.`status`, `NotificationType`.`id` type_id, `NotificationType`.`type`,'
 				.' `NotificationType`.`template`, `NotificationType`.`is_admin`,'
 				.' IFNULL(Project.user_id, 0) project_owner_id, IFNULL(Project.name, "") project_name,'
@@ -54,7 +55,7 @@ class Notification extends AppModel {
 			
 			$request_query = 
 				'SELECT `Request`.`id`, `User`.`username` `from_user_name`, `Request`.`created_at` `created`,'
-				.' `Request`.`to_id` `to_user_id`, NULL, NULL, NULL, NULL, NULL,'
+				.' `Request`.`to_id` `to_user_id`, NULL, NULL, NULL, NULL, NULL, NULL,'
 				.' `Request`.`status`,  NULL,  NULL,  NULL,  NULL, 0, NULL,  0, NULL,'
 				.' "request" notif_type'
 				.' FROM friend_requests as Request LEFT JOIN users as User ON User.id = Request.user_id'
@@ -71,6 +72,7 @@ class Notification extends AppModel {
 				$this->mc_set('notifications_page1', $notifications, $user_id, 10);
 			}
 		}
+        
 		if($page==1 && !$admin) { $this->mc_close(); }
 		return $notifications;
 	}
