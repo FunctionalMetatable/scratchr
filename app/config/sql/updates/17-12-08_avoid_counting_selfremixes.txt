@@ -1,3 +1,0 @@
-ALTER TABLE `projects` ADD `realremixes` INT NULL DEFAULT '0' AFTER `remixes` ;
-
- ALTER TABLE `projects` CHANGE `realremixes` `remixer` INT( 11 ) NULL DEFAULT '0' 
