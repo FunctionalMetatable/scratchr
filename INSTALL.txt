@@ -34,7 +34,19 @@ approrpiate access info for your database.
 
 8. Make app/tmp/ directory writable
 
-9. Send an email to andresmh@media.mit.edu letting us know that you have 
+9. Set AllowOverride All in your apache vhost configuration.
+   If you are setting it up for your localhost, then it should look something like this:
+   <VirtualHost 127.0.0.1>
+      ServerName scratch.local
+      ServerAlias www.scratch.local
+      DocumentRoot /var/www/scratchr/
+        <Directory />
+                Options FollowSymLinks
+                AllowOverride All
+        </Directory>
+    </VirtualHost>
+
+10. Send an email to andresmh@media.mit.edu letting us know that you have 
 succeded and how you're planning to use the site, we'll be very happy to hear from you. 
 Don't forget to read the LICENSE.TXT!!!
 
