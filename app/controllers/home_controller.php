@@ -97,7 +97,20 @@ Class HomeController extends AppController {
 		$this->set('favorites', $favorites);
 		$this->set('username',$curator_name);
 		
+		
 		if($this->isLoggedIn()):
+		$session_UID = $this->getLoggedInUserID();
+		$this->Project->mc_connect();
+		$myfriendsprojects = $this->Project->mc_get('$prefix-myfriendsprojects',$session_UID);
+		if($myfriendsprojects == ""){
+			$myfriendsprojectstmp = $this->___getMyFriendsProject($session_UID);
+			$this->Project->mc_set('$prefix-myfriendsprojects', $myfriendsprojectstmp, $session_UID);
+			$this->set('friendsprojects', $myfriendsprojectstmp);
+		} else {
+		$this->set('friendsprojects', $myfriendsprojects);
+		$this->Project->mc_close();
+		}	
+		
         $newprojects = $memcache->get("$prefix-newprojects");
         if ( $newprojects == "" ) {
        	    $newprojectstmp = $this->__getNewProjects();
@@ -455,5 +468,29 @@ Class HomeController extends AppController {
 	$curator =$this->Curator->find(null,array(),'Curator.id DESC');
 	return $curator['User']['urlname'];
 	}
+	
+	//populate friends 3 latest project
+		
+	function ___getMyFriendsProject($user_id){
+		$project_list = array();
+		$friends_project =array();
+		$config = $this->User->getdbName();
+		$mysqli = new mysqli($config['host'], $config['login'], $config['password'], $config['database']);
+		$rs = $mysqli->query( "CALL top3friendproject($user_id)" );
+		while($row = $rs->fetch_object())
+		{
+			array_push($project_list,$row->project_id);
+		}
+		mysqli_free_result($rs);
+		mysqli_close($mysqli); 
+		$project_ids = implode(',',$project_list);
+		if(!empty($project_ids)):
+		$this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+		$friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,'Project.created DESC', HOME_NUM_FRIEND_PROJECTS);
+		endif;
+		return $friends_project;
+	}	
 }
 ?>
