@@ -96,7 +96,8 @@ Class HomeController extends AppController {
         $this->set('topdownloaded', $topdownloaded);
 		$this->set('favorites', $favorites);
 		$this->set('username',$curator_name);
-
+		
+		if($this->isLoggedIn()):
         $newprojects = $memcache->get("$prefix-newprojects");
         if ( $newprojects == "" ) {
        	    $newprojectstmp = $this->__getNewProjects();
@@ -105,7 +106,7 @@ Class HomeController extends AppController {
         } else {
             $this->set('newprojects', $newprojects);
         }
-
+		endif;
         $toprandoms = $memcache->get("$prefix-toprandoms");
         if ( !$toprandoms) {
        	    $toprandoms = $this->__getTopRandomProjects();
