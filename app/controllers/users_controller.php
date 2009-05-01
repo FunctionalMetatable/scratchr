@@ -1106,10 +1106,11 @@ class UsersController extends AppController {
 		if(!$friends_project){
 			$friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,$order, $limit, $page);
 			$this->Project->mc_set($mc_key, $friends_project, $user_id, $ttl);
+			$this->Project->mc_close();
 		}
 		endif;
 		$this->set('friends_project_list',$friends_project);
-		$this->Project->mc_close();
+		
 		
 		//sets the admin_comment if one exists for this user
 		$admin_comment_record = $this->AdminComment->findCount("user_id = $user_id");
