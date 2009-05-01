@@ -46,7 +46,10 @@ approrpiate access info for your database.
         </Directory>
     </VirtualHost>
 
-10. Send an email to andresmh@media.mit.edu letting us know that you have 
+10. It is recommended that you increase your maximum memory limit for php to 32MB.
+    You can do it by changing the memory_limit parameter in your php.ini file.
+
+11. Send an email to andresmh@media.mit.edu letting us know that you have
 succeded and how you're planning to use the site, we'll be very happy to hear from you. 
 Don't forget to read the LICENSE.TXT!!!
 
