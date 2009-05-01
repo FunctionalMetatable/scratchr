@@ -16,7 +16,7 @@
     </div>
 <!-- ::: End intro  ::: -->
 
-<?php //print_r($favorites)?>
+ <?php if ($isLogged): ?>
     <div id="NewestProjects" class="container">
       <h3><?php ___('Newest Projects');?></h3>
 		<?php
@@ -40,7 +40,7 @@
 		<?php endforeach; ?>
       <p class="more"><a href="/channel/recent"><?php ___('See more');?></a> </p>
     </div>
-
+<?php endif;?>
     <div id="FeaturedProjects" class="container">
       <h3><?php ___('Featured Projects');?></h3>
 		<?php
