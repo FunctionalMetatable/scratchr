@@ -4,7 +4,7 @@ Class HomeController extends AppController {
      * Home Page Controller
      */
 	var $pageTitle = "Scratch | Home | imagine, program, share";
-    var $uses = array("Project","User","FeaturedProject", "ClubbedGallery","UserStat", "Gallery", "Theme", "FeaturedGallery", "Tag", "Notification","Curator","Favorite", "BlockedUserFrontpage");
+    var $uses = array("Project","User","FeaturedProject", "ClubbedGallery","UserStat", "Gallery", "Theme", "FeaturedGallery", "Tag", "Notification","Curator","Favorite", "BlockedUserFrontpage", "ClubbedTheme", "ThemeProject");
     var $helpers = array("Tagcloud");
    	
 	/**
@@ -29,7 +29,13 @@ Class HomeController extends AppController {
 			$frontpage_blocked_user_id = Set::extract('/BlockedUserFrontpage/user_id', $frontpage_blocked_user);
 			$user_ids       =array_merge($user_ids, $frontpage_blocked_user_id);
 			
-			$favorites = $this->__getCuratorFavorites($user_ids);
+			$clubedprojects = $this->__getDesignStudioProjects($user_ids);
+			$clubed_project_id = Set::extract('/ThemeProject/project_id', $clubedprojects);
+			$clubed_project_user_ids   = Set::extract('/Project/user_id', $clubedprojects);
+			$project_ids    = array_merge($project_ids, $clubed_project_id);
+			$user_ids       = array_merge($user_ids, $clubed_project_user_ids);
+			
+			$favorites = $this->__getCuratorFavorites($project_ids, $user_ids);
 			$favorites_id = Set::extract('/Project/id', $favorites);
 			$favorites_user_ids   = Set::extract('/Project/user_id', $favorites);
             $this->Project->register_frontpage($favorites_id, 'curator_favorites');
@@ -74,7 +80,8 @@ Class HomeController extends AppController {
                                    'topviewed' => $topviewed,
                                    'topdownloaded' => $topdownloaded,
 								   'favorites' => $favorites,
-								   'curator_name' =>$curator_name
+								   'curator_name' =>$curator_name,
+								   'clubedprojects' => $clubedprojects
                                 );
                                 
             $memcache->set("$prefix-home_projects", $home_projects, false, 3600) or die ("Failed to save data at the server");
@@ -87,6 +94,7 @@ Class HomeController extends AppController {
             $topdownloaded  = $home_projects['topdownloaded'];
 			$favorites      = $home_projects['favorites'];
 			$curator_name   = $home_projects['curator_name'];
+			$clubedprojects   = $home_projects['clubedprojects'];
         }
 		
         $this->set('featuredprojects', $featured);
@@ -96,6 +104,7 @@ Class HomeController extends AppController {
         $this->set('topdownloaded', $topdownloaded);
 		$this->set('favorites', $favorites);
 		$this->set('username',$curator_name);
+		$this->set('clubedprojects',$clubedprojects);
 		
 		
 		if($this->isLoggedIn()):
@@ -445,9 +454,13 @@ Class HomeController extends AppController {
 	
 	}
 	
-	function __getCuratorFavorites($exclude_user_ids){
+	function __getCuratorFavorites($exclude_project_ids, $exclude_user_ids){
+		$exclude_clause = '';
 		$exclude_user_id_clause = '';
-       
+        if(!empty($exclude_project_ids)) {
+           $exclude_clause = ' AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+        }
+
 		if(!empty($exclude_user_ids)) {
            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
@@ -460,7 +473,7 @@ Class HomeController extends AppController {
                 array('hasMany' => array('GalleryProject'))
             );
             $favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.user_id <> $curator_id"
-                .$exclude_user_id_clause.' GROUP BY Project.user_id', null, 'Favorite.timestamp DESC', 3, null, 2);
+                .$exclude_clause.$exclude_user_id_clause.' GROUP BY Project.user_id', null, 'Favorite.timestamp DESC', 3, null, 2);
         }
 		return  $favorites;
 	}
@@ -491,6 +504,20 @@ Class HomeController extends AppController {
 		$friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,'Project.created DESC', HOME_NUM_FRIEND_PROJECTS);
 		endif;
 		return $friends_project;
-	}	
+	}
+	
+	function __getDesignStudioProjects($exclude_user_ids) {
+	$exclude_user_id_clause = '';
+       
+		if(!empty($exclude_user_ids)) {
+           $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
+        }
+		
+	$clubed_theme = $this->ClubbedTheme->find(null,array(),'ClubbedTheme.created_at DESC',NULL,NULL,NULL,1,2);
+	$this->ThemeProject->bindProject();
+	 $theme_id = $clubed_theme['ClubbedTheme']['theme_id'];
+	return $clubed_theme_projects = $this->ThemeProject->findAll("ThemeProject.theme_id = $theme_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'".$exclude_user_id_clause.' GROUP BY Project.user_id',NULL, ' RAND()', NUM_DESIGN_STUDIO_PROJECT, NULL, 2, $this->getContentStatus());
+	
+	}//function	
 }
 ?>
