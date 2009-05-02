@@ -10,7 +10,7 @@ foreach($user_records as $user) {
 
 $users_from_same_ip = implode(', ', $users_from_same_ip);
 
-if(isset($activity_from_same_ip_signup_interval)) {
+/*if(isset($activity_from_same_ip_signup_interval)) {
 ?>
 <div id="signup_notice" >
   <?php 
@@ -23,7 +23,7 @@ if(isset($activity_from_same_ip_signup_interval)) {
 </div>
 <?php
 }
-else {
+else {*/
 ?>
 
 <p><?php ___('Seems like the following accounts were created from the same computer or network:')?> </p>
@@ -41,7 +41,7 @@ else {
 
 <!-- <a href="<?php echo $html->url('/users/whitelistip')?>">Send request for create multiple account from same Ip</a> //-->
 <?php
-}
+//}
 ?>
 </div>
 <style>
