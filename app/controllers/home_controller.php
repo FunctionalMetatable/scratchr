@@ -507,16 +507,13 @@ Class HomeController extends AppController {
 	}
 	
 	function __getDesignStudioProjects($exclude_user_ids) {
-	$exclude_user_id_clause = '';
-       
+		$exclude_user_id_clause = '';
 		if(!empty($exclude_user_ids)) {
            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
-		
-	$clubed_theme = $this->ClubbedTheme->find(null,array(),'ClubbedTheme.created_at DESC',NULL,NULL,NULL,1,2);
-	$this->ThemeProject->bindProject();
-	 $theme_id = $clubed_theme['ClubbedTheme']['theme_id'];
-	return $clubed_theme_projects = $this->ThemeProject->findAll("ThemeProject.theme_id = $theme_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'".$exclude_user_id_clause.' GROUP BY Project.user_id',NULL, ' RAND()', NUM_DESIGN_STUDIO_PROJECT, NULL, 2, $this->getContentStatus());
+	$clubed_theme =$this->ClubbedGallery->find(NULL, NULL, "ClubbedGallery.id DESC");
+	$theme_id = $clubed_theme['ClubbedGallery']['gallery_id'];
+	return $clubed_theme_projects = $this->GalleryProject->findAll("GalleryProject.gallery_id = $theme_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'".$exclude_user_id_clause.' GROUP BY Project.user_id',NULL, ' RAND()', NUM_DESIGN_STUDIO_PROJECT, NULL, 2, $this->getContentStatus());
 	
 	}//function	
 }
