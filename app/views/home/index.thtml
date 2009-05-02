@@ -187,7 +187,7 @@
       <p class="more"><a href="/channel/topviewed"><?php ___('See more');?></a> </p>
     </div>
 	
-	<?php //if(isset($clubedprojects) && $count=count($clubedprojects) >=3):?>
+	<?php if(isset($clubedprojects) && $count=count($clubedprojects) >=3):?>
 	<div id="ClubedProjects" class="container">
       <h3><?php ___('Scratch Design studio');?></h3>
 		<?php //print_r($clubedprojects);
@@ -213,7 +213,7 @@
 		</div>
 		<?php endforeach; ?>
       </div>
-	  <?php //endif;?>
+	  <?php endif;?>
 	
 	<?php if ($isLogged && $friendsprojects): ?>
 	<div id="FriendsProject" class="container">
