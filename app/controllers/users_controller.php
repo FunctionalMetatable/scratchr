@@ -88,15 +88,18 @@ class UsersController extends AppController {
 			$user_records = $this->User->findAll("User.ipaddress = $client_ip or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
 			else
 			$user_records = $this->User->findAll("User.ipaddress = $client_ip ",'urlname','created DESC');
-			/* Check if there was activity from Same IP inside SIGNUP INTERVAL */
+            
+			/*
+            // Check if there was activity from Same IP inside SIGNUP INTERVAL
 			$creation_from_same_ip_in_signup_interval = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
 			$access_from_same_ip_in_signup_interval = $this->ViewStat->hasAny("ViewStat.timestamp > now() - interval $signup_interval minute  AND  ViewStat.ipaddress = $client_ip");
 	
-			/* Activity from Same IP inside SIGNUP INTERVAL */
+			// Activity from Same IP inside SIGNUP INTERVAL
 			if ($creation_from_same_ip_in_signup_interval || $access_from_same_ip_in_signup_interval) {
 				$this->set('activity_from_same_ip_signup_interval', true);
 			}			
-			
+			*/
+            
 			/* Some activity in past from same IP so we need to show the message with user records and ipaddress (send them to view) */
 			$this->set('user_records', $user_records);
 			$this->set('ip_address',long2ip($client_ip));
@@ -146,15 +149,17 @@ class UsersController extends AppController {
 			else
 			$user_records = $this->User->findAll("User.ipaddress = $client_ip ",'urlname','created DESC');
 			
-			/* Check if there was activity from Same IP inside SIGNUP INTERVAL */
+			/*
+            // Check if there was activity from Same IP inside SIGNUP INTERVAL
 			$creation_from_same_ip_in_signup_interval = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
 			$access_from_same_ip_in_signup_interval = $this->ViewStat->hasAny("ViewStat.timestamp > now() - interval $signup_interval minute  AND  ViewStat.ipaddress = $client_ip");
 	
-			/* Activity from Same IP inside SIGNUP INTERVAL */
+			// Activity from Same IP inside SIGNUP INTERVAL
 			if ($creation_from_same_ip_in_signup_interval || $access_from_same_ip_in_signup_interval) {
 				$this->set('activity_from_same_ip_signup_interval', true);
 			}			
-			
+			*/
+            
 			/* Some activity in past from same IP so we need to show the message with user records and ipaddress (send them to view) */
 			$this->set('user_records', $user_records);
 			$this->set('ip_address',long2ip($client_ip));
