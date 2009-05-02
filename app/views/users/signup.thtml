@@ -23,7 +23,7 @@
 
 <!-- |||||| Begin main content area ||||||| -->
 <div class="fullcontent" id="SignUpForm">
-<?php if($ipNotAllnowed){//if ip address is 127.0.0.1?>
+<?php if($ipNotAllowed){//if ip address is 127.0.0.1?>
 <?php
 			echo "<div id='error_message' >";
 				if ($session->check('Message.flash')):
