@@ -40,7 +40,7 @@
 		<?php endforeach; ?>
       <p class="more"><a href="/channel/recent"><?php ___('See more');?></a> </p>
     </div>
-<?php endif;?>
+<?php endif;?><?php //print_r($featuredprojects)?>
     <div id="FeaturedProjects" class="container">
       <h3><?php ___('Featured Projects');?></h3>
 		<?php
@@ -186,7 +186,35 @@
 		<?php endforeach; ?>
       <p class="more"><a href="/channel/topviewed"><?php ___('See more');?></a> </p>
     </div>
-
+	
+	<?php //if(isset($clubedprojects) && $count=count($clubedprojects) >=3):?>
+	<div id="ClubedProjects" class="container">
+      <h3><?php ___('Scratch Design studio');?></h3>
+		<?php //print_r($clubedprojects);
+		/**
+		 * Design Studio Projects
+		 */
+		foreach ($clubedprojects as $clubed):
+		$pid = $clubed['Project']['id'];
+		$owner = $clubed['Project']['User']['urlname'];
+		$project_link = "/projects/".$owner."/".$pid;
+		$thumbnail_src = getThumbnailImg($owner, $pid);
+		$user_link = "/users/".$owner;
+		$project_name = htmlspecialchars($clubed['Project']['name']);
+		$project_name_s = $project_name;
+		if (strlen($project_name) > MAX_LENGTH_PNAME_HOME) {
+			$project_name_s = substr($project_name,0,15) . "&#0133;";
+		}
+		?>
+		<div class="thumb">
+		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<? e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
+		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
+		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
+		</div>
+		<?php endforeach; ?>
+      </div>
+	  <?php //endif;?>
+	
 	<?php if ($isLogged && $friendsprojects): ?>
 	<div id="FriendsProject" class="container">
       <h3><?php ___(' My Friend\'s Projects')?></h3>
