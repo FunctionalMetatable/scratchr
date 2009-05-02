@@ -111,14 +111,19 @@ class UsersController extends AppController {
 	function signup() {
 				
 		$this->pageTitle = ___("Scratch | Signup", true);
-		$client_ip = ip2long($this->RequestHandler->getClientIP());
+        $client_ip = ip2long($this->RequestHandler->getClientIP());
+        $server_ip = ip2long($_SERVER['SERVER_ADDR']);
+        $local_ip = 2130706433;
+        
 		$user_data = $this->data;
 		$errors = Array(); 
 		$signup_interval = SIGNUP_INTERVAL;
-		$ipNotAllnowed =false;
-		if($client_ip == 2130706433)
+
+        $ipNotAllowed =false;
+        //server is not localhost and client ip is 127.0.0.1
+		if($server_ip != $local_ip && $client_ip == $local_ip)
 		{
-			$ipNotAllnowed =true;
+			$ipNotAllowed =true;
 			$this->setFlash(___("We are unable to identify your IP address. Please  <a href='/contact/us/'>contact us</a>.", true));
 		}
 				
@@ -229,7 +234,7 @@ class UsersController extends AppController {
 				
 			$age = date("Y") - $this->data['User']['byear'];
 
-			if ($this->User->validates($this->data['User']) && $client_ip == 2130706433) {
+			if ($this->User->validates($this->data['User']) && !$ipNotAllowed) {
 				$this->data['User']['password'] = sha1($this->data['User']['password']);
 
 				//These fields don't have default values and should be validated
@@ -262,7 +267,7 @@ class UsersController extends AppController {
 				$this->validateErrors($this->User);
 			}
 		}
-		$this->set('ipNotAllnowed',$ipNotAllnowed);
+		$this->set('ipNotAllowed',$ipNotAllowed);
 		$this->set_signup_variables();
 		$this->set('errors', $errors);
 		$this->render('signup');
