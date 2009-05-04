@@ -2114,6 +2114,7 @@ Class GalleriesController extends AppController {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->hide_gcomment($comment_id, "delbyusr");
+                $this->deleteCommentsFromMemcache($gallery_id);
 				$subject= "Comment deleted because it was flagged by creator of '$gallery_name'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $gallery_creater_url";
 			} elseif ($isAdmin) {
@@ -2123,21 +2124,23 @@ Class GalleriesController extends AppController {
 					
 					foreach($all_content as $gcontent)
 					{
-					$comment_id =$gcontent['Gcomment']['id'];
-					$content = $gcontent['Gcomment']['content'];
-					$this->hide_gcomment($comment_id, "delbyadmin");
-					$subject= "Comment deleted because it was flagged by an admin";
-					$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
-					$this->notify('gcomment_removed', $creator_id,
-								array('gallery_id' => $gallery_id),
-								array($content)
-							);
+                        $comment_id =$gcontent['Gcomment']['id'];
+                        $content = $gcontent['Gcomment']['content'];
+                        $this->hide_gcomment($comment_id, "delbyadmin");
+                        $this->deleteCommentsFromMemcache($gcontent['Gcomment']['gallery_id']);
+                        $subject= "Comment deleted because it was flagged by an admin";
+                        $msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
+                        $this->notify('gcomment_removed', $creator_id,
+                                    array('gallery_id' => $gallery_id),
+                                    array($content)
+                                );
 					
 					}
 				}
 				else
 				{
 					$this->hide_gcomment($comment_id, "delbyadmin");
+                    $this->deleteCommentsFromMemcache($gallery_id);
 					$subject= "Comment deleted because it was flagged by an admin";
 					$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
 					$this->notify('gcomment_removed', $creator_id,
@@ -2163,7 +2166,6 @@ Class GalleriesController extends AppController {
 		}
 		
 		$this->set_comment_errors($errors);
-		$this->deleteCommentsFromMemcache($gallery_id);
 		$this->set('comment', $this->Gcomment->find("Gcomment.id = $comment_id"));
 		$this->set('comment_id', $comment_id);
 		$this->set('urlname', $urlname);

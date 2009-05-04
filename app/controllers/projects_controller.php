@@ -462,6 +462,7 @@ class ProjectsController extends AppController {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->Pcomment->saveField("comment_visibility", "delbyusr") ;
+                $this->deleteCommentsFromMemcache($pid);
 				$subject= "Comment deleted because it was flagged by creator of '$pname'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $project_creater_url";
 			} elseif ($isAdmin) {
@@ -475,19 +476,19 @@ class ProjectsController extends AppController {
 						$this->Pcomment->id =$pcontent['Pcomment']['content'] ;
 						$content = $pcontent['Pcomment']['id'];
 						$this->Pcomment->query("update pcomments set comment_visibility = 'delbyadmin' where id=".$pcontent['Pcomment']['id'] );
-				$subject= "Comment deleted because it was flagged by an admin";
-				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
-				$this->notify('pcomment_removed', $creator_id,
-								array('project_id' => $pid,
-									'project_owner_name' => $project_creator),
-									array($content));
-								
-					
+                        $this->deleteCommentsFromMemcache($pcontent['Pcomment']['project_id']);
+                        $subject= "Comment deleted because it was flagged by an admin";
+                        $msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
+                        $this->notify('pcomment_removed', $creator_id,
+                                        array('project_id' => $pid,
+                                            'project_owner_name' => $project_creator),
+                                            array($content));
 					}
 				}
 				else
 				{
 				$this->Pcomment->saveField("comment_visibility", "delbyadmin") ;
+                $this->deleteCommentsFromMemcache($pid);
 				$subject= "Comment deleted because it was flagged by an admin";
 				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
 				$this->notify('pcomment_removed', $creator_id,
@@ -509,7 +510,6 @@ class ProjectsController extends AppController {
 			}
 			$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
 		}
-		$this->deleteCommentsFromMemcache($pid);
 		$final_comments = Array();
 		$this->set('urlname', $urlname);
 		$this->set('isLogged', $isLogged);
