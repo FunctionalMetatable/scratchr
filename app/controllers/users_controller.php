@@ -730,11 +730,11 @@ class UsersController extends AppController {
 		$mysqli = new mysqli($config['host'], $config['login'], $config['password'], $config['database']);
 		$rs = $mysqli->query( "CALL top3friendproject($user_id)" );
 		
-		while($row = $rs->fetch_object())
-		{
-			array_push($project_list,$row->project_id);
-		}
-		mysqli_free_result($rs);
+            while($row = $rs->fetch_object())
+            {
+                array_push($project_list,$row->project_id);
+            }
+            mysqli_free_result($rs);
 		mysqli_close($mysqli); 
 		
 		$project_ids = implode(',',$project_list);
@@ -1082,12 +1082,12 @@ class UsersController extends AppController {
 		$config = $this->User->getdbName();
 		$mysqli = new mysqli($config['host'], $config['login'], $config['password'], $config['database']);
 		$rs = $mysqli->query( "CALL top3friendproject($user_id)" );
-		
-		while($row = $rs->fetch_object())
-		{
-			array_push($project_list,$row->project_id);
-		}
-		mysqli_free_result($rs);
+
+            while($row = $rs->fetch_object())
+            {
+                array_push($project_list,$row->project_id);
+            }
+            mysqli_free_result($rs);
 		mysqli_close($mysqli); 
 		$key = 'friends-project-';
         $ttl = FRIENDS_PROJECT_CACHE_TTL;  
@@ -2142,7 +2142,7 @@ class UsersController extends AppController {
 			$this->User->invalidate('message',___('Enter Message.',true));
 			
 			if($this->User->validates($this->data['User'])){
-				$this->Email->email($email,$name, $message, $subject,'TO_REQUEST_FOR_MULTIPLE_ACCOUNT',$email);
+				$this->Email->email($email,$name, $message, $subject, TO_REQUEST_FOR_MULTIPLE_ACCOUNT,$email);
 				$this->Session->setFlash(___('The message was sent.', true));
 				$this->set('isBannedUser',false);
 				$this->data['User']['name'] = '';
