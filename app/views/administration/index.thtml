@@ -49,5 +49,10 @@
     <a href="/administration/send_bulk_notifications"></a>
 	<h3><a href="<?php echo $html->url('/administration/send_bulk_notifications')?>"> Send Bulk Notifications </a></h3>
 	</div>
+
+    <div class="gallerythumb clearme">
+    <a href="/administration/ban_user_frontpage"></a>
+	<h3><a href="<?php echo $html->url('/administration/ban_user_frontpage')?>"> Frontpage User Ban  </a></h3>
+	</div>
 	<?php endif;?>
 </div>
