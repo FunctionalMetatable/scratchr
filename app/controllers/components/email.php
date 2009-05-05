@@ -5,7 +5,7 @@ class EmailComponent extends Object
 	  if($mailto) {
 		$f_mail = $mailto;
 	  } else {
-	  	$f_mail = "scratch-feedback@media.mit.edu";
+	  	$f_mail = DEFAULT_EMAIL_TO;
 	  }
 	  $f_name = "ScratchR Web Master";
 	  $f_message = $message;
@@ -14,8 +14,8 @@ class EmailComponent extends Object
 	  	$headers .= "X-Sender: <$mailfrom>\n";
 	  	$headers .= "X-Mailer: ScratchR Platform\n";
 	  } else {
-	  	$headers = "From: $name <contactus-form@scratch.mit.edu>\n";
-	  	$headers .= "X-Sender: <contactus-form@scratch.mit.edu>\n";
+	  	$headers = "From: $name <CONTACTUS_EMAIL>\n";
+	  	$headers .= "X-Sender: <CONTACTUS_EMAIL>\n";
 	  	$headers .= "X-Mailer: ScratchR Platform\n";
 	  }
 	  $headers .="Content-Type: text/html\n";
