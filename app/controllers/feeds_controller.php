@@ -76,6 +76,38 @@ class FeedsController extends AppController {
 		$this->render('featured_project_feed');
 	}
 	
+	function getTopViewedProjects() {
+		$this->autoRender = false;
+		$this->layout = 'xml'; 
+		
+		$projects = $this->Project->findAll("Project.proj_visibility = 'visible'", null, "Project.views DESC", 15);
+		$final_projects = Array();
+		$url = env('SERVER_NAME');
+		$url = strtolower($url);
+		$rss_link = "http://" . $url . "/feeds/getFeaturedProjects";
+		
+		foreach ($projects as $current_project) {
+			$project_id = $current_project['Project']['id'];
+			$user_id = $current_project['Project']['user_id'];
+			$user = $this->User->find("User.id = $user_id");
+			$user_name = $user['User']['username'];
+			
+			$thumbnail_src = getThumbnailImg($user_name, $project_id);
+			$additional_url = "/projects/$user_name/$project_id";
+			$current_project['Project']['link'] = "http://" . $url . $additional_url;
+			$current_project['Project']['image_link'] = "http://" . $url . $thumbnail_src;
+
+			$description = $current_project['Project']['description'];
+			$description = $this->removespecialchars($description);
+			$current_project['Project']['description'] = $description;
+			array_push($final_projects, $current_project);
+		}
+
+		$this->set('rss_link', $rss_link);
+		$this->set('projects', $final_projects);
+		$this->render('topviewed_project_feed');
+	}
+	
 	function getTopLovedProjects() {
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
