@@ -1706,6 +1706,7 @@ class ProjectsController extends AppController {
 
             $this->Project->id = $pid;
 			$content_status = $this->getContentStatus();
+			$users_permission =$this->isAnyPermission();
             //$this->Project->mc_connect();
             //$project = $this->Project->mc_get('project', $project_id);
             //if(!$project) {
@@ -1732,8 +1733,9 @@ class ProjectsController extends AppController {
             }
 			//if project is not visible redirect the non-admin user to 404
             $project_visibility = $project['Project']['proj_visibility'];
-            if(!$this->isAdmin()) {
-                if($project_visibility == "delbyusr" || ($project_visibility ==  "delbyadmin" && ! $this->isAdmin()))  {
+			if($this->isAdmin() || isset($users_permission['censor_projects'] )||isset($users_permission['project_view_permission'])) { }
+			else{
+                    if($project_visibility == "delbyusr" || ($project_visibility ==  "delbyadmin" && ! $this->isAdmin()))  {
                     $this->cakeError('error',array('code'=>'404', 'message'=>'project_deleted', 'name' => __('Not Found', true)));
                 }
             }
