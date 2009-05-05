@@ -2129,7 +2129,7 @@ Class GalleriesController extends AppController {
                         $this->hide_gcomment($comment_id, "delbyadmin");
                         $this->deleteCommentsFromMemcache($gcontent['Gcomment']['gallery_id']);
                         $subject= "Comment deleted because it was flagged by an admin";
-                        $msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
+                        $msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
                         $this->notify('gcomment_removed', $creator_id,
                                     array('gallery_id' => $gallery_id),
                                     array($content)
@@ -2142,7 +2142,7 @@ Class GalleriesController extends AppController {
 					$this->hide_gcomment($comment_id, "delbyadmin");
                     $this->deleteCommentsFromMemcache($gallery_id);
 					$subject= "Comment deleted because it was flagged by an admin";
-					$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
+					$msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
 					$this->notify('gcomment_removed', $creator_id,
 								array('gallery_id' => $gallery_id),
 								array($content)
