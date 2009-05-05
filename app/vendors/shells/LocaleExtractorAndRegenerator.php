@@ -1,5 +1,50 @@
 <?php
+/**
+ * http://www.odesk.com/help/help/using_odesk_tools/oDesk_tools
+ * #!/bin/sh
 
+#
+# This scrpt will invoke cake script for extracting and generating the
+# messages and then auto commits the new po files
+#
+# @author Bakyt Niyazov
+
+# first update
+/usr/bin/svn up /home/pootle/scratchr_working_copy
+
+# do the dirty job. generate default.pot file and run msgmerge command for every po file
+/home/pootle/scratchr_working_copy/cake/console/cake -app /home/pootle/scratchr_working_copy/app LocaleExtractorAndRegenerator
+
+# auto commit the changes
+/usr/bin/svn commit --username locale --password 4scratchr /home/pootle/scratchr_working_copy/app/locale/ -m "auto commit by extractor and regenerator"
+
+
+ */
+
+/**
+ * #!/bin/sh
+
+# Just straightforward Autoupdatr for Pootle
+# @author Bakyt Niyazov
+#
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/ar/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/de/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/el/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/es/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/fr/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/hu/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/it/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/jp/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/ko/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/nl/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/no/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/pl/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/pt_BR/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/ru/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/tr/
+/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/zh_TW/
+
+ */
 ini_set('memory_limit', '20M');
 /**
  * Note from Bakyt Niyazov
@@ -200,17 +245,32 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
 			// look at chunk below
 			$poFile = $this->__output . $file . DS . 'LC_MESSAGES' . DS . 'default.po';
 			if (is_file($poFile) && is_writable($poFile)) {
-				// outputting into intermediate file ".updated"
-				// just because msgmerge has problems when it generates
-				// the new file from the source po file
-                shell_exec($this->__msgmerge . ' ' . $poTemplateFullPath . ' ' . $poFile . ' -o ' . $poFile . '.pot2po');
+				// outputting into intermediate file ".final"
+				// just because msgmerge has problems when it outputs into existing file
+
+				// First merge generates a new PO file but those phrases which are don't exist in POT files are commented out
+                shell_exec($this->__msgmerge . ' ' . $poFile . ' ' . $poTemplateFullPath . ' -o ' . $poFile . '.po2pot');
+
+                // This merge will generate a new PO file. It adds a new phrases from POT file to the final
+        		shell_exec($this->__msgmerge . ' ' . $poFile . ' ' . $poFile . '.po2pot -o ' . $poFile . '.final');
+        		// now we just rename it (with overriding)
+                copy($poFile . '.final', $poFile);
+
+                // garbage collect
+                unlink($poFile . '.final');
+                unlink($poFile. '.po2pot');
+
+        		// THE COMMENT SECTION CAN BE DELETED. Don't Use it.
+                /*shell_exec($this->__msgmerge . ' ' . $poTemplateFullPath . ' ' . $poFile . ' -o ' . $poFile . '.pot2po');
                 shell_exec($this->__msgmerge . ' ' . $poFile . ' ' . $poTemplateFullPath . ' -o ' . $poFile . '.po2pot');
                 shell_exec($this->__msgmerge . ' ' . $poFile . '.pot2po' . ' ' . $poFile . '.po2pot' . ' -o ' . $poFile . '.final');
-                // now just rename it
+
+        		// now just rename it
                 copy($poFile . '.final', $poFile);
                 unlink($poFile . '.final');
                 unlink($poFile . '.pot2po');
                 unlink($poFile. '.po2pot');
+				*/
 
 			}
 
