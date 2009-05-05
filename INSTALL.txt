@@ -52,7 +52,9 @@ approrpiate access info for your database.
 11. It is recommended that you increase your maximum memory limit for php to 32MB.
     You can do it by changing the memory_limit parameter in your php.ini file.
 
-12. Send an email to andresmh@media.mit.edu letting us know that you have
+12. You can configure email addresses and other constants from app/config/bootstarp.php
+
+13. Send an email to andresmh@media.mit.edu letting us know that you have
 succeded and how you're planning to use the site, we'll be very happy to hear from you. 
 Don't forget to read the LICENSE.TXT!!!
 
