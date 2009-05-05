@@ -229,14 +229,14 @@ Class HomeController extends AppController {
             $this->set('tags', $tags);
         }
 		
-		$countries = $memcache->get("$prefix-countries");
+		/*$countries = $memcache->get("$prefix-countries");
         if ( $countries == "" ) {
        	    $countriestmp = $this->__getTopCountries();
             $memcache->set("$prefix-countries", $countriestmp, false, 3600) or die ("Failed to save data at the server");
             $this->set('countries', $countriestmp);
         } else {
             $this->set('countries', $countries);
-        }
+        }*/
 		
     	$memcache->close();
 		
@@ -490,11 +490,11 @@ Class HomeController extends AppController {
 		$config = $this->User->getdbName();
 		$mysqli = new mysqli($config['host'], $config['login'], $config['password'], $config['database']);
 		$rs = $mysqli->query( "CALL top3friendproject($user_id)" );
-		while($row = $rs->fetch_object())
-		{
-			array_push($project_list,$row->project_id);
-		}
-		mysqli_free_result($rs);
+            while($row = $rs->fetch_object())
+            {
+                array_push($project_list,$row->project_id);
+            }
+            mysqli_free_result($rs);
 		mysqli_close($mysqli); 
 		$project_ids = implode(',',$project_list);
 		if(!empty($project_ids)):
