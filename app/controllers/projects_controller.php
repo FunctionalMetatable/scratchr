@@ -882,7 +882,7 @@ class ProjectsController extends AppController {
 						$msg = "Project *automatically censored* because it reached the maximum number of flags.\n";
 						$msg .= "user $linked_flaggername ($user_id) just flagged $project_url";
 						$subject= "Project '$pname' censored";
-						$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, 'scratch-feedback@media.mit.edu');
+						$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, DEFAULT_EMAIL_FROM);
 						
 						$this->notify('project_removed_auto', $creator['User']['id'],
 										array('project_id' => $pid));

@@ -59,6 +59,12 @@ $this->params['webservices']
  //Put on/off change of email on MyStuff should also change it on the forums.1 for ON and 0 for OFF.
  define("ENABLE_TO_CHANGE_FORUM_EMAIL", 1);
  
+ define("DEFAULT_EMAIL_FROM", "scratch-feedback@media.mit.edu");
+ //Used in componenets/email 
+ define("DEFAULT_EMAIL_TO", "scratch-feedback@media.mit.edu");
+ define("CONTACTUS_EMAIL", "contactus-form@scratch.mit.edu");
+ //Used in  users password recovery reply email id.
+ define("REPLY_TO_PASSWORD_RECOVERY", "scratch-feedback@media.mit.edu");
  /**
   * Themes config
   */
