@@ -2006,6 +2006,9 @@
 					
                         $info = Array('BlockedUserFrontpage' => Array('id' => null, 'user_id' => $current_user_id, 'admin_id' => $admin_id, 'reason' => $reason));
                         $this->BlockedUserFrontpage->save($info);
+                        $this->BlockedUserFrontpage->mc_connect();
+                        $this->BlockedUserFrontpage->mc_delete('home_projects');
+                        $this->BlockedUserFrontpage->mc_close();
                     
 				}
                 else {
@@ -2107,7 +2110,9 @@
 		$ban_id = $ban_record['BlockedUserFrontpage']['id'];
 		
 		$this->BlockedUserFrontpage->del($ban_id);
-		
+        $this->BlockedUserFrontpage->mc_connect();
+		$this->BlockedUserFrontpage->mc_delete('home_projects');
+        $this->BlockedUserFrontpage->mc_close();
 		$banned_users = $this->set_banned_users_frontpage();
 		
 		$this->set('data', $banned_users);
