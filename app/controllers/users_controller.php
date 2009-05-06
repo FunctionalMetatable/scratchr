@@ -984,8 +984,12 @@ class UsersController extends AppController {
         
 		 $thanks_interval =THANKS_INTERVAL;
 		 $client_ip = ip2long($this->RequestHandler->getClientIP());
-		 $similar_sender = $this->Thank->hasAny("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.sender_id = $session_UID AND (Thank.reciever_id = $user_id OR Thank.ipaddress = $client_ip)");
-			
+		 $similar_sender = $this->Thank->hasAny("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.sender_id = $session_UID ");
+		 
+		 $similar_ip_sender = $this->Thank->hasAny("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.ipaddress = $client_ip");
+		 $thanks = 	$this->Thank->find("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.sender_id = $session_UID ");
+		 $thanks_to_username = $thanks['RecieverUser']['username'];	
+		 $thanks_reciever_id = $thanks['Thank']['reciever_id'];
 			$isMyFriend = false;
 
 			if ($isMe)
@@ -1155,6 +1159,9 @@ class UsersController extends AppController {
 		$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id"));
 		$this->set('isIgnored',$isIgnored);
 		$this->set('similar_sender', $similar_sender);
+		$this->set('thanks_to_username', $thanks_to_username);
+		$this->set('thanks_reciever_id', $thanks_reciever_id);
+		$this->set('similar_ip_sender', $similar_ip_sender);
 		$this->set('comment_count', $comment_count);
 		$this->set('ignore_count', $ignore_count);
 		$this->set('karma_ratings', $karma_ratings);

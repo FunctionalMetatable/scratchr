@@ -2,10 +2,10 @@
 <?php 
 	
 	foreach($data as $comment) {
-		$commenter_id = $comment['User']['id'];
-		$commenter_urlname = $comment['User']['urlname'];
-		$commenter_username = $comment['User']['username'];
-		$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $content_status, $comment['User']['timestamp']);
+		$commenter_id = $comment['SenderUser']['id'];
+		$commenter_urlname = $comment['SenderUser']['urlname'];
+		$commenter_username = $comment['SenderUser']['username'];
+		$commenter_icon = getBuddyIconBySize($commenter_id, 'mini', $content_status, $comment['SenderUser']['timestamp']);
 		$commenter_url = "/users/".$commenter_urlname;
 		$user_id = $comment['Thank']['reciever_id'];
 		$comment_id =  $comment['Thank']['id'];
