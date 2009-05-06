@@ -107,35 +107,30 @@ Class HomeController extends AppController {
 		$this->set('clubedprojects',$clubedprojects);
 		
 		
-		if($this->isLoggedIn()):
-		$session_UID = $this->getLoggedInUserID();
-		$this->Project->mc_connect();
-		$myfriendsprojects = $this->Project->mc_get('$prefix-myfriendsprojects',$session_UID);
-		if($myfriendsprojects == ""){
-			$myfriendsprojectstmp = $this->___getMyFriendsProject($session_UID);
-			$this->Project->mc_set('$prefix-myfriendsprojects', $myfriendsprojectstmp, $session_UID);
-			$this->set('friendsprojects', $myfriendsprojectstmp);
-		} else {
-		$this->set('friendsprojects', $myfriendsprojects);
-		$this->Project->mc_close();
-		}	
-		
-        $newprojects = $memcache->get("$prefix-newprojects");
-        if ( $newprojects == "" ) {
-       	    $newprojectstmp = $this->__getNewProjects();
-            $memcache->set("$prefix-newprojects", $newprojectstmp, false, 60) or die ("Failed to save data at the server");
-            $this->set('newprojects', $newprojectstmp);
-        } else {
+		if($this->isLoggedIn()) {
+            $session_UID = $this->getLoggedInUserID();
+
+            $myfriendsprojects = $memcache->get("$prefix-myfriendsprojects-$session_UID");
+            if( !$myfriendsprojects ) {
+                $myfriendsprojects = $this->___getMyFriendsProject($session_UID);
+                $memcache->set("$prefix-myfriendsprojects-$session_UID", $myfriendsprojects, false, 300) or die ("Failed to save data at the server");
+            }
+            $this->set('friendsprojects', $myfriendsprojects);
+            
+            $newprojects = $memcache->get("$prefix-newprojects");
+            if ( !$newprojects ) {
+                $newprojects = $this->__getNewProjects();
+                $memcache->set("$prefix-newprojects", $newprojects, false, 60) or die ("Failed to save data at the server");
+            }
             $this->set('newprojects', $newprojects);
         }
-		endif;
+        
         $toprandoms = $memcache->get("$prefix-toprandoms");
         if ( !$toprandoms) {
        	    $toprandoms = $this->__getTopRandomProjects();
             $memcache->set("$prefix-toprandoms", $toprandoms, false, 300) or die ("Failed to save data at the server");
             $toprandoms_ids   = Set::extract('/Project/id', $toprandoms);
             $this->Project->register_frontpage($toprandoms_ids, 'surprise');
-            $this->set('toprandoms', $toprandoms);
         }
         $this->set('toprandoms', $toprandoms);
         
