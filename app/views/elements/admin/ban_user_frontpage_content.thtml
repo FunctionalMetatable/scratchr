@@ -13,7 +13,7 @@
 		</div>
 	<?php endif; ?>
 	<form id="admin_banuser" action="<?=e("/administration/add_banned_user_frontpage")?>" method="post">
-		<p>Username: <br/><textarea id='admin_banuser_name' name="admin_banuser_name" cols="60" rows="2" tabindex="1"><?php e($default_name); ?></textarea></p>
+		<p>Username: <br/><input type="text" id="admin_banuser_name" name="admin_banuser_name" value="<?php e($default_name); ?>" size="40" /></p>
 		<p>Reason: <br/><textarea id='admin_banuser_reason' name="admin_banuser_reason" cols="60" rows="4" tabindex="2"><?php e($default_reason); ?></textarea></p>
 		<?php 
 			e($ajax->submit('Ban', array('id' => 'admin_banuser_submit', 
