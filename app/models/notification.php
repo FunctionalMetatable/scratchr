@@ -180,6 +180,27 @@ class Notification extends AppModel {
 
         return array('valids' => $valid_users, 'invalids' => $invalid_users);
     }
+
+    function addBulkNotificationsByCondition($condition, $text) {
+        //get notification type id for bulk
+        $notification_type_id = $this->__getNotificationTypeId('bulk');
+        $users = $this->query('SELECT id, username FROM `users` WHERE '.$condition);
+        $valid_users = array();
+        $data = array();
+        foreach($users as $user) {
+            $data[] = array('to_user_id' => $user['users']['id'],
+                            'extra' => $text,
+                            'notification_type_id' => $notification_type_id,
+            );
+             $valid_users[] = $user['users']['username'];
+        }
+        $ok = false;
+        if(!empty($data)) {
+            $this->create();
+            $ok = $this->saveAll($data);
+        }
+        return array('valids' => $valid_users, 'invalids' => array());
+    }
 	
 	/**
 	* Returns notification type id from notification type string to a user specified by $user_id
