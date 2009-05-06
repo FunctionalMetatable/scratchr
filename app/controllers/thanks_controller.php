@@ -15,7 +15,8 @@ class ThanksController extends AppController {
 				$client_ip = ip2long($this->RequestHandler->getClientIP());
                 $session_user_id = $this->getLoggedInUserID();
                 $client_ip = ip2long($this->RequestHandler->getClientIP());
-				
+				$users = $this->User->find("User.id =$user_id",'id,username');
+				$isMe = $this->activeSession($user_id);
 				$data['Thank']['sender_id'] = $session_user_id;
 				$data['Thank']['reciever_id'] = $user_id;
 				$data['Thank']['reason'] = $this->params['form']['reason'];
@@ -23,6 +24,8 @@ class ThanksController extends AppController {
 				$this->Thank->save($data['Thank']);
 				$this->set('just_thanked', true);
 				$this->set('user_id',$user_id);
+				$this->set('isMe',$isMe);
+				$this->set('thanks_to_username',$users['User']['username']);
 				$this->render("thanks_ajax", "ajax");
 				return;
 				 

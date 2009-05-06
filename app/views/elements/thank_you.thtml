@@ -37,12 +37,16 @@ else {
     "));
 }
 ?>
+<!--don't allow to give thank you to self-->
 <?php if($isMe):?>
 <h6><a href="<?php echo $html->url('/thanks/show/'.$user_id)?>"><?php echo $thanked_count;?>&nbsp;</a><?php ___('people thanked you'); ?></h6>
+<?php elseif ( !empty($just_thanked) ):?>
+<?php //elseif ($isLoggedIn && (!empty($similar_sender) || !empty($just_thanked))):?>
 
-<?php elseif ($isLoggedIn && (!empty($similar_sender) || !empty($just_thanked))):?>
-
-<h6><?php ___('You thanked it!'); ?></h6>
+<h6><?php printf(___('You just thanked %s',true),$thanks_to_username); ?></h6>
+<!--if Already thanked to user-->
+<?php elseif ( $thanks_reciever_id == $user_id):?>
+<h6><?php printf(___('You already thanked %s',true),$thanks_to_username); ?></h6>
 
 <?php elseif (!$isLoggedIn):?>
 <h6><?php echo $ajax->link(___("Give thank you?", true), 
@@ -54,8 +58,16 @@ else {
 <script type="text/javascript">
 var explainThankMsg = "<?php ___('Please explain why do you want to give thank you.'); ?>";
 var explainThankTxt = '';
+var thankMsg = '';
+var similar_sender = '<?php echo $similar_sender; ?>';
+var similar_ip_sender = '<?php echo $similar_ip_sender?>';
+if(similar_ip_sender)
+var thankMsg = 'Some one already thanked to <?php echo $thanks_to_username?> using this IP.Wait some time of interval to give thank you again.';
+else
+if(similar_sender)
+var thankMsg = 'You just thanked to <?php echo $thanks_to_username?>.Wait some time of interval to give thank you again.';
 </script>
-<h6><a href="#" onclick="$('thankMessageDiv').toggle();$('thankMessageDivTb').value=explainThankMsg;return false;"><?php ___('Give thank you?'); ?></a></h6>
+<h6><a href="#" onclick="if(!(similar_sender || similar_ip_sender)){$('thankMessageDiv').toggle();$('thankMessageDivTb').value=explainThankMsg;}else{alert(thankMsg)} return false;"><?php ___('Give thank you?'); ?></a></h6>
 <div id="thankMessageDiv" style="display:none;">
 <?php e($ajax->form("", "post", array("update"=>"thankDiv",'url' => "/thanks/give/$user_id", "condition"=>"confirmThanking($('thankMessageDivTb').getValue())"))); ?>
 

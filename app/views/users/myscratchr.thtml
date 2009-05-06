@@ -166,9 +166,9 @@ function langList($countries) {
 	  </p>
 
 			<!--Thank you mechanism-->
-			<!--
-			<div id="thankDiv" class="flag"><?php e($this->renderElement("thank_you",array('isLoggedIn'=>$isLoggedIn,'user_id'=>$user['id'],'isMe'=>$isMe,'thanked_count'=>$thanked_count))); ?></div>
-			//-->
+			
+			<div id="thankDiv" class="flag"><?php e($this->renderElement("thank_you",array('isLoggedIn'=>$isLoggedIn,'user_id'=>$user['id'], 'isMe'=>$isMe, 'thanked_count'=>$thanked_count, 'thanks_to_username'=>$thanks_to_username, 'thanks_reciever_id'=>$thanks_reciever_id, 'similar_ip_sender'=>$similar_ip_sender))); ?></div>
+			
 			<!--Thank you mechanism-->
 			
 		<?php if ($isMe || $isAdmin):?>

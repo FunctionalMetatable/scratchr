@@ -7,8 +7,14 @@ class Thank extends AppModel {
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 	
 	var $belongsTo = array(
-			'User' => array('className' => 'User',
+			'SenderUser' => array('className' => 'User',
 								'foreignKey' => 'sender_id',
+								'conditions' => '',
+								'fields' => '',
+								'order' => ''
+			),
+			'RecieverUser' => array('className' => 'User',
+								'foreignKey' => 'reciever_id',
 								'conditions' => '',
 								'fields' => '',
 								'order' => ''
