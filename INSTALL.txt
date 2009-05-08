@@ -14,6 +14,9 @@ Apache needs mod-rewrite enabled and PHP needs php5-mysql
 
 4. Create a MySQL database based on sql/db-structure.sql:
     mysql -u root -p name_of_database < app/config/sql/db-structure.sql
+   Also import all the data and storedprocedures from sql/db-data.sql and sql/db-sp.sql
+    mysql -u root -p name_of_database < app/config/sql/db-data.sql
+    mysql -u root -p name_of_database < app/config/sql/db-sp.sql
    Execute all SQL files you find under app/config/sql/updates one by one (if any)
    (first sort all the files by modified/filename to maintain the right order)
     
