@@ -22,7 +22,7 @@
 
 <div class = "project_share_form">
 	<div class = "project_share_item_left">
-		<label for="create_gallery_name"><?php ___('Priview image'); ?></label>
+		<label for="create_gallery_name"><?php ___('Preview image'); ?></label>
 	</div>
 	<div class = "project_share_item_right">
 	<?php echo $form->file('priview_image',array('name'=>'priview_image'))?>
