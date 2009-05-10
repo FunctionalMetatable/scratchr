@@ -209,7 +209,10 @@ class ProjectsController extends AppController {
 			}
 			else
 			{
-				$isNameExist =$this->Project->hasAny(array('Project.name' =>$newtitle, 'Project.user_id'=>$project['Project']['user_id']));
+				$isNameExist =$this->Project->hasAny(array('Project.name' => $newtitle,
+                                                    'Project.user_id' => $project['Project']['user_id'],
+                                                    'Project.id !=' => $pid));
+                
 				if(!$isNameExist){
 					if ($this->Project->saveField('name',$newtitle)) {
 						$this->set('ptitle', $newtitle); // note: 'title' is pre-defed var for cake layout
@@ -2313,20 +2316,21 @@ class ProjectsController extends AppController {
 			$owner_id = $result['Gallery']['user_id'];
 			$temp_gallery = $current_gallery;
 			$temp_gallery['Gallery']['ignored'] = false;
-			
+			$ignored = false;
+            
 			if ($isLogged) {
-				if (empty($owner_id)) {
-				} else {
-					$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $creator_id AND IgnoredUser.user_id = $owner_id");
+				if (!empty($owner_id)) {
+                    $ignore_count = $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $creator_id AND IgnoredUser.user_id = $owner_id");
+                    if ($ignore_count > 0) {
+                        $ignored = true;
+                    }
 				}
-				if ($ignore_count > 0) {
-					$temp_gallery['Gallery']['ignored'] = true;
-				} else {
-					$temp_gallery['Gallery']['ignored'] = false;
-				}
+				
+				$temp_gallery['Gallery']['ignored'] = $ignored;
 			}
 			array_push($gallerylist, $temp_gallery);
 		}
+        
 		$gallerylist = $this->finalize_galleries($gallerylist);
 		return $gallerylist;
 	}
