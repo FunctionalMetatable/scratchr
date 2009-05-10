@@ -876,29 +876,26 @@ class UsersController extends AppController {
 		$this->Project->bindUser();
 		$this->User->bindThank();
 		$user_record = $this->User->find("urlname = '$urlname'", null, null, 2);
-		if(empty($user_record))
-			{
-			
+		if(empty($user_record)) {
 			$this->cakeError('error404');
-			}
+        }
 
 		$user_id = $user_record['User']['id'];
 		$isMe = $this->activeSession($user_id);
 		$username = $user_record['User']['username'];
 		
 		$user_status = $user_record['User']['status'];
-		if ($user_status == 'delbyadmin') 
-		$this->cakeError('error404');
+		if ($user_status == 'delbyadmin') {
+            $this->cakeError('error404');
+        }
 		//Find number of featured project for a particular user
 		$this->Project->bindFeatured();
 		$allUserProject = $this->Project->findAll("Project.user_id = $user_id");
 		$featured_count = 0;
 		$featureProlectList = array();
 		$image_name='';
-		foreach($allUserProject as $userProject)
-		{
-			if(isset($userProject['FeaturedProject']['id'] ))
-			{
+		foreach($allUserProject as $userProject) {
+			if(isset($userProject['FeaturedProject']['id'] )) {
 				$featured_count+=1;
 				if(SHOW_RIBBON ==1):
 				$text =$this->convertDate($userProject['FeaturedProject']['timestamp']);
@@ -972,49 +969,32 @@ class UsersController extends AppController {
 		$relations = $this->Relationship->findAll("user_id = $user_id", NULL, "Relationship.timestamp DESC", 5, 1, NULL);
 		$this->set('friends', $relations);
 		
-		 $similar_sender = false;;
 		$isIgnored=false;
-		//determines if the profile page being viewed is that of a friend
-		if ($isLoggedIn)
-		{
+
+        //determines if the profile page being viewed is that of a friend
+		if ($isLoggedIn) {
 			$session_UID = $this->getLoggedInUserID();
 			$isIgnored = $this->IgnoredUser->hasAny("IgnoredUser.blocker_id = $session_UID AND IgnoredUser.user_id = $user_id");
 			
-			// set user thanks info
-        
-		 $thanks_interval =THANKS_INTERVAL;
-		 $client_ip = ip2long($this->RequestHandler->getClientIP());
-		 $similar_sender = $this->Thank->hasAny("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.sender_id = $session_UID ");
-		 
-		 $similar_ip_sender = $this->Thank->hasAny("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.ipaddress = $client_ip");
-		 $thanks = 	$this->Thank->find("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.sender_id = $session_UID ");
-		 $thanks_to_username = $thanks['RecieverUser']['username'];	
-		 $thanks_reciever_id = $thanks['Thank']['reciever_id'];
 			$isMyFriend = false;
-
-			if ($isMe)
-			{
+			if ($isMe) {
 				$this->set('session_user_themes', $user_record['Theme']);
 				$friend_requests = $this->FriendRequest->findAll(array("to_id"=>$session_UID, "FriendRequest.status"=>"pending"));
 				$theme_requests = $this->ThemeRequest->findAll(array("to_id"=>$session_UID, "ThemeRequest.status"=>"pending"), null, null, null, null, 1);
 				$this->set('theme_requests', $theme_requests);
 				$this->set('friend_requests', $friend_requests);
 			}
-			else
-			{
-				if ($this->Relationship->hasAny("user_id = ".$session_UID." AND friend_id = ".$user_id))
-				{
+			else {
+				if ($this->Relationship->hasAny("user_id = ".$session_UID." AND friend_id = ".$user_id)) {
 					$isMyFriend = true;
 				}
-				else
-				{
+				else {
 					$this->set("friendPending", false);
 					$this->set("friendDeclined", false);
 
 					$fr = $this->FriendRequest->find(array("user_id"=>$user_id, "to_id"=>$session_UID));
 
-					if (!empty($fr))
-					{
+					if (!empty($fr)) {
 						$this->set("friendPending", ($fr['FriendRequest']['status'] == "pending"));
 						$this->set("friendDeclined", ($fr['FriendRequest']['status'] == "declined"));
 					}
@@ -1042,14 +1022,34 @@ class UsersController extends AppController {
 		
 		
 		
-		if($isMe)
-		{
+		/*
+        // set user thanks info
+        $similar_sender = false;;
+        if ($isLoggedIn) {
+            $thanks_interval =THANKS_INTERVAL;
+            $client_ip = ip2long($this->RequestHandler->getClientIP());
+            $similar_sender = $this->Thank->hasAny("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.sender_id = $session_UID ");
+
+            $similar_ip_sender = $this->Thank->hasAny("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.ipaddress = $client_ip");
+            $thanks = 	$this->Thank->find("Thank.timestamp > now() - interval $thanks_interval HOUR AND Thank.sender_id = $session_UID ");
+            $thanks_to_username = $thanks['RecieverUser']['username'];
+            $thanks_reciever_id = $thanks['Thank']['reciever_id'];
+        }
+
+        if( $isMe ) {
 		  $thanked_people_count = $this->Thank->query("SELECT count(DISTINCT(sender_id)) as cnt from thanks where `reciever_id`=$user_id");
-		
-		$this->set('thanked_count', $thanked_people_count['0']['0']['cnt']);
+          $this->set('thanked_count', $thanked_people_count['0']['0']['cnt']);
 		}
-		else
-		$this->set('thanked_count',0);
+		else {
+            $this->set('thanked_count',0);
+        }
+        
+        $this->set('similar_sender', $similar_sender);
+		$this->set('thanks_to_username', $thanks_to_username);
+		$this->set('thanks_reciever_id', $thanks_reciever_id);
+		$this->set('similar_ip_sender', $similar_ip_sender);
+        */
+        
 		//init shariables
 		$myShariables = $this->Shariable->findAll("user_id = $user_id");
 		$shariables_used = $this->Shariable->findCount("user_id = $user_id");
@@ -1057,10 +1057,8 @@ class UsersController extends AppController {
 
 
 		// set user's galleries
-		
 		$final_galleries = $this->set_galleries($user_id);
 		$final_galleries = $this->finalize_galleries($final_galleries);
-		
 		
 		$num_friends = $this->Relationship->findAll("user_id = $user_id");
 		$num_galleries = $this->GalleryMembership->findCount("GalleryMembership.user_id = $user_id");
@@ -1078,20 +1076,17 @@ class UsersController extends AppController {
 		}
 		
 		//populate friends 3 latest project
-		
-
 		$project_list = array();
 		$friends_project =array();
 		
 		$config = $this->User->getdbName();
 		$mysqli = new mysqli($config['host'], $config['login'], $config['password'], $config['database']);
 		$rs = $mysqli->query( "CALL top3friendproject($user_id)" );
-
-            while($row = $rs->fetch_object())
-            {
-                array_push($project_list,$row->project_id);
-            }
-            mysqli_free_result($rs);
+        while($row = $rs->fetch_object())
+        {
+            array_push($project_list,$row->project_id);
+        }
+        mysqli_free_result($rs);
 		mysqli_close($mysqli); 
 		$key = 'friends-project-';
         $ttl = FRIENDS_PROJECT_CACHE_TTL;  
@@ -1158,10 +1153,6 @@ class UsersController extends AppController {
 		
 		$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id"));
 		$this->set('isIgnored',$isIgnored);
-		$this->set('similar_sender', $similar_sender);
-		$this->set('thanks_to_username', $thanks_to_username);
-		$this->set('thanks_reciever_id', $thanks_reciever_id);
-		$this->set('similar_ip_sender', $similar_ip_sender);
 		$this->set('comment_count', $comment_count);
 		$this->set('ignore_count', $ignore_count);
 		$this->set('karma_ratings', $karma_ratings);
