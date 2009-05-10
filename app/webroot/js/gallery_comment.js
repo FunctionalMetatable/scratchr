@@ -9,8 +9,7 @@ function showReplyBox(comment_id, showReplies, toggle) {
 	var element_name = 'reply_to_' + comment_id;
 	var popup = document.getElementById(element_name);
 	var frame = document.getElementById('gallery_comment_reply_frame_' + comment_id);
-    console.log(frame);
-	var target = document.getElementById(comment_id);
+    var target = document.getElementById(comment_id);
 	var link = document.getElementById('reply_hide_link_' + comment_id);
 	var topframe = document.getElementById('reply_to_' + comment_id);
 	var linkb_name = 'view_hide_link_' + comment_id;
@@ -36,8 +35,7 @@ function showReplyBox(comment_id, showReplies, toggle) {
 		}
 	}
     var button = document.getElementById('gallery_comment_reply_submit_' + comment_id);
-    console.log(button);
-	if (showReplies) {
+    if (showReplies) {
 		text_input.value = "";
         list.style.display = 'block';
 		linkb.innerHTML = 'hide replies';
