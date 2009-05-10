@@ -1808,8 +1808,8 @@ class ProjectsController extends AppController {
             if($comment_id) {
                 $comment_level = 0;
                 if($comment_data['comments'][0]['Pcomment']['reply_to']!=-100) {
-                   $reply_to = $this->Pcomment->field('reply_to', 'id = '. $comment_data['comments'][0]['Pcomment']['reply_to']);
-                   if($reply_to == -100) {
+                   $parent = $this->Pcomment->field('reply_to', 'id = '. $comment_data['comments'][0]['Pcomment']['reply_to']);
+                   if($parent == -100) {
                        $comment_level = 1;
                    }
                    else {
