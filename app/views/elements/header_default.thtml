@@ -43,17 +43,14 @@ $lang = array( array("العربية", "/lang/ara", "اللغة"),
                array("Deutsch", "/lang/de-de", "Sprache"),
                array("English", "/lang/en-us", "Language"),
                array("Español", "/lang/es-es", "Español"),
-			   
                array("Français", "/lang/fr-fr", "Langue"),
                array("Ελληνικά", "/lang/gre", "Γλώσσα"),
                array("Magyar", "/lang/hun", "Nyelv"),
                array("Italiano", "/lang/ita", "Lingua"),
-			   
                array("日本語", "/lang/jpn", "言語"),
                array("한국어", "/lang/kor", "언어"),
                array("Nederlands", "/lang/dut", "Taal"),
                array("Norsk", "/lang/nor", "Språk"), 	       
-			   
                array("Polski", "/lang/pol", "Język"),
                array("Português-Br", "/lang/pt-br", "Idioma"),
 			   array("Русский", "/lang/rus", "Язык"),
@@ -104,21 +101,29 @@ for ($z = 0; $z < $langnum; $z++) {
 <?php 
         
 for ($d = 0; $d < 4; $d++) { // 4 columns loop
-echo "<ul id='languages'>";
-    $g = 0;	
+    
+	$g = 0;
+	
+	echo "<ul id='languages'>";
+	
 	if ($g !=$langnum) { 
-	$g = $langi+$langnum/4; // number of languages per column
+		$g = $langi+$langnum/4; // number of languages per column
 	} 
-	else {break;}
-		for (; $langi < $g; $langi++) { //loop for each column			 
-			
-			if ($lang[$langi][0]!==$stop) {
-			echo "<li><a href='".$lang[$langi][1]."'>".$lang[$langi][0]."</a>";
-			}
-			else {next; $g+=1;} // removes displayed language, default is English
+	else {
+		break;
 	}
 	
-echo "</ul>";	
+	for (; $langi < $g; $langi++) { //loop for each column			 
+		if ($lang[$langi][0]!==$stop) {
+			echo "<li><a href='".$lang[$langi][1]."'>".$lang[$langi][0]."</a>";
+		}
+		else { // removes displayed language, default is English
+			next;
+			$g+=1;
+		}
+	}
+	
+	echo "</ul>";	
 }
 ?>
                 </div>
