@@ -717,8 +717,10 @@ Class ServicesController extends AppController {
 		foreach ($relprojects as $relproject) {
 			if ($relproject['ProjectShare']['related_username']) {
 				$this->Project->id = $project_shared_id;			
-				$newinfo = array('id' => $project_shared_id, 'related_project_id' => $relproject['ProjectShare']['related_project_id'], 'related_username' => $relproject['ProjectShare']['related_username']);
-				print_r($newinfo);
+				$newinfo = array('id' => $project_shared_id,
+                                  'based_on_pid' => $relproject['ProjectShare']['related_project_id'],
+                                  'based_on_uid' => $relproject['ProjectShare']['related_user_id']);
+				//print_r($newinfo);
 				$this->Project->save($newinfo);
 				return true;
 			}
