@@ -54,7 +54,7 @@ $lang = array( array("العربية", "/lang/ara", "اللغة"),
                array("Polski", "/lang/pol", "Język"),
                array("Português-Br", "/lang/pt-br", "Idioma"),
 			   array("Русский", "/lang/rus", "Язык"),
-			   array("Türkçe", "/lang/tur", "Dil"),
+			   array("Türkçe222", "/lang/tur", "Dil"),
 			   array("漢字", "/lang/zh-tw", "語言")
              ); 
 
