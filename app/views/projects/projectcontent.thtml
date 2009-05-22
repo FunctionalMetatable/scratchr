@@ -85,50 +85,25 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 	<?php ___('shared it ');echo $date;___(' ago')?><br />
 	
 	<?php
-	if($based_on_pid) {
-		$related = '<img src="'. getBuddyIconBySize($related_user_id,'mini', $content_status) . '" alt="user_icon" width="28" height="28">';
-		$related  .= ___("Based on", true) . " <a href='/users/$related_username'>$related_username</a>" . ___("'s", true) . " ";
-		if($based_on_id) {
-			if (empty($related_original_username) ) {
- 				$related .= "<a href='/projects/$related_username/$based_on_id'>".___('project', true)."</a> ";
-			} else {
- 				$related .= "<a href='/projects/$related_username/$based_on_id'>".___('version', true)."</a> ";
-				$related .= "of <a href='/users/$related_original_username'>$related_original_username</a>'s ";
-				if ($related_original_project_id) {
-					$related .= "<a href='/projects/$related_original_username/$related_original_project_id'>" . ___('project', true) . "</a>";
-				} else {
-					$related .= ___("work", true)." ";
-				}
-			}
-		} else {
-			$related .= ___("work", true) . " ";
-		}
-		e($related);
-	}
-	?>
-    <?php
-	if($based_on_uid) {
+	if($based_on_pid && !empty($based_on_uid)) {
 		$related  = '<img src="'. getBuddyIconBySize($based_on_uid,'mini', $content_status) . '" alt="user_icon" width="28" height="28">';
 		$related .= ___("Based on", true) . " <a href='/users/$based_on_username'>$based_on_username</a>" . ___("'s", true) . " ";
-		if($based_on_pid) {
-			if(!empty($original_username)) {
- 				$related .= "<a href='/projects/$based_on_username/$based_on_pid'>".___('version', true)."</a> ";
-				$related .= "of <a href='/users/$original_username'>$original_username</a>" . ___("'s", true) . " ";
+        		
+        if(!empty($original_username)) {
+            $related .= "<a href='/projects/$based_on_username/$based_on_pid'>".___('version', true)."</a> ";
+            $related .= "of <a href='/users/$original_username'>$original_username</a>" . ___("'s", true) . " ";
 
-                if (!empty($original_pid)) {
-                    $related .= "<a href='/projects/$original_username/$original_pid'>" . ___('project', true) . "</a>";
-				}
-                else {
-					$related .= ___("work", true)." ";
-				}
-			}
+            if (!empty($original_pid)) {
+                $related .= "<a href='/projects/$original_username/$original_pid'>" . ___('project', true) . "</a>";
+            }
             else {
- 				$related .= "<a href='/projects/$based_on_username/$based_on_pid'>".___('project', true)."</a> ";
-			}
-		}
+                $related .= ___("work", true)." ";
+            }
+        }
         else {
-			$related .= ___("work", true) . " ";
-		}
+            $related .= "<a href='/projects/$based_on_username/$based_on_pid'>".___('project', true)."</a> ";
+        }
+		
 		e($related);
 	}
 	?>
