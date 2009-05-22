@@ -78,7 +78,7 @@ $lang = array( array("العربية", "/lang/ara", "اللغة"),
 			   array("Slovenian", "/lang/slv", "Language"),
 			   array("Swedish", "/lang/swe", "Language"),
 			   array("Thai", "/lang/tha", "Language"),
-			   array("Türkçe333", "/lang/tur", "Dil"),
+			   array("Türkçe444", "/lang/tur", "Dil"),
 			   array("Ukrainian", "/lang/urk", "Language"),
 			   array("Vietnamese", "/lang/vie", "Language"),
 			   array("漢字", "/lang/zh-tw", "語言")
