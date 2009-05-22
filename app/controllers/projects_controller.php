@@ -3020,19 +3020,13 @@ class ProjectsController extends AppController {
     }
 	
 	function findOriginalProject($pid){
-	$this->Project->mc_connect();
-    $project = $this->Project->mc_get('original_project', $pid);
-	if(!$project){
-	$project =$this->Project->find("Project.id = $pid","id,user_id, based_on_pid,related_username");
-		if($project['Project']['based_on_pid'] ==""){
-			$this->Project->mc_set('original_project', $project['Project']['id'], $pid);
-			$this->Project->mc_close();
-			return $project['Project']['id'];
-		}
-		else
-		return ($this->findOriginalProject($project['Project']['based_on_pid']));
-	  }
-	  return $project;
+        $project =$this->Project->find("Project.id = $pid","id,user_id, based_on_pid");
+        if($project['Project']['based_on_pid'] == "") {
+            return $project['Project']['id'];
+        }
+        else {
+            return ($this->findOriginalProject($project['Project']['based_on_pid']));
+        }
 	}
 }
 ?>
