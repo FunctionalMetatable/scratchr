@@ -1890,14 +1890,19 @@ class ProjectsController extends AppController {
             //setting related work/projects strings
             
             //the project is based on another project
-			if($project['Project']['based_on_uid']) {
+			if($project['Project']['based_on_pid']) {
                 $this->Project->mc_connect();
             	$based_on_data = $this->Project->mc_get('based_on', $project_id);
 
                 if($based_on_data === false) {
                     //find out the based on username
-                    $based_on_user = $this->User->find( 'id = '.$project['Project']['based_on_uid'], 'username' );
-                    $based_on_username = $based_on_user['User']['username'];
+                    $based_on_user = $this->Project->query( "SELECT User.id, User.username, Project.id"
+                                                        ." FROM projects as Project, users as User"
+                                                        ." WHERE Project.id = " . $project['Project']['based_on_pid']
+                                                        ." and Project.user_id = User.id");
+                    
+                    $based_on_uid = $based_on_user['0']['User']['id'];
+                    $based_on_username = $based_on_user['0']['User']['username'];
 
                     //find out the original project
                     $original_pid = $this->findOriginalProject($pid);
@@ -1917,6 +1922,7 @@ class ProjectsController extends AppController {
 
                     
                     $based_on_data = array(
+                        'based_on_uid'      => $based_on_uid,
                         'based_on_username' => $based_on_username,
                         'original_pid'      => $original_pid,
                         'original_username' => $original_username
@@ -1927,13 +1933,14 @@ class ProjectsController extends AppController {
                 //close memcache connection
                 $this->Project->mc_connect();
 
+                $this->set('based_on_uid',      $based_on_data['based_on_uid']);
                 $this->set('based_on_username', $based_on_data['based_on_username']);
                 $this->set('original_pid',      $based_on_data['original_pid']);
                 $this->set('original_username', $based_on_data['original_username']);
 			}
 
             $this->set('based_on_pid', $project['Project']['based_on_pid']);
-            $this->set('based_on_uid', $project['Project']['based_on_uid']);
+            
 
             //make one single call to FeaturedProject, we don't need hasAny
             $featured_timestamp = $this->FeaturedProject->field('timestamp',"project_id = $pid");

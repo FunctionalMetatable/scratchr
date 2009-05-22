@@ -719,8 +719,8 @@ Class ServicesController extends AppController {
 				$this->Project->id = $project_shared_id;			
 				$newinfo = array('id' => $project_shared_id,
                                   'based_on_pid' => $relproject['ProjectShare']['related_project_id'],
-                                  'based_on_uid' => $relproject['ProjectShare']['related_user_id']);
-				//print_r($newinfo);
+                                );
+                //print_r($newinfo);
 				$this->Project->save($newinfo);
 				return true;
 			}
