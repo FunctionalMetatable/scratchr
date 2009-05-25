@@ -1013,7 +1013,7 @@ CREATE TABLE `projects` (
   `vischangedtime` datetime default NULL,
   `safe` enum('high','mid','low') default 'low',
   `status` enum('notreviewed','censored','safe','notsafe') NOT NULL default 'notreviewed',
-  `locked` int(11) NOT NULL,
+  `locked` int(11) NOT NULL default 0,
   `remixes` int(11) default '0',
   `remixer` int(11) default '0',
   `upload_ip` int(30) default NULL,
