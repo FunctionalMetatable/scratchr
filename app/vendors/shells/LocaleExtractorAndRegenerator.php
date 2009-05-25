@@ -1,8 +1,5 @@
 <?php
 /**
- * http://www.odesk.com/help/help/using_odesk_tools/oDesk_tools
- * #!/bin/sh
-
 #
 # This scrpt will invoke cake script for extracting and generating the
 # messages and then auto commits the new po files
@@ -17,33 +14,6 @@
 
 # auto commit the changes
 /usr/bin/svn commit --username locale --password 4scratchr /home/pootle/scratchr_working_copy/app/locale/ -m "auto commit by extractor and regenerator"
-
-
- */
-
-/**
- * #!/bin/sh
-
-# Just straightforward Autoupdatr for Pootle
-# @author Bakyt Niyazov
-#
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/ar/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/de/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/el/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/es/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/fr/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/hu/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/it/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/jp/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/ko/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/nl/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/no/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/pl/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/pt_BR/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/ru/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/tr/
-/usr/bin/svn up /usr/lib/python2.4/site-packages/Pootle/po/scratchr2/zh_TW/
-
  */
 ini_set('memory_limit', '20M');
 /**
@@ -130,12 +100,20 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
 	var $__output = null;
 
 /**
- * Msgmerge command full path
+ * msgmerge command full path
  *
  * @var string
  * @access private
  */
 	var $__msgmerge = null;
+
+/**
+ * pocompile command full path
+ *
+ * @var string
+ * @access private
+ */
+	var $__pocompile = null;
 
 /**
  * Override startup of the Shell
@@ -152,8 +130,16 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
 	function main() {
 		$command = explode(' ', `whereis msgmerge`);
 		$this->__msgmerge = trim($command[1]);
+
+		$command = explode(' ', `whereis pocompile`);
+		$this->__pocompile = trim($command[1]);
+
 		if (empty($this->__msgmerge)) {
 			$this->err('"msgmerge" command\'s path was not found. "whereis" command did not help. Please install gettext package');
+		}
+
+			if (empty($this->__pocompile)) {
+			$this->err('"pocompile" command\'s path was not found. "whereis" command did not help. Please install gettext package');
 		}
 
 		// Assuming that this script is located at any "app" (app folder name could be different - no problem)
@@ -249,7 +235,13 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
 				// just because msgmerge has problems when it outputs into existing file
 
 				// First merge generates a new PO file but those phrases which are don't exist in POT files are commented out
-                shell_exec($this->__msgmerge . ' ' . $poFile . ' ' . $poTemplateFullPath . ' -o ' . $poFile . '.po2pot');
+                shell_exec($this->__msgmerge . ' ' . $poFile . ' ' . $poTemplateFullPath . ' -o ' . $poFile . '.final');
+                copy($poFile . '.final', $poFile);
+                // garbage collect
+                unlink($poFile . '.final');
+
+                // First merge generates a new PO file but those phrases which are don't exist in POT files are commented out
+/*                shell_exec($this->__msgmerge . ' ' . $poFile . ' ' . $poTemplateFullPath . ' -o ' . $poFile . '.po2pot');
 
                 // This merge will generate a new PO file. It adds a new phrases from POT file to the final
         		shell_exec($this->__msgmerge . ' ' . $poFile . ' ' . $poFile . '.po2pot -o ' . $poFile . '.final');
@@ -259,32 +251,14 @@ class LocaleExtractorAndRegeneratorShell extends Shell {
                 // garbage collect
                 unlink($poFile . '.final');
                 unlink($poFile. '.po2pot');
+*/
 
-        		// THE COMMENT SECTION CAN BE DELETED. Don't Use it.
-                /*shell_exec($this->__msgmerge . ' ' . $poTemplateFullPath . ' ' . $poFile . ' -o ' . $poFile . '.pot2po');
-                shell_exec($this->__msgmerge . ' ' . $poFile . ' ' . $poTemplateFullPath . ' -o ' . $poFile . '.po2pot');
-                shell_exec($this->__msgmerge . ' ' . $poFile . '.pot2po' . ' ' . $poFile . '.po2pot' . ' -o ' . $poFile . '.final');
 
-        		// now just rename it
-                copy($poFile . '.final', $poFile);
-                unlink($poFile . '.final');
-                unlink($poFile . '.pot2po');
-                unlink($poFile. '.po2pot');
-				*/
 
+                // now compile (--nofuzzy is default but I'm explicitly setting it)
+                $name = explode('.', $poFile);
+                shell_exec($this->__pocompile . ' ' . $poFile . ' -o ' . $name[0] . '.mo --nofuzzy');
 			}
-
-			/*$nextLevel = opendir($this->__output . $file . DS . 'LC_MESSAGES');
-			while (false !== ($poFile = readdir($nextLevel))) {
-				if (in_array($poFile, array('.', '..')) || substr($poFile, -3) !== '.po') {
-					continue;
-				}
-				echo "\n";
-				print_r($poFile);
-			}
-			closedir($nextLevel);
-			*/
-
 		}
 		closedir($dh);
 	}
