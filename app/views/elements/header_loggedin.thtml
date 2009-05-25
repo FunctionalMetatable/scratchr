@@ -159,7 +159,7 @@ echo "</ul>";
 
 </div>
 </div>
-<? endif; ?>
+<?php endif; ?>
 
 <?php
 	if($isAnnouncementOn) {
