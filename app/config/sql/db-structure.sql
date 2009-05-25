@@ -999,7 +999,7 @@ CREATE TABLE `projects` (
   `modified` datetime default NULL,
   `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `loveit` int(10) unsigned default NULL,
-  `num_bookmarks` int(255) NOT NULL,
+  `num_bookmarks` int(255) NOT NULL default 0,
   `version` smallint(255) unsigned NOT NULL default '1',
   `flagit` int(10) unsigned NOT NULL default '0',
   `numberOfSprites` int(10) unsigned default NULL,
