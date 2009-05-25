@@ -281,7 +281,7 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 	   ?>
 	   <?php if(!$isLocked && !$user_locked || $isMine): ?>
 		<h4><?php ___('Add a Comment'); ?> </h4>	  
-		<form id="pcomment" action="<?=e("/projects/$urlname/$pid/comment")?>" method="post">
+		<form id="pcomment" action="<?php e("/projects/$urlname/$pid/comment")?>" method="post">
 
 			<p><textarea id='pcomment_textarea' name="pcomment_textarea" cols="55" rows="3"></textarea>
 			<div id="counter-pcomment_textarea"></div></p>
@@ -360,7 +360,7 @@ ___('Download this project!');
 				
 				<a href="<?php echo $html->url('/download')?>">Scratch</a>
 				
-		<?
+		<?php
 		}
 		} else {
 			//check if project is censored
