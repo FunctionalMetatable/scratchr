@@ -122,23 +122,22 @@ for ($z = 0; $z < $langnum; $z++) {
 
               
 <?php 
-        
 for ($d = 0; $d < 4; $d++) { // 4 columns loop
-$g = 0;
-echo "<ul id='languages'>";	
+    $g = 0;
+    echo "<ul id='languages'>";	
 	if ($g !=$langnum) { 
-	$g = $langi+$langnum/4; // number of languages per column
-	} 
-	else {break;}
-		for (; $langi < $g; $langi++) { //loop for each column			 
-			
-			if ($lang[$langi][0]!==$stop) {
-			echo "<li><a href='".$lang[$langi][1]."'>".$lang[$langi][0]."</a>";
-			}
-			else {$g+=1;} // removes displayed language, default is English
+        $g = $langi+$langnum/4; // number of languages per column
+	} else {
+        break;
+    }
+    for (; ($langi < $g) and ($langi < count($lang)); $langi++) { //loop for each column			 
+        if ($lang[$langi][0]!==$stop) {
+            echo "<li><a href='".$lang[$langi][1]."'>".$lang[$langi][0]."</a>";
+        } else {
+            $g+=1;
+        } // removes displayed language, default is English
 	}
-	
-echo "</ul>";	
+    echo "</ul>";	
 }
 ?>
                 </div>
