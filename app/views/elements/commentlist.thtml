@@ -9,7 +9,7 @@
 ?>
 <?php if($isCommentError): ?>
 <div class='comment_error'>
-    <?= $commentErrors[0]; ?>
+    <?php echo $commentErrors[0]; ?>
 </div>
 <?php endif; ?>
 
@@ -27,14 +27,14 @@ $is_comment_ignored = in_array($comment['Pcomment']['id'], $ignored_comments);
 $is_comment_ok = (!$is_commenter_ignored && !$is_comment_ignored);
 $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
 ?>
-<div class="comment" id="<?= $comment_id ?>">
+<div class="comment" id="<?php echo $comment_id ?>">
 
     <div <?php if($single_thread): ?>style="background:#ffffcc"<?php endif; ?>>
     <h5>
         <?php echo $html->image($commenter_icon,
                 array('alt' => $comment['User']['username'], 'width'=>'28', 'height'=>'28')); ?>
-        <a href="<?= $html->url( '/users/' . $comment['User']['urlname'] ); ?>">
-            <?= $comment['User']['username']; ?>
+        <a href="<?php echo $html->url( '/users/' . $comment['User']['urlname'] ); ?>">
+            <?php echo $comment['User']['username']; ?>
         </a>
         <?php if (empty($date) || (isset($date) && $date != "Now")):
             printf(___('%s ago', true), friendlyDate($comment['Pcomment']['timestamp']));
@@ -43,11 +43,11 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
 
     <p>
     <?php if ($is_comment_ok): ?>
-        <?= $comment['Pcomment']['content']; ?>
+        <?php echo $comment['Pcomment']['content']; ?>
     <?php elseif ($is_comment_ignored): ?>
-        <?= $ignored_commment_text; ?>
+        <?php echo $ignored_commment_text; ?>
     <?php else: ?>
-        <?= $ignored_commenter_text; ?>
+        <?php echo $ignored_commenter_text; ?>
     <?php endif; ?>
     </p>
 
@@ -96,9 +96,9 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
     endif; ?>
     </span>
     <?php if($isAdmin): ?>
-        <div id="delete_all_<?= $comment_id ?>" style='display:none;'>
+        <div id="delete_all_<?php echo $comment_id ?>" style='display:none;'>
         <p><?php ___("Do you also want to delete all the messages that are exactly the same?"); ?></p>
-        <?=
+        <?php echo
             $ajax->link('<span class="button2">Yes</span>', '#',
                         array('url' => $markcomment_url.'/1',
                             'update'    =>  "$comment_id",
@@ -106,7 +106,7 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
                             'Are you sure?', false);
         ?>
         &nbsp; &nbsp;
-        <?=
+        <?php echo
             $ajax->link('<span class="button2">No</span>', '#',
                         array('url' => $markcomment_url.'/1',
                             'update'    =>  "$comment_id",
@@ -117,14 +117,14 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
     <?php endif; ?>
     
     <?php if($is_comment_reply_enabled): ?>
-    <div class="comment_reply_main" id="reply_to_<?= $comment_id; ?>">
-        <?= $this->renderElement('projects/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
+    <div class="comment_reply_main" id="reply_to_<?php echo $comment_id; ?>">
+        <?php echo $this->renderElement('projects/comment_reply_form', array('comment_id' => $comment_id, 'comment_level' => $comment_level)); ?>
     </div>
     <?php endif; ?>
     </div>
-    <div class="comment_reply_main_visible" id="reply_list_<?= $comment_id; ?>">
+    <div class="comment_reply_main_visible" id="reply_list_<?php echo $comment_id; ?>">
         <?php if(!empty($comment['Pcomment']['replylist'])): ?>
-            <?= $this->renderElement('projects/reply_list',
+            <?php echo $this->renderElement('projects/reply_list',
                 array('comments' => $comment['Pcomment']['replylist']['comments'],
                     'ignored_commenters' => $comment['Pcomment']['replylist']['ignored_commenters'],
                     'ignored_comments' => $comment['Pcomment']['replylist']['ignored_comments'],
