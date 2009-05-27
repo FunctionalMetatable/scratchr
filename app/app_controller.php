@@ -241,7 +241,7 @@ class AppController extends Controller {
         if($counter) {
             return rand()%$counter;
         } else {
-            return 0
+            return 0;
         }
 	}
     /**
