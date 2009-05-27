@@ -143,7 +143,7 @@ Class HomeController extends AppController {
             $this->set('scratch_club', $scratch_club);
         }
 
-        $featuredthemes = false;//$memcache->get("$prefix-featuredthemes");
+        $featuredthemes = $memcache->get("$prefix-featuredthemes");
         if ( !$featuredthemes ) {
        	    $featuredthemes = $this->__getFeaturedGalleries();
             $featuredthemes_ids   = Set::extract('/Gallery/id', $featuredthemes);
@@ -247,7 +247,8 @@ Class HomeController extends AppController {
 	
 	function __getScratchClub() {
         $club = $this->ClubbedGallery->find(NULL, NULL, "ClubbedGallery.id DESC");
-		$club = $this->finalize_gallery($club);
+        if(empty($club)) return false;
+        $club = $this->finalize_gallery($club);
         return  $club['Gallery']; 
 	}
 	
