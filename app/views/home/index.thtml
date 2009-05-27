@@ -284,8 +284,8 @@ o.png" alt="Scratch Day" width="77"></a><?php ___('Be a part of Scratch Day - a 
       <p class="more"><a href="http://day.scratch.mit.edu/"><?php ___('Find out more');?></a> </p>
      </div>
 
-    <div  id="club" class="sidecontainer">
-	<?php
+    <?php if(!empty($scratch_club['name'])): ?>
+    <?php
 		$club_name = htmlspecialchars($scratch_club['name']);
 		$club_name_s = (strlen($club_name) > 23) ? substr($club_name,0,23) . "&#0133;" : $club_name ;
 		$pos=strpos($scratch_club['description'],'--');
@@ -297,11 +297,13 @@ o.png" alt="Scratch Day" width="77"></a><?php ___('Be a part of Scratch Day - a 
 		 	$gallery_desc = $desc_array['0'];
 		}
 	?>
-      <h4><?php ___('Scratch Design Studio');?></h4>
+    <div  id="club" class="sidecontainer">
+    <h4><?php ___('Scratch Design Studio');?></h4>
       <h5><a href="/galleries/view/<?php e($scratch_club['id']) ?>"><?php e($club_name_s)?></a></h5>
       <p><a href="/galleries/view/<?php e($scratch_club['id']) ?>"><img src="<?php e($scratch_club['icon_src']); ?>" title="<?php e($club_name)?>" alt="<?php e($club_name)?>" width="90" height="68"></a><?php e($gallery_desc)?></p>
       <p class="more"><a href="/galleries/browse/clubbed"><?php ___('See more');?></a> </p>
     </div>
+    <?php endif; ?>
 
 	<div id="FeaturedGalleries" class="sidecontainer">
       <h4><?php ___('Featured Galleries');?></h4>
