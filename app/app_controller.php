@@ -50,7 +50,7 @@ class AppController extends Controller {
 		if ($empties == 3) {
 			$announcement_id = -1;
 			$isAnnouncementOn = false;
-		} else {
+		} else if(!empty($annoucements[0])) {
 			$isAnnouncementOn = $annoucements[0]['Announcement']['isOn'];
 			$announcement_id = $this->getAnnouncementId();
 		}
@@ -58,7 +58,7 @@ class AppController extends Controller {
 		if ($announcement_id == -1) {
 			$announcement = "";
 			$isAnnouncementOn = false;
-		} else {
+		} else if(!empty($annoucements[$announcement_id])){
 			$announcement = $annoucements[$announcement_id]['Announcement']['content'];
 		}
 		
@@ -238,8 +238,11 @@ class AppController extends Controller {
 				$counter++;
 			}
 		}
-
-		return rand()%$counter;
+        if($counter) {
+            return rand()%$counter;
+        } else {
+            return 0
+        }
 	}
     /**
      * Called mostly by views
