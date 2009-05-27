@@ -46,7 +46,9 @@ class AppController extends Controller {
 		$isBanned = false;
 		$annoucements = $this->Announcement->findAll("content != ''");
 		$empties = $this->Announcement->findCount("content = ''");
-		
+
+        $announcement_id = -1;
+        $isAnnouncementOn = false;
 		if ($empties == 3) {
 			$announcement_id = -1;
 			$isAnnouncementOn = false;
