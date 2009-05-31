@@ -114,7 +114,7 @@
 
 	<?php if(isset($clubedprojects) && $count=count($clubedprojects) >=3):?>
 	<div id="ClubedProjects" class="container">
-      <h3><?php ___('Surprise Projects from the Design Studio');?></h3>
+      <h3><?php ___('Projects from the Scratch Design Studio');?></h3>
 		<?php //print_r($clubedprojects);
 		foreach ($clubedprojects as $clubed):
 		$pid = $clubed['Project']['id'];
@@ -208,7 +208,7 @@
       <p class="more"><a href="/channel/toploved"><?php ___('See more');?></a> </p>
     </div>
 
-
+<!--
 	 <div class="container" id=TopDownloadedLately">
       <h3><?php ___('Top Downloaded Lately')?></h3>
 		<?php
@@ -228,7 +228,7 @@
 			</div>
 		<?php endforeach; ?>
     </div>
-
+//-->
 
     <div id="TopViewedLately" class="container">
       <h3><?php ___('Top Viewed Lately')?></h3>
