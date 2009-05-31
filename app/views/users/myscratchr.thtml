@@ -531,12 +531,10 @@ function langList($countries) {
 	<!-- ::: End projects ::: -->
 	
 	 <!-- ::: Begin friends projects ::: -->
-	
-	<div class="mystuff_container">
+	<?php if(!empty($friends_project_list)): ?>
+    <div class="mystuff_container">
 	<div id="ajax_pagination_ternary">
 	
-    <!-- ::: Begin projects ::: -->
-		
 		<div class="mystuff_header">
 			<h3>
             <?php if ($isMe): ?>
@@ -552,8 +550,8 @@ function langList($countries) {
 			endif;
 		?>
 		</div>
-	</div>
-	
-	<!-- ::: End friends projects ::: -->
+    </div>
+   <?php endif; ?>
+    <!-- ::: End friends projects ::: -->
   </div>
   <!-- ////// End main content ////// -->
