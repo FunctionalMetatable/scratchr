@@ -730,11 +730,11 @@ class UsersController extends AppController {
 		$mysqli = new mysqli($config['host'], $config['login'], $config['password'], $config['database']);
 		$rs = $mysqli->query( "CALL top3friendproject($user_id)" );
 		
-            while($row = $rs->fetch_object())
-            {
-                array_push($project_list,$row->project_id);
-            }
-            mysqli_free_result($rs);
+        while($row = $rs->fetch_object())
+        {
+            array_push($project_list,$row->project_id);
+        }
+        mysqli_free_result($rs);
 		mysqli_close($mysqli); 
 		
 		$project_ids = implode(',',$project_list);
@@ -744,11 +744,19 @@ class UsersController extends AppController {
 		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );	
 		
 		if(!empty($project_ids)):
-		list($order,$limit,$page) = $this->PaginationTernary->init("Project.id in (".$project_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
-		
-		$friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,$order, $limit, $page);
+            list($order,$limit,$page) = $this->PaginationTernary->init("Project.id in (".$project_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
+
+            $friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,$order, $limit, $page);
 		endif;
 		$this->set('friends_project_list',$friends_project);
+
+        $user_record = $this->User->find("id = '$user_id'");
+		$username = $user_record['User']['username'];
+        $isMe = $this->activeSession($user_id);
+		
+        $this->set('username', $username);
+        $this->set('isMe', $this->activeSession($user_id));
+
 		$this->render('render_friend_projects_ajax', 'ajax');
 		return;
 		

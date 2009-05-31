@@ -1,8 +1,12 @@
 <div class="mystuff_header">
-			<h3><?php  ___("My Friends' Latest Projects"); ?></h3>
-		</div>
-		<?php
-			
-			e($this->renderElement('friends_project', array('data' => $friends_project_list)));
-			
-		?>
+    <h3>
+    <?php if ($isMe): ?>
+        <?php  ___("My Friends' Latest Projects"); ?>
+    <?php else: ?>
+        <?php  printf(___("Projects by %s's Friends", true), $username) ; ?>
+    <?php endif; ?>
+    </h3>
+</div>
+<?php
+  e($this->renderElement('friends_project', array('data' => $friends_project_list)));
+?>

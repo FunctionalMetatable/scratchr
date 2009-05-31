@@ -538,7 +538,13 @@ function langList($countries) {
     <!-- ::: Begin projects ::: -->
 		
 		<div class="mystuff_header">
-			<h3><?php  ___("My Friends' Latest Projects"); ?></h3>
+			<h3>
+            <?php if ($isMe): ?>
+                <?php  ___("My Friends' Latest Projects"); ?>
+            <?php else: ?>
+                <?php  printf(___("Projects by %s's Friends", true), $user['username']) ; ?>
+            <?php endif; ?>
+            </h3>
 		</div>
 		<?php
 			if(!$isIgnored):
