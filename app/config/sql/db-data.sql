@@ -44,3 +44,6 @@ INSERT INTO `permissions` (`id`, `name`, `url_name`) VALUES
 (8, 'delete gallery comments', 'delete_gallery_comments'),
 (9, 'block IP', 'block_IP'),
 (10, 'block account', 'block_account');
+
+INSERT INTO `relationship_types` (`id`, `name`, `description`, `timestamp`) VALUES
+(1, 'friend', 'basic friendship', '2006-08-26 02:51:21');
