@@ -70,9 +70,9 @@ Class HomeController extends AppController {
             $project_ids    = array_merge($project_ids, $topviewed_ids);
 			$user_ids       = array_merge($user_ids, $topviewed_user_ids);
 
-            $topdownloaded  = $this->__getTopDownloadedProjects($project_ids, $user_ids);
-            $topdownloaded_ids  = Set::extract('/Project/id', $topdownloaded);
-            $this->Project->register_frontpage($topdownloaded_ids, 'top_downloaded');
+           // $topdownloaded  = $this->__getTopDownloadedProjects($project_ids, $user_ids);
+           // $topdownloaded_ids  = Set::extract('/Project/id', $topdownloaded);
+           // $this->Project->register_frontpage($topdownloaded_ids, 'top_downloaded');
 		 
 			$home_projects = array('featured' => $featured,
                                    'topremixed' => $topremixed,
@@ -101,7 +101,7 @@ Class HomeController extends AppController {
         $this->set('topremixed', $topremixed);
         $this->set('toploved', $toploved);
         $this->set('topviewed', $topviewed);
-        $this->set('topdownloaded', $topdownloaded);
+//        $this->set('topdownloaded', $topdownloaded);
 		$this->set('favorites', $favorites);
 		$this->set('username',$curator_name);
 		$this->set('clubedprojects',$clubedprojects);
@@ -125,6 +125,7 @@ Class HomeController extends AppController {
             $this->set('newprojects', $newprojects);
         }
         
+/*
         $toprandoms = $memcache->get("$prefix-toprandoms");
         if ( !$toprandoms) {
        	    $toprandoms = $this->__getTopRandomProjects();
@@ -133,7 +134,7 @@ Class HomeController extends AppController {
             $this->Project->register_frontpage($toprandoms_ids, 'surprise');
         }
         $this->set('toprandoms', $toprandoms);
-        
+*/      
         $scratch_club = $memcache->get("$prefix-scratch_club");
         if ( $scratch_club == "" ) {
        	    $scratch_clubtmp = $this->__getScratchClub();
