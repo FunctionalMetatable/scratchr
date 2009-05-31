@@ -2,7 +2,7 @@
   <div id="main">
 
 <!-- ::: Begin intro (logged out) ::: -->
-    <?php if($isLogged): ?>
+    <?php if(!$isLogged): ?>
     <div id="intro">
       <div class="step"><a href="/howto"><img src="/img/gr_step1.gif" alt="scratchr blocks" width="103" height="61"></a>
         <p><?php ___('Snap together blocks'); ?></p>
