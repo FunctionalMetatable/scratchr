@@ -1,8 +1,8 @@
 <!-- |||||| Begin content area ||||||| -->
-<a name="main">
   <div id="main">
 
 <!-- ::: Begin intro (logged out) ::: -->
+    <?php if($isLogged): ?>
     <div id="intro">
       <div class="step"><a href="/howto"><img src="/img/gr_step1.gif" alt="scratchr blocks" width="103" height="61"></a>
         <p><?php ___('Snap together blocks'); ?></p>
@@ -14,6 +14,7 @@
         <p><?php ___('and share your creations on the web');?></p>
       </div>
     </div>
+    <?php endif; ?>
 <!-- ::: End intro  ::: -->
 
  <?php if ($isLogged): ?>
@@ -385,4 +386,3 @@ A worldwide network of gatherings, where people came together to meet, share, an
 
   </div>
 <!-- ////// End main sidebar ////// -->
-</a>
