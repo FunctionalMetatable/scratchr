@@ -534,22 +534,21 @@ function langList($countries) {
 	<?php if(!empty($friends_project_list)): ?>
     <div class="mystuff_container">
 	<div id="ajax_pagination_ternary">
-	
-		<div class="mystuff_header">
-			<h3>
+        <div class="mystuff_header">
+            <h3>
             <?php if ($isMe): ?>
                 <?php  ___("My Friends' Latest Projects"); ?>
             <?php else: ?>
                 <?php  printf(___("Projects by %s's Friends", true), $user['username']) ; ?>
             <?php endif; ?>
             </h3>
-		</div>
-		<?php
-			if(!$isIgnored):
-			e($this->renderElement('friends_project', array('data' => $friends_project_list)));
-			endif;
-		?>
-		</div>
+        </div>
+        <?php
+            if(!$isIgnored):
+            e($this->renderElement('friends_project', array('data' => $friends_project_list)));
+            endif;
+        ?>
+    </div>
     </div>
    <?php endif; ?>
     <!-- ::: End friends projects ::: -->
