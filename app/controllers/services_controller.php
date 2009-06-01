@@ -15,9 +15,9 @@ define("USER_BLOCKED_ERROR", 408);
 define("IP_BLOCKED_ERROR", 409);
 Class ServicesController extends AppController {
 	// var $components = array("Security");
-    var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave','ProjectScript','BlockedIp','Remix');
+    var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave','ProjectScript','BlockedIp');
 	var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
-	 var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
+	var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
     var $doc = null;
     var $service = null;
     var $debug = null;
@@ -651,83 +651,64 @@ Class ServicesController extends AppController {
 	// but couldn't call them remotely
 	// extracts history for a specific project owned by a specific user
 	// uses java extractor
-	function extracthistory($project_shared_id, $user_shared_id, $newproject=null) {
-//		$this->log("extracting for $project_shared_id, $user_shared_id");
+    function extracthistory($project_shared_id, $user_shared_id, $newproject=null) {
 		$ppath = APP.'webroot/static/projects/';
-		//$ppath = '/llk/scratchr/production/app/webroot/static/projects/';
-		//$ppath = 'e:/scratchr/app/webroot/static/projects/';
-		$jar = APP."misc/historyextraction/ScratchAnalyzer.jar";
-		//$jar = "/llk/scratchr/production/app/misc/historyextraction/ScratchAnalyzer.jar";
-		//$jar = "e:/scratchr/app/misc/historyextraction/ScratchAnalyzer.jar";
-		$jar = escapeshellcmd($jar);
         $powner = $this->User->findById($user_shared_id);
-		$sbfilepath =  $ppath . $powner['User']['username'] . "/" . $project_shared_id . ".sb";		
-//		$this->log("checking if $sbfilepath exists");
-		if (! file_exists($sbfilepath)) {
+		$sbfilepath =  $ppath . $powner['User']['username'] . "/" . $project_shared_id . ".sb";
+        if (!file_exists($sbfilepath)) {
 			$this->log("\n<br>!NOTFOUND!:$sbfilepath<br>\n");
-			return false;
-		} else {
-			$sbfilepath = escapeshellcmd($sbfilepath);
+            return false;
 		}
-//		$this->log("file exists");
-	
+        $sbfilepath = escapeshellcmd($sbfilepath);
+        
+        $jar = APP."misc/historyextraction/ScratchAnalyzer.jar";
+		$jar = escapeshellcmd($jar);
+        
 		unset($retvals);
-		exec("java -jar $jar h $sbfilepath", $retvals);
-		if(count($retvals)) {
-			//echo "java output:"; print_r($retvals); echo "<br>\n";
-		} else {
-			$this->log("failed executing java program: $ret<br>");
-			return false; 
+        $exec = "java -jar $jar h $sbfilepath";
+
+		exec($exec, $retvals);
+        if(count($retvals)) {
 		}
-//$this->log(print_r($retvals,true));
-		
+        else {
+            $this->log("failed executing java program");
+            return false;
+		}
+
+        $based_on_stored = false;
 		foreach ($retvals as $retval) {
-			if(! $this->isempty($retval)) {
+			if(!$this->isempty($retval)) {
+                //store in project_shares
 				$this->storehistory($project_shared_id, $user_shared_id, $retval);
-				
-			}
-			
-		}
-		
-		$revretvals = array_reverse($retvals);
-		foreach ($revretvals as $retval) {
-		$retval = str_replace('!undefined!', '', $retval);
-		list($date, $event, $pname , $username, $savername) = explode("\t", $retval);
-		if ($event == 'share') {
-		if ($this->isempty($pname) || $this->isempty($username)) {
-				// No point in adding record if there is no way to refer to another project
-				$this->log("\n<br>!MISSINGDATA-SH!:date:$date,pname:$pname,username:$username<br>\n");
-			} else {
-			$eventuser = $this->User->find(array('username' => $username),'id');
-			$eventuser_id = $eventuser['User']['id'];
-			$citedproject = $this->Project->find(array('user_id' => $eventuser_id,'name' => $pname));
-			$citedproject_id =$citedproject['Project']['id'];
-			if($project_shared_id != $citedproject_id  || $user_shared_id != $eventuser_id){
-					$this->storeremix($project_shared_id, $citedproject_id);
-					break;
-				}
-			}//else
-		}//event
-		
-		}//foreach revretvals
-		
-		
-		$condition = "user_id = '$user_shared_id' AND project_id = '$project_shared_id' AND related_project_id != project_id"; 
-		$relprojects = $this->ProjectShare->findAll($condition, "id, related_username, related_user_id, related_project_id, related_project_name", "id desc");
-		foreach ($relprojects as $relproject) {
-			if ($relproject['ProjectShare']['related_username']) {
-				$this->Project->id = $project_shared_id;			
-				$newinfo = array('id' => $project_shared_id,
-                                  'based_on_pid' => $relproject['ProjectShare']['related_project_id'],
-                                );
-                //print_r($newinfo);
-				$this->Project->save($newinfo);
-				return true;
-			}
-		}
+                //store the first non empty entry as based_on_pid
+                $retval = str_replace('!undefined!', '', $retval);
+                list($date, $event, $projectname, $username, $author) = explode("\t", $retval);
+                if (!$based_on_stored && $event == 'share'
+                    && !$this->isempty($projectname) && !$this->isempty($username)) {
+                    //find out the based on user's id
+                    $based_on_user = $this->User->find(array('username' => $username), 'id');
+                    $based_on_uid  = $based_on_user['User']['id'];
+                    //find based on project's id
+                    $this->Project->recursive = -1;
+                    $based_on_project = $this->Project->find(
+                                     array('user_id' => $based_on_uid, 'name' => $projectname));
+                    $based_on_pid  = $based_on_project['Project']['id'];
+                    //shared project's id and user's id is not the same as based on's
+                    if(!empty($based_on_pid)
+                    && $project_shared_id != $based_on_pid
+                    && $user_shared_id != $based_on_uid) {
+                        $this->Project->id = $project_shared_id;
+                        $project = array('id' => $project_shared_id,
+                                          'based_on_pid' => $based_on_pid);
+                        $this->Project->save($project);
+                        $based_on_stored = true;
+                    }
+                }
+            }
+        }
 		return true;
 	}
-	
+    
 	// stores history information 
 	// input: tab delimited string with values (coming from java analyzer)
 	function storehistory($project_shared_id, $user_shared_id, $retval) {
