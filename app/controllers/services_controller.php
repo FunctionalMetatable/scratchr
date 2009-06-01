@@ -695,8 +695,7 @@ Class ServicesController extends AppController {
                     $based_on_pid  = $based_on_project['Project']['id'];
                     //shared project's id and user's id is not the same as based on's
                     if(!empty($based_on_pid)
-                    && $project_shared_id != $based_on_pid
-                    && $user_shared_id != $based_on_uid) {
+                    && $project_shared_id != $based_on_pid) {
                         $this->Project->id = $project_shared_id;
                         $project = array('id' => $project_shared_id,
                                           'based_on_pid' => $based_on_pid);
