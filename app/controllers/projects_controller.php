@@ -452,7 +452,7 @@ class ProjectsController extends AppController {
 			/*
 			$msg = "User '$flaggername' has flagged this comment by '$creatorname':\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
 			$subject= "Flagged comment under '$pname'";
-			$this->Email->email('scratch-feedback@media.mit.edu',  $flaggername, $msg, $subject, 'scratch-caution@media.mit.edu', $userflagger['User']['email']);
+			$this->Email->email('help@scratch.mit.edu',  $flaggername, $msg, $subject, 'caution@scratch.mit.edu', $userflagger['User']['email']);
 			*/
 		}
 		
