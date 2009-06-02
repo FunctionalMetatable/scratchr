@@ -666,7 +666,7 @@ Class ServicesController extends AppController {
 
         $retvals = null;
 		unset($retvals);
-        $exec = "java -jar $jar h $sbfilepath";
+        $exec = JAVA_PATH." -jar $jar h $sbfilepath";
         $this->log("\nDBG: Executing:$exec\n");
 
 		exec("$exec 2>&1", $retvals, $err);
