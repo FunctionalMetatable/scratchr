@@ -91,7 +91,7 @@
 
 	<?php if(isset($favorites) && $count=count($favorites) >=3):?>
 	<div id="Favorites" class="container">
-      <h3><?php ___("Projects curated by"); echo " <a href=\"/users/$username\">$username</a>"; ?></h3>
+      <h3><?php ___("Projects Selected by"); echo " <a href=\"/users/$username\">$username</a>"; ?></h3>
 		<?php
 		foreach ($favorites as $favorite):
 		$pid = $favorite['Project']['id'];
@@ -108,6 +108,7 @@
 		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
 		</div>
 		<?php endforeach; ?>
+      <p class="more"><a href="http://info.scratch.mit.edu/Become_a_Scratch_Curator"><?php ___('Learn more');?></a> </p>
     </div>
 	<?php endif;?>
 
@@ -115,7 +116,7 @@
 
 	<?php if(isset($clubedprojects) && $count=count($clubedprojects) >=3):?>
 	<div id="ClubedProjects" class="container">
-      <h3><?php ___('Projects from the Scratch Design Studio');?></h3>
+      <h3><?php ___('Projects from Scratch Design Studio');?></h3>
 		<?php //print_r($clubedprojects);
 		foreach ($clubedprojects as $clubed):
 		$pid = $clubed['Project']['id'];
