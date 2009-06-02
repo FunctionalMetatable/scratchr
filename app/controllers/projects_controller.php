@@ -1905,10 +1905,11 @@ class ProjectsController extends AppController {
                     $based_on_username = $based_on_user['0']['User']['username'];
 
                     //find out the original project
-                    $original_pid = $this->findOriginalProject($pid);
+                    $original_pid = false;
+                    /*$original_pid = $this->findOriginalProject($pid);
                     if($original_pid == $project['Project']['based_on_pid']) {
                         $original_pid = false;
-                    }
+                    }*/
 
                     //find out the original username
                     $original_username = null;
@@ -1931,7 +1932,7 @@ class ProjectsController extends AppController {
                 }
 
                 //close memcache connection
-                $this->Project->mc_connect();
+                $this->Project->mc_close();
 
                 $this->set('based_on_uid',      $based_on_data['based_on_uid']);
                 $this->set('based_on_username', $based_on_data['based_on_username']);

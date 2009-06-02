@@ -223,6 +223,11 @@ define('TEMP_BLOCK_INTERVAL', '90 minutes');
 **/
 define('FILTERED_HOST', 'filtered.scratch.mit.edu');
 
+/***
+* Define Java path
+**/
+define('JAVA_PATH', '/usr/java/latest/bin/java');
+
  /**
   * Returns theme url for html link destination
   */
