@@ -189,7 +189,7 @@ name="data[Duser][role-researcher]" value="1" id="DuserRole-researcher" /> <?php
 
 <?php ___('If you are having difficulties with this form, please go directly to'); ?> <a href="<?php echo $html->url('/pages/download')?>"><?php ___('Scratch download'); ?></a><BR>
 <?php ___('Please send questions to us at:'); ?> <a 
-href="mailto:scratch-feedback&#64;media.mit.edu">scratch-feedback&#64;media.mit.edu</a>.
+href="mailto:help&#64;media.mit.edu">help&#64;media.mit.edu</a>.
 <!-- ////// End Content area ////// -->
 
 
