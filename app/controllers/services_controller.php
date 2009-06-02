@@ -620,9 +620,9 @@ Class ServicesController extends AppController {
 				$this->notify($inappropriate, $user_id,
 					array('project_id' => $project_id));
 			}
-			//$this->log("extracting for:$project_id, $user_id...");
+			$this->log("extracting for:$project_id, $user_id...");
 			$this->extracthistory($project_id, $user_id, $newproject);
-			//$this->log("done extracthistory");
+			$this->log("done extracthistory");
 			$this->doc = $this->doc . "<pid>$project_id</pid>";
 			$this->__success();
 			
