@@ -656,7 +656,7 @@ Class ServicesController extends AppController {
         $powner = $this->User->findById($user_shared_id);
 		$sbfilepath =  $ppath . $powner['User']['username'] . "/" . $project_shared_id . ".sb";
         if (!file_exists($sbfilepath)) {
-			$this->log("\n<br>!NOTFOUND!:$sbfilepath<br>\n");
+			$this->log("\nERR: .SB NOT FOUND: $sbfilepat\n");
             return false;
 		}
         $sbfilepath = escapeshellcmd($sbfilepath);
@@ -666,12 +666,14 @@ Class ServicesController extends AppController {
         
 		unset($retvals);
         $exec = "java -jar $jar h $sbfilepath";
+        $this->log("\nDBG: Executing:$exec\n");
 
 		exec($exec, $retvals);
         if(count($retvals)) {
+            $this->log("\nDBG: Analyzer returns: $retvals\n");
 		}
         else {
-            $this->log("failed executing java program");
+            $this->log("\nERR: Analyzer returns NULL: $retvals\n");
             return false;
 		}
 
@@ -683,6 +685,7 @@ Class ServicesController extends AppController {
                 //store the first non empty entry as based_on_pid
                 $retval = str_replace('!undefined!', '', $retval);
                 list($date, $event, $projectname, $username, $author) = explode("\t", $retval);
+                $this->log("\nDBG: Scanning: $event $projectname $username\n");
                 if (!$based_on_stored && $event == 'share'
                     && !$this->isempty($projectname) && !$this->isempty($username)) {
                     //find out the based on user's id
@@ -693,9 +696,14 @@ Class ServicesController extends AppController {
                     $based_on_project = $this->Project->find(
                                      array('user_id' => $based_on_uid, 'name' => $projectname));
                     $based_on_pid  = $based_on_project['Project']['id'];
+
+                    $this->log("\nDBG: Based on pid: $based_on_pid\n");
+                    $this->log("\nDBG: Uploaded pid: $project_shared_id\n");
+                    
                     //shared project's id and user's id is not the same as based on's
                     if(!empty($based_on_pid)
                     && $project_shared_id != $based_on_pid) {
+                        $this->log("\nDBG: SUCCESSFULLY STORED: $project_shared_id is based on $based_on_pid\n");
                         $this->Project->id = $project_shared_id;
                         $project = array('id' => $project_shared_id,
                                           'based_on_pid' => $based_on_pid);
