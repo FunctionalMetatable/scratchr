@@ -621,7 +621,7 @@ Class ServicesController extends AppController {
 					array('project_id' => $project_id));
 			}
 			$this->log("extracting for:$project_id, $user_id...");
-			$this->extracthistory($project_id, $user_id, $newproject);
+			$this->extracthistory($project_id, $user_id);
 			$this->log("done extracthistory");
 			$this->doc = $this->doc . "<pid>$project_id</pid>";
 			$this->__success();
@@ -677,14 +677,20 @@ Class ServicesController extends AppController {
             return false;
         }
         $this->log("\nDBG: Analyzer returns: $output\n");
-		
-        $based_on_stored = false;
-		foreach ($retvals as $retval) {
+
+        //store in project_shares
+        foreach ($retvals as $retval) {
 			if(!$this->isempty($retval)) {
-                //store in project_shares
-				$this->storehistory($project_shared_id, $user_shared_id, $retval);
+                $this->storehistory($project_shared_id, $user_shared_id, $retval);
+            }
+        }
+        
+        //find based on pid, reverse way
+        $i = count($retvals) -1;
+        for(; $i >=0; $i--) {
+			if(!$this->isempty($retvals[$i])) {
                 //store the first non empty entry as based_on_pid
-                $retval = str_replace('!undefined!', '', $retval);
+                $retval = str_replace('!undefined!', '', $retvals[$i]);
                 list($date, $event, $projectname, $username, $author) = explode("\t", $retval);
                 $this->log("\nDBG: Scanning: $event $projectname $username\n");
                 if (!$based_on_stored && $event == 'share'
@@ -703,17 +709,19 @@ Class ServicesController extends AppController {
                     
                     //shared project's id and user's id is not the same as based on's
                     if(!empty($based_on_pid)
-                    && $project_shared_id != $based_on_pid) {
+                    && $project_shared_id != $based_on_pid
+                    && $user_shared_id != $based_on_uid) {
                         $this->log("\nDBG: SUCCESSFULLY STORED: $project_shared_id is based on $based_on_pid\n");
                         $this->Project->id = $project_shared_id;
                         $project = array('id' => $project_shared_id,
                                           'based_on_pid' => $based_on_pid);
                         $this->Project->save($project);
-                        $based_on_stored = true;
+                        break;
                     }
                 }
             }
         }
+        
 		return true;
 	}
     
