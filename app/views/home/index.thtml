@@ -91,7 +91,7 @@
 
 	<?php if(isset($favorites) && $count=count($favorites) >=3):?>
 	<div id="Favorites" class="container">
-      <h3><?php ___("Projects Selected by"); echo " <a href=\"/users/$username\">$username</a>"; ?></h3>
+      <h3><?php ___("Projects Selected by"); echo " $username"; ?></h3>
 		<?php
 		foreach ($favorites as $favorite):
 		$pid = $favorite['Project']['id'];
