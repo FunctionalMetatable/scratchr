@@ -40,16 +40,16 @@ define("NUM_TOP_REMIXED", 3);
 /**
  * Email Address Related to Flagging
  */
- define("REPLY_TO_FLAGGED_PCOMMENT", "scratch-feedback@media.mit.edu");
- define("TO_FLAGGED_PCOMMENT", "scratch-caution@media.mit.edu");
- define("REPLY_TO_FLAGGED_PROJECT", "scratch-feedback@media.mit.edu");
- define("TO_FLAGGED_PROJECT", "scratch-caution@media.mit.edu");
- define("REPLY_TO_FLAGGED_GCOMMENT", "scratch-feedback@media.mit.edu");
- define("TO_FLAGGED_GCOMMENT", "scratch-caution@media.mit.edu");
- define("REPLY_TO_FLAGGED_PTAG", "scratch-feedback@media.mit.edu");
- define("TO_FLAGGED_PTAG", "scratch-caution@media.mit.edu");
- define("REPLY_TO_FLAGGED_GTAG", "scratch-feedback@media.mit.edu");
- define("TO_FLAGGED_GTAG", "scratch-caution@media.mit.edu");
+ define("REPLY_TO_FLAGGED_PCOMMENT", "help@scratch.mit.edu");
+ define("TO_FLAGGED_PCOMMENT", "caution@scratch.mit.edu");
+ define("REPLY_TO_FLAGGED_PROJECT", "help@scratch.mit.edu");
+ define("TO_FLAGGED_PROJECT", "caution@scratch.mit.edu");
+ define("REPLY_TO_FLAGGED_GCOMMENT", "help@scratch.mit.edu");
+ define("TO_FLAGGED_GCOMMENT", "caution@scratch.mit.edu");
+ define("REPLY_TO_FLAGGED_PTAG", "help@scratch.mit.edu");
+ define("TO_FLAGGED_PTAG", "caution@scratch.mit.edu");
+ define("REPLY_TO_FLAGGED_GTAG", "help@scratch.mit.edu");
+ define("TO_FLAGGED_GTAG", "caution@scratch.mit.edu");
  
  /**
   * Themes config
@@ -134,18 +134,18 @@ define('CONTENT_STATUS', "safe");
 /**
  * Email addresses for contact page
  */
-define("TOPIC1", "scrach-feedback@scratch.mit.edu");
-define("TOPIC2", "scrach-feedback@scratch.mit.edu");
-define("TOPIC3", "scrach-feedback@scratch.mit.edu");
-define("TOPIC4", "scrach-feedback@scratch.mit.edu");
-define("TOPIC5", "scrach-feedback@scratch.mit.edu");
-define("TOPIC6", "scrach-feedback@scratch.mit.edu");
-define("TOPIC7", "scrach-feedback@scratch.mit.edu");
-define("TOPIC8", "scrach-feedback@scratch.mit.edu");
+define("TOPIC1", "help@scratch.mit.edu");
+define("TOPIC2", "help@scratch.mit.edu");
+define("TOPIC3", "help@scratch.mit.edu");
+define("TOPIC4", "help@scratch.mit.edu");
+define("TOPIC5", "help@scratch.mit.edu");
+define("TOPIC6", "help@scratch.mit.edu");
+define("TOPIC7", "help@scratch.mit.edu");
+define("TOPIC8", "help@scratch.mit.edu");
 
-define("SUBTOPIC1", "scrach-feedback@scratch.mit.edu");
-define("SUBTOPIC2", "scrach-feedback@scratch.mit.edu");
-define("SUBTOPIC3", "scrach-feedback@scratch.mit.edu");
+define("SUBTOPIC1", "help@scratch.mit.edu");
+define("SUBTOPIC2", "help@scratch.mit.edu");
+define("SUBTOPIC3", "help@scratch.mit.edu");
 
  /**
   * Returns theme url for html link destination
