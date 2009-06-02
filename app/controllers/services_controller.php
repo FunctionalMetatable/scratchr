@@ -663,23 +663,21 @@ Class ServicesController extends AppController {
         
         $jar = APP."misc/historyextraction/ScratchAnalyzer.jar";
 		$jar = escapeshellcmd($jar);
-        
+
+        $retvals = null;
 		unset($retvals);
         $exec = "java -jar $jar h $sbfilepath";
         $this->log("\nDBG: Executing:$exec\n");
 
-		exec($exec, $retvals);
-        ob_start();
-        print_r($retvals);
-        $output = ob_get_clean();
-        if(count($retvals)) {
-            $this->log("\nDBG: Analyzer returns: $output\n");
-		}
-        else {
-            $this->log("\nERR: Analyzer returns NULL: $output\n");
-            return false;
-		}
+		exec("$exec 2>&1", $retvals, $err);
 
+        $output = join("\n", $retvals);
+        if($err || empty($retvals)) {
+            $this->log("\nERR: Analyzer returns error: $output\n");
+            return false;
+        }
+        $this->log("\nDBG: Analyzer returns: $output\n");
+		
         $based_on_stored = false;
 		foreach ($retvals as $retval) {
 			if(!$this->isempty($retval)) {
