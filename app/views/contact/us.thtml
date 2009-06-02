@@ -70,7 +70,7 @@ document.getElementById('subtopicsdiv').style.display="block";
 <?php }else{?>
 <?php if (isset($error)){?> 
 	  <p><h2><?php echo($error) ?></h2></p>
-	  <p><?php ___('Not working for you? scratch-feedback@media.mit.edu'); ?></p>
+	  <p><?php ___('Not working for you? help@scratch.mit.edu'); ?></p>
 <?}?>
 
 <div id="main">
