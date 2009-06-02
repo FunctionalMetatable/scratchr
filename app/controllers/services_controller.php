@@ -669,11 +669,14 @@ Class ServicesController extends AppController {
         $this->log("\nDBG: Executing:$exec\n");
 
 		exec($exec, $retvals);
+        ob_start();
+        print_r($retvals);
+        $output = ob_get_clean();
         if(count($retvals)) {
-            $this->log("\nDBG: Analyzer returns: $retvals\n");
+            $this->log("\nDBG: Analyzer returns: $output\n");
 		}
         else {
-            $this->log("\nERR: Analyzer returns NULL: $retvals\n");
+            $this->log("\nERR: Analyzer returns NULL: $output\n");
             return false;
 		}
 
