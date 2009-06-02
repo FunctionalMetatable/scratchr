@@ -12,7 +12,7 @@ echo $javascript->link('prototype.js');
 echo $javascript->link('scriptaculous.js');
 echo $javascript->link('scratchr.js?v=1.2');
 echo $javascript->link('hanbox.js');
-echo $javascript->link('gallery_comment.js');
+echo $javascript->link('gallery_comment.js?v=1');
 
 echo $javascript->link('charcount.js');
 echo $javascript->link('jquery.js');
