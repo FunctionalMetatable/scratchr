@@ -686,42 +686,50 @@ Class ServicesController extends AppController {
         }
         
         //find based on pid, reverse way
-        $i = count($retvals) -1;
-        for(; $i >=0; $i--) {
-			if(!$this->isempty($retvals[$i])) {
-                //store the first non empty entry as based_on_pid
-                $retval = str_replace('!undefined!', '', $retvals[$i]);
-                list($date, $event, $projectname, $username, $author) = explode("\t", $retval);
-                $this->log("\nDBG: Scanning: $event $projectname $username\n");
-                if (!$based_on_stored && $event == 'share'
-                    && !$this->isempty($projectname) && !$this->isempty($username)) {
-                    //find out the based on user's id
-                    $based_on_user = $this->User->find(array('username' => $username), 'id');
-                    $based_on_uid  = $based_on_user['User']['id'];
-                    //find based on project's id
-                    $this->Project->recursive = -1;
-                    $based_on_project = $this->Project->find(
-                                     array('user_id' => $based_on_uid, 'name' => $projectname));
-                    $based_on_pid  = $based_on_project['Project']['id'];
+        for($i = (count($retvals) -1); $i >=0; $i--) {
+			if($this->isempty($retvals[$i])) {
+                continue;
+            }
+            
+            $retval = str_replace('!undefined!', '', $retvals[$i]);
+            list($date, $event, $projectname, $username, $author) = explode("\t", $retval);
+            $this->log("\nDBG: Scanning: $event $projectname $username\n");
 
-                    $this->log("\nDBG: Based on pid: $based_on_pid\n");
-                    $this->log("\nDBG: Uploaded pid: $project_shared_id\n");
-                    
-                    //shared project's id and user's id is not the same as based on's
-                    if(!empty($based_on_pid)
-                    && $project_shared_id != $based_on_pid
-                    && $user_shared_id != $based_on_uid) {
-                        $this->log("\nDBG: SUCCESSFULLY STORED: $project_shared_id is based on $based_on_pid\n");
-                        $this->Project->id = $project_shared_id;
+            if ($event == 'share' && !$this->isempty($projectname)
+                && !$this->isempty($username)) {
+                //find out the based on user's id
+                $based_on_user = $this->User->find(array('username' => $username), 'id');
+                $based_on_uid  = $based_on_user['User']['id'];
+                //find based on project's id
+                $this->Project->recursive = -1;
+                $based_on_project = $this->Project->find(
+                                 array('user_id' => $based_on_uid, 'name' => $projectname));
+                $based_on_pid  = $based_on_project['Project']['id'];
+
+                $this->log("\nDBG: Based on pid: $based_on_pid\n");
+                $this->log("\nDBG: Uploaded pid: $project_shared_id\n");
+
+                //shared project's id is not the same as based on's
+                if(!empty($based_on_pid)
+                && $project_shared_id != $based_on_pid) {
+                    //gotcha, based on from different user
+                    if($user_shared_id != $based_on_uid) {
                         $project = array('id' => $project_shared_id,
                                           'based_on_pid' => $based_on_pid);
-                        $this->Project->save($project);
+
                         break;
                     }
+                    else {
+                        $project = array('id' => $project_shared_id,
+                                          'based_on_pid' => $based_on_pid);
+                    }
                 }
-            }
-        }
-        
+            }            
+        }//end for
+
+        $this->Project->save($project);
+        $this->log("\nDBG: SUCCESSFULLY STORED: $project_shared_id is based on $based_on_pid\n");
+
 		return true;
 	}
     
