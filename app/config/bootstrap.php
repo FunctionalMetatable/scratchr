@@ -206,6 +206,7 @@ define("CHANNEL_TOPVIEWED_CACHE_TTL", 30); //0.5 hour
 define("CHANNEL_TOPLOVED_CACHE_TTL", 30); //0.5 hour
 define("CHANNEL_REMIXED_CACHE_TTL", 30); //0.5 hour
 define("FRIENDS_PROJECT_CACHE_TTL", 30); //0.5 hour
+define("REMIXES_CACHE_TTL", 30); //0.5 hour
 define('PCOMMENT_CACHE_NUMPAGE', 3); //cache first 3 project comment pages
 define('GCOMMENT_CACHE_NUMPAGE', 3); //cache first 3 gallery comment pages
 
