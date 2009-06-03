@@ -685,7 +685,11 @@ Class ServicesController extends AppController {
             }
         }
         
-        //find based on pid, reverse way
+        //find based_on_pid and root_based_on_pid - reverse way
+        $based_on_pid = 0;
+        $root_based_on_pid = 0;
+        $override_based_on= true;
+        
         for($i = (count($retvals) -1); $i >=0; $i--) {
 			if($this->isempty($retvals[$i])) {
                 continue;
@@ -697,39 +701,46 @@ Class ServicesController extends AppController {
 
             if ($event == 'share' && !$this->isempty($projectname)
                 && !$this->isempty($username)) {
-                //find out the based on user's id
-                $based_on_user = $this->User->find(array('username' => $username), 'id');
-                $based_on_uid  = $based_on_user['User']['id'];
-                //find based on project's id
+                //find out the user's id
+                $parent_user = $this->User->find(array('username' => $username), 'id');
+                $parent_uid  = $parent_user['User']['id'];
+                //find out the project's id
                 $this->Project->recursive = -1;
-                $based_on_project = $this->Project->find(
-                                 array('user_id' => $based_on_uid, 'name' => $projectname));
-                $based_on_pid  = $based_on_project['Project']['id'];
+                $parent_project = $this->Project->find(
+                                 array('user_id' => $parent_uid, 'name' => $projectname));
+                $parent_pid  = $parent_project['Project']['id'];
 
-                $this->log("\nDBG: Based on pid: $based_on_pid\n");
+                $this->log("\nDBG: Parent pid: $parent_pid\n");
                 $this->log("\nDBG: Uploaded pid: $project_shared_id\n");
 
-                //shared project's id is not the same as based on's
-                if(!empty($based_on_pid)
-                && $project_shared_id != $based_on_pid) {
-                    //gotcha, based on from different user
-                    if($user_shared_id != $based_on_uid) {
-                        $project = array('id' => $project_shared_id,
-                                          'based_on_pid' => $based_on_pid);
-
-                        break;
+                //uploaded project's id is not the same as parent's
+                if(!empty($parent_pid)
+                && $project_shared_id != $parent_pid) {
+                    //can override based_on, as we are not yet sure about it
+                    if($override_based_on) {
+                        //gotcha, parent is from different user
+                        if($user_shared_id != $parent_uid) {
+                            $based_on_pid = $parent_pid;
+                            $override_based_on= false;
+                        }
+                        else {
+                            $based_on_pid = $parent_pid;
+                        }
                     }
-                    else {
-                        $project = array('id' => $project_shared_id,
-                                          'based_on_pid' => $based_on_pid);
-                    }
+                    
+                    $root_based_on_pid = $parent_pid;
                 }
-            }            
+            }        
         }//end for
 
-        $this->Project->save($project);
-        $this->log("\nDBG: SUCCESSFULLY STORED: $project_shared_id is based on $based_on_pid\n");
-
+        if($root_based_on_pid) {
+            $project = array('id' => $project_shared_id,
+                            'based_on_pid' => $based_on_pid,
+                            'root_based_on_pid' => $root_based_on_pid);
+            $this->Project->save($project);
+            $this->log("\nDBG: SUCCESSFULLY STORED: $project_shared_id "
+                    ."is based on $based_on_pid and root is $root_based_on_pid\n");
+        }
 		return true;
 	}
     
