@@ -2006,10 +2006,10 @@ class ProjectsController extends AppController {
 
             //set remixes and remixer
 			$this->Project->mc_connect();
-            $project_history = $this->Project->mc_get('project_history', $project_id);
-			if(!$project_history){
-			$project_history = $this->Project->query("SELECT  count(*)as original_remixes,count(distinct user_id)as remixer FROM `projects` WHERE (proj_visibility='visible' OR proj_visibility='censbycomm' OR proj_visibility='censbyadmin') AND based_on_pid=$pid");
-			$this->Project->mc_set('project_history', $project_history, $project_id);
+            $project_history = false; //$this->Project->mc_get('project_history', $project_id);
+			if(!$project_history) {
+                $project_history = $this->Project->query("SELECT  count(*)as original_remixes,count(distinct user_id)as remixer FROM `projects` WHERE (proj_visibility='visible' OR proj_visibility='censbycomm' OR proj_visibility='censbyadmin') AND based_on_pid=$pid");
+                $this->Project->mc_set('project_history', $project_history, $project_id, REMIXES_CACHE_TTL);
 			}
 			$this->set('relatedcount', $project_history['0']['0']['original_remixes']);
             $this->set('remixer', $project_history['0']['0']['remixer']);
