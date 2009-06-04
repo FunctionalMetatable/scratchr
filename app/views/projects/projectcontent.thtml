@@ -317,12 +317,16 @@ else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 if(isset($project['Project']['scratch_version_date'])) {
    $scratch_version_date = strtotime($project['Project']['scratch_version_date']);
    $v1_3_date = strtotime("2008-08-01");
-   if ($scratch_version_date > $v1_3_date) {
-      echo '<img src="/img/gr_code_1.3.png" alt="scratch code 1.3" width="86" height="50">';
+   $v1_4_date = strtotime("2009-06-01");
+   if ($scratch_version_date > $v1_4_date) {
+      echo '<img src="/img/gr_code_1.4.png" alt="Project made in Scratch 1.4" width="86" height="50">';
+   }
+   elseif ($scratch_version_date > $v1_3_date) {
+      echo '<img src="/img/gr_code_1.3.png" alt="Project made in Scratch 1.3" width="86" height="50">';
    }
 }
 else {
-   echo '<img src="/img/gr_code.png" alt="scratch code" width="86" height="50">';
+   echo '<img src="/img/gr_code.png" alt="Project Made in Scratch 1.2" width="86" height="50">';
 }
 ___('Download this project!');
 ?>
