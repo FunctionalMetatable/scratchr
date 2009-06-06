@@ -18,3 +18,35 @@
 <div id="ipaddress"><? echo getenv('REMOTE_ADDR'); ?> </div>
 </div>
 </div>
+
+<script src="http://static.getclicky.com/88107.js" type="text/javascript"></script>
+<noscript><p><img alt="Clicky" width="1" height="1" src="http://static.getclicky.com/88107-db11.gif" /></p></noscript>
+
+<!-- ClickTale Bottom part -->
+<div id="ClickTaleDiv" style="display: none;"></div>
+<script src="/WRb.js" type="text/javascript"></script>
+<script type="text/javascript">
+if(typeof ClickTale=='function') ClickTale(22427,0.00012);
+</script>
+<!-- ClickTale end of Bottom part -->
+
+<!-- Start Quantcast tag -->
+<script type="text/javascript">
+_qoptions={
+qacct:"p-ceDf5rCr2q-1c"
+};
+</script>
+<script type="text/javascript" src="//secure.quantserve.com/quant.js"></script>
+<noscript>
+<img src="//secure.quantserve.com/pixel/p-ceDf5rCr2q-1c.gif" style="display: none;" border="0" height="1" width="1" alt="Quantcast"/>
+</noscript>
+<!-- End Quantcast tag -->
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-1470754-1");
+pageTracker._trackPageview();
+</script>
