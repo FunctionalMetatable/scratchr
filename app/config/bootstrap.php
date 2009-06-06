@@ -44,27 +44,27 @@ $this->params['webservices']
 /**
  * Email Address Related to Flagging
  */
- define("REPLY_TO_FLAGGED_PCOMMENT", "scratch-feedback@mit");
- define("TO_FLAGGED_PCOMMENT", "scratch-caution@mit");
- define("REPLY_TO_FLAGGED_PROJECT", "scratch-feedback@mit");
- define("TO_FLAGGED_PROJECT", "scratch-caution@mit");
- define("REPLY_TO_FLAGGED_GCOMMENT", "scratch-feedback@mit");
- define("TO_FLAGGED_GCOMMENT", "scratch-caution@mit");
- define("REPLY_TO_FLAGGED_PTAG", "scratch-feedback@mit");
- define("TO_FLAGGED_PTAG", "scratch-caution@mit");
- define("REPLY_TO_FLAGGED_GTAG", "scratch-feedback@mit");
- define("TO_FLAGGED_GTAG", "scratch-caution@mit");
+ define("REPLY_TO_FLAGGED_PCOMMENT", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("TO_FLAGGED_PCOMMENT", "caution@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("REPLY_TO_FLAGGED_PROJECT", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("TO_FLAGGED_PROJECT", "caution@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("REPLY_TO_FLAGGED_GCOMMENT", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("TO_FLAGGED_GCOMMENT", "caution@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("REPLY_TO_FLAGGED_PTAG", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("TO_FLAGGED_PTAG", "caution@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("REPLY_TO_FLAGGED_GTAG", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("TO_FLAGGED_GTAG", "caution@scratch.mit.edu.USEYOUROWNEMAIL");
  //Emais id to send mail to request create multiple account using same ip.
- define("TO_REQUEST_FOR_MULTIPLE_ACCOUNT", "scratch-feedback@media.mit.edu");
+ define("TO_REQUEST_FOR_MULTIPLE_ACCOUNT", "help@scratch.mit.edu.USEYOUROWNEMAIL");
  //Put on/off change of email on MyStuff should also change it on the forums.1 for ON and 0 for OFF.
  define("ENABLE_TO_CHANGE_FORUM_EMAIL", 1);
  
- define("DEFAULT_EMAIL_FROM", "scratch-feedback@media.mit.edu");
+ define("DEFAULT_EMAIL_FROM", "help@scratch.mit.edu.USEYOUROWNEMAIL");
  //Used in componenets/email 
- define("DEFAULT_EMAIL_TO", "scratch-feedback@media.mit.edu");
- define("CONTACTUS_EMAIL", "contactus-form@scratch.mit.edu");
+ define("DEFAULT_EMAIL_TO", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("CONTACTUS_EMAIL", "help@scratch.mit.edu.USEYOUROWNEMAIL");
  //Used in  users password recovery reply email id.
- define("REPLY_TO_PASSWORD_RECOVERY", "scratch-feedback@media.mit.edu");
+ define("REPLY_TO_PASSWORD_RECOVERY", "help@scratch.mit.edu.USEYOUROWNEMAIL");
  /**
   * Themes config
   */
@@ -176,18 +176,18 @@ define('CONTENT_STATUS', "all");
 /**
  * Email addresses for contact page
  */
-define("TOPIC1", "scrach-feedback@mit");
-define("TOPIC2", "scrach-feedback@mit");
-define("TOPIC3", "scrach-feedback@mit");
-define("TOPIC4", "scrach-feedback@mit");
-define("TOPIC5", "scrach-feedback@mit");
-define("TOPIC6", "scrach-feedback@mit");
-define("TOPIC7", "scrach-feedback@mit");
-define("TOPIC8", "scrach-feedback@mit");
+define("TOPIC1", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+define("TOPIC2", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+define("TOPIC3", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+define("TOPIC4", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+define("TOPIC5", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+define("TOPIC6", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+define("TOPIC7", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+define("TOPIC8", "help@scratch.mit.edu.USEYOUROWNEMAIL");
 
-define("SUBTOPIC1", "scrach-feedback@mit");
-define("SUBTOPIC2", "scrach-feedback@mit");
-define("SUBTOPIC3", "scrach-feedback@mit");
+define("SUBTOPIC1", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+define("SUBTOPIC2", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+define("SUBTOPIC3", "help@scratch.mit.edu.USEYOUROWNEMAIL");
 
 /**
  * Sitemap constants
