@@ -11,8 +11,7 @@
 <div class="container" id="loginForm">
   <form action="<?php echo $html->url('/users/whitelistip')?>" method="POST" accept-charset="UTF-8">
   <div class="login_header">
-    <h4><?php ___('Please fill the form below to request for allowing multiple accounts from an IP address. Please enter the reason in comments.
-'); ?></h4>
+    <h4><?php ___('Request for allowing multiple accounts from the same IP address'); ?></h4>
   </div>
 	<?php
 			echo "<div id='success_msg'>";
@@ -25,21 +24,21 @@
 <!-- testing //-->	
 	<div id="send_request">
 		<div class="login_row">
-			 <label for="User" ><?php ___('Ipaddress'); ?>&nbsp;:</label>
+			 <label for="User" ><?php ___('IP Address'); ?>&nbsp;:</label>
 			<?php echo $form->input('WhitelistedIpAddress.ipaddress',array('size'=>28,'value'=>$client_ip,'style'=>'font-size:14px','label'=>''))?>	
 		</div>
 		<div class="login_row">
-		 	<label for="User" ><?php ___('Contact Name'); ?>&nbsp;:</label>
+		 	<label for="User" ><?php ___('Contact name'); ?>&nbsp;:</label>
 			<?php echo $form->input('WhitelistedIpAddress.contact_name',array('size'=>28,'label'=>''))?>	
 		</div>
 		
 		<div class="login_row">
-		<label for="User" ><?php ___('Email'); ?>&nbsp;:</label>
+		<label for="User" ><?php ___('E-mail'); ?>&nbsp;:</label>
 		<?php echo $form->input('WhitelistedIpAddress.email',array('size'=>28,'label'=>''))?>	
 		</div>
 		
 		<div class="login_row">
-		<label for="User" ><?php ___('School Name'); ?>&nbsp;:</label>
+		<label for="User" ><?php ___('School or organization's name'); ?>&nbsp;:</label>
 		<?php echo $form->input('WhitelistedIpAddress.school_name',array('size'=>28,'label'=>''))?>	
 		</div>
 		<div class="login_row">
@@ -49,7 +48,7 @@
 		
 		</div>
 		<div class="login_row">
-		 <label for="User" ><?php ___('No Of Student'); ?>&nbsp;:</label>
+		 <label for="User" ><?php ___('Estimated number of users sharing the same IP'); ?>&nbsp;:</label>
 		<?php echo $form->input('WhitelistedIpAddress.no_of_student',array('size'=>28,'label'=>''))?>	
 		</div>
 		<div class="login_submit">
