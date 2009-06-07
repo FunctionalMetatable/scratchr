@@ -662,14 +662,14 @@ Class ServicesController extends AppController {
         $sbfilepath = escapeshellcmd($sbfilepath);
         
         $jar = APP."misc/historyextraction/ScratchAnalyzer.jar";
-		$jar = escapeshellcmd($jar);
+	$jar = escapeshellcmd($jar);
 
         $retvals = null;
-		unset($retvals);
+	unset($retvals);
         $exec = JAVA_PATH." -jar $jar h $sbfilepath";
         $this->log("\nDBG: Executing:$exec\n");
 
-		exec("$exec 2>&1", $retvals, $err);
+	exec("$exec 2>&1", $retvals, $err);
 
         $output = join("\n", $retvals);
         if($err || empty($retvals)) {
