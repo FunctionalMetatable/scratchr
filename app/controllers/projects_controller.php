@@ -1890,7 +1890,11 @@ class ProjectsController extends AppController {
             //setting related work/projects strings
             
             //the project is based on another project
-			if($project['Project']['based_on_pid']) {
+            $based_on_pid = $project['Project']['based_on_pid'];
+            $root_based_on_pid = $project['Project']['root_based_on_pid'];
+            if($root_based_on_pid == $based_on_pid) { $root_based_on_pid = null; }
+            
+			if($based_on_pid) {
                 $this->Project->mc_connect();
             	$based_on_data = $this->Project->mc_get('based_on', $project_id);
 
@@ -1898,35 +1902,27 @@ class ProjectsController extends AppController {
                     //find out the based on username
                     $based_on_user = $this->Project->query( "SELECT User.id, User.username, Project.id"
                                                         ." FROM projects as Project, users as User"
-                                                        ." WHERE Project.id = " . $project['Project']['based_on_pid']
+                                                        ." WHERE Project.id = " . $based_on_pid
                                                         ." and Project.user_id = User.id");
                     
                     $based_on_uid = $based_on_user['0']['User']['id'];
                     $based_on_username = $based_on_user['0']['User']['username'];
 
-                    //find out the original project
-                    $original_pid = false;
-                    /*$original_pid = $this->findOriginalProject($pid);
-                    if($original_pid == $project['Project']['based_on_pid']) {
-                        $original_pid = false;
-                    }*/
+                    //find out the root based on username
+                    $root_based_on_username = false;
+                    if($root_based_on_pid) {
+                        $root_based_on_user = $this->Project->query( "SELECT User.username, Project.id"
+                                                            ." FROM projects as Project, users as User"
+                                                            ." WHERE Project.id = " . $root_based_on_pid
+                                                            ." and Project.user_id = User.id");
 
-                    //find out the original username
-                    $original_username = null;
-                    if($original_pid) {
-                        $original_user = $this->Project->query( "SELECT User.username, Project.id"
-                                                        ." FROM projects as Project, users as User"
-                                                        ." WHERE Project.id = " . $original_pid
-                                                        ." and Project.user_id = User.id");
-                        $original_username = $original_user['0']['User']['username'];
+                        $root_based_on_username = $root_based_on_user['0']['User']['username'];
                     }
-
                     
                     $based_on_data = array(
                         'based_on_uid'      => $based_on_uid,
                         'based_on_username' => $based_on_username,
-                        'original_pid'      => $original_pid,
-                        'original_username' => $original_username
+                        'original_username' => $root_based_on_username
                     );
                     $this->Project->mc_set('based_on', $based_on_data, $project_id);
                 }
@@ -1936,12 +1932,11 @@ class ProjectsController extends AppController {
 
                 $this->set('based_on_uid',      $based_on_data['based_on_uid']);
                 $this->set('based_on_username', $based_on_data['based_on_username']);
-                $this->set('original_pid',      $based_on_data['original_pid']);
                 $this->set('original_username', $based_on_data['original_username']);
 			}
 
             $this->set('based_on_pid', $project['Project']['based_on_pid']);
-            
+            $this->set('original_pid', $project['Project']['root_based_on_pid']);
 
             //make one single call to FeaturedProject, we don't need hasAny
             $featured_timestamp = $this->FeaturedProject->field('timestamp',"project_id = $pid");
@@ -2005,8 +2000,8 @@ class ProjectsController extends AppController {
             $this->set('downloadcount', $this->Downloader->findCount(array('project_id' => $pid)));
 
             //set remixes and remixer
-			$this->Project->mc_connect();
-            $project_history = false; //$this->Project->mc_get('project_history', $project_id);
+			/*$this->Project->mc_connect();
+            $project_history = $this->Project->mc_get('project_history', $project_id);
 			if(!$project_history) {
                 $project_history = $this->Project->query(
                     "SELECT  count(*) AS original_remixes,count(distinct user_id) AS remixer"
@@ -2015,11 +2010,14 @@ class ProjectsController extends AppController {
                 );
                 $this->Project->mc_set('project_history', $project_history, $project_id, REMIXES_CACHE_TTL);
 			}
-			$this->set('relatedcount', $project_history['0']['0']['original_remixes']);
+            $this->set('relatedcount', $project_history['0']['0']['original_remixes']);
             $this->set('remixer', $project_history['0']['0']['remixer']);
-
             //close memcache connection
             $this->Project->mc_close();
+            */
+            $remixes = $project['Project']['remixes'];
+            $this->set('relatedcount', $remixes);
+            $this->set('remixer', $project['Project']['remixer']);
 
             $this->set('isGalleryOwner', $isGalleryOwner);
             $this->set('viewcount', $project['Project']['views']);
@@ -2200,33 +2198,21 @@ class ProjectsController extends AppController {
 		$this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-		$modpids = $this->Project->findAll("(based_on_pid = $pid OR root_based_on_pid = $pid)");
+          
+		$modpids = $this->Project->findAll(
+                    "(based_on_pid = $pid OR root_based_on_pid = $pid)",
+                    null, null, null, 1, null, 'all', true
+            );
         foreach ($modpids as $project) {
-		if ($project['User']['username']){
+            if ($project['User']['username']){
 				$mods['linkable'][] = array('username' => $project['User']['username'], 'pid'  => $project['Project']['id']); 
 			}
-			 else {
-					$mods['unlinkable'][] = array('user_id' => $project['Project']['user_id'], 'pid' => $project['Project']['id']);  
-				}
-			
+            else {
+                $mods['unlinkable'][] = array('user_id' => $project['Project']['user_id'], 'pid' => $project['Project']['id']);
+            }
 		}//foreach
-		/*foreach ($modpids as $modpid) {	
-			$this->Project->bindUser();
-			$this->Project->id = $modpid['ProjectShare']['project_id'];
-			$project = $this->Project->read();
-			if ($project['User']['username']){
-				$mods['linkable'][] = array('username' => $project['User']['username'], 'pid'  => $modpid['ProjectShare']['project_id']); 
-			} else {
-				$user = $this->User->findById($modpid['ProjectShare']['user_id']);
-				if($user['User']['username']) {
-					$mods['userlinkable'][] = array('username' => $user['User']['username'], 'pid' => $modpid['ProjectShare']['project_id']);
-				} else {
-					$mods['unlinkable'][] = array('user_id' => $modpid['ProjectShare']['user_id'], 'pid' => $modpid['ProjectShare']['project_id']);  
-				}
-			}
-			$this->set('mods', $mods);
-		}*/
-		$this->set('mods', $mods);
+
+        $this->set('mods', $mods);
 		$this->render('mods', 'scratchr_default');
 		return;
 	}	
