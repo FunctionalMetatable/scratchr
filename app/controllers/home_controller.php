@@ -21,6 +21,7 @@ Class HomeController extends AppController {
         $prefix = MEMCACHE_PREFIX;
         $project_ids = array();
        	$user_ids =array();
+	$this->set('client_ip', $this->RequestHandler->getClientIP());
         $home_projects = $memcache->get("$prefix-home_projects");
         if(!$home_projects) {
 			$curator_name = $this->___getCuratorName();
