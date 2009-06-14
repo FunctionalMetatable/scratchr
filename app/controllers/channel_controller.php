@@ -194,11 +194,11 @@ Class ChannelController extends AppController {
 		$this->layout = 'scratchr_explorer'; 
 		$this->pageTitle = ___("Scratch | Most Remixed projects", true);
         $this->modelClass = "Project";
-        $options = array("sortBy"=>"remixes", "direction" => "DESC");
+        $options = array("sortBy"=>"remixer", "direction" => "DESC");
 
         $key = 'channel-remixed-';
         $ttl = CHANNEL_REMIXED_CACHE_TTL;        
-        $projects_count = $this->_getProjectsCount('remixes > 0 AND proj_visibility = "visible"',
+        $projects_count = $this->_getProjectsCount('remixer > 0 AND proj_visibility = "visible"',
                                                 $key, $ttl);
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
@@ -210,7 +210,7 @@ Class ChannelController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->Project->findAll("remixes > 0 AND Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL);
+            $final_projects = $this->Project->findAll("remixer > 0 AND Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL);
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
