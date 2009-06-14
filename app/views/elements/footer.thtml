@@ -15,7 +15,7 @@
 	}
 */
 ?>
-<div id="ipaddress"><? echo getenv('REMOTE_ADDR'); ?> </div>
+<div id="ipaddress"> <? if ($client_ip) { echo $client_ip; } else { echo "-"; }; ?> </div>
 </div>
 </div>
 
