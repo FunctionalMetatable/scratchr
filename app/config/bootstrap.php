@@ -1,8 +1,9 @@
 <?php
 
 require_once('recaptchalib.php');
-define("CAPTCHA_PUBLICKEY", ""); // from http://recaptcha.net/
-define("CAPTCHA_PRIVATEKEY", "");
+define("CAPTCHA_PUBLICKEY", "6LfkVAIAAAAAABlcomxpr4KzuPR0VBcG8eLGnsli"); // from http://recaptcha.net/
+define("CAPTCHA_PRIVATEKEY", "6LfkVAIAAAAAAEUSKkasdLGfAGSczVHj4IvWbWGp");
+
 
 /**
  * Module file for global configs and functions
@@ -29,7 +30,7 @@ $this->params['webservices']
  define("NUM_NEW_MEMBERS", 4);
  define("NUM_RECENT_VISITORS", 4);
  define("MAX_LENGTH_PNAME_HOME", 20);
- define("MEMCACHE_PREFIX", "gamma.dev");
+ define("MEMCACHE_PREFIX", "scratch.mit.edu");
  
  define("NUM_MAX_COMMENT_FLAGS", 1);
  define("NUM_MAX_PROJECT_FLAGS", 3);
@@ -44,27 +45,27 @@ $this->params['webservices']
 /**
  * Email Address Related to Flagging
  */
- define("REPLY_TO_FLAGGED_PCOMMENT", "help@scratch.mit.edu.USEYOUROWNEMAIL");
- define("TO_FLAGGED_PCOMMENT", "caution@scratch.mit.edu.USEYOUROWNEMAIL");
- define("REPLY_TO_FLAGGED_PROJECT", "help@scratch.mit.edu.USEYOUROWNEMAIL");
- define("TO_FLAGGED_PROJECT", "caution@scratch.mit.edu.USEYOUROWNEMAIL");
- define("REPLY_TO_FLAGGED_GCOMMENT", "help@scratch.mit.edu.USEYOUROWNEMAIL");
- define("TO_FLAGGED_GCOMMENT", "caution@scratch.mit.edu.USEYOUROWNEMAIL");
- define("REPLY_TO_FLAGGED_PTAG", "help@scratch.mit.edu.USEYOUROWNEMAIL");
- define("TO_FLAGGED_PTAG", "caution@scratch.mit.edu.USEYOUROWNEMAIL");
- define("REPLY_TO_FLAGGED_GTAG", "help@scratch.mit.edu.USEYOUROWNEMAIL");
- define("TO_FLAGGED_GTAG", "caution@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("REPLY_TO_FLAGGED_PCOMMENT", "caution@scratch.mit.edu");
+ define("TO_FLAGGED_PCOMMENT", "caution@scratch.mit.edu");
+ define("REPLY_TO_FLAGGED_PROJECT", "caution@scratch.mit.edu");
+ define("TO_FLAGGED_PROJECT", "caution@scratch.mit.edu");
+ define("REPLY_TO_FLAGGED_GCOMMENT", "caution@scratch.mit.edu");
+ define("TO_FLAGGED_GCOMMENT", "caution@scratch.mit.edu");
+ define("REPLY_TO_FLAGGED_PTAG", "caution@scratch.mit.edu");
+ define("TO_FLAGGED_PTAG", "caution@scratch.mit.edu");
+ define("REPLY_TO_FLAGGED_GTAG", "caution@scratch.mit.edu");
+ define("TO_FLAGGED_GTAG", "caution@scratch.mit.edu");
  //Emais id to send mail to request create multiple account using same ip.
- define("TO_REQUEST_FOR_MULTIPLE_ACCOUNT", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("TO_REQUEST_FOR_MULTIPLE_ACCOUNT", "help@scratch.mit.edu");
  //Put on/off change of email on MyStuff should also change it on the forums.1 for ON and 0 for OFF.
  define("ENABLE_TO_CHANGE_FORUM_EMAIL", 1);
  
- define("DEFAULT_EMAIL_FROM", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("DEFAULT_EMAIL_FROM", "help@scratch.mit.edu");
  //Used in componenets/email 
- define("DEFAULT_EMAIL_TO", "help@scratch.mit.edu.USEYOUROWNEMAIL");
- define("CONTACTUS_EMAIL", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("DEFAULT_EMAIL_TO", "help@scratch.mit.edu");
+ define("CONTACTUS_EMAIL", "help@scratch.mit.edu");
  //Used in  users password recovery reply email id.
- define("REPLY_TO_PASSWORD_RECOVERY", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+ define("REPLY_TO_PASSWORD_RECOVERY", "help@scratch.mit.edu");
  /**
   * Themes config
   */
@@ -79,11 +80,11 @@ $this->params['webservices']
  /**
  Show ribbon on featured project. Value 1 means fetured is active and 0 means deactive.
  */
- define("SHOW_RIBBON", 1);
+ define("SHOW_RIBBON", 0);
  /**
  To enable/disable to write debug log for service controller.Value 1 for enable and 0 for desable
  */
- define("WRITE_LOG", 1);
+ define("WRITE_LOG", 0);
  /**
  Set how many friend projects to be show.
  */
@@ -98,7 +99,7 @@ $this->params['webservices']
  /**
  Allow multiple accounts to be created from the same IP after X minutes
  */
- define("SIGNUP_INTERVAL", 5);
+ define("SIGNUP_INTERVAL", 0);
 
  /**
   * sets the time interval (hrs) in which
@@ -176,18 +177,18 @@ define('CONTENT_STATUS', "all");
 /**
  * Email addresses for contact page
  */
-define("TOPIC1", "help@scratch.mit.edu.USEYOUROWNEMAIL");
-define("TOPIC2", "help@scratch.mit.edu.USEYOUROWNEMAIL");
-define("TOPIC3", "help@scratch.mit.edu.USEYOUROWNEMAIL");
-define("TOPIC4", "help@scratch.mit.edu.USEYOUROWNEMAIL");
-define("TOPIC5", "help@scratch.mit.edu.USEYOUROWNEMAIL");
-define("TOPIC6", "help@scratch.mit.edu.USEYOUROWNEMAIL");
-define("TOPIC7", "help@scratch.mit.edu.USEYOUROWNEMAIL");
-define("TOPIC8", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+define("TOPIC1", "help@scratch.mit.edu");
+define("TOPIC2", "help@scratch.mit.edu");
+define("TOPIC3", "help@scratch.mit.edu");
+define("TOPIC4", "help@scratch.mit.edu");
+define("TOPIC5", "help@scratch.mit.edu");
+define("TOPIC6", "help@scratch.mit.edu");
+define("TOPIC7", "help@scratch.mit.edu");
+define("TOPIC8", "help@scratch.mit.edu");
 
-define("SUBTOPIC1", "help@scratch.mit.edu.USEYOUROWNEMAIL");
-define("SUBTOPIC2", "help@scratch.mit.edu.USEYOUROWNEMAIL");
-define("SUBTOPIC3", "help@scratch.mit.edu.USEYOUROWNEMAIL");
+define("SUBTOPIC1", "help@scratch.mit.edu");
+define("SUBTOPIC2", "help@scratch.mit.edu");
+define("SUBTOPIC3", "help@scratch.mit.edu");
 
 /**
  * Sitemap constants
@@ -198,7 +199,7 @@ define('CACHE_DURATION', '1 day');
 /**
  * Memcache constants
  */
-define("MEMCACHE_SERVER", 'localhost'); //memcache server
+define("MEMCACHE_SERVER", 'scratchstore'); //memcache server
 define("MEMCACHE_PORT", 11211); //memcache port
 define("CHANNEL_RECENT_CACHE_TTL", 30); //0.5 hour
 define("CHANNEL_FEATURED_CACHE_TTL", 30); //0.5 hour
