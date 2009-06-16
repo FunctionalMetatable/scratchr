@@ -2563,7 +2563,9 @@
         $version = $memcache->getVersion();
         echo 'Memcache Version: ' . $version . '<br/>';
         echo 'Connecting to Memcache Server: ' . MEMCACHE_SERVER .' Port: '. MEMCACHE_PORT . '<br/>';
-        pr($memcache->getExtendedStats());
+        echo '<pre>';
+        print_r($memcache->getExtendedStats());
+        echo '</pre>';
         exit;
     }
 }
