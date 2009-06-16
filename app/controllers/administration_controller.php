@@ -2556,5 +2556,15 @@
             $this->set('users', $users);
         }
     }
+
+    function memcache_stat() {
+        $memcache = new Memcache();
+		$memcache->addServer(MEMCACHE_SERVER, MEMCACHE_PORT)
+            or die ("OMG. Scratch could not connect to memcached. Please try again later.");
+        $version = $memcache->getVersion();
+        echo 'Memcache Version: ' . $version . "\n";
+        pr($memcache->getExtendedStats());
+        exit;
+    }
 }
 ?>
