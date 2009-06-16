@@ -2559,10 +2559,10 @@
 
     function memcache_stat() {
         $memcache = new Memcache();
-		$memcache->addServer(MEMCACHE_SERVER, MEMCACHE_PORT)
-            or die ("OMG. Scratch could not connect to memcached. Please try again later.");
+		$memcache->addServer(MEMCACHE_SERVER, MEMCACHE_PORT);
         $version = $memcache->getVersion();
-        echo 'Memcache Version: ' . $version . "\n";
+        echo 'Memcache Version: ' . $version . '<br/>';
+        echo 'Connecting to Memcache Server: ' . MEMCACHE_SERVER .' Port: '. MEMCACHE_PORT . '<br/>';
         pr($memcache->getExtendedStats());
         exit;
     }
