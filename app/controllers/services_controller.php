@@ -358,7 +358,7 @@ Class ServicesController extends AppController {
 					}
 				}
 			}
-				foreach($inappropriates as $inappropriate) {
+            foreach($inappropriates as $inappropriate) {
 				$this->__notify($inappropriate, $user_id,
 					array('project_id' => $project_id));
 			}
@@ -623,7 +623,8 @@ Class ServicesController extends AppController {
 
 			$this->doc = $this->doc . "<pid>$project_id</pid>";
 			$this->__success();
-		} else {
+		}
+        else {
 
 			$this->err_codes[USER_BLOCKED_ERROR]="Unable to accept project because the account '$urlname' has been blocked.";
 			$this->__failed(USER_BLOCKED_ERROR);
@@ -797,6 +798,9 @@ Class ServicesController extends AppController {
                                         'COUNT(*) AS remixes, COUNT(DISTINCT user_id) AS remixer');
         $project[0]['id'] = $pid;
         $this->Project->save($project[0]);
+        $this->log("\nDBG: SUCCESSFULLY UPDATED: " . $pid
+            . ' has ' .$project[0]['remixes'] . ' remixes and '
+            . $project[0]['remixer'] . " remixer \n");
     }
     
     /*
