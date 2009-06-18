@@ -729,20 +729,20 @@ Class ServicesController extends AppController {
             $this->Project->save($project);
             $this->log("\nDBG: SUCCESSFULLY STORED: $project_shared_id "
                     ."is based on $based_on_pid and root is $root_based_on_pid\n");
-        }
 
-        $this->__update_remixes_remixer($root_based_on_pid);
-        if($based_on_pid != $root_based_on_pid)  {
-            $this->__update_remixes_remixer($based_on_pid);
-        }
+            $this->__update_remixes_remixer($root_based_on_pid);
+            if($based_on_pid != $root_based_on_pid)  {
+                $this->__update_remixes_remixer($based_on_pid);
+            }
+        }        
     }
 
-    function __run_scratch_analyzer() {
+    function __run_scratch_analyzer($sbfilepath) {
         $jar = APP."misc/historyextraction/ScratchAnalyzer.jar";
         return $this->__run_analyzer($jar, $sbfilepath, 'h');
     }
 
-    function __run_full_analyzer() {
+    function __run_full_analyzer($sbfilepath) {
         @$db =& ConnectionManager::getDataSource('analysis');
         if(!isset($db->config)) {
             return false;
