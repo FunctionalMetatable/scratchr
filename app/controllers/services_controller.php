@@ -730,6 +730,11 @@ Class ServicesController extends AppController {
             $this->log("\nDBG: SUCCESSFULLY STORED: $project_shared_id "
                     ."is based on $based_on_pid and root is $root_based_on_pid\n");
         }
+
+        $this->__update_remixes_remixer($root_based_on_pid);
+        if($based_on_pid != $root_based_on_pid)  {
+            $this->__update_remixes_remixer($based_on_pid);
+        }
     }
 
     function __run_scratch_analyzer() {
@@ -773,7 +778,7 @@ Class ServicesController extends AppController {
         return $entries;
     }
 
-    function __get_sbfilepath($user_shared_id, $project_shared_id) {
+    function __get_sbfilepath($project_shared_id, $user_shared_id) {
         $ppath = APP.'webroot/static/projects/';
         $powner = $this->User->findById($user_shared_id);
         $sbfilepath =  $ppath . $powner['User']['username'] . "/" . $project_shared_id . ".sb";
@@ -785,8 +790,17 @@ Class ServicesController extends AppController {
         $this->log("\nDBG: .SB FILE FOUND: $sbfilepath\n");
         return $sbfilepath;
     }
+
+    function __update_remixes_remixer($pid) {
+        $this->Project->recursive = -1;
+        $project = $this->Project->find('based_on_pid = ' . $pid . ' OR root_based_on_pid = ' . $pid,
+                                        'COUNT(*) AS remixes, COUNT(DISTINCT user_id) AS remixer');
+        $project[0]['id'] = $pid;
+        $this->Project->save($project[0]);
+    }
     
     /*
+     *
      * stores history information
      * input: tab delimited string with values (coming from java analyzer)
      */
@@ -833,27 +847,7 @@ Class ServicesController extends AppController {
 						$record['related_project_id'] =  $citedproject['Project']['id'];
 					}
 				}
-				if($this->ProjectShare->save($record)) {
-					$related_project_id = $record['related_project_id'];
-					$this->Project->id = $related_project_id;
-					$current_related_project = $this->Project->read();
-					if (empty($current_related_project)) {
-					}
-                    else {
-						$total_remixes = $current_related_project['Project']['remixes'] + 1;
-
-						$this->Project->saveField("remixes", $total_remixes);
-						$project_record = $this->Project->find(array('name' => $pname));
-						$project_record_id = $project_record['Project']['id'];
-						$project_share_count = $this->ProjectShare->findCount("ProjectShare.related_project_id = $project_record_id AND ProjectShare.user_id = $user_shared_id AND ProjectShare.project_id!=ProjectShare.related_project_id");
-
-						if($project_share_count ==1) {
-							$total_remixer = $project_record['Project']['remixer'] + 1;
-							$this->Project->id = $project_record_id;
-							$this->Project->saveField("remixer", $total_remixer);
-						}
-					}
-				}
+				$this->ProjectShare->save($record);
 			}
 		}
 		// For saves, olds and empty
