@@ -620,9 +620,6 @@ Class ServicesController extends AppController {
 			
 			$this->doc = $this->doc . "<pid>$project_id</pid>";
 			$this->__success();
-
-			$this->doc = $this->doc . "<pid>$project_id</pid>";
-			$this->__success();
 		}
         else {
 
