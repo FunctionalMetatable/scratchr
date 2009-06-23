@@ -661,7 +661,7 @@ Class ServicesController extends AppController {
 
         $this->__store_based_ons($project_shared_id, $user_shared_id, $entries);
 
-        $this->__run_full_analyzer($sbfilepath);
+        //$this->__run_full_analyzer($sbfilepath);
 
         $this->log("\nDBG: Extraction Ends: PROJECT-ID: $project_shared_id, USER-ID: $user_shared_id\n");
         return true;
@@ -732,7 +732,11 @@ Class ServicesController extends AppController {
             if($based_on_pid != $root_based_on_pid)  {
                 $this->__update_remixes_remixer($based_on_pid);
             }
-        }        
+        }
+        else {
+            $this->log("\nDBG: SUCCESSFULLY ANALYZED: $project_shared_id "
+                    ."has no based on \n");
+        }
     }
 
     function __run_scratch_analyzer($sbfilepath) {
