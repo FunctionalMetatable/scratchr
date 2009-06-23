@@ -661,7 +661,7 @@ Class ServicesController extends AppController {
 
         $this->__store_based_ons($project_shared_id, $user_shared_id, $entries);
 
-        //$this->__run_full_analyzer($sbfilepath);
+        $this->__run_full_analyzer($sbfilepath);
 
         $this->log("\nDBG: Extraction Ends: PROJECT-ID: $project_shared_id, USER-ID: $user_shared_id\n");
         return true;
@@ -745,12 +745,15 @@ Class ServicesController extends AppController {
     }
 
     function __run_full_analyzer($sbfilepath) {
-        @$db =& ConnectionManager::getDataSource('analysis');
-        if(!isset($db->config)) {
+        $this->log("\nDBG: Running Full Analyzer \n");
+        config('database');
+        $db =& new DATABASE_CONFIG();
+        
+        if(!isset($db->analysis)) {
             return false;
         }
 
-        $db = $db->config;
+        $db = $db->analysis;
         if(empty($db['host']) || empty($db['database']) || empty($db['login'])) {
             return false;
         }
