@@ -471,7 +471,7 @@ Class HomeController extends AppController {
                 array('hasMany' => array('GalleryProject'))
             );
             $favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.user_id <> $curator_id"
-                .$exclude_clause.$exclude_user_id_clause.' GROUP BY Project.user_id', null, 'Favorite.timestamp DESC', 3, null, 2);
+                .$exclude_clause.$exclude_user_id_clause, null, 'Favorite.timestamp DESC', 3, null, 2);
         }
 		return  $favorites;
 	}
