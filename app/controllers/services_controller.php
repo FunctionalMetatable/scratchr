@@ -682,7 +682,7 @@ Class ServicesController extends AppController {
 
             $entry = str_replace('!undefined!', '', $entries[$i]);
             list($date, $event, $projectname, $username, $author) = explode("\t", $entry);
-            $this->log("\nDBG: Scanning: $event $projectname $username\n");
+            //$this->log("\nDBG: Scanning: $event $projectname $username\n");
 
             if($event != 'share' || $this->__is_empty($projectname)
                 || $this->__is_empty($username)) {
