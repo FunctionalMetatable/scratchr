@@ -1,11 +1,11 @@
 <?php
-// php scan.php  2009-06-14  2009-06-15 SAFE 1 1>scan.log 2>&1 &
+// php scan.php SAFE|UNSAFE(default SAFE) LIMIT(default 100)
+// php scan.php SAFE 1 1>scan.log 2>&1 &
 // tail scan.log
 
 /*
  * constants
  */
-
 define('SERVER', 'localhost');
 define('USER', 'root');
 define('PASS', '');
@@ -35,44 +35,25 @@ set_error_handler('error_handler');
  * start operations
  */
 cout('============================================');
-//get start date, end date
-$start_date = false;
-$end_date = false;
-
-$pattern = '/(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])/';
-if(isset($argv[1])) {
-    if(preg_match($pattern, $argv[1])) {
-        $start_date = $argv[1];
-    }
-}
-if(isset($argv[2])) {
-    if(preg_match($pattern, $argv[2])) {
-        $end_date = $argv[2];
-    }
-}
-if(!$start_date || !$end_date) {
-    cout('Start Date or End Date is Either Missing or of Invalid Format ');
-    exit;
-}
-cout('START DATE '. $start_date .' END DATE '.$end_date);
 
 //safe mode
 $safe_mode = true;
-if(isset($argv[3]) && $argv[3] == 'UNSAFE') {
+if(isset($argv[1]) && $argv[1] == 'UNSAFE') {
     $safe_mode = false;
 }
 if($safe_mode) {
     cout('~SAFE MODE!');
 }
+define('DAT_FILENAME', 'scan_'.$safe_mode.'.dat');
 
 //limit
-$limit = false;
-if(isset($argv[4])) {
-    $limit = intval($argv[4]);
+$limit = 100;
+if(isset($argv[2])) {
+    $limit = intval($argv[2]);
 }
-if($limit) {
-    cout('LIMIT '.$limit);
-}
+
+cout('LIMIT '.$limit);
+
 cout('');
 cout('============================================');
 
@@ -86,19 +67,19 @@ else {
   cout('Database not found');
 }
 
-$limit_clause = '';
-if($limit) {
-    $limit_clause = 'LIMIT '.$limit;
+//if the .dat file exists
+if(!file_exists(DAT_FILENAME)) {
+    touch(DAT_FILENAME);
 }
 
-$query = 'SELECT `id`, `user_id`, `based_on_pid`, `root_based_on_pid`, `remixes`, `remixer`'
-        .' FROM `projects`'
-        .' WHERE `created` >= "'.$start_date.' 00:00:00"'
-        .' AND `created` <= "'.$end_date.' 00:00:00"'
-        .' ORDER BY id ASC ' . $limit_clause;
-cout('Executing: '.$query);
-$projects = mysql_query($query);
+//check the .dat file perms
+if(!is_writable(DAT_FILENAME) || !is_readable(DAT_FILENAME)) {
+    cout('Can not access '. DAT_FILENAME);
+    exit;
+}
 
+//get projects
+$projects = __get_projects();
 if(empty($projects)) {
     cout('Something is wrong with the query');
 }
@@ -109,6 +90,8 @@ while($project = mysql_fetch_array($projects)) {
     
     __extract_data($project['id'], $project['user_id']);
     
+    file_put_contents(DAT_FILENAME, $project['id']);
+
     cout('============================================');
 }
 
@@ -118,6 +101,22 @@ cout('I am done!');
 mysql_close($con);
 exit(0);
 
+function __get_projects() {
+    $last_scanned_id = file_get_contents(DAT_FILENAME);
+    $where_clause = '';
+    if($last_scanned_id) {
+       $where_clause = 'WHERE id < ' . $last_scanned_id;
+    }
+
+    global $limit;
+    $limit_clause = 'LIMIT '.$limit;
+
+    $query = 'SELECT `id`, `user_id`, `based_on_pid`, `root_based_on_pid`, `remixes`, `remixer`'
+            .' FROM `projects` ' . $where_clause
+            .' ORDER BY id DESC ' . $limit_clause;
+    cout('Executing: '.$query);
+    return mysql_query($query);
+}
 
 function __extract_data($project_shared_id, $user_shared_id) {
     cout("Extraction Starts: PROJECT-ID: $project_shared_id, USER-ID: $user_shared_id");
