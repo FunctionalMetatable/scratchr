@@ -12,6 +12,7 @@ define('PASS', '');
 define('DATABASE', 'scratchr_dev');
 define('APP', '/var/www/scratch/app/');
 define('JAVA_PATH', 'java');
+define('PROJECT_PATH', '/var/www/scratch/app/webroot/static/projects/');
 define('EMAIL', 'user@example.com');
 
 /*
@@ -282,7 +283,7 @@ function __run_analyzer($jar, $sbfilepath, $arg) {
 }
 
 function __get_sbfilepath($project_shared_id, $user_shared_id) {
-    $ppath = APP.'webroot/static/projects/';
+    $ppath = PROJECT_PATH;
     $powner = mysql_query('SELECT username FROM users WHERE id = ' . $user_shared_id);
     $powner = mysql_fetch_array($powner);
     
