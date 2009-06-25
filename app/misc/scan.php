@@ -12,6 +12,7 @@ define('PASS', '');
 define('DATABASE', 'scratchr_dev');
 define('APP', '/var/www/scratch/app/');
 define('JAVA_PATH', 'java');
+define('EMAIL', 'user@example.com');
 
 /*
  * required funcitons
@@ -35,6 +36,8 @@ set_error_handler('error_handler');
  * start operations
  */
 cout('============================================');
+
+$start_time = microtime(1);
 
 //safe mode
 $safe_mode = true;
@@ -84,11 +87,16 @@ if(empty($projects)) {
     cout('Something is wrong with the query');
 }
 
+$records_scanned = 0;
+$records_altered = 0;
+$files_missing = 0;
+
 while($project = mysql_fetch_array($projects)) {
     cout('');
     cout('============================================');
     
-    __extract_data($project['id'], $project['user_id']);
+    __extract_data($project['id'], $project['user_id'],
+        $project['based_on_pid'], $project['root_based_on_pid']);
     
     file_put_contents(DAT_FILENAME, $project['id']);
 
@@ -99,6 +107,25 @@ while($project = mysql_fetch_array($projects)) {
 cout('');
 cout('I am done!');
 mysql_close($con);
+
+//create a simple report
+$records_unchanged = $records_scanned - $records_altered;
+$elapsed_time = microtime(1)-$start_time;
+date_default_timezone_set("US/Central");
+$today = date("l d F Y h:i:s A");
+
+$report = "SCANNER REPORT\n=============================\n";
+$report .=  $today . "\n";
+$report .= ($safe_mode) ? "SAFE MODE\n" : "UNSAFE MODE\n";
+$report .= "Time Taken: " . sprintf("%02d:%02d:%02d", ($elapsed_time/3600)%24,
+                ($elapsed_time/60)%60, $elapsed_time%60)."\n";
+$report .= "$records_scanned records scanned,"
+        ." $records_altered records altered,"
+        ." $records_unchanged records unchanged"
+        ."\n$files_missing files were missing out of $records_scanned";
+
+mail(EMAIL, "SCANNER REPORT - " . $today, nl2br($report));
+cout($report);
 exit(0);
 
 function __get_projects() {
@@ -118,23 +145,32 @@ function __get_projects() {
     return mysql_query($query);
 }
 
-function __extract_data($project_shared_id, $user_shared_id) {
+function __extract_data($project_shared_id, $user_shared_id,
+                        $cur_based_on_pid, $cur_root_based_on_pid) {
     cout("Extraction Starts: PROJECT-ID: $project_shared_id, USER-ID: $user_shared_id");
+
+    global $records_scanned;
+    $records_scanned++;
+    
     $sbfilepath = __get_sbfilepath($project_shared_id, $user_shared_id);
     //file does not exist, we should just give it a break :)
     if(empty($sbfilepath)) {
+        global $files_missing;
+        $files_missing++;
         return false;
     }
 
     //running main scratch analyzer and collecitng entries
     $entries = __run_scratch_analyzer($sbfilepath);
-    __store_based_ons($project_shared_id, $user_shared_id, $entries);
+    __store_based_ons($project_shared_id, $user_shared_id, $entries,
+                     $cur_based_on_pid, $cur_root_based_on_pid);
 
     cout("Extraction Ends: PROJECT-ID: $project_shared_id, USER-ID: $user_shared_id");
     return true;
 }
 
-function __store_based_ons($project_shared_id, $user_shared_id, $entries) {
+function __store_based_ons($project_shared_id, $user_shared_id, $entries,
+                            $cur_based_on_pid, $cur_root_based_on_pid) {
     if(empty($entries)) { return false; }
 
     //find based_on_pid and root_based_on_pid - reverse way
@@ -190,6 +226,15 @@ function __store_based_ons($project_shared_id, $user_shared_id, $entries) {
     }//end for
 
     if($root_based_on_pid) {
+        // don't need to do anything if based_on and root_based_on are same as current ones
+        if($based_on_pid == $cur_based_on_pid 
+            && $root_based_on_pid == $cur_root_based_on_pid) {
+            cout("SUCCESSFULLY SCANNED [NO UPDATE NEEDED]: $project_shared_id "
+                ."is based on $based_on_pid and root is $root_based_on_pid"
+            );
+            return true;
+        }
+        
         $query = 'UPDATE `projects` SET'
             . ' `based_on_pid` = '. $based_on_pid .', `root_based_on_pid` = ' . $root_based_on_pid
             . ' WHERE `id` = ' . $project_shared_id;
@@ -199,6 +244,9 @@ function __store_based_ons($project_shared_id, $user_shared_id, $entries) {
         if(!$safe_mode) {
             mysql_query($query);
         }
+
+        global $records_altered;
+        $records_altered++;
         cout("SUCCESSFULLY STORED: $project_shared_id "
                 ."is based on $based_on_pid and root is $root_based_on_pid");
 
