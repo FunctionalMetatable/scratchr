@@ -73,6 +73,9 @@ if(!is_writable(DAT_FILENAME) || !is_readable(DAT_FILENAME)) {
     exit;
 }
 
+$first_project_id = file_get_contents(DAT_FILENAME);
+if(empty($first_project_id)) { $first_project_id = 0; }
+
 //get projects
 $projects = __get_projects();
 if(empty($projects)) {
@@ -116,6 +119,7 @@ $report .= "$records_scanned records scanned,"
         ." $records_altered records altered,"
         ." $records_unchanged records unchanged"
         ."\n$files_missing files were missing out of $records_scanned"
+        ."\nFirst scanned project is $first_project_id"
         ."\nLast scanned project is $last_project_id";
 
 mail(EMAIL, "SCANNER REPORT - " . $today, $report);
