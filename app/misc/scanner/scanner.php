@@ -1,19 +1,9 @@
 <?php
-// php scan.php SAFE|UNSAFE(default SAFE) LIMIT(default 100)
-// php scan.php SAFE 1 1>scan.log 2>&1 &
-// tail scan.log
+// php scanner.php SAFE|UNSAFE(default SAFE) LIMIT(default 100)
+// php scanner.php SAFE 1 1>scanner.log 2>&1
+// tail scanner.log
 
-/*
- * constants
- */
-define('SERVER', 'localhost');
-define('USER', 'root');
-define('PASS', '');
-define('DATABASE', 'scratchr_dev');
-define('APP', '/var/www/scratch/app/');
-define('JAVA_PATH', 'java');
-define('PROJECT_PATH', '/var/www/scratch/app/webroot/static/projects/');
-define('EMAIL', 'user@example.com');
+require('config.php');
 
 /*
  * required funcitons
@@ -32,6 +22,7 @@ function cin() {
 }
 
 set_error_handler('error_handler');
+set_time_limit(0);
 
 /*
  * start operations
@@ -48,7 +39,7 @@ if(isset($argv[1]) && $argv[1] == 'UNSAFE') {
 if($safe_mode) {
     cout('~SAFE MODE!');
 }
-define('DAT_FILENAME', 'scan_'.$safe_mode.'.dat');
+define('DAT_FILENAME', 'scanner_'.$safe_mode.'.dat');
 
 //limit
 $limit = 100;
@@ -114,6 +105,7 @@ $records_unchanged = $records_scanned - $records_altered;
 $elapsed_time = microtime(1)-$start_time;
 date_default_timezone_set("US/Central");
 $today = date("l d F Y h:i:s A");
+$last_project_id = file_get_contents(DAT_FILENAME);
 
 $report = "SCANNER REPORT\n=============================\n";
 $report .=  $today . "\n";
@@ -123,9 +115,10 @@ $report .= "Time Taken: " . sprintf("%02d:%02d:%02d", ($elapsed_time/3600)%24,
 $report .= "$records_scanned records scanned,"
         ." $records_altered records altered,"
         ." $records_unchanged records unchanged"
-        ."\n$files_missing files were missing out of $records_scanned";
+        ."\n$files_missing files were missing out of $records_scanned"
+        ."\nLast scanned project is $last_project_id";
 
-mail(EMAIL, "SCANNER REPORT - " . $today, nl2br($report));
+mail(EMAIL, "SCANNER REPORT - " . $today, $report);
 cout($report);
 exit(0);
 
@@ -194,13 +187,14 @@ function __store_based_ons($project_shared_id, $user_shared_id, $entries,
         }
 
         //find out the user's id
-        $parent_user = mysql_query('SELECT id FROM users WHERE username = "' . $username . '"');
+        $parent_user = mysql_query('SELECT id FROM users WHERE username = "'
+            . mysql_real_escape_string($username) . '"');
         $parent_user = mysql_fetch_array($parent_user);
         $parent_uid  = $parent_user['id'];
 
         //find out the project's id
         $parent_project = mysql_query('SELECT id FROM projects WHERE user_id = '. $parent_uid 
-                                    .' AND name = "' . $projectname . '"');
+                                    .' AND name = "' . mysql_real_escape_string($projectname) . '"');
         $parent_project = mysql_fetch_array($parent_project);
         $parent_pid  = $parent_project['id'];
 
