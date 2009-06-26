@@ -1258,7 +1258,7 @@ class ProjectsController extends AppController {
 
 		$user_id = $this->getLoggedInUserID();
 		if ($user_id) {
-			$favorite = $this->Favorite->find("project_id = $pid AND user_id = $user_id");
+			$favorite = $this->Favorite->find("Favorite.project_id = $pid AND Favorite.user_id = $user_id");
 			if (!empty($favorite)) {
 				$this->Favorite->del($favorite['Favorite']['id']);
 				$prev_favoriters_count = (int)$project['Project']['num_favoriters'];
