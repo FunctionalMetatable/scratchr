@@ -1858,11 +1858,14 @@ class ProjectsController extends AppController {
                 $this->ProjectFlag->belongsTo = null;
                 $this->ProjectFlag->bindModel(array('belongsTo' => array('User' => array('className' => 'User', 'foreignKey' => 'admin_id')
                     )));
-                $project_flags = $this->ProjectFlag->find("project_id = $pid", 'ProjectFlag.*, User.username', 'ProjectFlag.id DESC');
+                $project_flags = $this->ProjectFlag->find("project_id = $pid", 'ProjectFlag.*, User.username', 'ProjectFlag.id DESC');			
                 $this->set('flags', $project_flags);
 
                 $admin_name = $project_flags['User']['username'];
                 $this->set('admin_name', $admin_name);
+				
+				$this->set_admin_name($pid, $current_user_id);
+				
 
                 $actual_time = '';
                 if($project_flags['ProjectFlag']['admin_id']) {
@@ -1871,7 +1874,7 @@ class ProjectsController extends AppController {
                 $feature_time = '';
                 $feature_on = '';
                 if ($project_flags['ProjectFlag']['feature_admin_id']) {
-                    $feature_on = $final_flags['ProjectFlag']['feature_timestamp'];
+                    $feature_on = $project_flags['ProjectFlag']['feature_timestamp'];
                     $feature_time = stampToDate($feature_on);
                 }
 
