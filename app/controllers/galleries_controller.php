@@ -2151,10 +2151,11 @@ Class GalleriesController extends AppController {
 			}
 			if ($inappropriate_count > $max_count) {
 				$this->Mgcomment->bindUser();
+				$linked_stringwflaggernames = "";
 				$allflaggers = $this->Mgcomment->findAll("comment_id = $comment_id");
 				foreach ($allflaggers as $flagger) {
 					$user_href =TOPLEVEL_URL.'/users/'.$flagger['User']['username'];
-					$linked_stringwflaggernames ="<a href ='$user_href'>";
+					$linked_stringwflaggernames .="<a href ='$user_href'>";
 					$linked_stringwflaggernames .= $flagger['User']['username'] . "</a>,";
 				}
 				
@@ -2162,10 +2163,11 @@ Class GalleriesController extends AppController {
 				$msg = "Users  $linked_stringwflaggernames have flagged this comment by  $linked_creatorname :\n$content\n $gallery_creater_url";
 				
 			}
+			
 			$this->Email->email(REPLY_TO_FLAGGED_GCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_GCOMMENT, $userflagger['User']['email']);
 		}
 		
-		$this->set_comment_errors($errors);
+		//$this->set_comment_errors($errors);
 		$this->set('comment', $this->Gcomment->find("Gcomment.id = $comment_id"));
 		$this->set('comment_id', $comment_id);
 		$this->set('urlname', $urlname);
