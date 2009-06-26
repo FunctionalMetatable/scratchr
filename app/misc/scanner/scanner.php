@@ -287,10 +287,17 @@ function __get_sbfilepath($project_shared_id, $user_shared_id) {
     
     $sbfilepath =  $ppath . $powner['username'] . "/" . $project_shared_id . ".sb";
 
+    //if sb file is not there
     if (!file_exists($sbfilepath)) {
-        cout(".SB NOT FOUND: $sbfilepath");
-        return false;
+        //try hidden extension
+        $sbfilepath .= '.hid';
+        //still not found
+        if (!file_exists($sbfilepath)) {
+            cout(".SB or .SB.HID NOT FOUND: $sbfilepath");
+            return false;
+        }
     }
+
     cout(".SB FILE FOUND: $sbfilepath\n");
     return $sbfilepath;
 }
