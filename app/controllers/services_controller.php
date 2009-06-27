@@ -772,7 +772,7 @@ Class ServicesController extends AppController {
         $exec = JAVA_PATH . ' -jar ' . $jar . '  ' . $arg . ' ' . $sbfilepath;
         $this->log("\nDBG: Executing: $exec\n");
         unset($entries);
-        exec("$exec 2>&1", $entries, $err);
+        exec("LANG=en_US.utf-8; $exec 2>&1", $entries, $err);
 
         $output = join("\n", $entries);
         if($err || empty($entries)) {
