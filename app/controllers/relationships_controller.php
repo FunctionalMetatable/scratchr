@@ -42,6 +42,18 @@ Class RelationshipsController extends AppController {
 					$this->FriendRequest->create();
 					$this->FriendRequest->save(array("FriendRequest"=>array("user_id"=>$user_id, "to_id"=>$friend_id, "status"=>"pending",'created_at'=>NULL)));
 					//echo "friend request sent";
+					
+					//Allow  recent friend to add project to my gallary
+					$galleries = $this->Gallery->findAll("Gallery.user_id = $user_id AND Gallery.type = 3 AND Gallery.usage = 'friends' AND Gallery.visibility = 'visible'");
+					//echo "<pre>";print_r($galleries);echo "</pre>"; exit;
+					foreach($galleries as $gallery)
+					{
+						if (!$this->GalleryMembership->hasAny("GalleryMembership.user_id = ".$friend_id." AND GalleryMembership.gallery_id = ".$gallery['Gallery']['id'])) {
+							$info = Array('GalleryMembership' => Array('id' => null, 'user_id' => $friend_id, 'gallery_id' => $gallery['Gallery']['id'], 'type' => 3, 'rank' => 'member'));
+							$this->GalleryMembership->save($info);
+							$this->GalleryMembership->id = false;
+						}
+					}
 				}
 			}
 		}

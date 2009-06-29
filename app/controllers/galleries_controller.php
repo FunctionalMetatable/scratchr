@@ -392,6 +392,18 @@ Class GalleriesController extends AppController {
 					$info = Array('GalleryMembership' => Array('id' => null, 'user_id' => $user_id, 'gallery_id' => $gallery_id, 'type' => 0, 'rank' => 'owner'));
 					$this->GalleryMembership->save($info);
 					
+					//if gallery is for friends
+					if($internal_permission == 3){
+						$this->Relationship->bindFriend();
+						$relations = $this->Relationship->findAll("Relationship.user_id = $user_id");
+			
+						foreach($relations as $relation){
+							$member = Array('GalleryMembership' => Array('id' => null, 'user_id' => $relation['Relationship']['friend_id'], 'gallery_id' => $gallery_id, 'type' => 3, 'rank' => 'member'));
+							$this->GalleryMembership->save($member);
+							$this->GalleryMembership->id = false;
+						}
+					}
+					
 					$this->set_creation_tags($gallery_id, $this->data);
 
 					if (!empty($this->params["form"]["create_gallery_icon"]["name"])) {
@@ -1618,14 +1630,18 @@ Class GalleriesController extends AppController {
 		} elseif ($option == "friends") {
 			$this->Gallery->saveField("usage", "friends");
 			$this->Gallery->saveField("type", 3);
-			$members_record = $this->GalleryMembership->findAll("GalleryMembership.gallery_id = $gallery_id");
-			foreach ($members_record as $member) {
-				if ($member['GalleryMembership']['user_id'] == $owner_id) {
-
-				} else {
-					$this->GalleryMembership->del($member['GalleryMembership']['id']);
-				}
+			$members_record = $this->GalleryMembership->deleteAll("GalleryMembership.gallery_id = $gallery_id AND GalleryMembership.user_id != $owner_id");
+			
+			$relations = $this->Relationship->findAll("user_id = $owner_id");
+			
+			foreach($relations as $relation){
+				$info = Array('GalleryMembership' => Array('id' => null, 'user_id' => $relation['Relationship']['friend_id'], 'gallery_id' => $gallery_id, 'type' => 3, 'rank' => 'member'));
+				$this->GalleryMembership->save($info);
+				$this->GalleryMembership->id = false;
 			}
+		
+			
+			
 		} elseif ($option == "byinvite") {
 			$this->Gallery->saveField("type", 4);
 			$this->Gallery->saveField("usage", "byinvite");
