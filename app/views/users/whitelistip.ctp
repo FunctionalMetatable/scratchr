@@ -38,7 +38,7 @@
 		</div>
 		
 		<div class="login_row">
-		<label for="User" ><?php ___('School or organization's name'); ?>&nbsp;:</label>
+		<label for="User" ><?php ___("School or organization's name"); ?>&nbsp;:</label>
 		<?php echo $form->input('WhitelistedIpAddress.school_name',array('size'=>28,'label'=>''))?>	
 		</div>
 		<div class="login_row">
