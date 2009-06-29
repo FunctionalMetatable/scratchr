@@ -1899,7 +1899,7 @@ class ProjectsController extends AppController {
             
 			if($based_on_pid) {
                 $this->Project->mc_connect();
-            	$based_on_data = $this->Project->mc_get('based_on', $project_id);
+            	$based_on_data = $this->Project->mc_get('based_on_data', $project_id);
 
                 if($based_on_data === false) {
                     //find out the based on username
