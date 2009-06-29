@@ -53,6 +53,7 @@ cout('');
 cout('============================================');
 
 $con = mysql_connect(SERVER, USER, PASS);
+//mysql_set_charset('utf8',$con);
 cout('Connected to database');
 
 if(mysql_select_db(DATABASE, $con)) {
@@ -62,6 +63,7 @@ else {
   cout('Database not found');
 }
 
+//mysql_query('SET NAMES utf8');
 //if the .dat file exists
 if(!file_exists(DAT_FILENAME)) {
     touch(DAT_FILENAME);
@@ -195,6 +197,7 @@ function __store_based_ons($project_shared_id, $user_shared_id, $entries,
             . mysql_real_escape_string($username) . '"');
         $parent_user = mysql_fetch_array($parent_user);
         $parent_uid  = $parent_user['id'];
+        cout("Parent uid: $parent_uid");
 
         //find out the project's id
         $parent_project = mysql_query('SELECT id FROM projects WHERE user_id = '. $parent_uid 
@@ -202,8 +205,8 @@ function __store_based_ons($project_shared_id, $user_shared_id, $entries,
         $parent_project = mysql_fetch_array($parent_project);
         $parent_pid  = $parent_project['id'];
 
-        //cout("Parent pid: $parent_pid");
-        //cout("Uploaded pid: $project_shared_id");
+        cout("Parent pid: $parent_pid");
+        cout("Uploaded pid: $project_shared_id");
 
         //uploaded project's id is not the same as parent's
         if(!empty($parent_pid)
