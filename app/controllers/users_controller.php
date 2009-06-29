@@ -2104,7 +2104,7 @@ class UsersController extends AppController {
 							
 							$this->Email->email($email,$contact_name, $msg, $subject,'TO_REQUEST_FOR_MULTIPLE_ACCOUNT',$email);
 				$this->Session->setFlash(___('Request has been send.Now you can create multiple account from same Ip.', true));
-				$this->redirect('/users/whitelistip');
+				$this->redirect('/signup');
 				}
 			}
 		}//!empty
