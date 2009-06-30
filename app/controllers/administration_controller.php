@@ -2129,7 +2129,7 @@
 		$this->User->id = $user_id;
 		$user = $this->User->read();
 		
-		$stats = $this->ViewStat->findAll("ViewStat.user_id = $user_id", "DISTINCT user_id, ipaddress");
+		$stats = $this->ViewStat->findAll("ViewStat.user_id = $user_id", "DISTINCT user_id, ipaddress",'ViewStat.timestamp DESC');
 		$final_ips = Array();
 		$counter = 0;
 		foreach ($stats as $current_stat) {
