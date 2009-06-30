@@ -731,5 +731,12 @@ Class Project extends AppModel
             $this->query($sql);
         }
     }
+
+    //clear the based on cache for this project
+    function clear_based_on_data($project_id) {
+        $this->mc_connect();
+        $this->mc_delete('based_on_data', $project_id);
+        $this->mc_close();
+    }
 }
 ?>

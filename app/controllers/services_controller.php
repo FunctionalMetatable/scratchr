@@ -669,7 +669,7 @@ Class ServicesController extends AppController {
 
     function __store_based_ons($project_shared_id, $user_shared_id, $entries) {
         //clear the based on cache for this project
-        //$this->Project->mc_delete('based_on_data', $project_shared_id);
+        $this->Project->clear_based_on_data($project_shared_id);
         
         if(empty($entries)) { return false; }
         
