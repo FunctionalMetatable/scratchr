@@ -665,8 +665,28 @@
 			$this->modelClass = "Pcomment";
 			$options = Array("sortBy"=>"timestamp", "sortByClass" => "Pcomment", 
 						"direction"=> "DESC", "url"=>"/administration/renderUser/$user_id/" . $option);
-			list($order,$limit,$page) = $this->Pagination->init("Pcomment.user_id = $user_id AND Pcomment.comment_visibility != 'visible'", Array(), $options);
-			$data = $this->Pcomment->findAll("Pcomment.user_id = $user_id AND Pcomment.comment_visibility != 'visible'", null, $order, $limit, $page);
+			list($order,$limit,$page) = $this->Pagination->init("Pcomment.user_id = $user_id AND Pcomment.comment_visibility != 'visible' AND Pcomment.comment_visibility != 'delbyparentcomment'", Array(), $options);
+			$data = $this->Pcomment->findAll("Pcomment.user_id = $user_id AND Pcomment.comment_visibility != 'visible' AND Pcomment.comment_visibility != 'delbyparentcomment'", null, $order, $limit, $page);
+			
+			$final_data = Array();
+			$counter = 0;
+			foreach ($data as $pcomment) {
+				$temp_comment = $pcomment;
+				$temp_user_id = $pcomment['Project']['user_id'];
+				$temp_user = $this->User->find("User.id = $temp_user_id");
+				$temp_user_name = $temp_user['User']['username'];
+				$temp_comment['Project']['username'] = $temp_user_name;
+				$final_data[$counter] = $temp_comment;
+				$counter++;
+			}
+			$this->set('data', $final_data);
+		}
+		if ($option == "dPparentcomments") {
+			$this->modelClass = "Pcomment";
+			$options = Array("sortBy"=>"timestamp", "sortByClass" => "Pcomment", 
+						"direction"=> "DESC", "url"=>"/administration/renderUser/$user_id/" . $option);
+			list($order,$limit,$page) = $this->Pagination->init("Pcomment.user_id = $user_id  AND Pcomment.comment_visibility = 'delbyparentcomment' ", Array(), $options);
+			$data = $this->Pcomment->findAll("Pcomment.user_id = $user_id  AND Pcomment.comment_visibility = 'delbyparentcomment' ", null, $order, $limit, $page);
 			
 			$final_data = Array();
 			$counter = 0;
@@ -685,8 +705,34 @@
 			$this->modelClass = "Gcomment";
 			$options = Array("sortBy"=>"timestamp", "sortByClass" => "Gcomment", 
 						"direction"=> "DESC", "url"=>"/administration/renderUser/$user_id/" . $option);
-			list($order,$limit,$page) = $this->Pagination->init("Gcomment.user_id = $user_id AND Gcomment.comment_visibility != 'visible'", Array(), $options);
-			$data = $this->Gcomment->findAll("Gcomment.user_id = $user_id AND Gcomment.comment_visibility != 'visible'", null, $order, $limit, $page);
+			list($order,$limit,$page) = $this->Pagination->init("Gcomment.user_id = $user_id AND Gcomment.comment_visibility != 'visible' AND Gcomment.comment_visibility != 'delbyparentcomment'", Array(), $options);
+			$data = $this->Gcomment->findAll("Gcomment.user_id = $user_id AND Gcomment.comment_visibility != 'visible' AND Gcomment.comment_visibility != 'delbyparentcomment'", null, $order, $limit, $page);
+			
+			$final_data = Array();
+			$counter = 0;
+			foreach ($data as $pcomment) {
+				$temp_comment = $pcomment;
+				$temp_user_id = $pcomment['Gallery']['user_id'];
+				if (!empty($temp_user_id)) {
+					$temp_user = $this->User->find("User.id = $temp_user_id");
+					$temp_user_name = $temp_user['User']['username'];
+					$temp_comment['Gallery']['username'] = $temp_user_name;
+				} else {
+					$temp_user_name = "";
+					$temp_comment['Gallery']['username'] = $temp_user_name;
+				}
+				
+				$final_data[$counter] = $temp_comment;
+				$counter++;
+			}
+			$this->set('data', $final_data);
+		}
+		if ($option == "dGparentcomments") {
+			$this->modelClass = "Gcomment";
+			$options = Array("sortBy"=>"timestamp", "sortByClass" => "Gcomment", 
+						"direction"=> "DESC", "url"=>"/administration/renderUser/$user_id/" . $option);
+			list($order,$limit,$page) = $this->Pagination->init("Gcomment.user_id = $user_id AND Gcomment.comment_visibility = 'delbyparentcomment'", Array(), $options);
+			$data = $this->Gcomment->findAll("Gcomment.user_id = $user_id AND Gcomment.comment_visibility = 'delbyparentcomment'", null, $order, $limit, $page);
 			
 			$final_data = Array();
 			$counter = 0;
