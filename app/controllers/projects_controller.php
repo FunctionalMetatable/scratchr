@@ -1865,7 +1865,7 @@ class ProjectsController extends AppController {
                 $admin_name = $project_flags['User']['username'];
                 $this->set('admin_name', $admin_name);
 				
-				$this->set_admin_name($pid, $current_user_id);
+				$this->set_admin_name($pid);
 				
 
                 $actual_time = '';
