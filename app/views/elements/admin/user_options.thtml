@@ -14,9 +14,19 @@
          			e($this->renderElement('adminuserdcomments', array('user_id' => $user_id, 'data'=> $data)));
         	 	e($ajax->divEnd("admin_project_comments"));
         	}
+			if ($option == "dPparentcomments") {
+		 		e($ajax->div("admin_project_comments"));
+         			e($this->renderElement('adminuserdparentcomments', array('user_id' => $user_id, 'data'=> $data)));
+        	 	e($ajax->divEnd("admin_project_comments"));
+        	}
 			if ($option == "dgcomments") {
 		 		e($ajax->div("admin_project_comments"));
          			e($this->renderElement('admin/user_gallery_comments', array('user_id' => $user_id, 'data'=> $data, 'show_hidden' => true)));
+        	 	e($ajax->divEnd("admin_project_comments"));
+        	}
+			if ($option == "dGparentcomments") {
+		 		e($ajax->div("admin_project_comments"));
+         			e($this->renderElement('admin/user_parent_dcomments', array('user_id' => $user_id, 'data'=> $data, 'show_hidden' => true)));
         	 	e($ajax->divEnd("admin_project_comments"));
         	}
 			if ($option == "mpcomments") {

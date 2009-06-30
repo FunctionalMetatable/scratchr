@@ -1,3 +1,4 @@
+
 <?php
 	e($this->renderElement('admin/admin_index', Array()));
 ?>
@@ -97,8 +98,22 @@
 						}
 					 
 					?>
-					<a href="<?php echo $html->url('/administration/viewuser/'.$user_id)?>/dpcomments" class="<?php echo $link_class?>">Deleted Comments (Project)</a>
-				</li>   
+					<a href="<?php echo $html->url('/administration/viewuser/'.$user_id)?>/dpcomments" class="<?php echo $link_class?>" >Deleted Comments (Project)</a>
+				</li>
+				<?php if($option == "dpcomments" || $option == "dPparentcomments"):?>
+				<!--delbyparentcomment section-->
+				<li class="admin_tab" style="font-size:10px">
+					<?php 
+						if ($option == "dPparentcomments") {
+							$link_class = "admin_tab_link_active";
+						} else {
+							$link_class = "admin_tab_link";
+						}
+					 
+					?>
+					<a href="<?php echo $html->url('/administration/viewuser/'.$user_id)?>/dPparentcomments" class="<?php echo $link_class?>">Deleted Comments By Parent(Project)</a>
+				</li>
+				<?php endif;?>
 			</ul> 
 		</div>
 		<div id="admin_tabs">
@@ -114,6 +129,21 @@
 					?>
 					<a href="<?php echo $html->url('/administration/viewuser/'.$user_id)?>/dgcomments" class="<?php echo $link_class?>">Deleted Comments (Gallery)</a>
 				</li>
+				<?php if($option == "dgcomments" || $option == "dGparentcomments"):?>
+				<!--delbyparentcomment section-->
+				<li class="admin_tab" style="font-size:10px">
+					<?php 
+						if ($option == "dGparentcomments") {
+							$link_class = "admin_tab_link_active";
+						} else {
+							$link_class = "admin_tab_link";
+						}
+					 
+					?>
+					<a href="<?php echo $html->url('/administration/viewuser/'.$user_id)?>/dGparentcomments" class="<?php echo $link_class?>">Deleted Comments By Parent(Gallery)</a>
+				</li>
+				<?php endif;?>
+				
 				<li class="admin_tab">
 					<?php 
 						if ($option == "mpcomments") {

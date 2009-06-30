@@ -722,6 +722,14 @@ Class GalleriesController extends AppController {
 		} else {
 			$this->hide_gcomment($comment_id, "delbyadmin");
 		}
+		$commentLists = $this->Gcomment->findAll('Gcomment.gallery_id = '
+                    . $gallery_id . ' AND Gcomment.reply_to = '. $comment_id,'id');
+			
+			foreach($commentLists as $commentList){
+				$this->Gcomment->id = $commentList['Gcomment']['id'];
+				$this->Gcomment->saveField('comment_visibility','delbyparentcomment');
+				$this->Gcomment->id = false;
+			}
         $this->deleteCommentsFromMemcache($gallery_id);
 		exit;
 	}
