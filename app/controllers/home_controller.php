@@ -276,8 +276,7 @@ Class HomeController extends AppController {
                 array('hasMany' => array('GalleryProject'))
             );
         return $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'"
-                                                . $exclude_clause . $exclude_user_id_clause
-                                                . ' GROUP BY Project.user_id',
+                                                . $exclude_clause . $exclude_user_id_clause,
             NULL, "FeaturedProject.id DESC", NUM_FEATURED_PROJECTS, NULL, 2);
     }
 
