@@ -630,7 +630,8 @@ Class GalleriesController extends AppController {
 			$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND IgnoredUser.blocker_id = $gallery_owner_id");
 			if ($ignore_count == 0) {
 				//do not notify if gallery owner is the commenter
-				if($guser_id != $commenter_id) {
+				if(!empty($new_tcomment['Gcomment']['id'])
+                    && $guser_id != $commenter_id) {
 					$this->notify('new_gcomment', $guser_id,
 								array('gallery_id' => $gallery_id,
 								'from_user_name' => $commenter_username,

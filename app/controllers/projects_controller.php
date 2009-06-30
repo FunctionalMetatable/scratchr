@@ -374,8 +374,9 @@ class ProjectsController extends AppController {
 			//if comment by ignored user do not send notification
 			$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND IgnoredUser.blocker_id = $project_owner_id");
 			if ($ignore_count == 0) {
-				//if user is not commenting on his own project
-				if($logged_id != $puser_id) {
+                //comment is saved and user is not commenting on his own project
+				if(!empty($new_pcomment['Pcomment']['id'])
+                    && $logged_id != $puser_id) {
 					$this->notify('new_pcomment', $puser_id,
 									array('project_id' => $pid,
 										'from_user_name' => $commenter_username,
