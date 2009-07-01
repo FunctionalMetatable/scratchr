@@ -868,7 +868,7 @@ class ProjectsController extends AppController {
 				$msg = "user $linked_flaggername ($user_id) just flagged $project_url \n Reason: \n " . $msgin;			
 
 			
-				$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  $flaggername, $msg, $subject, TO_FLAGGED_PROJECT, $userflagger['User']['email']);
+				$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, FROM_FLAGGED_PROJECT);
 				$this->Flagger->save($this->data);
 				$prev_flaggers_count = (int)$project['Project']['flagit'];
 				$this->Project->saveField('flagit',($prev_flaggers_count + 1));
@@ -886,7 +886,7 @@ class ProjectsController extends AppController {
 						$msg = "Project *automatically censored* because it reached the maximum number of flags.\n";
 						$msg .= "user $linked_flaggername ($user_id) just flagged $project_url";
 						$subject= "Project '$pname' censored";
-						$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, DEFAULT_EMAIL_FROM);
+						$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, FROM_FLAGGED_PROJECT);
 						
 						$this->notify('project_removed_auto', $creator['User']['id'],
 										array('project_id' => $pid));
