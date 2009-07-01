@@ -36,6 +36,7 @@ $this->params['webservices']
  define("NUM_MAX_PROJECT_FLAGS", 3);
  define("NUM_MAX_TAG_FLAGS", 1);
  define("MAX_COMMENT_LENGTH", 500);
+  define("COMMENT_LENGTH", 10);
  define("COMMENT_SPAM_MAX_DAYS", 3);
  define("COMMENT_SPAM_CLEAR_COMMENTS", 5);
  define("COMMENT_SPAM_CLEAR_MINUTES", 2);

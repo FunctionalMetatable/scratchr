@@ -2514,12 +2514,14 @@ Class GalleriesController extends AppController {
 				$days = COMMENT_SPAM_MAX_DAYS;
 				$max_comments = COMMENT_SPAM_CLEAR_COMMENTS;
 				$time_limit = COMMENT_SPAM_CLEAR_MINUTES;
+				$comment_length = strlen($comment);
 				$recent_comments_by_user = $this->Gcomment->findAll("Gcomment.user_id =  $commenter_id AND Gcomment.timestamp > now() - interval $time_limit minute AND Gcomment.gallery_id = $gallery_id");
 				if(sizeof($recent_comments_by_user)>$max_comments)
 				{
 				  $excessive_commenting = true;
 				}
 				$nowhite_comment = ereg_replace("[ \t\n\r\f\v]{1,}", "[ \\t\\n\\r\\f\\v]*", $comment);
+				if($comment_length > COMMENT_LENGTH):
 				$similar_comments = $this->Gcomment->findAll("Gcomment.content RLIKE '".$nowhite_comment."' AND Gcomment.timestamp > now() - interval $days  day AND Gcomment.user_id = $commenter_id");
 				preg_match_all("/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/", $comment, $url_matches);
 				for($i=0; $i<count($url_matches[0]); $i++)
@@ -2534,7 +2536,7 @@ Class GalleriesController extends AppController {
 				{
 				    $possible_spam = true;
 				}
-
+				endif;
 				if(isInappropriate($comment)) {
 					$vis = 'censbyadmin';
 					$this->notify('inappropriate_gcomment_reply', $user_id,
@@ -2544,7 +2546,7 @@ Class GalleriesController extends AppController {
 					$vis = 'visible';
 				}
 				
-				$comment_length = strlen($comment);
+				
 				if($possible_spam)
 				{
 				  ___("Sorry, you have posted a very similar message recently.");
@@ -2556,8 +2558,8 @@ Class GalleriesController extends AppController {
 				else if ($comment_length > MAX_COMMENT_LENGTH) {
 					
 				} else {
-					$duplicate_record = $this->Gcomment->find("Gcomment.gallery_id = $gallery_id AND Gcomment.user_id = $user_id AND Gcomment.content = '$comment'");
-
+					$duplicate_record = $this->Gcomment->find("Gcomment.gallery_id = $gallery_id AND Gcomment.user_id = $user_id AND Gcomment.content = '$comment' AND Gcomment.reply_to != -100");
+					if($comment_length > COMMENT_LENGTH):
 					if (empty($duplicate_record)) {
 						$duplicate = false;
 					} else {
@@ -2570,7 +2572,13 @@ Class GalleriesController extends AppController {
 							$duplicate = false;
 						}
 					}
-					
+					else:
+					if (empty($duplicate_record)) {
+						$duplicate = false;
+					} else {
+							$duplicate = true;
+					}
+					endif;
 					if ($duplicate) {
 					} else {
 						$new_reply = array('Gcomment'=>array('id' => null, 'gallery_id'=>$gallery_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $source_id));
