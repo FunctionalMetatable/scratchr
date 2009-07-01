@@ -684,7 +684,12 @@ Class ServicesController extends AppController {
             }
 
             $entry = str_replace('!undefined!', '', $entries[$i]);
-            list($date, $event, $projectname, $username, $author) = explode("\t", $entry);
+            $words = explode("\t", $entry);
+            //ignore, if it has less than 5 values
+            if(count($words) < 5) {
+                continue;
+            }
+            list($date, $event, $projectname, $username, $author) = $words;
             //$this->log("\nDBG: Scanning: $event $projectname $username\n");
 
             if($event != 'share' || $this->__is_empty($projectname)
