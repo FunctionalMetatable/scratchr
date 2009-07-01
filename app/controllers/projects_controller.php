@@ -2501,16 +2501,20 @@ class ProjectsController extends AppController {
 
 				// SPAM checking
 				$possible_spam = false;
+				$duplicate = false;
 				$excessive_commenting = false;
 				$days = COMMENT_SPAM_MAX_DAYS;
 				$max_comments = COMMENT_SPAM_CLEAR_COMMENTS;
 				$time_limit = COMMENT_SPAM_CLEAR_MINUTES;
+				$comment_length = strlen($comment);
 				$recent_comments_by_user = $this->Pcomment->findAll("Pcomment.user_id =  $commenter_id AND Pcomment.created > now() - interval $time_limit minute AND Pcomment.project_id = $project_id");
 				if(sizeof($recent_comments_by_user)>$max_comments)
 				{
 				  $excessive_commenting = false;
 				}
 				$nowhite_comment = ereg_replace("[ \t\n\r\f\v]{1,}", "[ \\t\\n\\r\\f\\v]*", $comment);
+				if($comment_length > COMMENT_LENGTH):
+				
 				$similar_comments = $this->Pcomment->findAll("Pcomment.content RLIKE '".$nowhite_comment."' AND Pcomment.created > now() - interval $days  day AND Pcomment.user_id = $commenter_id");
 				preg_match_all("/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/", $comment, $url_matches);
 				for($i=0; $i<count($url_matches[0]); $i++)
@@ -2523,9 +2527,10 @@ class ProjectsController extends AppController {
 				}
 				if(sizeof($similar_comments)>1)
 				{
-				    $possible_spam = true;
+				   
+					$possible_spam = true;
 				}
-
+				endif;
 				if(isInappropriate($comment)) {
 					$vis = 'censbyadmin';
 					$this->notify('inappropriate_pcomment_reply', $user_id,
@@ -2536,7 +2541,7 @@ class ProjectsController extends AppController {
 					$vis = 'visible';
 				}
 				
-				$comment_length = strlen($comment);
+				 
 				if($possible_spam)
 				{
 				  ___("Sorry, you have posted a very similar message recently.");
@@ -2548,23 +2553,32 @@ class ProjectsController extends AppController {
 				else if ($comment_length > MAX_COMMENT_LENGTH) {
 					
 				} else {
-					$duplicate_record = $this->Pcomment->find("Pcomment.project_id = $project_id AND Pcomment.user_id = $user_id AND Pcomment.content = '$comment'");
-
+				
+					$duplicate_record = $this->Pcomment->find("Pcomment.project_id = $project_id AND Pcomment.user_id = $user_id AND Pcomment.content = '$comment' AND Pcomment.reply_to!= -100");
+					if($comment_length > COMMENT_LENGTH):
 					if (empty($duplicate_record)) {
 						$duplicate = false;
 					} else {
 						$original = $duplicate_record['Pcomment']['created'];
 						$today = time(); /* Current unix time */
-						$since = $today - strtotime($original);
+						$since = $today - strtotime($original);echo $since;
 						if ($since < 60) {
 							$duplicate = true;
 						} else {
 							$duplicate = false;
 						}
 					}
-					
-					if ($duplicate) {
+					else:
+					if (empty($duplicate_record)) {
+						$duplicate = false;
 					} else {
+					$duplicate = true;
+
+					}
+					endif;
+					if ($duplicate) {
+					 ___("Sorry, you have posted a very similar message recently.");
+					} else { 
 						$new_reply = array('Pcomment'=>array('id' => null, 'project_id'=>$project_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $parent_id));
 						$this->Pcomment->save($new_reply);
                         $pcomment_id = $this->Pcomment->getInsertID();
