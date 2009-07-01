@@ -699,13 +699,22 @@ Class ServicesController extends AppController {
             
             //find out the user's id
             $parent_user = $this->User->find(array('username' => $username), 'id');
+            if(empty($parent_user)) {
+                $this->log("\nDBG: Parent user not found\n");
+                continue;
+            }
             $parent_uid  = $parent_user['User']['id'];
+            $this->log("\nDBG: Parent uid: $parent_uid\n");
+            
             //find out the project's id
             $this->Project->recursive = -1;
             $parent_project = $this->Project->find(
                              array('user_id' => $parent_uid, 'name' => $projectname));
+            if(empty($parent_project)) {
+                $this->log("\nDBG: Parent project not found\n");
+                continue;
+            }
             $parent_pid  = $parent_project['Project']['id'];
-
             $this->log("\nDBG: Parent pid: $parent_pid\n");
             $this->log("\nDBG: Uploaded pid: $project_shared_id\n");
 
