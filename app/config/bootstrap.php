@@ -49,6 +49,7 @@ $this->params['webservices']
  define("TO_FLAGGED_PCOMMENT", "caution@scratch.mit.edu");
  define("REPLY_TO_FLAGGED_PROJECT", "caution@scratch.mit.edu");
  define("TO_FLAGGED_PROJECT", "caution@scratch.mit.edu");
+ define("FROM_FLAGGED_PROJECT", "caution@scratch.mit.edu");
  define("REPLY_TO_FLAGGED_GCOMMENT", "caution@scratch.mit.edu");
  define("TO_FLAGGED_GCOMMENT", "caution@scratch.mit.edu");
  define("REPLY_TO_FLAGGED_PTAG", "caution@scratch.mit.edu");
