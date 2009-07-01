@@ -200,6 +200,10 @@ function __store_based_ons($project_shared_id, $user_shared_id, $entries,
         //find out the user's id
         $parent_user = mysql_query('SELECT id FROM users WHERE username = "'
             . mysql_real_escape_string($username) . '"');
+        if(empty($parent_user)) {
+            cout("Parent user not found");
+            continue;
+        }
         $parent_user = mysql_fetch_array($parent_user);
         $parent_uid  = $parent_user['id'];
         cout("Parent uid: $parent_uid");
@@ -207,6 +211,10 @@ function __store_based_ons($project_shared_id, $user_shared_id, $entries,
         //find out the project's id
         $parent_project = mysql_query('SELECT id FROM projects WHERE user_id = '. $parent_uid 
                                     .' AND name = "' . mysql_real_escape_string($projectname) . '"');
+        if(empty($parent_project)) {
+            cout("Parent project not found");
+            continue;
+        }
         $parent_project = mysql_fetch_array($parent_project);
         $parent_pid  = $parent_project['id'];
 
