@@ -471,13 +471,15 @@
 	function delete_comment_ajax($user_id, $comment_id, $typeof = "pcomment") {
 		if ($typeof == "pcomment") {
 			$this->Pcomment->id = $comment_id;
-			$this->Pcomment->read();
+			$pcomments = $this->Pcomment->read();
 			$this->Pcomment->saveField("comment_visibility", "delbyadmin") ;
+			$this->deleteCommentsFromMemcache($pcomments['Pcomment']['project_id']);
 			exit;
 		} elseif ($typeof == "gcomment") {
 			$this->Gcomment->id = $comment_id;
-			$this->Gcomment->read();
+			$gcomments = $this->Gcomment->read();
 			$this->Gcomment->saveField("comment_visibility", "delbyadmin") ;
+			$this->deleteGcommentsFromMemcache($gcomments['Gcomment']['gallery_id']);
 			exit;
 		}
 	}
@@ -2613,6 +2615,28 @@
         print_r($memcache->getExtendedStats());
         echo '</pre>';
         exit;
+    }
+	
+	function deleteCommentsFromMemcache($project_id) {
+        $this->Pcomment->mc_connect();
+        for($i=1; $i<=PCOMMENT_CACHE_NUMPAGE; $i++) {
+            $mc_key = $project_id.'__'.$i;
+            $this->Pcomment->mc_delete('pcomments', $mc_key);
+            $mc_key = $project_id.'_1_'.$i;
+            $this->Pcomment->mc_delete('pcomments', $mc_key);
+        }
+        $this->Pcomment->mc_close();
+    }
+	
+	 function deleteGcommentsFromMemcache($gallery_id) {
+        $this->Gcomment->mc_connect();
+        for($i=1; $i<=GCOMMENT_CACHE_NUMPAGE; $i++) {
+            $mc_key = $gallery_id.'__'.$i;
+            $this->Gcomment->mc_delete('gcomments', $mc_key);
+            $mc_key = $gallery_id.'_1_'.$i;
+            $this->Gcomment->mc_delete('gcomments', $mc_key);
+        }
+        $this->Gcomment->mc_close();
     }
 }
 ?>
