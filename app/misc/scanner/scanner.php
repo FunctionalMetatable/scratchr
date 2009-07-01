@@ -184,7 +184,12 @@ function __store_based_ons($project_shared_id, $user_shared_id, $entries,
         }
 
         $entry = str_replace('!undefined!', '', $entries[$i]);
-        list($date, $event, $projectname, $username, $author) = explode("\t", $entry);
+        $words = explode("\t", $entry);
+        //ignore, if it has less than 5 values
+        if(count($words) < 5) {
+            continue;
+        }
+        list($date, $event, $projectname, $username, $author) = $words;
         cout("Scanning: $event $projectname $username");
 
         if($event != 'share' || __is_empty($projectname)
