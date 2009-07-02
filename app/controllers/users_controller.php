@@ -6,7 +6,7 @@ class UsersController extends AppController {
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 
 	'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject','AdminComment', 'User','Project','Favorite', 'Pcomment',
 	'UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification',
-	'Shariable','Thank', 'ViewStat','Curator','WhitelistedIpAddress');
+	'Shariable','Thank', 'ViewStat','Curator','WhitelistedIpAddress','BlockedIp');
 	
 
 	function admin_index() {
@@ -63,8 +63,13 @@ class UsersController extends AppController {
 		
 		$signup_interval = SIGNUP_INTERVAL;
 		
+		$usedIp = $this->ViewStat->hasAny("ViewStat.ipaddress = $client_ip AND ViewStat.timestamp > DATE_SUB(NOW(), INTERVAL 30 DAY)");
+		if($usedIp){
+		$isUsedIpblocked = $this->BlockedIp->hasAny("BlockedIp.ip = $client_ip ");
+		}
+		
 		 $isBlocked_from_this_ip =$this->User->hasAny("User.ipaddress = $client_ip and User.status='locked'");
-		if($isBlocked_from_this_ip)
+		if($isBlocked_from_this_ip || $isUsedIpblocked)
 		{
 			$this->redirect("/users/us_banned");
 			return;
