@@ -21,6 +21,7 @@ declare  cur_friend_project cursor for
        select  id
        from projects
        where user_id = cur_friend_id
+       and (proj_visibility='visible' OR proj_visibility='censbycomm' OR proj_visibility='censbyadmin')
        order by created desc
        limit 3;
  declare  continue handler for not found
