@@ -477,8 +477,8 @@ class ProjectsController extends AppController {
 					
 					foreach($all_content as $pcontent)
 					{
-						$this->Pcomment->id =$pcontent['Pcomment']['content'] ;
-						$content = $pcontent['Pcomment']['id'];
+						$this->Pcomment->id =$pcontent['Pcomment']['id'] ;
+						$content = $pcontent['Pcomment']['content'];
 						$this->Pcomment->query("update pcomments set comment_visibility = 'delbyadmin' where id=".$pcontent['Pcomment']['id'] );
                         $this->deleteCommentsFromMemcache($pcontent['Pcomment']['project_id']);
                         $subject= "Comment deleted because it was flagged by an admin";
