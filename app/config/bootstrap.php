@@ -201,7 +201,7 @@ define('CACHE_DURATION', '1 day');
 /**
  * Memcache constants
  */
-define("MEMCACHE_SERVER", 'scratchstore'); //memcache server
+define("MEMCACHE_SERVER", 'localhost'); //memcache server
 define("MEMCACHE_PORT", 11211); //memcache port
 define("HOMEL_PAGE_TTL", 60); //for home page
 define("HOMEL_NEW_PROJECTS_TTL", 60);
@@ -243,7 +243,7 @@ define('FILTERED_HOST', 'filtered.scratch.mit.edu');
 /***
 * Define Java path
 **/
-define('JAVA_PATH', 'java');
+define('JAVA_PATH', '/usr/java/latest/bin/java');
 
  /**
   * Returns theme url for html link destination
