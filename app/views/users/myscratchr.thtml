@@ -174,6 +174,9 @@ function langList($countries) {
 		<?php if ($isMe || $isAdmin):?>
 			<p>
             <a onclick="document.getElementById('user_icon').style.display='block'; return false;" href="#"><?php ___('change picture'); ?></a>
+			<?php if($isAdmin):?>
+			<br /><a href="<?php echo $html->url('/administration/viewuser/')?><?php echo $user_id?>">View Details</a>
+			<?php endif;?>
             <div class="std_error"><?php if(isset($upload_error)) echo '<br/>'.$upload_error; ?> </div>
             </p>
 			<form id="user_icon" style="display:none" action="<?php echo $html->url('/users/updatepic/')?><?php e($user['id'])?>" method="post" enctype='multipart/form-data'>
