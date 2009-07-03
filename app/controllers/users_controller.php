@@ -723,50 +723,7 @@ class UsersController extends AppController {
 	  $this->set('isId',$isId);
 	  $this->set('username',$username);
 	}//function pwdreset
-	/**
-	/* Ajax pagination helper
-	**/
-	function renderFriendProjects($user_id)
-	{
-		$project_list = array();
-		$friends_project =array();
-		
-		$config = $this->User->getdbName();
-		$mysqli = new mysqli($config['host'], $config['login'], $config['password'], $config['database']);
-		$rs = $mysqli->query( "CALL top3friendproject($user_id)" );
-		
-        while($row = $rs->fetch_object())
-        {
-            array_push($project_list,$row->project_id);
-        }
-        mysqli_free_result($rs);
-		mysqli_close($mysqli); 
-		
-		$project_ids = implode(',',$project_list);
-		$page_limit = NUM_FRIEND_PROJECTS;
-		$this->PaginationTernary->show = $page_limit;
-		$this->modelClass = "Project";
-		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );	
-		
-		if(!empty($project_ids)):
-            list($order,$limit,$page) = $this->PaginationTernary->init("Project.id in (".$project_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
 
-            $friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,$order, $limit, $page);
-		endif;
-		$this->set('friends_project_list',$friends_project);
-
-        $user_record = $this->User->find("id = '$user_id'");
-		$username = $user_record['User']['username'];
-        $isMe = $this->activeSession($user_id);
-		
-        $this->set('username', $username);
-        $this->set('isMe', $this->activeSession($user_id));
-
-		$this->render('render_friend_projects_ajax', 'ajax');
-		return;
-		
-	}
-	
 	function renderProjects($urlname=null, $option = "projects") {
 		$this->autoRender = false;
 	
@@ -1089,7 +1046,7 @@ class UsersController extends AppController {
 		}
 		
 		//populate friends 3 latest project
-		$project_list = array();
+		/*$project_list = array();
 		$friends_project =array();
 		
 		$config = $this->User->getdbName();
@@ -1104,12 +1061,11 @@ class UsersController extends AppController {
 		$key = 'friends-project-';
         $ttl = FRIENDS_PROJECT_CACHE_TTL;  
 		
-       
-		$project_ids = implode(',',$project_list);
+        $project_ids = implode(',',$project_list);
 		$page_limit = NUM_FRIEND_PROJECTS;
 		$this->PaginationTernary->show = $page_limit;
 		$this->modelClass = "Project";
-		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );	
+		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC", "url"=>"/users/renderFriendProjects/".$user_id );*/
 		#fetch friends froject without memchached
 		/*if(!empty($project_ids)):
 		list($order,$limit,$page) = $this->PaginationTernary->init("Project.id in (".$project_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options);
@@ -1118,7 +1074,7 @@ class UsersController extends AppController {
 		$this->set('friends_project_list',$friends_project);
 		*/
 		#fetch friends froject using memchached.
-		if(!empty($project_ids)):
+		/*if(!empty($project_ids)):
 		$projects_count = $this->_getFriendsProjectsCount("Project.id in (".$project_ids.") ". " AND Project.proj_visibility = 'visible'",
                                                 $key, $ttl);
 		list($order,$limit,$page) = $this->PaginationTernary->init("Project.id in (".$project_ids.") ". " AND Project.proj_visibility = 'visible'", Array(), $options, $projects_count);
@@ -1131,8 +1087,7 @@ class UsersController extends AppController {
 			$this->Project->mc_close();
 		}
 		endif;
-		$this->set('friends_project_list',$friends_project);
-		
+		$this->set('friends_project_list',$friends_project);*/		
 		
 		//sets the admin_comment if one exists for this user
 		$admin_comment_record = $this->AdminComment->findCount("user_id = $user_id");
