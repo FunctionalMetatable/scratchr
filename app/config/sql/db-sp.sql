@@ -13,10 +13,6 @@ begin
  declare  cur_friend_id varchar(255);
  declare  cur_friend_project_id varchar(255);
   declare  cur_friend cursor for
-       select  distinct user_id
-       from relationships
-       where friend_id = user_id_param
-       union
        select  distinct friend_id
        from relationships
        where user_id = user_id_param;
