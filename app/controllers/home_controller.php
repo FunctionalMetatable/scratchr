@@ -16,13 +16,11 @@ Class HomeController extends AppController {
     }
 	
     function index() {
-        $memcache = new Memcache;
-        $memcache->connect(MEMCACHE_SERVER, MEMCACHE_PORT) or die ("Could not connect");
-        $prefix = MEMCACHE_PREFIX;
+        $this->Project->mc_connect();
         $project_ids = array();
        	$user_ids =array();
-	$this->set('client_ip', $this->RequestHandler->getClientIP());
-        $home_projects = $memcache->get("$prefix-home_projects");
+        $this->set('client_ip', $this->RequestHandler->getClientIP());
+        $home_projects = $this->Project->mc_get('home_projects');
         if(!$home_projects) {
 			$curator_name = $this->___getCuratorName();
 			
@@ -79,20 +77,21 @@ Class HomeController extends AppController {
                                    'topremixed' => $topremixed,
                                    'toploved' => $toploved,
                                    'topviewed' => $topviewed,
-                                   'topdownloaded' => $topdownloaded,
+                                   //'topdownloaded' => $topdownloaded,
 								   'favorites' => $favorites,
 								   'curator_name' =>$curator_name,
 								   'clubedprojects' => $clubedprojects
                                 );
                                 
-            $memcache->set("$prefix-home_projects", $home_projects, false, 3600) or die ("Failed to save data at the server");
+            $this->Project->mc_set('home_projects', $home_projects,
+                                    false, HOMEL_PAGE_TTL);
         }
         else {
             $featured       = $home_projects['featured'];
             $topremixed     = $home_projects['topremixed'];
             $toploved       = $home_projects['toploved'];
             $topviewed      = $home_projects['topviewed'];
-            $topdownloaded  = $home_projects['topdownloaded'];
+            //$topdownloaded  = $home_projects['topdownloaded'];
 			$favorites      = $home_projects['favorites'];
 			$curator_name   = $home_projects['curator_name'];
 			$clubedprojects   = $home_projects['clubedprojects'];
@@ -102,26 +101,20 @@ Class HomeController extends AppController {
         $this->set('topremixed', $topremixed);
         $this->set('toploved', $toploved);
         $this->set('topviewed', $topviewed);
-//        $this->set('topdownloaded', $topdownloaded);
+        //$this->set('topdownloaded', $topdownloaded);
 		$this->set('favorites', $favorites);
 		$this->set('username',$curator_name);
 		$this->set('clubedprojects',$clubedprojects);
 		
 		
 		if($this->isLoggedIn()) {
-            $session_UID = $this->getLoggedInUserID();
-
-            $myfriendsprojects = $memcache->get("$prefix-myfriendsprojects-$session_UID");
-            if( !$myfriendsprojects ) {
-                $myfriendsprojects = $this->___getMyFriendsProject($session_UID);
-                $memcache->set("$prefix-myfriendsprojects-$session_UID", $myfriendsprojects, false, 300) or die ("Failed to save data at the server");
-            }
+            $myfriendsprojects = $this->Project->getMyFriendsProject($this->getLoggedInUserID());
             $this->set('friendsprojects', $myfriendsprojects);
             
-            $newprojects = $memcache->get("$prefix-newprojects");
-            if ( !$newprojects ) {
+            $newprojects = $this->Project->mc_get("newprojects");
+            if (!$newprojects) {
                 $newprojects = $this->__getNewProjects();
-                $memcache->set("$prefix-newprojects", $newprojects, false, 60) or die ("Failed to save data at the server");
+                $this->Project->mc_set("newprojects", $newprojects, false, HOMEL_NEW_PROJECTS_TTL);
             }
             $this->set('newprojects', $newprojects);
         }
@@ -136,96 +129,78 @@ Class HomeController extends AppController {
         }
         $this->set('toprandoms', $toprandoms);
 */      
-        $scratch_club = $memcache->get("$prefix-scratch_club");
-        if ( $scratch_club == "" ) {
-       	    $scratch_clubtmp = $this->__getScratchClub();
-            $memcache->set("$prefix-scratch_club", $scratch_clubtmp, false, 3600) or die ("Failed to save data at the server");
-            $this->set('scratch_club', $scratch_clubtmp);
-        } else {
-            $this->set('scratch_club', $scratch_club);
+        $scratch_club = $this->Project->mc_get("scratch_club");
+        if (!$scratch_club) {
+       	    $scratch_club = $this->__getScratchClub();
+            $this->Project->mc_set("scratch_club", $scratch_club, false, HOME_SCRATCH_CLUB_TTL);
         }
-
-        $featuredthemes = $memcache->get("$prefix-featuredthemes");
-        if ( !$featuredthemes ) {
+        $this->set('scratch_club', $scratch_club);
+        
+        $featuredthemes = $this->Project->mc_get("featuredthemes");
+        if (!$featuredthemes) {
        	    $featuredthemes = $this->__getFeaturedGalleries();
             $featuredthemes_ids   = Set::extract('/Gallery/id', $featuredthemes);
             $this->Gallery->register_frontpage($featuredthemes_ids, 'featured');
-            $memcache->set("$prefix-featuredthemes", $featuredthemes, false, 3600) or die ("Failed to save data at the server");
+            $this->Project->mc_set("featuredthemes", $featuredthemes, false, HOME_FEATURED_THEMES_TTL);
         }
         $this->set('featuredthemes', $featuredthemes);
         
-        $recentvisitors = $memcache->get("$prefix-recentvisitors");
-        if ( $recentvisitors == "" ) {
-       	    $recentvisitorstmp = $this->__getRecentVisitors();
-            $memcache->set("$prefix-recentvisitors", $recentvisitorstmp, false, 600) or die ("Failed to save data at the server");
-            $this->set('recentvisitors', $recentvisitorstmp);
-        } else {
-            $this->set('recentvisitors', $recentvisitors);
+        $recentvisitors = $this->Project->mc_get("recentvisitors");
+        if (!$recentvisitors) {
+       	    $recentvisitors = $this->__getRecentVisitors();
+            $this->Project->mc_set("recentvisitors", $recentvisitors, false, HOME_RECENT_VISITORS_TTL);
         }
-
-        $newmembers = $memcache->get("$prefix-newmembers");
-        if ( $newmembers == "" ) {
-       	    $newmemberstmp = $this->__getNewMembers();
-            $memcache->set("$prefix-newmembers", $newmemberstmp, false, 600) or die ("Failed to save data at the server");
-            $this->set('newmembers', $newmemberstmp);
-        } else {
-            $this->set('newmembers', $newmembers);
+        $this->set('recentvisitors', $recentvisitors);
+        
+        $newmembers = $this->Project->mc_get("newmembers");
+        if (!$newmembers) {
+       	    $newmembers = $this->__getNewMembers();
+            $this->Project->mc_set("newmembers", $newmembers, false, HOME_NEW_MEMBERS_TTL);
         }
-
-        $totalprojects = $memcache->get("$prefix-totalprojects");
-        if ( $totalprojects == "" ) {
-       	    $totalprojectstmp = $this->__getTotalProjects();
-            $memcache->set("$prefix-totalprojects", $totalprojectstmp, false, 3600) or die ("Failed to save data at the server");
-            $this->set('totalprojects', $totalprojectstmp);
-        } else {
-            $this->set('totalprojects', $totalprojects);
+        $this->set('newmembers', $newmembers);
+        
+        $totalprojects = $this->Project->mc_get("totalprojects");
+        if (!$totalprojects) {
+       	    $totalprojects = $this->__getTotalProjects();
+            $this->Project->mc_set("totalprojects", $totalprojects, false, HOME_TOTAL_PROJECTS_TTL);
         }
-
-        $totalscripts = $memcache->get("$prefix-totalscripts");
-        if ( $totalscripts == "" ) {
-       	    $totalscriptstmp = $this->__getTotalScripts();
-            $memcache->set("$prefix-totalscripts", $totalscriptstmp, false, 3600) or die ("Failed to save data at the server");
-            $this->set('totalscripts', $totalscriptstmp);
-        } else {
-            $this->set('totalscripts', $totalscripts);
+        $this->set('totalprojects', $totalprojects);
+        
+        $totalscripts = $this->Project->mc_get("totalscripts");
+        if (!$totalscripts) {
+       	    $totalscripts = $this->__getTotalScripts();
+            $this->Project->mc_set("totalscripts", $totalscripts, false, HOME_TOTAL_SCRIPTS_TTL);
         }
-
-        $totalsprites = $memcache->get("$prefix-totalsprites");
-        if ( $totalsprites == "" ) {
-       	    $totalspritestmp = $this->__getTotalSprites();
-            $memcache->set("$prefix-totalsprites", $totalspritestmp, false, 3600) or die ("Failed to save data at the server");
-            $this->set('totalsprites', $totalspritestmp);
-        } else {
-            $this->set('totalsprites', $totalsprites);
+        $this->set('totalscripts', $totalscripts);
+        
+        $totalsprites = $this->Project->mc_get("totalsprites");
+        if (!$totalsprites) {
+       	    $totalsprites = $this->__getTotalSprites();
+            $this->Project->mc_set("totalsprites", $totalsprites, false, HOME_TOTAL_SPRITES_TTL);
         }
-
-        $totalcreators = $memcache->get("$prefix-totalcreators");
-        if ( $totalcreators == "" ) {
-       	    $totalcreatorstmp = $this->__getTotalCreators();
-            $memcache->set("$prefix-totalcreators", $totalcreatorstmp, false, 3600) or die ("Failed to save data at the server");
-            $this->set('totalcreators', $totalcreatorstmp);
-        } else {
-            $this->set('totalcreators', $totalcreators);
+        $this->set('totalsprites', $totalsprites);
+        
+        $totalcreators = $this->Project->mc_get("totalcreators");
+        if (!$totalcreators) {
+       	    $totalcreators = $this->__getTotalCreators();
+            $this->Project->mc_set("totalcreators", $totalcreators, false, HOME_TOTAL_CREATOR_TTL);
         }
-
-        $totalusers = $memcache->get("$prefix-totalusers");
-        if ( $totalusers == "" ) {
-       	    $totaluserstmp = $this->__getTotalUsers();
-            $memcache->set("$prefix-totalusers", $totaluserstmp, false, 3600) or die ("Failed to save data at the server");
-            $this->set('totalusers', $totaluserstmp);
-        } else {
-            $this->set('totalusers', $totalusers);
+        $this->set('totalcreators', $totalcreators);
+        
+        $totalusers = $this->Project->mc_get("totalusers");
+        if (!$totalusers) {
+       	    $totalusers = $this->__getTotalUsers();
+            $this->Project->mc_set("totalusers", $totalusers, false, HOME_TOTAL_USERS_TTL);
         }
-
-        $tags = $memcache->get("$prefix-tags");
-        if ( $tags == "" ) {
-       	    $tagstmp = $this->__getTagCloud();
-            $memcache->set("$prefix-tags", $tagstmp, false, 3600) or die ("Failed to save data at the server");
-            $this->set('tags', $tagstmp);
-        } else {
-            $this->set('tags', $tags);
+        $this->set('totalusers', $totalusers);
+        
+        $tags = $this->Project->mc_get("tags");
+        if (!$tags) {
+       	    $tags = $this->__getTagCloud();
+            $this->Project->mc_set("tags", $tags, false, HOME_TAGS_TTL);
         }
-		
+        $this->set('tags', $tags);
+        
 		/*$countries = $memcache->get("$prefix-countries");
         if ( $countries == "" ) {
        	    $countriestmp = $this->__getTopCountries();
@@ -235,7 +210,7 @@ Class HomeController extends AppController {
             $this->set('countries', $countries);
         }*/
 		
-    	$memcache->close();
+    	$this->Project->mc_close();
 		
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
@@ -474,44 +449,20 @@ Class HomeController extends AppController {
         }
 		return  $favorites;
 	}
+    
 	function ___getCuratorName(){
-	$curator =$this->Curator->find(null,array(),'Curator.id DESC');
-	return $curator['User']['urlname'];
+    	$curator =$this->Curator->find(null,array(),'Curator.id DESC');
+        return $curator['User']['urlname'];
 	}
 	
-	//populate friends 3 latest project
-		
-	function ___getMyFriendsProject($user_id){
-		$project_list = array();
-		$friends_project =array();
-		$config = $this->User->getdbName();
-		$mysqli = new mysqli($config['host'], $config['login'], $config['password'], $config['database']);
-		$rs = $mysqli->query( "CALL top3friendproject($user_id)" );
-            while($row = $rs->fetch_object())
-            {
-                array_push($project_list,$row->project_id);
-            }
-            mysqli_free_result($rs);
-		mysqli_close($mysqli); 
-		$project_ids = implode(',',$project_list);
-		if(!empty($project_ids)):
-		$this->Project->unbindModel(
-                array('hasMany' => array('GalleryProject'))
-            );
-		$friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,'Project.created DESC', HOME_NUM_FRIEND_PROJECTS);
-		endif;
-		return $friends_project;
-	}
-	
-	function __getDesignStudioProjects($exclude_user_ids) {
+    function __getDesignStudioProjects($exclude_user_ids) {
 		$exclude_user_id_clause = '';
 		if(!empty($exclude_user_ids)) {
            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
-	$clubed_theme =$this->ClubbedGallery->find(NULL, NULL, "ClubbedGallery.id DESC");
-	$theme_id = $clubed_theme['ClubbedGallery']['gallery_id'];
-	return $clubed_theme_projects = $this->GalleryProject->findAll("GalleryProject.gallery_id = $theme_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'".$exclude_user_id_clause.' GROUP BY Project.user_id',NULL, ' RAND()', NUM_DESIGN_STUDIO_PROJECT, NULL, 2, $this->getContentStatus());
-	
+        $clubed_theme =$this->ClubbedGallery->find(NULL, NULL, "ClubbedGallery.id DESC");
+        $theme_id = $clubed_theme['ClubbedGallery']['gallery_id'];
+        return $clubed_theme_projects = $this->GalleryProject->findAll("GalleryProject.gallery_id = $theme_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'".$exclude_user_id_clause.' GROUP BY Project.user_id',NULL, ' RAND()', NUM_DESIGN_STUDIO_PROJECT, NULL, 2, $this->getContentStatus());
 	}//function	
 }
 ?>
