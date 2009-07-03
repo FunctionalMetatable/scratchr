@@ -738,5 +738,38 @@ Class Project extends AppModel
         $this->mc_delete('based_on_data', $project_id);
         $this->mc_close();
     }
+
+    //populate friends 3 latest project
+	function getMyFriendsProject($user_id, $offset = 0, $limit = 3){
+        $project_ids = $this->mc_get('friends_projects', $user_id);
+        
+        if(!$project_ids) {
+            $project_ids = array();
+            $config = $this->User->getdbName();
+            $mysqli = new mysqli($config['host'], $config['login'],
+                                $config['password'], $config['database']);
+            $rs = $mysqli->query( "CALL latest3friendproject($user_id)" );
+            while($row = $rs->fetch_object()) {
+                array_push($project_ids, $row->id);
+            }
+            mysqli_free_result($rs);
+            mysqli_close($mysqli);
+            $this->mc_set('friends_projects', $project_ids, $user_id, HOME_FRIENDS_PROJECTS_TTL);
+        }
+
+        $friends_project =array();
+        if(!empty($project_ids)) {
+            $project_ids = array_slice($project_ids, $offset, $limit);
+            $project_list = implode(',', $project_ids);
+            $this->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+            $friends_project = $this->findAll("Project.id in (".$project_list.") ", 
+                               null, 'Project.created DESC',
+                               HOME_NUM_FRIEND_PROJECTS);
+        }
+
+        return $friends_project;
+	}
 }
 ?>

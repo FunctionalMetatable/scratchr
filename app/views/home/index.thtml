@@ -165,11 +165,8 @@
 
 <!--
 	<div id="SurpriseProjects" class="container">
-      <h3><?php ___('Surprise Projects');?></h3>
+      <h3><?php /*___('Surprise Projects');?></h3>
 		<?php
-		/**
-		 * Populate random projects
-		 */
 		foreach ($toprandoms as $toprandom):
 		$pid = $toprandom['Project']['id'];
 		$owner = $toprandom['User']['urlname'];
@@ -184,7 +181,7 @@
 		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
 		</div>
-		<?php endforeach; ?>
+		<?php endforeach; */ ?>
       <p class="more"><a href="/channel/surprise"><?php ___('See more');?></a> </p>
     </div>
 //-->
@@ -212,7 +209,7 @@
 
 <!--
 	 <div class="container" id=TopDownloadedLately">
-      <h3><?php ___('Top Downloaded Lately')?></h3>
+      <h3><?php /*___('Top Downloaded Lately')?></h3>
 		<?php
 		foreach ($topdownloaded as $topdownload):
 			$pid = $topdownload['Project']['id'];
@@ -228,7 +225,7 @@
 			  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 			  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
 			</div>
-		<?php endforeach; ?>
+		<?php endforeach;*/ ?>
     </div>
 //-->
 
