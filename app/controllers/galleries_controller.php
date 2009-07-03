@@ -165,22 +165,22 @@ Class GalleriesController extends AppController {
 				exit;
 
         if (isset($this->params['form']['description'])) {
-            $newdesc = htmlspecialchars($this->params['form']['description']);
-	    if(isInappropriate($newdesc))
-	    {
-		$user_record = $this->Session->read('User');
-		$user_id = $user_record['id'];
-		$this->notify('inappropriate_gdesc', $user_id,
-					array('gallery_id' => $gallery_id));
-	    }
-	    else
-	    {
-		if ($this->Gallery->saveField('description', $newdesc)) {
+            $newdesc = htmlspecialchars(trim($this->params['form']['description']));
+            if(isInappropriate($newdesc))
+            {
+                $user_record = $this->Session->read('User');
+                $user_id = $user_record['id'];
+                $this->notify('inappropriate_gdesc', $user_id,
+                            array('gallery_id' => $gallery_id));
+            }
+            else
+            {
+                if ($this->Gallery->saveField('description', $newdesc)) {
                    $this->set('gdesc', $newdesc);
                    $this->render('themedescription_ajax','ajax');
                    return;
-            	}
-	    }
+                }
+            }
         }
         $this->set('gdesc',$gallery['Gallery']['description']);
         $this->render('themedescription_ajax','ajax');
