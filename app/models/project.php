@@ -748,7 +748,7 @@ Class Project extends AppModel
             $config = $this->User->getdbName();
             $mysqli = new mysqli($config['host'], $config['login'],
                                 $config['password'], $config['database']);
-            $rs = $mysqli->query( "CALL latest3friendproject($user_id)" );
+            $rs = $mysqli->query( "CALL latest1friendproject($user_id)" );
             while($row = $rs->fetch_object()) {
                 array_push($project_ids, $row->id);
             }
