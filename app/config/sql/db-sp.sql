@@ -1,10 +1,11 @@
 --
 -- Dumping routines for database 'scratchdb'
 --
-drop PROCEDURE if exists latest3friendproject;
+
+drop PROCEDURE if exists latest1friendproject;
 delimiter //
 
-CREATE PROCEDURE `latest3friendproject`(in user_id_param int(10))
+CREATE PROCEDURE `latest1friendproject`(in user_id_param int(10))
 begin
  declare  no_more int default 0;
  declare  project_id_list varchar(15000) default '0';
@@ -23,8 +24,8 @@ declare  cur_friend_project cursor for
        where user_id = cur_friend_id
        and proj_visibility = 'visible'
        order by created desc
-       limit 3;
- declare  continue handler for not found
+       limit 1;
+declare  continue handler for not found
        set  no_more = 1;
 open cur_friend;
 Loop1: loop
@@ -45,13 +46,18 @@ Loop1: loop
       end loop LOOP2;
 end loop LOOP1;
 
+
+
 set @sql_statement =
  CONCAT('select ',user_id_param,' as user_id, d.username ,a.user_id as friend_id, b.username, a.id, a.name, a.created
   from projects a, users b,(select username from users where id = ',user_id_param,') d
 where a.user_id = b.id
-and   a.id in (', project_id_list,') order by user_id, friend_id, a.created desc');
+and   a.id in (', project_id_list,') order by a.created desc, user_id, friend_id');
+
 
 prepare stmt from  @sql_statement;
 execute stmt;
 deallocate prepare stmt;
 END //
+
+delimiter ;
