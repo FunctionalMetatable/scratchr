@@ -102,6 +102,7 @@ $this->params['webservices']
  Allow multiple accounts to be created from the same IP after X minutes
  */
  define("SIGNUP_INTERVAL", 0);
+ define("USED_IP_BY_BLOCKED_ACCOUNT_IN_PAST_N_DAYS", 30);
 
  /**
   * sets the time interval (hrs) in which

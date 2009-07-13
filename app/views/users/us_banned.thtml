@@ -1,6 +1,15 @@
 <div class="fullcontent">
 <?php if($isBannedUser):?>
-<h3><?php ___("We noticed that your might be using the same computer or network as the account '$blockedusername' which was blocked due to '$reasonsforblocking'. Please contact to talk more about this.")?></h3>
+<h3><?php ___("Sorry, creation of new accounts from your network address has been suspended...")?></h3>
+<p>
+<?php printf(___('Another account accessing the Scratch Website from the same IP address was used to post comments or projects that fall outside of the guidelines described in the Scratch Website %sTerms of Use%s', true), '<a href="http://info.scratch.mit.edu/Terms_of_use" >', '</a>'); ?>
+</p>
+<?php ___('Account : ')?>&lt;<?php echo $blockedusername?>&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<?php ___('Blocked On : ')?>&lt;<?php echo $blockedon?>&gt;
+<br /><br /><?php ___('Reason : ')?>
+<div style="border:#CCCCCC 1px solid; padding:2px;margin:5px 0px 5px 0px;"><?php echo $reasonsforblocking;?></div>
+<?php ___("Please contact us with the form below to discuss this issue.")?>
 <?php endif?>
 <?php
 			echo "<div id='success_msg'>";
@@ -10,8 +19,14 @@
 				echo "</div>";
 			
 ?>
+<?php $psetParams='';
+	if(!empty($this->params['pass']['0'])){
+			$psetParams=$this->params['pass']['0'];
+	}
 
-<form method="post" enctype="multipart/form-data" action="<?php echo $html->url('/users/us_banned')?>">
+
+?>
+<form method="post"  action="<?php echo $html->url('/users/us_banned/'.$psetParams)?>">
 
 <div id="main">
 <p>
@@ -22,12 +37,6 @@
 <p>
  <label for="User" ><?php ___('Email'); ?>&nbsp;:</label>
 <?php echo $form->input('User.email',array('size'=>25,'label'=>''))?>
-	
-</p>
-
-<p>
-	<label for="User" ><?php ___('Subject'); ?>&nbsp;:</label>
-	<?php echo $form->input('User.subject',array('size'=>25,'label'=>''))?>
 	
 </p>
 
