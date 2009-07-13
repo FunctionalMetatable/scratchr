@@ -740,36 +740,67 @@ Class Project extends AppModel
     }
 
     //populate friends 3 latest project
-	function getMyFriendsProject($user_id, $offset = 0, $limit = 3){
-        $project_ids = $this->mc_get('friends_projects', $user_id);
+    function getMyFriendsLatest3Projects($user_id) {
+        $project_ids = array();
+        list($project_count, $project_ids) = $this->__getMyFriendsProjectIds($user_id);
+        //TODO: cache here
+        return $this->__getProjectsFromIds($project_ids, 0, 3);
+    }
+
+    function getMyFriendsLatestProjectsCount($user_id) {
+        $project_count = 0;
+        list($project_count, $project_ids) = $this->__getMyFriendsProjectIds($user_id);
+        return $project_count;
+    }
+    
+    function getMyFriendsLatestProjects($user_id, $page, $limit) {
+        $project_ids = array();
+        list($project_count, $project_ids) = $this->__getMyFriendsProjectIds($user_id);
+        $offset = ($page-1)*$limit;
+        //TODO: cache here
+        return $this->__getProjectsFromIds($project_ids, $offset, $limit);
+    }
+    
+	function __getProjectsFromIds($project_ids, $offset = 0, $limit = 10) {
+        if(empty($project_ids)) {
+            return array();
+        }
+
+        $projects =array();
+        $project_ids = array_slice($project_ids, $offset, $limit);
+        $project_ids = implode(',', $project_ids);
+        $this->unbindModel(
+            array('hasMany' => array('GalleryProject'))
+        );
+        $projects = $this->findAll('Project.id in ('.$project_ids.')',
+                           null, 'Project.created DESC');
         
-        if(!$project_ids) {
+        return $projects;
+	}
+
+    function __getMyFriendsProjectIds($user_id) {
+        $project_data = $this->mc_get('friends_projects_data', $user_id);
+
+        if(!$project_data) {
+            $project_count = 0;
             $project_ids = array();
+            
             $config = $this->User->getdbName();
             $mysqli = new mysqli($config['host'], $config['login'],
                                 $config['password'], $config['database']);
             $rs = $mysqli->query( "CALL latest1friendproject($user_id)" );
-            while($row = $rs->fetch_object()) {
+            
+            while($project_count <= MAX_FRIENDS_PROJECTS && $row = $rs->fetch_object()) {
                 array_push($project_ids, $row->id);
+                $project_count++;
             }
             mysqli_free_result($rs);
             mysqli_close($mysqli);
-            $this->mc_set('friends_projects', $project_ids, $user_id, HOME_FRIENDS_PROJECTS_TTL);
+            $project_data = array($project_count, $project_ids);
+            $this->mc_set('friends_projects_data', $project_data, $user_id, HOME_FRIENDS_PROJECTS_TTL);
         }
-
-        $friends_project =array();
-        if(!empty($project_ids)) {
-            $project_ids = array_slice($project_ids, $offset, $limit);
-            $project_list = implode(',', $project_ids);
-            $this->unbindModel(
-                array('hasMany' => array('GalleryProject'))
-            );
-            $friends_project = $this->findAll("Project.id in (".$project_list.") ", 
-                               null, 'Project.created DESC',
-                               HOME_NUM_FRIEND_PROJECTS);
-        }
-
-        return $friends_project;
-	}
+        
+        return $project_data;
+    }
 }
 ?>

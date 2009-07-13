@@ -108,7 +108,7 @@ Class HomeController extends AppController {
 		
 		
 		if($this->isLoggedIn()) {
-            $myfriendsprojects = $this->Project->getMyFriendsProject($this->getLoggedInUserID());
+            $myfriendsprojects = $this->Project->getMyFriendsLatest3Projects($this->getLoggedInUserID());
             $this->set('friendsprojects', $myfriendsprojects);
             
             $newprojects = $this->Project->mc_get("newprojects");

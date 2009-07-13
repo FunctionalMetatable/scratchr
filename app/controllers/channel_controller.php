@@ -3,7 +3,7 @@ Class ChannelController extends AppController {
     var $helpers = array('Pagination');
     var $components = array('Pagination');
     var $uses = array("IgnoredUser", "Project", "FeaturedProject", "Gallery", "Notification");
-	
+	var $feed_links = array ();
 	
 	 /**
      * Called before every controller action
@@ -13,19 +13,20 @@ Class ChannelController extends AppController {
 		$limit = 10;
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
-		$newest_feed_link = "/feeds/getNewestProjects";
-		$featured_feed_link = "/feeds/getFeaturedProjects";
-		$topviewed_feed_link = "/feeds/getTopViewedProjects";
-		$toploved_feed_link = "/feeds/getTopLovedProjects";
-		$remixed_feed_link = "/feeds/getTopRemixedProjects";
 		
 		$this->Pagination->show = $limit;
-		$this->set('remixed_feed_link', $remixed_feed_link);
-		$this->set('topviewed_feed_link', $topviewed_feed_link);
-		$this->set('toploved_feed_link', $toploved_feed_link);
-		$this->set('newest_feed_link', $newest_feed_link);
-		$this->set('featured_feed_link', $featured_feed_link);
+        $obscured_uid = urlencode(base64_encode($this->getLoggedInUserID()));
+        $this->feed_links = array (
+            'recent' => "/feeds/getNewestProjects",
+            'featured' => "/feeds/getFeaturedProjects",
+            'topviewed' => "/feeds/getTopViewedProjects",
+            'toploved' => "/feeds/getTopLovedProjects",
+            'remixed' => "/feeds/getTopRemixedProjects",
+            'friends_latest' => "/feeds/getFriendsLatestProjects/".$obscured_uid
+        );
+		$this->set('feed_links', $this->feed_links);
 		$this->set('content_status', $this->getContentStatus());
+        $this->set('isLoggedIn', $this->isLoggedIn());
     }
 	
     function recent() {
@@ -55,11 +56,9 @@ Class ChannelController extends AppController {
         $this->set('data', $final_projects);
         $this->Project->mc_close();
 
-        $newest_feed_link = "/feeds/getNewestProjects";
-		
         $this->set('heading', "new projects");
         $this->set('option', 'recent');
-        $this->set('rss_link', $newest_feed_link);
+        $this->set('rss_link', $this->feed_links['recent']);
         $this->render('explorer');
     }
 	
@@ -89,11 +88,9 @@ Class ChannelController extends AppController {
         $this->set('data', $final_projects);
         $this->Project->mc_close();
 
-        $featured_feed_link = "/feeds/getFeaturedProjects";
-		
         $this->set('heading', ___("featured projects", true));
         $this->set('option', 'featured');
-		$this->set('rss_link', $featured_feed_link);
+		$this->set('rss_link', $this->feed_links['featured']);
 		$this->render('explorer');
     }
 
@@ -124,10 +121,9 @@ Class ChannelController extends AppController {
         $this->set('data', $final_projects);
         $this->Project->mc_close();
 	
-        $topviewed_feed_link = "/feeds/getTopViewedProjects";
-	    $this->set('heading', ___("top viewed", true));
+        $this->set('heading', ___("top viewed", true));
 		$this->set('option', 'topviewed');
-		$this->set('rss_link', $topviewed_feed_link);
+		$this->set('rss_link', $this->feed_links['topviewed']);
         $this->render('explorer');
     }
 
@@ -159,10 +155,9 @@ Class ChannelController extends AppController {
         $this->set('data', $final_projects);
         $this->Project->mc_close();
 
-        $toploved_feed_link = "/feeds/getTopLovedProjects";
-		$this->set('heading', ___("top loved", true));
+        $this->set('heading', ___("top loved", true));
         $this->set('option', 'toploved');
-        $this->set('rss_link', $toploved_feed_link);
+        $this->set('rss_link', $this->feed_links['toploved']);
         $this->render('explorer');
     }
 
@@ -217,12 +212,10 @@ Class ChannelController extends AppController {
         $this->set('data', $final_projects);
         $this->Project->mc_close();
 
-        $remixed_feed_link = "/feeds/getTopRemixedProjects";
-		
         $this->set('data', $final_projects);
         $this->set('heading', ___("top remixed", true));
 		$this->set('option', 'remixed');
-		$this->set('rss_link', $remixed_feed_link);
+		$this->set('rss_link', $this->feed_links['remixed']);
         $this->render('explorer');
     }
 	
@@ -250,16 +243,39 @@ Class ChannelController extends AppController {
         //$final_projects = $this->Project->findAll("remixes > 0", NULL, $order, $limit, $page, NULL);
 		$final_projects = $this->set_projects($final_projects);
 		
-		$remixed_feed_link = "/feeds/getTopRemixedProjects";
-		
-        $this->set('data', $final_projects);
-        $this->set('heading', ___("surprised", true));
-		$this->set('option', 'surprised');
-		$this->set('rss_link', $remixed_feed_link);
-        $this->render('surprise');
+		$this->set('data', $final_projects);
+        $this->set('heading', ___("surprise", true));
+		$this->set('option', 'surprise');
+		$this->render('surprise');
     }
 	
-	
+    
+    function friends_latest() {
+        $this->layout = 'scratchr_explorer';
+        $this->pageTitle = "Scratch | My Friends' Latest Projects";
+        $this->modelClass = "Project";
+        $user_id = $this->getLoggedInUserID();
+        if(!$user_id) {
+            $this->cakeError('error404');
+            return false;
+        }
+        $this->Project->mc_connect();
+        $projects_count = $this->Project->getMyFriendsLatestProjectsCount($user_id);
+        list($order, $limit, $page) = $this->Pagination->init(null, array(),
+                                            array(), $projects_count);
+       
+        $projects = $this->Project->getMyFriendsLatestProjects(
+                                    $user_id, $page, $limit);
+        $this->set('data', $projects);
+        $this->Project->mc_close();
+
+        $this->set('rss_link', $this->feed_links['friends_latest']);
+        $this->set('heading', "friends' latest projects");
+        $this->set('option', 'friends_latest');
+        $this->render('explorer');
+    }
+
+    
 	function set_projects($projects) {
 		$isLogged = $this->isLoggedIn();
 		$user_id = $this->getLoggedInUserID();

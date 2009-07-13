@@ -25,7 +25,7 @@ $this->params['webservices']
  define("NUM_TOP_REMIXED", 3);
  define("NUM_NEW_PROJECTS", 3);
  define("NUM_DESIGN_STUDIO_PROJECT", 3);
- define("HOME_NUM_FRIEND_PROJECTS", 3);
+ define("MAX_FRIENDS_PROJECTS", 100);
  define("NUM_THEME_PROJECTS", 4);
  define("NUM_NEW_MEMBERS", 4);
  define("NUM_RECENT_VISITORS", 4);
