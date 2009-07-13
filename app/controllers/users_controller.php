@@ -60,24 +60,39 @@ class UsersController extends AppController {
 	function multiaccountwarn() {
 		$this->pageTitle = ___("Scratch | Signup", true);
 		$client_ip = ip2long($this->RequestHandler->getClientIP());
-		
+		$isBlocked_from_this_ip = false;
+		$locked_account = false;
 		$signup_interval = SIGNUP_INTERVAL;
 		
-		$usedIp = $this->ViewStat->hasAny("ViewStat.ipaddress = $client_ip AND ViewStat.timestamp > DATE_SUB(NOW(), INTERVAL 30 DAY)");
-		if($usedIp){
-		$isUsedIpblocked = $this->BlockedIp->hasAny("BlockedIp.ip = $client_ip ");
-		}
+		$blocked_record =$this->User->find("User.ipaddress = $client_ip and User.status='locked'",array(),'User.timestamp DESC');
+			if($blocked_record){
+				$isBlocked_from_this_ip = true;
+			}
 		
-		 $isBlocked_from_this_ip =$this->User->hasAny("User.ipaddress = $client_ip and User.status='locked'");
-		if($isBlocked_from_this_ip || $isUsedIpblocked)
+		$whitelisted_ip = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = $client_ip");
+		if(!$whitelisted_ip){
+			$locked_user_id = $this->checkLockedUser();
+			if($locked_user_id){
+				$locked_account = true;
+			} 
+		}
+		if(($isBlocked_from_this_ip || $locked_account) && !$whitelisted_ip)
 		{
-			$this->redirect("/users/us_banned");
-			return;
+			if($locked_account){
+				$this->redirect("/users/us_banned/".$locked_user_id);
+				return;
+			}
+			else
+			{
+				$this->redirect("/users/us_banned");
+				return;
+			}	
+			
 		}
 		/* First we find if the IP has been used before or not, if not then simply redirect him to sign up page */
 		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip");
 		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = $client_ip");
-		$whitelisted_ip = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = $client_ip");
+		
 		/* Some Activity from Same IP in past */
 		if(($creation_from_same_ip || $access_from_same_ip) && !$whitelisted_ip) {
 	
@@ -2071,27 +2086,42 @@ class UsersController extends AppController {
 	  $this->set('client_ip' ,$this->RequestHandler->getClientIP());
 	}//function
 	
-	function us_banned(){
+	
+	function us_banned($locked_id =null){
 			$this->autoRender = false;
 			$this->pageTitle = ___('Scratch | Blocked Account | Contact us', true);
 			$client_ip = ip2long($this->RequestHandler->getClientIP());
+			if($locked_id)
+			$blocked_record =$this->User->find("User.status='locked'");
+			else
 			$blocked_record =$this->User->find("User.ipaddress = $client_ip and User.status='locked'",array(),'User.timestamp DESC');
 			if($blocked_record){
 				$blocked_user_id =$blocked_record['User']['id'];
 				$blockedusername =$blocked_record['User']['urlname'];
+				$author_ip =$blocked_record['User']['ipaddress'];
 				$ban_record = $this->BlockedUser->find("BlockedUser.user_id = $blocked_user_id");
 				$reasonsforblocking = $ban_record['BlockedUser']['reason'];
+				$blocked_date = stampToDate($ban_record['BlockedUser']['timestamp']);
+				$this->set('blockedon',stampToDate($ban_record['BlockedUser']['timestamp']));
 				$this->set('reasonsforblocking',$reasonsforblocking);
 				$this->set('blockedusername',$blockedusername);
 				$this->set('isBannedUser',true);
 			}
 			else
 			$this->set('isBannedUser',false);
+			
+			
 			if (!empty($this->data)) {
+			$user_agent = $_SERVER['HTTP_USER_AGENT'];
 			$name = $this->data['User']['name'];
 			$email = $this->data['User']['email'];
-			$subject =$this->data['User']['subject'];
-			$message = $this->data['User']['message'];
+			$subject = ___("Account Creation Block page fromaaa :". $client_ip,true);
+			$message = ___("Blocked Account Name : ". $blockedusername,true). "\r\n";
+			$message = $message.___("Blocked On : ".$blocked_date,true). "\r\n";
+			$message = $message.___("Reason : "."\r\n"."<div style='border:#CCCCCC 1px solid; padding:2px;margin:5px 0px 5px 0px;'>".$reasonsforblocking."</div>",true). "\r\n";
+			$message = $message.___("Author's Ip address : ".$author_ip,true). "\r\n";
+			$message = $message.___("User agent Info : ".$user_agent,true). "\r\n";
+			$message = $message.$this->data['User']['message'];
 			
 			if(empty($this->data['User']['name']))
 			$this->User->invalidate('name',___('Enter contact name.',true));
@@ -2102,8 +2132,7 @@ class UsersController extends AppController {
 			}
 			else
 			$this->User->invalidate('email',___('Enter  Email id.',true));
-			if(empty($this->data['User']['subject']))
-			$this->User->invalidate('subject',___('Enter Subject',true));
+			
 			if(empty($this->data['User']['message']))
 			$this->User->invalidate('message',___('Enter Message.',true));
 			
@@ -2113,7 +2142,7 @@ class UsersController extends AppController {
 				$this->set('isBannedUser',false);
 				$this->data['User']['name'] = '';
 				$this->data['User']['email'] = '';
-				$this->data['User']['subject'] = '';
+				
 				$this->data['User']['message'] ='';
 			}
 		}//!empty
@@ -2132,5 +2161,19 @@ class UsersController extends AppController {
         $this->Project->mc_close();
         return $projects_count;
     }
+	
+	function checkLockedUser()
+	{
+		$client_ip = ip2long($this->RequestHandler->getClientIP());
+		$listLockedUser = $this->User->findAll("User.status='locked' AND User.ipaddress != $client_ip",'id','User.timestamp DESC');
+		$locked_user_ids =  Set::extract('/User/id', $listLockedUser);
+		$ndays = USED_IP_BY_BLOCKED_ACCOUNT_IN_PAST_N_DAYS;
+		foreach($locked_user_ids as $locked_user_id){
+		$hasAnyIpUsedByLockedUser = $this->ViewStat->hasAny("ViewStat.timestamp > DATE_SUB(NOW(), INTERVAL $ndays DAY) AND  ViewStat.ipaddress = $client_ip AND ".'ViewStat.user_id ='.$locked_user_id);
+		if($hasAnyIpUsedByLockedUser)
+		return $locked_user_id;
+		}
+		
+	}
   }
 ?>
