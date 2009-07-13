@@ -5,7 +5,9 @@
 	echo $this->renderElement('superheader');
 ?>
 
-<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php e($rss_link); ?>">
+<?php if(!empty($rss_link)): ?>
+<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php e($rss_link); ?>" />
+<?php endif; ?>
 
 <title><?php e($title_for_layout)?></title>
 
