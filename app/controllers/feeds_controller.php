@@ -2,14 +2,36 @@
 class FeedsController extends AppController {
     var $name = 'Feeds';
     var $components = array('Session', 'Cookie');
-	var $uses = array('Flagger', 'User', 'FeaturedProject', 'Project', 'Gallery', 'GalleryProject');
-	
+	var $uses = array('Flagger', 'User', 'FeaturedProject', 'Project', 'Gallery', 'GalleryProject','Notification');
+	var $helpers = array('Template');
 	/**
 	* Test
 	**/
 	function test() {
 		$this->layout = 'xml'; 
         $this->set('projects', $this->Project->findAll(null, null, null, 1));
+	}
+	
+	function getNotificationFeeds($obscured_id =null){
+		$this->autoRender = false;
+		$this->layout = 'xml';
+		$user_id =base64_decode(urldecode($obscured_id));
+		$user_record = $this->User->find("id = $user_id");
+		if(empty($user_record)) {
+			$this->cakeError('error404');
+		}
+		
+		$username = $user_record['User']['username']; 
+	
+		$notifications = $this->Notification->getNotifications($user_id, 1, 10);
+		$url = env('SERVER_NAME');
+		$url = strtolower($url);
+		$rss_link = "http://" . $url . "/feeds/getNotificationFeeds/".urlencode(base64_encode($this->getLoggedInUserID()));
+		
+		$this->set('username', $username);
+		$this->set('rss_link', $rss_link);
+		$this->set('notifications',$notifications);
+		$this->render('get_notifications_feeds');
 	}
 	
 	function getNewestProjects() {

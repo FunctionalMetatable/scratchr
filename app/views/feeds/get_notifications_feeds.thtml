@@ -1,0 +1,25 @@
+
+<rss version="2.0">
+  <channel> 
+    <title>Notifications on Scratchr</title> 
+    <link><?php echo $rss_link; ?></link> 
+    <description>Last 10 Notification posted to the site</description> 
+    <language>en-us</language> 
+    <pubDate><?php echo date("D, j M Y H:i:s", gmmktime()) . ' GMT';?></pubDate> 
+    <docs></docs> 
+    <generator>CakePHP</generator> 
+    <managingEditor>Han and Andres</managingEditor> 
+    <webMaster>genghisu</webMaster> 
+   <?php 
+   		foreach ($notifications as $notification): 
+   		$notification = $notification[0]; 
+		$id = $notification['id'];
+		$message = $template->create($notification, $username);
+   ?> 
+    <item> 
+      <title><?php echo htmlentities($message); ?>
+</title> 
+    </item> 
+    <?php endforeach; ?> 
+  </channel> 
+</rss> 
