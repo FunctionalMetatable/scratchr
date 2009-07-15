@@ -1,24 +1,23 @@
 
 <rss version="2.0">
   <channel> 
-    <title>Notifications on Scratchr</title> 
+    <title>Notifications for the user {username}</title>
     <link><?php echo $rss_link; ?></link> 
-    <description>Last 10 Notification posted to the site</description> 
+    <description>Last 10 Notifications for the User {username}</description>
     <language>en-us</language> 
     <pubDate><?php echo date("D, j M Y H:i:s", gmmktime()) . ' GMT';?></pubDate> 
     <docs></docs> 
-    <generator>CakePHP</generator> 
-    <managingEditor>Han and Andres</managingEditor> 
-    <webMaster>genghisu</webMaster> 
+    <generator>ScratchR</generator>
    <?php 
    		foreach ($notifications as $notification): 
    		$notification = $notification[0]; 
 		$id = $notification['id'];
 		$message = $template->create($notification, $username);
-   ?> 
+   ?>
     <item> 
-      <title><?php echo htmlentities($message); ?>
-</title> 
+      <title><?php echo htmlentities(strip_tags($message)); ?></title>
+      <description><?php echo htmlentities($message); ?></description>
+      <link>http://scratch.mit.edu/notifications</link>
     </item> 
     <?php endforeach; ?> 
   </channel> 
