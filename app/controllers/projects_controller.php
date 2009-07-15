@@ -824,7 +824,7 @@ class ProjectsController extends AppController {
     function flag($urlname, $pid) {
         $this->exitOnInvalidArgCount(2);
         $this->autoRender=false;
-
+		
         $this->Project->bindUser();
         $this->Project->id=$pid;
         $project = $this->Project->read();
@@ -847,11 +847,13 @@ class ProjectsController extends AppController {
 		$user_id = $this->getLoggedInUserID();
 		$userflagger = $this->User->find("User.id = '$user_id'");
 		$flaggername = $userflagger['User']['username'];
+		$flagger_ip = $userflagger['User']['ipaddress'];
 
 		$this->data['Flagger']['user_id'] = $user_id;
 		$this->data['Flagger']['project_id'] = $pid;
 		$this->data['Flagger']['creator_id'] = $creatorname;
 		$this->data['Flagger']['reasons'] = $msgin;
+		$this->data['Flagger']['ipaddress'] = $flagger_ip;
 
 		if ($user_id) {
 			if (!$this->Flagger->hasAny("project_id = $pid AND user_id = $user_id")) {
@@ -871,8 +873,13 @@ class ProjectsController extends AppController {
 				$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, FROM_FLAGGED_PROJECT);
 				$this->Flagger->save($this->data);
 				$prev_flaggers_count = (int)$project['Project']['flagit'];
-				$this->Project->saveField('flagit',($prev_flaggers_count + 1));
-				$flags = $project['Project']['flagit'];
+				
+				$flaggerIpCount = $this->Flagger->findCount("Flagger.project_id = $pid AND Flagger.ipaddress = $flagger_ip");
+				//Increment flagit count only if user is from different ip
+				if ($flaggerIpCount <=1) {
+					$this->Project->saveField('flagit',($prev_flaggers_count + 1));
+				}
+				$flags = $this->Project->field('flagit',"Project.id = $pid");
 				$this->set('just_flagged', true);
 				$this->set('pid', $pid);
 				$this->set('urlname', $urlname);
