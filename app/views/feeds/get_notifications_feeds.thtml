@@ -1,9 +1,9 @@
 
 <rss version="2.0">
   <channel> 
-    <title>Notifications for the user {username}</title>
+    <title>Notifications for the User {<?php echo $username?>}</title>
     <link><?php echo $rss_link; ?></link> 
-    <description>Last 10 Notifications for the User {username}</description>
+    <description>Last 10 Notifications for the User {<?php echo $username?>}</description>
     <language>en-us</language> 
     <pubDate><?php echo date("D, j M Y H:i:s", gmmktime()) . ' GMT';?></pubDate> 
     <docs></docs> 
@@ -17,7 +17,7 @@
     <item> 
       <title><?php echo htmlentities(strip_tags($message)); ?></title>
       <description><?php echo htmlentities($message); ?></description>
-      <link>http://scratch.mit.edu/notifications</link>
+      <link><?php echo TOPLEVEL_URL.'/notifications'?></link>
     </item> 
     <?php endforeach; ?> 
   </channel> 
