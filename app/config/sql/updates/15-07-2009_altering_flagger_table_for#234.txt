@@ -1,0 +1,1 @@
+ALTER TABLE `flaggers` ADD `ipaddress` INT( 12 ) NULL ;
