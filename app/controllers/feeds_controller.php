@@ -12,10 +12,10 @@ class FeedsController extends AppController {
         $this->set('projects', $this->Project->findAll(null, null, null, 1));
 	}
 	
-	function getNotificationFeeds($obscured_id =null){
+	function getNotificationFeeds($encoded_user_id){
 		$this->autoRender = false;
 		$this->layout = 'xml';
-		$user_id =base64_decode(urldecode($obscured_id));
+		$user_id = $this->decode($encoded_user_id);
 		$user_record = $this->User->find("id = $user_id");
 		if(empty($user_record)) {
 			$this->cakeError('error404');
@@ -311,7 +311,7 @@ class FeedsController extends AppController {
 	
 	function removespecialchars($target) {
 		$result = $target;
-		$search = "«";
+		$search = "ï¿½";
 		$replace = "-";
 		$result = str_replace($search, $replace, $target);
 		return $result;

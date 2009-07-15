@@ -38,7 +38,7 @@ class NotificationsController extends AppController {
 												$this->Notification->countAll($user_id));
 		$notifications = $this->Notification->getNotifications($user_id, $page, $limit);
 		$this->set('notifications', $notifications);
-		
+        $this->set('encoded_user_id', $this->encode($user_id));
 		$this->set('title', "Scratch | Messages and notifications");
 		$this->render('notifications');
 	}
