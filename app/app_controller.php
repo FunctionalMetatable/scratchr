@@ -903,6 +903,34 @@ ini_restore ("memory_limit");
 		
 		return $final_array;
 	}
-}
 
+    /*
+     * returns an encrypted urlencoded string from $id
+     */
+    function encode($id) {
+        $salt = Configure::read('Security.salt');
+        $plain_str = $id.'-'.substr(sha1($id.$salt), 0, 6);
+        $base64_str = base64_encode($plain_str);
+        $base64url_str = strtr($base64_str, '+/=', '-_,');
+        return $base64url_str;
+    }
+
+    /*
+     * returns the user id from the given encrypted urlencoded string
+     * returns 0 if the string is invalid
+     */    
+    function decode($base64url_str) {
+        $salt = Configure::read('Security.salt');
+        $base64_str = strtr($base64url_str, '-_,', '+/=');
+        $plain_str = base64_decode($base64_str);
+        $parts = explode('-', $plain_str);
+        if(count($parts) != 2) {
+            return 0;
+        }
+        $id = $parts[0];
+        return substr(sha1($id.$salt), 0, 6) === $parts[1]
+            ? (int) $id
+            : 0;
+    }
+}
 ?>
