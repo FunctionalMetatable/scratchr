@@ -85,6 +85,7 @@
 		  <p><?php ___('by'); ?><a href="<?php e($user_link)?>"> <?php e($owner)?></a></p>
 		</div>
 		<?php endforeach; ?>
+        <p class="more"><a href="/channel/friends_latest"><?php ___('See more');?></a> </p>
     </div>
 	<?php endif;?>
 
