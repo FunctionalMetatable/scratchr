@@ -15,7 +15,7 @@ Class ChannelController extends AppController {
 		$url = strtolower($url);
 		
 		$this->Pagination->show = $limit;
-        $obscured_uid = urlencode(base64_encode($this->getLoggedInUserID()));
+        $obscured_uid = $this->encode($this->getLoggedInUserID());
         $this->feed_links = array (
             'recent' => "/feeds/getNewestProjects",
             'featured' => "/feeds/getFeaturedProjects",
@@ -259,7 +259,7 @@ Class ChannelController extends AppController {
             $this->cakeError('error404');
             return false;
         }
-        $this->Project->mc_connect();
+        
         $projects_count = $this->Project->getMyFriendsLatestProjectsCount($user_id);
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             array(), $projects_count);
@@ -267,8 +267,7 @@ Class ChannelController extends AppController {
         $projects = $this->Project->getMyFriendsLatestProjects(
                                     $user_id, $page, $limit);
         $this->set('data', $projects);
-        $this->Project->mc_close();
-
+        
         $this->set('rss_link', $this->feed_links['friends_latest']);
         $this->set('heading', "friends' latest projects");
         $this->set('option', 'friends_latest');

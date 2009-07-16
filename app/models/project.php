@@ -741,24 +741,40 @@ Class Project extends AppModel
 
     //populate friends 3 latest project
     function getMyFriendsLatest3Projects($user_id) {
-        $project_ids = array();
-        list($project_count, $project_ids) = $this->__getMyFriendsProjectIds($user_id);
-        //TODO: cache here
-        return $this->__getProjectsFromIds($project_ids, 0, 3);
+        $my_friends_latest3_projects = $this->mc_get('my_friends_latest3_projects', $user_id);
+        if (!$my_friends_latest3_projects) {
+       	    $project_ids = array();
+            list($project_count, $project_ids) = $this->__getMyFriendsProjectIds($user_id);
+            $my_friends_latest3_projects = $this->__getProjectsFromIds($project_ids, 0, 3);
+            $this->mc_set('my_friends_latest3_projects',
+                $my_friends_latest3_projects, $user_id, HOME_FRIENDS_PROJECTS_TTL);
+        }
+        return $my_friends_latest3_projects;
     }
 
     function getMyFriendsLatestProjectsCount($user_id) {
+        $this->mc_connect();
         $project_count = 0;
         list($project_count, $project_ids) = $this->__getMyFriendsProjectIds($user_id);
+        $this->mc_close();
         return $project_count;
     }
     
     function getMyFriendsLatestProjects($user_id, $page, $limit) {
-        $project_ids = array();
-        list($project_count, $project_ids) = $this->__getMyFriendsProjectIds($user_id);
-        $offset = ($page-1)*$limit;
-        //TODO: cache here
-        return $this->__getProjectsFromIds($project_ids, $offset, $limit);
+        $this->mc_connect();
+        $my_friends_latest_projects = $this->mc_get('my_friends_latest_projects',
+            $user_id.'_'.$page.'_'.$limit);
+
+        if (!$my_friends_latest_projects) {
+            $project_ids = array();
+            list($project_count, $project_ids) = $this->__getMyFriendsProjectIds($user_id);
+            $offset = ($page-1)*$limit;
+            $my_friends_latest_projects = $this->__getProjectsFromIds($project_ids, $offset, $limit);
+            $this->mc_set('my_friends_latest_projects',
+                $my_friends_latest_projects, $user_id.'_'.$page.'_'.$limit, HOME_FRIENDS_PROJECTS_TTL);
+        }
+        $this->mc_close();
+        return $my_friends_latest_projects;
     }
     
 	function __getProjectsFromIds($project_ids, $offset = 0, $limit = 10) {
