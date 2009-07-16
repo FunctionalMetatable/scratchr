@@ -390,7 +390,8 @@ class ProjectsController extends AppController {
 		$this->set_comment_errors($errors);
 		//the comment is saved
         if(!empty($new_pcomment)) {
-          $new_pcomment['User'] =  $commenter_userrecord['User'];
+          $new_pcomment['Pcomment']['content'] = $this->set_comment_content($new_pcomment['Pcomment']['content']);
+		  $new_pcomment['User'] =  $commenter_userrecord['User'];
           $this->set('comment', $new_pcomment);
           $this->set('isProjectOwner', $user_id == $logged_id);
           $this->set('project_id', $pid);
@@ -607,6 +608,7 @@ class ProjectsController extends AppController {
      * @parm int $pid => project id
      */
     function describe($urlname=null, $pid=null) {
+		Configure::write('debug',0);
         $this->exitOnInvalidArgCount(2);
         $this->autoRender=false;
         $this->Project->bindUser();
@@ -633,7 +635,7 @@ class ProjectsController extends AppController {
 	    else
 	    {
 		if($this->Project->saveField('description', $newdesc)) {
-                	$this->set('pdesc', $newdesc);
+                	$this->set('pdesc', $this->set_comment_content($newdesc));
                 	$this->render('projectdescription_ajax','ajax');
                 	return;
             	}
