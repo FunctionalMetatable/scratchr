@@ -219,11 +219,12 @@ class FeedsController extends AppController {
 	/*
      * makes $projects array feed ready
      */
-    function __feedize_projects($projects, $user_name = null) {
+    function __feedize_projects($projects, $user_name_param = null) {
         $url = strtolower(env('SERVER_NAME'));
+        $user_name = $user_name_param;
         foreach ($projects as $key => $project) {
 			$project_id = $project['Project']['id'];
-            if(!$user_name) {
+            if(!$user_name_param) {
                 $user_id = $project['Project']['user_id'];
                 $user = $this->User->find("User.id = $user_id");
                 $user_name = $user['User']['username'];
