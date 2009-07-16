@@ -26,7 +26,7 @@ class FeedsController extends AppController {
 		$notifications = $this->Notification->getNotifications($user_id, 1, 10);
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
-		$rss_link = "http://" . $url . "/feeds/getNotificationFeeds/".urlencode(base64_encode($this->getLoggedInUserID()));
+		$rss_link = "http://" . $url . "/feeds/getNotificationFeeds/".$encoded_user_id;
 		
 		$this->set('username', $username);
 		$this->set('rss_link', $rss_link);
@@ -43,26 +43,8 @@ class FeedsController extends AppController {
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
 		$rss_link = "http://" . $url . "/feeds/getNewestProjects";
-		
-		foreach ($projects as $current_project) {
-			$project_id = $current_project['Project']['id'];
-			$user_id = $current_project['Project']['user_id'];
-			$user = $this->User->find("User.id = $user_id");
-			$user_name = $user['User']['username'];
-			
-			$thumbnail_src = getThumbnailImg($user_name, $project_id);
-			$additional_url = "/projects/$user_name/$project_id";
-			$current_project['Project']['link'] = "http://" . $url . $additional_url;
-			$current_project['Project']['image_link'] = "http://" . $url . $thumbnail_src;
-
-			$description = $current_project['Project']['description'];
-			$description = $this->removespecialchars($description);
-			$current_project['Project']['description'] = $description;
-			array_push($final_projects, $current_project);
-		}
-
 		$this->set('rss_link', $rss_link);
-		$this->set('projects', $final_projects);
+		$this->set('projects', $this->__feedize_projects($projects));
 		$this->render('newest_project_feed');
 	}
 	
@@ -75,26 +57,8 @@ class FeedsController extends AppController {
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
 		$rss_link = "http://" . $url . "/feeds/getFeaturedProjects";
-		
-		foreach ($projects as $current_project) {
-			$project_id = $current_project['Project']['id'];
-			$user_id = $current_project['Project']['user_id'];
-			$user = $this->User->find("User.id = $user_id");
-			$user_name = $user['User']['username'];
-			
-			$thumbnail_src = getThumbnailImg($user_name, $project_id);
-			$additional_url = "/projects/$user_name/$project_id";
-			$current_project['Project']['link'] = "http://" . $url . $additional_url;
-			$current_project['Project']['image_link'] = "http://" . $url . $thumbnail_src;
-
-			$description = $current_project['Project']['description'];
-			$description = $this->removespecialchars($description);
-			$current_project['Project']['description'] = $description;
-			array_push($final_projects, $current_project);
-		}
-
 		$this->set('rss_link', $rss_link);
-		$this->set('projects', $final_projects);
+		$this->set('projects', $this->__feedize_projects($projects));
 		$this->render('featured_project_feed');
 	}
 	
@@ -107,26 +71,8 @@ class FeedsController extends AppController {
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
 		$rss_link = "http://" . $url . "/feeds/getFeaturedProjects";
-		
-		foreach ($projects as $current_project) {
-			$project_id = $current_project['Project']['id'];
-			$user_id = $current_project['Project']['user_id'];
-			$user = $this->User->find("User.id = $user_id");
-			$user_name = $user['User']['username'];
-			
-			$thumbnail_src = getThumbnailImg($user_name, $project_id);
-			$additional_url = "/projects/$user_name/$project_id";
-			$current_project['Project']['link'] = "http://" . $url . $additional_url;
-			$current_project['Project']['image_link'] = "http://" . $url . $thumbnail_src;
-
-			$description = $current_project['Project']['description'];
-			$description = $this->removespecialchars($description);
-			$current_project['Project']['description'] = $description;
-			array_push($final_projects, $current_project);
-		}
-
 		$this->set('rss_link', $rss_link);
-		$this->set('projects', $final_projects);
+		$this->set('projects', $this->__feedize_projects($projects));
 		$this->render('topviewed_project_feed');
 	}
 	
@@ -139,26 +85,8 @@ class FeedsController extends AppController {
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
 		$rss_link = "http://" . $url . "/feeds/getUnreviewedProjects";
-		
-		foreach ($projects as $current_project) {
-			$project_id = $current_project['Project']['id'];
-			$user_id = $current_project['Project']['user_id'];
-			$user = $this->User->find("User.id = $user_id");
-			$user_name = $user['User']['username'];
-			
-			$thumbnail_src = getThumbnailImg($user_name, $project_id);
-			$additional_url = "/projects/$user_name/$project_id";
-			$current_project['Project']['link'] = "http://" . $url . $additional_url;
-			$current_project['Project']['image_link'] = "http://" . $url . $thumbnail_src;
-
-			$description = $current_project['Project']['description'];
-			$description = $this->removespecialchars($description);
-			$current_project['Project']['description'] = $description;
-			array_push($final_projects, $current_project);
-		}
-
-		$this->set('rss_link', $rss_link);
-		$this->set('projects', $final_projects);
+        $this->set('rss_link', $rss_link);
+		$this->set('projects', $this->__feedize_projects($projects));
 		$this->render('toploved_project_feed');
 	}
 	
@@ -216,26 +144,8 @@ class FeedsController extends AppController {
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
 		$rss_link = "http://" . $url . "/feeds/getTopRemixedProjects";
-		
-		foreach ($projects as $current_project) {
-			$project_id = $current_project['Project']['id'];
-			$user_id = $current_project['Project']['user_id'];
-			$user = $this->User->find("User.id = $user_id");
-			$user_name = $user['User']['username'];
-			
-			$thumbnail_src = getThumbnailImg($user_name, $project_id);
-			$additional_url = "/projects/$user_name/$project_id";
-			$current_project['Project']['link'] = "http://" . $url . $additional_url;
-			$current_project['Project']['image_link'] = "http://" . $url . $thumbnail_src;
-
-			$description = $current_project['Project']['description'];
-			$description = $this->removespecialchars($description);
-			$current_project['Project']['description'] = $description;
-			array_push($final_projects, $current_project);
-		}
-
 		$this->set('rss_link', $rss_link);
-		$this->set('projects', $final_projects);
+		$this->set('projects', $this->__feedize_projects($projects));
 		$this->render('topremixed_project_feed');
 	}
 	
@@ -254,22 +164,10 @@ class FeedsController extends AppController {
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
 		$rss_link = "http://" . $url . "/feeds/getRecentUserProjects/$user_id";
-		
-		foreach ($projects as $current_project) {
-			$project_id = $current_project['Project']['id'];
-			$thumbnail_src = getThumbnailImg($user_name, $project_id);
-			$additional_url = "/projects/$user_name/$project_id";
-			$current_project['Project']['link'] = "http://" . $url . $additional_url;
-			$current_project['Project']['image_link'] = "http://" . $url . $thumbnail_src;
 
-			$description = $current_project['Project']['description'];
-			$description = $this->removespecialchars($description);
-			$current_project['Project']['description'] = $description;
-			array_push($final_projects, $current_project);
-		}
 		$this->set('user_name', $user_name);
 		$this->set('rss_link', $rss_link);
-		$this->set('projects', $final_projects);
+        $this->set('projects', $this->__feedize_projects($projects, $user_name));
 		$this->render('User_project_feed');
 	}
 	
@@ -289,32 +187,58 @@ class FeedsController extends AppController {
 		$url = strtolower($url);
 		$rss_link = "http://" . $url . "/feeds/getRecentGalleryProjects/$gallery_id";
 		
-		foreach ($gallery_projects as $current_project) {
-			$user_id = $current_project['Project']['user_id'];
-			$user_record = $this->User->findAll("User.id = $user_id");
-			$user_name = $user_record[0]['User']['username'];
-			$project_id = $current_project['Project']['id'];
-			
-			$thumbnail_src = getThumbnailImg($user_name, $project_id);
-			$additional_url = "/projects/$user_name/$project_id";
-			$current_project['Project']['link'] = "http://" . $url . $additional_url;
-			$current_project['Project']['image_link'] = "http://" . $url . $thumbnail_src;
-			$current_project['Project']['description'] = $current_project['Project']['description'];
-			array_push($final_projects, $current_project);
-		}
-		
 		$this->set('gallery_name', $gallery_name);
 		$this->set('rss_link', $rss_link);
-		$this->set('projects', $final_projects);
+		$this->set('projects', $this->__feedize_projects($gallery_projects));
 		$this->render('gallery_project_feed');
 	}
-	
-	function removespecialchars($target) {
-		$result = $target;
-		$search = "�";
-		$replace = "-";
-		$result = str_replace($search, $replace, $target);
-		return $result;
+    
+    function getFriendsLatestProjects($encoded_user_id){
+		$this->autoRender = false;
+		$this->layout = 'xml';
+		$user_id = $this->decode($encoded_user_id);
+		$user_record = $this->User->find("id = $user_id");
+		if(empty($user_record)) {
+			$this->cakeError('error404');
+		}
+
+		$username = $user_record['User']['username'];
+        $projects = $this->Project->getMyFriendsLatestProjects(
+                                    $user_id, 0, 10);
+
+        $url = env('SERVER_NAME');
+		$url = strtolower($url);
+		$rss_link = "http://" . $url . "/feeds/getFriendsLatestProjects/".$encoded_user_id;
+
+		$this->set('username', $username);
+        $this->set('projects', $this->__feedize_projects($projects));
+		$this->set('rss_link', $rss_link);
+        $this->render('get_friends_latest_feeds');
 	}
+	
+	/*
+     * makes $projects array feed ready
+     */
+    function __feedize_projects($projects, $user_name = null) {
+        $url = strtolower(env('SERVER_NAME'));
+        foreach ($projects as $key => $project) {
+			$project_id = $project['Project']['id'];
+            if(!$user_name) {
+                $user_id = $project['Project']['user_id'];
+                $user = $this->User->find("User.id = $user_id");
+                $user_name = $user['User']['username'];
+            }
+			$thumbnail_src = getThumbnailImg($user_name, $project_id);
+			$additional_url = "/projects/$user_name/$project_id";
+			$project['Project']['link'] = "http://" . $url . $additional_url;
+			$project['Project']['image_link'] = "http://" . $url . $thumbnail_src;
+
+			$project['Project']['description'] = 
+                        str_replace("�", "-", $project['Project']['description']);
+            $projects[$key] = $project;
+		}
+
+        return $projects;
+    }
 }
 ?>
