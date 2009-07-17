@@ -20,7 +20,7 @@ Class HomeController extends AppController {
         $project_ids = array();
        	$user_ids =array();
         $this->set('client_ip', $this->RequestHandler->getClientIP());
-        $home_projects = $this->Project->mc_get('home_projects');
+        $home_projects = false;//$this->Project->mc_get('home_projects');
         if(!$home_projects) {
 			$curator_name = $this->___getCuratorName();
 			
@@ -265,7 +265,7 @@ Class HomeController extends AppController {
             $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
         $this->Project->bindUser();
-        if ($this->getContentStatus() =='safe') {
+        if ($this->getContentStatus() == 'safe') {
 		    $days = 20;
         } else {
 		    $days = 4;
@@ -273,9 +273,24 @@ Class HomeController extends AppController {
         $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-        return $this->Project->findAll("Project.created > now() - interval $days  day AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'"
-                                . $exclude_clause . $exclude_user_id_clause . ' GROUP BY Project.user_id',
-                                NULL, "Project.views DESC", NUM_TOP_VIEWED, 1, NULL, $this->getContentStatus());
+        
+        $sql = 'SELECT `Project`.id, `Project`.name, `User`.urlname'
+               .' FROM ('
+               .' SELECT `id`, `user_id`, `name`, `views`'
+               .' FROM `projects` `Project`'
+               .' WHERE `created` > now( ) - INTERVAL '. $days .' DAY'
+               .' AND user_id > 0 AND proj_visibility = "visible"'
+               .' AND status <> "notsafe"'
+               . $exclude_clause . $exclude_user_id_clause
+               .' ORDER BY `views` DESC'
+               .' LIMIT ' . (NUM_TOP_VIEWED * 5)
+               .' ) `Project`'
+               .' LEFT JOIN `users` `User` ON `Project`.`user_id` = `User`.`id`'
+               .' GROUP BY `Project`.`user_id`'
+               .' ORDER BY `Project`.`views` DESC'
+               .' LIMIT ' . NUM_TOP_VIEWED;
+        $projects = $this->Project->query($sql);
+        return $projects;
     }
 
     function __getTopRemixedProjects($exclude_project_ids, $exclude_user_ids) {
