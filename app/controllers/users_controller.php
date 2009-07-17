@@ -951,7 +951,7 @@ class UsersController extends AppController {
 
 		// get all friends of user
 		$this->Relationship->bindFriend();
-		$relations = $this->Relationship->findAll("user_id = $user_id", NULL, "Relationship.timestamp DESC", 5, 1, NULL);
+		$relations = $this->Relationship->findAll("Relationship.user_id = $user_id AND Relationship.friend_id > 0", NULL, "Relationship.timestamp DESC", 5, 1, NULL);
 		$this->set('friends', $relations);
 		
 		$isIgnored=false;
