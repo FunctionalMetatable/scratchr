@@ -419,13 +419,30 @@ Class HomeController extends AppController {
 	}
 	
     function __getDesignStudioProjects($exclude_user_ids) {
-		$exclude_user_id_clause = '';
+		$clubbed_gallery =$this->ClubbedGallery->find(NULL, NULL, "ClubbedGallery.id DESC");
+        $gallery_id = 13;//= $clubbed_gallery['ClubbedGallery']['gallery_id'];
+        
+        $exclude_user_id_clause = '';
 		if(!empty($exclude_user_ids)) {
-           $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
+           $exclude_user_id_clause = ' AND `user_id` NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
-        $clubed_theme =$this->ClubbedGallery->find(NULL, NULL, "ClubbedGallery.id DESC");
-        $theme_id = $clubed_theme['ClubbedGallery']['gallery_id'];
-        return $clubed_theme_projects = $this->GalleryProject->findAll("GalleryProject.gallery_id = $theme_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'".$exclude_user_id_clause.' GROUP BY Project.user_id',NULL, ' RAND()', NUM_DESIGN_STUDIO_PROJECT, NULL, 2, $this->getContentStatus());
+        
+        $sql = 'SELECT `Project`.id, `Project`.name, `User`.urlname'
+               .' FROM ('
+               .' SELECT `projects`.`id`, `user_id`, `name`'
+               .' FROM `projects`, `gallery_projects`'
+               .' WHERE `gallery_id` = '. $gallery_id
+               .' AND `projects`.`id` = `gallery_projects`.`project_id`'
+               .' AND `proj_visibility` = "visible" AND `status` <> "notsafe"'
+               . $exclude_user_id_clause
+               .' ORDER BY RAND()'
+               .' LIMIT ' . (NUM_DESIGN_STUDIO_PROJECT * 3)
+               .' ) `Project`'
+               .' LEFT JOIN `users` `User` ON `Project`.`user_id` = `User`.`id`'
+               .' GROUP BY `Project`.`user_id`'
+               .' LIMIT ' . NUM_DESIGN_STUDIO_PROJECT;
+
+        return $this->Project->query($sql);
 	}//function	
 }
 ?>
