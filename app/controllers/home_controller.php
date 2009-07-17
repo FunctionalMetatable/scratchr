@@ -420,7 +420,7 @@ Class HomeController extends AppController {
 	
     function __getDesignStudioProjects($exclude_user_ids) {
 		$clubbed_gallery =$this->ClubbedGallery->find(NULL, NULL, "ClubbedGallery.id DESC");
-        $gallery_id = 13;//= $clubbed_gallery['ClubbedGallery']['gallery_id'];
+        $gallery_id = $clubbed_gallery['ClubbedGallery']['gallery_id'];
         
         $exclude_user_id_clause = '';
 		if(!empty($exclude_user_ids)) {
