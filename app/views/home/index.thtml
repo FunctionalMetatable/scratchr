@@ -121,7 +121,7 @@
 		<?php //print_r($clubedprojects);
 		foreach ($clubedprojects as $clubed):
 		$pid = $clubed['Project']['id'];
-		$owner = $clubed['Project']['User']['urlname'];
+		$owner = $clubed['User']['urlname'];
 		$project_link = "/projects/".$owner."/".$pid;
 		$thumbnail_src = getThumbnailImg($owner, $pid);
 		$user_link = "/users/".$owner;
