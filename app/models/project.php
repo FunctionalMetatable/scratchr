@@ -818,5 +818,45 @@ Class Project extends AppModel
         
         return $project_data;
     }
+
+    function getTopProjects($order_by_field, $order, $interval, $exclude_project_ids,
+                            $exclude_user_ids, $limit, $condition = null) {
+
+        $exclude_clause = '';
+		$exclude_user_id_clause = '';
+        $condition_clause = '';
+        $interval_clause = '';
+        
+        if(!empty($exclude_project_ids)) {
+            $exclude_clause = ' AND id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+        }
+		if(!empty($exclude_user_ids)) {
+            $exclude_user_id_clause = ' AND user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
+        }
+        if(!empty($condition)) {
+            $condition_clause = ' AND '.$condition;
+        }
+        if(!empty($interval)) {
+            $interval_clause = ' AND `created` > now( ) - INTERVAL '. $interval .' DAY';
+        }
+        $sql = 'SELECT `Project`.id, `Project`.name, `User`.urlname'
+               .' FROM ('
+               .' SELECT `id`, `user_id`, `name`, '.$order_by_field
+               .' FROM `projects`'
+               .' WHERE user_id > 0 '
+               . $interval_clause
+               . $condition_clause
+               .' AND proj_visibility = "visible" AND status <> "notsafe"'
+               . $exclude_clause . $exclude_user_id_clause
+               .' ORDER BY '.$order_by_field .' '.$order
+               .' LIMIT ' . ($limit * 5)
+               .' ) `Project`'
+               .' LEFT JOIN `users` `User` ON `Project`.`user_id` = `User`.`id`'
+               .' GROUP BY `Project`.`user_id`'
+               .' ORDER BY `Project`.'.$order_by_field.' '.$order
+               .' LIMIT ' . $limit;
+
+        return $this->query($sql);
+    }
 }
 ?>

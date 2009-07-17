@@ -230,8 +230,8 @@ Class HomeController extends AppController {
 	}
 	
     function __getNewProjects() {
-        $this->Project->bindUser();
-        return $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'", null, "Project.created DESC", NUM_NEW_PROJECTS, 1, null, $this->getContentStatus());
+        return $this->Project->getTopProjects('`created`', 'DESC', null,
+            null, null, NUM_NEW_PROJECTS);
     }
 
     function __getBlockedUserFrontpage(){
@@ -256,91 +256,29 @@ Class HomeController extends AppController {
     }
 
     function __getTopViewedProjects($exclude_project_ids, $exclude_user_ids) {
-        $exclude_clause = '';
-		$exclude_user_id_clause = '';
-        if(!empty($exclude_project_ids)) {
-            $exclude_clause = ' AND id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
-        }
-		if(!empty($exclude_user_ids)) {
-            $exclude_user_id_clause = ' AND user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
-        }
-        $this->Project->bindUser();
         if ($this->getContentStatus() == 'safe') {
 		    $days = 20;
         } else {
 		    $days = 4;
         }
-
-        $sql = 'SELECT `Project`.id, `Project`.name, `User`.urlname'
-               .' FROM ('
-               .' SELECT `id`, `user_id`, `name`, `views`'
-               .' FROM `projects`'
-               .' WHERE `created` > now( ) - INTERVAL '. $days .' DAY'
-               .' AND user_id > 0 AND proj_visibility = "visible"'
-               .' AND status <> "notsafe"'
-               . $exclude_clause . $exclude_user_id_clause
-               .' ORDER BY `views` DESC'
-               .' LIMIT ' . (NUM_TOP_VIEWED * 5)
-               .' ) `Project`'
-               .' LEFT JOIN `users` `User` ON `Project`.`user_id` = `User`.`id`'
-               .' GROUP BY `Project`.`user_id`'
-               .' ORDER BY `Project`.`views` DESC'
-               .' LIMIT ' . NUM_TOP_VIEWED;
-        $projects = $this->Project->query($sql);
-        return $projects;
+        return $this->Project->getTopProjects('`views`', 'DESC', $days,
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED);
     }
 
     function __getTopRemixedProjects($exclude_project_ids, $exclude_user_ids) {
-        $exclude_clause = '';
-		$exclude_user_id_clause = '';
-        if(!empty($exclude_project_ids)) {
-            $exclude_clause = ' AND id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
-        }
-		if(!empty($exclude_user_ids)) {
-            $exclude_user_id_clause = ' AND user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
-        }
-        $this->Project->bindUser();
         if ($this->getContentStatus() =='safe') {
 		    $days = 20;
         } else {
 		    $days = 10;
         }
 
-        $sql = 'SELECT `Project`.id, `Project`.name, `User`.urlname'
-               .' FROM ('
-               .' SELECT `id`, `user_id`, `name`, `remixer`'
-               .' FROM `projects`'
-               .' WHERE `created` > now( ) - INTERVAL '. $days .' DAY'
-               .' AND remixer > 0 AND user_id > 0'
-               .' AND proj_visibility = "visible" AND status <> "notsafe"'
-               . $exclude_clause . $exclude_user_id_clause
-               .' ORDER BY `remixer` DESC'
-               .' LIMIT ' . (NUM_TOP_REMIXED * 5)
-               .' ) `Project`'
-               .' LEFT JOIN `users` `User` ON `Project`.`user_id` = `User`.`id`'
-               .' GROUP BY `Project`.`user_id`'
-               .' ORDER BY `Project`.`remixer` DESC'
-               .' LIMIT ' . NUM_TOP_REMIXED;
-
-        $projects = $this->Project->query($sql);
-        return $projects;
+        return $this->Project->getTopProjects('`remixer`', 'DESC', $days,
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, 'remixer > 0');
     }
 
     function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids) {
-        $exclude_clause = '';
-		$exclude_user_id_clause = '';
-        if(!empty($exclude_project_ids)) {
-            $exclude_clause = ' AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
-        }
-		if(!empty($exclude_user_ids)) {
-            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
-        }
-        $this->Project->unbindModel(
-                array('hasMany' => array('GalleryProject'))
-            );
-        return $this->Project->findAll("Project.created > now() - interval 10 day AND  Project.proj_visibility = 'visible' AND Project.status <> 'notsafe'"
-                                        . $exclude_clause . $exclude_user_id_clause . ' GROUP BY Project.user_id',
-                                        NULL, "Project.loveit DESC", NUM_TOP_RATED, 1, NULL, $this->getContentStatus());
+        return $this->Project->getTopProjects('`loveit`', 'DESC', '10',
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED);
     }
 
     function __getTopDownloadedProjects($exclude_project_ids, $exclude_user_ids) {
