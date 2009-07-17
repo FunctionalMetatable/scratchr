@@ -2970,16 +2970,16 @@ Class GalleriesController extends AppController {
 		$ignored_list = implode(',',$ignored_user_array);
 		if(!empty($ignored_list)){
 			if ($content_status == 'safe') {
-				$conditions = "gallery_id = $gallery_id AND Project.status = 'safe' AND Project.user_id not in (".$ignored_list.") ";
+				$conditions = "gallery_id = $gallery_id AND Gallery.visibility = 'visible' AND Project.status = 'safe' AND Project.user_id not in (".$ignored_list.") ";
 			} else {
-				$conditions = "gallery_id = $gallery_id AND Project.user_id not in (".$ignored_list.") ";
+				$conditions = "gallery_id = $gallery_id AND Gallery.visibility = 'visible' AND Project.user_id not in (".$ignored_list.") ";
 			}
 		}
 		else{
 		if ($content_status == 'safe') {
-				$conditions = "gallery_id = $gallery_id AND Project.status = 'safe' ";
+				$conditions = "gallery_id = $gallery_id  AND Gallery.visibility = 'visible' AND Project.status = 'safe' ";
 			} else {
-				$conditions = "gallery_id = $gallery_id ";
+				$conditions = "gallery_id = $gallery_id  AND Gallery.visibility = 'visible'";
 			}
 		
 		}
@@ -3000,10 +3000,10 @@ Class GalleriesController extends AppController {
 								"direction"=> "DESC", "url"=>"/galleries/renderProjects/" . $gallery_id . "/added");
 		}
 		if(!empty($ignored_list)){
-		list($order,$limit,$page) = $this->Pagination->init("gallery_id = $gallery_id AND Project.user_id not in (".$ignored_list.") ", Array(), $options);
+		list($order,$limit,$page) = $this->Pagination->init("gallery_id = $gallery_id  AND Gallery.visibility = 'visible' AND Project.user_id not in (".$ignored_list.") ", Array(), $options);
 		}
 		else
-		list($order,$limit,$page) = $this->Pagination->init("gallery_id = $gallery_id ", Array(), $options);
+		list($order,$limit,$page) = $this->Pagination->init("gallery_id = $gallery_id  AND Gallery.visibility = 'visible'", Array(), $options);
 		$gallery_projects = $this->GalleryProject->findAll($conditions, null, $order, $limit, $page, 3);
 		$gallery_projects = $this->set_gallery_projects($gallery_projects, $gallery_id);
 		$data = $gallery_projects;
