@@ -259,10 +259,10 @@ Class HomeController extends AppController {
         $exclude_clause = '';
 		$exclude_user_id_clause = '';
         if(!empty($exclude_project_ids)) {
-            $exclude_clause = ' AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+            $exclude_clause = ' AND id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
         }
 		if(!empty($exclude_user_ids)) {
-            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
+            $exclude_user_id_clause = ' AND user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
         $this->Project->bindUser();
         if ($this->getContentStatus() == 'safe') {
@@ -270,14 +270,11 @@ Class HomeController extends AppController {
         } else {
 		    $days = 4;
         }
-        $this->Project->unbindModel(
-                array('hasMany' => array('GalleryProject'))
-            );
-        
+
         $sql = 'SELECT `Project`.id, `Project`.name, `User`.urlname'
                .' FROM ('
                .' SELECT `id`, `user_id`, `name`, `views`'
-               .' FROM `projects` `Project`'
+               .' FROM `projects`'
                .' WHERE `created` > now( ) - INTERVAL '. $days .' DAY'
                .' AND user_id > 0 AND proj_visibility = "visible"'
                .' AND status <> "notsafe"'
@@ -297,10 +294,10 @@ Class HomeController extends AppController {
         $exclude_clause = '';
 		$exclude_user_id_clause = '';
         if(!empty($exclude_project_ids)) {
-            $exclude_clause = ' AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+            $exclude_clause = ' AND id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
         }
 		if(!empty($exclude_user_ids)) {
-            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
+            $exclude_user_id_clause = ' AND user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
         }
         $this->Project->bindUser();
         if ($this->getContentStatus() =='safe') {
@@ -308,12 +305,25 @@ Class HomeController extends AppController {
         } else {
 		    $days = 10;
         }
-        $this->Project->unbindModel(
-                array('hasMany' => array('GalleryProject'))
-            );
-        return $this->Project->findAll("DATE_SUB(NOW(), INTERVAL $days DAY) <= Project.created AND Project.user_id > 0 AND Project.proj_visibility = 'visible' AND Project.remixer > 0 AND Project.status <> 'notsafe'"
-                                        . $exclude_clause . $exclude_user_id_clause . ' GROUP BY Project.user_id',
-                                        NULL, "Project.remixer DESC", NUM_TOP_REMIXED, 1, NULL, $this->getContentStatus());
+
+        $sql = 'SELECT `Project`.id, `Project`.name, `User`.urlname'
+               .' FROM ('
+               .' SELECT `id`, `user_id`, `name`, `remixer`'
+               .' FROM `projects`'
+               .' WHERE `created` > now( ) - INTERVAL '. $days .' DAY'
+               .' AND remixer > 0 AND user_id > 0'
+               .' AND proj_visibility = "visible" AND status <> "notsafe"'
+               . $exclude_clause . $exclude_user_id_clause
+               .' ORDER BY `remixer` DESC'
+               .' LIMIT ' . (NUM_TOP_REMIXED * 5)
+               .' ) `Project`'
+               .' LEFT JOIN `users` `User` ON `Project`.`user_id` = `User`.`id`'
+               .' GROUP BY `Project`.`user_id`'
+               .' ORDER BY `Project`.`remixer` DESC'
+               .' LIMIT ' . NUM_TOP_REMIXED;
+
+        $projects = $this->Project->query($sql);
+        return $projects;
     }
 
     function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids) {
