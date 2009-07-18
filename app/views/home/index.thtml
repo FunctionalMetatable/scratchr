@@ -96,7 +96,7 @@
 		<?php
 		foreach ($favorites as $favorite):
 		$pid = $favorite['Project']['id'];
-		$owner = $favorite['Project']['User']['urlname'];
+		$owner = $favorite['User']['urlname'];
 		$project_link = "/projects/".$owner."/".$pid;
 		$thumbnail_src = getThumbnailImg($owner, $pid);
 		$user_link = "/users/".$owner;
