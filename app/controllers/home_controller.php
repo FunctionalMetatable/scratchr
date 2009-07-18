@@ -20,7 +20,7 @@ Class HomeController extends AppController {
         $project_ids = array();
        	$user_ids =array();
         $this->set('client_ip', $this->RequestHandler->getClientIP());
-        $home_projects = false;//$this->Project->mc_get('home_projects');
+        $home_projects = $this->Project->mc_get('home_projects');
         if(!$home_projects) {
 			$curator_name = $this->___getCuratorName();
 			
@@ -83,8 +83,8 @@ Class HomeController extends AppController {
 								   'clubedprojects' => $clubedprojects
                                 );
                                 
-            /*$this->Project->mc_set('home_projects', $home_projects,
-                                    false, HOMEL_PAGE_TTL);*/
+            $this->Project->mc_set('home_projects', $home_projects,
+                                    false, HOMEL_PAGE_TTL);
         }
         else {
             $featured       = $home_projects['featured'];
