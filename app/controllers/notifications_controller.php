@@ -43,6 +43,27 @@ class NotificationsController extends AppController {
 		$this->render('notifications');
 	}
 	
+	function view($user_id){
+		if(!$this->isAdmin()) {
+			$this->cakeError('error404');
+		}
+		$user_record = $this->User->find("id = $user_id");
+			if(empty($user_record)) {
+				$this->cakeError('error404');
+			}
+			
+			$username = $user_record['User']['username'];
+			$this->set('username', $username);
+		$i =0;	
+		$inappropriate_notifications = array();
+		$notifications = $this->Notification->getInappropriateNotifications($user_id, 1, 10);
+		foreach($notifications as $notification){
+			$inappropriate_notifications[$i++]['0'] = array_merge($notification['Notification'],$notification['NotificationType'],$notification['0']);
+		}
+		
+		$this->set('inappropriate_notifications', $inappropriate_notifications);
+	}
+	
 	/* 
 	 * AJAX-called
 	 * marks the indicated notification as read

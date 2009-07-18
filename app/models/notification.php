@@ -77,6 +77,35 @@ class Notification extends AppModel {
 		return $notifications;
 	}
 	
+	function getInappropriateNotifications($user_id, $page, $limit, $admin = false) {
+		$notifications = false;
+		$inappropriate_conditions = ' AND `NotificationType`.`inappropriate` = 1';
+		
+		if ($notifications == false) {
+			$offset = ($page -1) * $limit;
+			$notification_query = 
+				'SELECT `Notification`.`id`, `Notification`.`from_user_name`, `Notification`.`created`,'
+				.' `Notification`.`to_user_id`,  `Notification`.`project_id`, `Notification`.`project_owner_name`,'
+				.' `Notification`.`gallery_id`, `Notification`.`comment_id`,'
+                .' `Notification`.`extra`, `Notification`.`notification_type_id`,'
+				.' `Notification`.`status`, `NotificationType`.`id` type_id, `NotificationType`.`type`,'
+				.' `NotificationType`.`template`, `NotificationType`.`is_admin`, `NotificationType`.`inappropriate`,'
+				.' IFNULL(Project.user_id, 0) project_owner_id, IFNULL(Project.name, "") project_name,'
+				.' IFNULL(Gallery.user_id, 0) gallery_owner_id, IFNULL(Gallery.name, "") gallery_name,'
+				.' "notification" notif_type'
+				.' FROM `notifications` AS `Notification`'
+				.' LEFT JOIN `notification_types` AS `NotificationType` ON'
+				.' (`Notification`.`notification_type_id` = `NotificationType`.`id`)'
+				.' LEFT JOIN `projects` AS `Project` ON (`Notification`.`project_id` = `Project`.`id`)'
+				.' LEFT JOIN `galleries` AS `Gallery` ON (`Notification`.`gallery_id` = `Gallery`.`id`)'
+				.' WHERE `Notification`.`to_user_id` = '.$user_id.$inappropriate_conditions
+				.' ORDER BY `created` DESC';
+			
+			$inappropriate_notifications = $this->query($notification_query);
+		}
+		return $inappropriate_notifications;
+	}
+	
 	/**
 	* returns number of unread/pending notifications/friend_requests
 	* Precondition: must be logged in

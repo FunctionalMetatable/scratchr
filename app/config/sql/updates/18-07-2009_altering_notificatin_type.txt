@@ -1,0 +1,14 @@
+ALTER TABLE `notification_types` ADD `inappropriate` INT NULL DEFAULT '0';
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 8 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 9 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 10 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 11 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 12 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 13 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 14 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 15 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 16 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 17 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 18 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 19 LIMIT 1;
+UPDATE `notification_types` SET `inappropriate` = '1' WHERE `notification_types`.`id` = 20 LIMIT 1;

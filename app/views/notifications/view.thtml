@@ -1,0 +1,31 @@
+<div class="fullcontent">
+
+<h2><?php printf(___('%s Message(s)',true),count($inappropriate_notifications)); ?></h2>
+
+<div id="main">
+    <div id="messages"><?php //print_r($inappropriate_notifications)?>
+	<?php foreach($inappropriate_notifications as $notification):?>
+	<?php
+		$notification = $notification[0]; 
+		$id = $notification['id'];
+		$message = $template->create($notification, $username);
+	?>
+	<div id='notification_<?php echo $id; ?>' class="notification" style='display:block;' align='left'>
+			<?php echo $message; ?>
+			<div style="text-align:right">
+				<small>By <?php 
+				echo (!empty($notification['from_user_name'])) ? $notification['from_user_name']: 'system';
+				?>
+				&nbsp;
+				<?php
+				echo friendlyDate($notification['created']);___(' ago');
+				?></small>
+			</div>
+	 </div>  
+	
+    <?php endforeach; ?>
+	
+	
+	
+</div>
+</div>
