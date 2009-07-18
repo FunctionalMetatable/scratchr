@@ -83,8 +83,8 @@ Class HomeController extends AppController {
 								   'clubedprojects' => $clubedprojects
                                 );
                                 
-            $this->Project->mc_set('home_projects', $home_projects,
-                                    false, HOMEL_PAGE_TTL);
+            /*$this->Project->mc_set('home_projects', $home_projects,
+                                    false, HOMEL_PAGE_TTL);*/
         }
         else {
             $featured       = $home_projects['featured'];
@@ -230,7 +230,7 @@ Class HomeController extends AppController {
 	}
 	
     function __getNewProjects() {
-        return $this->Project->getTopProjects('`created`', 'DESC', null,
+        return $this->Project->getTopProjects('`created`', '`created` DESC', null,
             null, null, NUM_NEW_PROJECTS);
     }
 
@@ -239,20 +239,12 @@ Class HomeController extends AppController {
 	}
 	
 	function __getFeaturedProjects($exclude_project_ids, $exclude_user_ids) {
-        $exclude_clause = '';
-        $exclude_user_id_clause = '';
-        if(!empty($exclude_project_ids)) {
-            $exclude_clause = ' AND FeaturedProject.project_id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
-        }
-        if(!empty($exclude_user_ids)) {
-            $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
-        }	
-        $this->Project->unbindModel(
-                array('hasMany' => array('GalleryProject'))
-            );
-        return $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'"
-                                                . $exclude_clause . $exclude_user_id_clause,
-            NULL, "FeaturedProject.id DESC", NUM_FEATURED_PROJECTS, NULL, 2);
+        $condition = '`projects`.`id` = `featured_projects`.`project_id`';
+        $projects = $this->Project->getTopProjects('`featured_projects`.`id` `featured`',
+                    '`featured` DESC', null, $exclude_project_ids, $exclude_user_ids,
+                    NUM_FEATURED_PROJECTS,
+                    $condition, '`featured_projects`');
+        return $projects;
     }
 
     function __getTopViewedProjects($exclude_project_ids, $exclude_user_ids) {
@@ -261,7 +253,7 @@ Class HomeController extends AppController {
         } else {
 		    $days = 4;
         }
-        return $this->Project->getTopProjects('`views`', 'DESC', $days,
+        return $this->Project->getTopProjects('`views`', '`views` DESC', $days,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED);
     }
 
@@ -272,12 +264,12 @@ Class HomeController extends AppController {
 		    $days = 10;
         }
 
-        return $this->Project->getTopProjects('`remixer`', 'DESC', $days,
+        return $this->Project->getTopProjects('`remixer`', '`remixer` DESC', $days,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, 'remixer > 0');
     }
 
     function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids) {
-        return $this->Project->getTopProjects('`loveit`', 'DESC', '10',
+        return $this->Project->getTopProjects('`loveit`', '`loveit` DESC', '10',
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED);
     }
 
@@ -389,28 +381,22 @@ Class HomeController extends AppController {
 	
 	}
 	
-	function __getCuratorFavorites($exclude_project_ids, $exclude_user_ids){
-		$exclude_clause = '';
-		$exclude_user_id_clause = '';
-        if(!empty($exclude_project_ids)) {
-           $exclude_clause = ' AND Project.id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
-        }
+	function __getCuratorFavorites($exclude_project_ids, $exclude_user_ids) {
+        $curator = $this->Curator->find(null, array(), 'Curator.id DESC');
+        $curator_id  = $curator['Curator']['user_id'];
 
-		if(!empty($exclude_user_ids)) {
-           $exclude_user_id_clause = ' AND Project.user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
-        }
+        if(empty($curator_id)) { return null; }
 
-        $favorites =array();
-		$curator = $this->Curator->find(null, array(), 'Curator.id DESC');
-	 	$curator_id  = $curator['Curator']['user_id'];
-		if($curator_id) {
-            $this->Project->unbindModel(
-                array('hasMany' => array('GalleryProject'))
-            );
-            $favorites = $this->Favorite->findAll("Favorite.user_id= $curator_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.user_id <> $curator_id"
-                .$exclude_clause.$exclude_user_id_clause, null, 'Favorite.timestamp DESC', 3, null, 2);
-        }
-		return  $favorites;
+        $condition = '`favorites`.`user_id` = '. $curator_id
+                    .' AND `projects`.`user_id` <> '. $curator_id
+                    .' AND `projects`.`id` = `favorites`.`project_id`';
+        $projects = $this->Project->getTopProjects('`favorites`.`timestamp` `recency`',
+                    '`recency` DESC', null, $exclude_project_ids, $exclude_user_ids,
+                    NUM_CURATOR_FAV_PROJECT,
+                    $condition, '`favorites`');
+
+
+        return $projects;
 	}
     
 	function ___getCuratorName(){
@@ -419,30 +405,19 @@ Class HomeController extends AppController {
 	}
 	
     function __getDesignStudioProjects($exclude_user_ids) {
-		$clubbed_gallery =$this->ClubbedGallery->find(NULL, NULL, "ClubbedGallery.id DESC");
-        $gallery_id = $clubbed_gallery['ClubbedGallery']['gallery_id'];
+		$clubbed_gallery = $this->__getScratchClub();
+        $gallery_id = $clubbed_gallery['id'];
         
-        $exclude_user_id_clause = '';
-		if(!empty($exclude_user_ids)) {
-           $exclude_user_id_clause = ' AND `user_id` NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
-        }
-        
-        $sql = 'SELECT `Project`.id, `Project`.name, `User`.urlname'
-               .' FROM ('
-               .' SELECT `projects`.`id`, `user_id`, `name`'
-               .' FROM `projects`, `gallery_projects`'
-               .' WHERE `gallery_id` = '. $gallery_id
-               .' AND `projects`.`id` = `gallery_projects`.`project_id`'
-               .' AND `proj_visibility` = "visible" AND `status` <> "notsafe"'
-               . $exclude_user_id_clause
-               .' ORDER BY RAND()'
-               .' LIMIT ' . (NUM_DESIGN_STUDIO_PROJECT * 3)
-               .' ) `Project`'
-               .' LEFT JOIN `users` `User` ON `Project`.`user_id` = `User`.`id`'
-               .' GROUP BY `Project`.`user_id`'
-               .' LIMIT ' . NUM_DESIGN_STUDIO_PROJECT;
+        if(empty($gallery_id)) { return null; }
 
-        return $this->Project->query($sql);
+        $condition = '`gallery_id` = '. $gallery_id
+                        .' AND `projects`.`id` = `gallery_projects`.`project_id`';
+        
+        $projects = $this->Project->getTopProjects('', 'RAND()', null, null,
+                    $exclude_user_ids, NUM_DESIGN_STUDIO_PROJECT,
+                    $condition, '`gallery_projects`');
+
+        return $projects;
 	}//function	
 }
 ?>

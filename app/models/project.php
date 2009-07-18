@@ -819,8 +819,8 @@ Class Project extends AppModel
         return $project_data;
     }
 
-    function getTopProjects($order_by_field, $order, $interval, $exclude_project_ids,
-                            $exclude_user_ids, $limit, $condition = null) {
+    function getTopProjects($fields, $order_by_clause, $interval, $exclude_project_ids,
+                    $exclude_user_ids, $limit, $condition = null, $join_table = null) {
 
         $exclude_clause = '';
 		$exclude_user_id_clause = '';
@@ -828,32 +828,47 @@ Class Project extends AppModel
         $interval_clause = '';
         
         if(!empty($exclude_project_ids)) {
-            $exclude_clause = ' AND id NOT IN ( '.implode($exclude_project_ids, ' , ').' )';
+            $exclude_clause = ' AND `projects`.`id` NOT IN ( '
+                                    . implode($exclude_project_ids, ' , ').' )';
         }
 		if(!empty($exclude_user_ids)) {
-            $exclude_user_id_clause = ' AND user_id NOT IN ( '.implode($exclude_user_ids, ' , ').' )';
+            $exclude_user_id_clause = ' AND `projects`.`user_id` NOT IN ( '
+                                     . implode($exclude_user_ids, ' , ') . ' )';
         }
         if(!empty($condition)) {
-            $condition_clause = ' AND '.$condition;
+            $condition_clause = ' AND ' . $condition;
         }
         if(!empty($interval)) {
             $interval_clause = ' AND `created` > now( ) - INTERVAL '. $interval .' DAY';
         }
+        if(!empty($join_table)) {
+            $join_table = ', ' . $join_table;
+        }
+        if(!empty($fields)) {
+            $fields = ', ' . $fields;
+        }
+
+        $order_by_clause_inner = ' ORDER BY ' . $order_by_clause;
+        $order_by_clause_outer = '';
+        if($order_by_clause != 'RAND()') {
+            $order_by_clause_outer = ' ORDER BY `Project`.'.$order_by_clause;
+        }
+
         $sql = 'SELECT `Project`.id, `Project`.name, `User`.urlname'
                .' FROM ('
-               .' SELECT `id`, `user_id`, `name`, '.$order_by_field
-               .' FROM `projects`'
-               .' WHERE user_id > 0 '
+               .' SELECT `projects`.`id`, `projects`.`user_id`, `name`'.$fields
+               .' FROM `projects`' . $join_table
+               .' WHERE `projects`.`user_id` > 0 '
                . $interval_clause
                . $condition_clause
-               .' AND proj_visibility = "visible" AND status <> "notsafe"'
+               .' AND `proj_visibility` = "visible" AND `status` <> "notsafe"'
                . $exclude_clause . $exclude_user_id_clause
-               .' ORDER BY '.$order_by_field .' '.$order
+               . $order_by_clause_inner
                .' LIMIT ' . ($limit * 5)
                .' ) `Project`'
                .' LEFT JOIN `users` `User` ON `Project`.`user_id` = `User`.`id`'
                .' GROUP BY `Project`.`user_id`'
-               .' ORDER BY `Project`.'.$order_by_field.' '.$order
+               . $order_by_clause_outer
                .' LIMIT ' . $limit;
 
         return $this->query($sql);

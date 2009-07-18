@@ -46,7 +46,7 @@
 		<?php
 		foreach ($featuredprojects as $featured):
 		$pid = $featured['Project']['id'];
-		$owner = $featured['Project']['User']['urlname'];
+		$owner = $featured['User']['urlname'];
 		$project_link = "/projects/".$owner."/".$pid;
 		$thumbnail_src = getThumbnailImg($owner, $pid);
 		$user_link = "/users/".$owner;
