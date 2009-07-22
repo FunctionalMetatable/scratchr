@@ -604,7 +604,7 @@ Class GalleriesController extends AppController {
 						$this->Gcomment->id=null;
 						$this->Gcomment->save($new_tcomment);
                         $new_tcomment['Gcomment']['id'] = $this->Gcomment->getInsertID();
-                        $this->deleteCommentsFromMemcache($gallery_id);
+                        $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 						$this->updateGallery($gallery_id);
 					}
 				}
@@ -731,7 +731,7 @@ Class GalleriesController extends AppController {
 				$this->Gcomment->saveField('comment_visibility','delbyparentcomment');
 				$this->Gcomment->id = false;
 			}
-        $this->deleteCommentsFromMemcache($gallery_id);
+        $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 		exit;
 	}
 
@@ -2139,7 +2139,7 @@ Class GalleriesController extends AppController {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->hide_gcomment($comment_id, "delbyusr");
-                $this->deleteCommentsFromMemcache($gallery_id);
+                $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 				$subject= "Comment deleted because it was flagged by creator of '$gallery_name'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $gallery_creater_url";
 			} elseif ($isAdmin) {
@@ -2152,7 +2152,7 @@ Class GalleriesController extends AppController {
                         $comment_id =$gcontent['Gcomment']['id'];
                         $content = $gcontent['Gcomment']['content'];
                         $this->hide_gcomment($comment_id, "delbyadmin");
-                        $this->deleteCommentsFromMemcache($gcontent['Gcomment']['gallery_id']);
+                        $this->Gcomment->deleteCommentsFromMemcache($gcontent['Gcomment']['gallery_id']);
                         $subject= "Comment deleted because it was flagged by an admin";
                         $msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
                         $this->notify('gcomment_removed', $creator_id,
@@ -2165,7 +2165,7 @@ Class GalleriesController extends AppController {
 				else
 				{
 					$this->hide_gcomment($comment_id, "delbyadmin");
-                    $this->deleteCommentsFromMemcache($gallery_id);
+                    $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 					$subject= "Comment deleted because it was flagged by an admin";
 					$msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
 					$this->notify('gcomment_removed', $creator_id,
@@ -2584,7 +2584,7 @@ Class GalleriesController extends AppController {
 						$new_reply = array('Gcomment'=>array('id' => null, 'gallery_id'=>$gallery_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $source_id));
 						$this->Gcomment->save($new_reply);
                         $gcomment_id = $this->Gcomment->getInsertID();
-                        $this->deleteCommentsFromMemcache($gallery_id);
+                        $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 						$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND (IgnoredUser.blocker_id = $gallery_owner_id OR IgnoredUser.blocker_id = $comment_owner_id)");
 						
 						if ($ignore_count == 0 && $vis == 'visible') {
@@ -3071,16 +3071,5 @@ Class GalleriesController extends AppController {
 			  }
 			
 	}
-
-    function deleteCommentsFromMemcache($gallery_id) {
-        $this->Gcomment->mc_connect();
-        for($i=1; $i<=GCOMMENT_CACHE_NUMPAGE; $i++) {
-            $mc_key = $gallery_id.'__'.$i;
-            $this->Gcomment->mc_delete('gcomments', $mc_key);
-            $mc_key = $gallery_id.'_1_'.$i;
-            $this->Gcomment->mc_delete('gcomments', $mc_key);
-        }
-        $this->Gcomment->mc_close();
-    }
 }
 ?>

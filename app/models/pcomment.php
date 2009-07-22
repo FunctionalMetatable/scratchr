@@ -84,7 +84,18 @@ class Pcomment extends AppModel {
 			return $mycond;
 		}
 	}
-    
+
+    function deleteCommentsFromMemcache($project_id) {
+        $this->mc_connect();
+        for($i=1; $i<=PCOMMENT_CACHE_NUMPAGE; $i++) {
+            $mc_key = $project_id.'__'.$i;
+            $this->mc_delete('pcomments', $mc_key);
+            $mc_key = $project_id.'_1_'.$i;
+            $this->mc_delete('pcomments', $mc_key);
+        }
+        $this->mc_close();
+    }
+	
     function bindUser($conditions = null, $order = null) {
         $this->bindModel(array(
         'belongsTo' => array(

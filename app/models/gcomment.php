@@ -57,7 +57,18 @@ class Gcomment extends AppModel {
 			return $mycond;
 		}
 	}
-	
+
+    function deleteCommentsFromMemcache($gallery_id) {
+        $this->mc_connect();
+        for($i=1; $i<=GCOMMENT_CACHE_NUMPAGE; $i++) {
+            $mc_key = $gallery_id.'__'.$i;
+            $this->mc_delete('gcomments', $mc_key);
+            $mc_key = $gallery_id.'_1_'.$i;
+            $this->mc_delete('gcomments', $mc_key);
+        }
+        $this->mc_close();
+    }
+    
     function bindUser($conditions = null, $order = null) {
         $this->bindModel(array(
         'belongsTo' => array(
