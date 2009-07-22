@@ -1,9 +1,9 @@
 
 <rss version="2.0">
   <channel> 
-    <title>Notifications for the User {<?php echo $username?>}</title>
+    <title><?php echo $username?>'s Notifications</title>
     <link><?php echo $rss_link; ?></link> 
-    <description>Last 10 Notifications for the User {<?php echo $username?>}</description>
+    <description><?php echo $username?>'s Last 10 Notifications</description>
     <language>en-us</language> 
     <pubDate><?php echo date("D, j M Y H:i:s", gmmktime()) . ' GMT';?></pubDate> 
     <docs></docs> 
