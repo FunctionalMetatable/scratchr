@@ -350,7 +350,7 @@ class ProjectsController extends AppController {
 						$new_pcomment = array('Pcomment'=>array('id' => null, 'project_id'=>$pid, 'user_id'=>$commenter_id, 'content'=>$comment, 'comment_visibility' => $vis, 'reply_to_id'=>$comment_id, 'created' => date("Y-m-d G:i:s") ));
 						$this->Pcomment->save($new_pcomment);
                         $new_pcomment['Pcomment']['id'] = $this->Pcomment->getInsertID();
-                        $this->deleteCommentsFromMemcache($pid);
+                        $this->Pcomment->deleteCommentsFromMemcache($pid);
 					}
 				}
             }
@@ -467,7 +467,7 @@ class ProjectsController extends AppController {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->Pcomment->saveField("comment_visibility", "delbyusr") ;
-                $this->deleteCommentsFromMemcache($pid);
+                $this->Pcomment->deleteCommentsFromMemcache($pid);
 				$subject= "Comment deleted because it was flagged by creator of '$pname'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $project_creater_url";
 			} elseif ($isAdmin) {
@@ -481,7 +481,7 @@ class ProjectsController extends AppController {
 						$this->Pcomment->id =$pcontent['Pcomment']['id'] ;
 						$content = $pcontent['Pcomment']['content'];
 						$this->Pcomment->query("update pcomments set comment_visibility = 'delbyadmin' where id=".$pcontent['Pcomment']['id'] );
-                        $this->deleteCommentsFromMemcache($pcontent['Pcomment']['project_id']);
+                        $this->Pcomment->deleteCommentsFromMemcache($pcontent['Pcomment']['project_id']);
                         $subject= "Comment deleted because it was flagged by an admin";
                         $msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
                         $this->notify('pcomment_removed', $creator_id,
@@ -493,7 +493,7 @@ class ProjectsController extends AppController {
 				else
 				{
 				$this->Pcomment->saveField("comment_visibility", "delbyadmin") ;
-                $this->deleteCommentsFromMemcache($pid);
+                $this->Pcomment->deleteCommentsFromMemcache($pid);
 				$subject= "Comment deleted because it was flagged by an admin";
 				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
 				$this->notify('pcomment_removed', $creator_id,
@@ -2591,7 +2591,7 @@ class ProjectsController extends AppController {
 						$new_reply = array('Pcomment'=>array('id' => null, 'project_id'=>$project_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $parent_id));
 						$this->Pcomment->save($new_reply);
                         $pcomment_id = $this->Pcomment->getInsertID();
-                        $this->deleteCommentsFromMemcache($project_id);
+                        $this->Pcomment->deleteCommentsFromMemcache($project_id);
 						$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.user_id = $commenter_id AND (IgnoredUser.blocker_id = $project_owner_id OR IgnoredUser.blocker_id = $comment_owner_id)");
 						if ($ignore_count == 0 && $vis == 'visible') {
 							//user is not replying to his own comment
@@ -2694,7 +2694,7 @@ class ProjectsController extends AppController {
 			}		
 		
 		}
-        $this->deleteCommentsFromMemcache($project_id);
+        $this->Pcomment->deleteCommentsFromMemcache($project_id);
 		exit;
 	}
 	
@@ -3037,18 +3037,7 @@ class ProjectsController extends AppController {
 			
 	}		
 
-    function deleteCommentsFromMemcache($project_id) {
-        $this->Pcomment->mc_connect();
-        for($i=1; $i<=PCOMMENT_CACHE_NUMPAGE; $i++) {
-            $mc_key = $project_id.'__'.$i;
-            $this->Pcomment->mc_delete('pcomments', $mc_key);
-            $mc_key = $project_id.'_1_'.$i;
-            $this->Pcomment->mc_delete('pcomments', $mc_key);
-        }
-        $this->Pcomment->mc_close();
-    }
-	
-	function findOriginalProject($pid){
+    function findOriginalProject($pid){
         $project =$this->Project->find("Project.id = $pid","id,user_id, based_on_pid");
         if($project['Project']['based_on_pid'] == "") {
             return $project['Project']['id'];
