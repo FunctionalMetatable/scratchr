@@ -2534,7 +2534,7 @@ class ProjectsController extends AppController {
 				      $possible_spam = true;
 				  }
 				}
-				if(sizeof($similar_comments)>1)
+				if(sizeof($similar_comments)>$max_comments)
 				{
 				   
 					$possible_spam = true;
@@ -2570,7 +2570,7 @@ class ProjectsController extends AppController {
 					} else {
 						$original = $duplicate_record['Pcomment']['created'];
 						$today = time(); /* Current unix time */
-						$since = $today - strtotime($original);echo $since;
+						$since = $today - strtotime($original);
 						if ($since < 60) {
 							$duplicate = true;
 						} else {

@@ -2580,6 +2580,7 @@ Class GalleriesController extends AppController {
 					}
 					endif;
 					if ($duplicate) {
+					 ___("Sorry, you have posted a very similar message recently.");
 					} else {
 						$new_reply = array('Gcomment'=>array('id' => null, 'gallery_id'=>$gallery_id, 'user_id'=>$user_id, 'content'=>$comment, 'comment_visibility'=>$vis, 'reply_to' => $source_id));
 						$this->Gcomment->save($new_reply);
