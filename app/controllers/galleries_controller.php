@@ -588,7 +588,7 @@ Class GalleriesController extends AppController {
 					if (empty($duplicate_record)) {
 						$duplicate = false;
 					} else {
-						$original = $duplicate_record['Gcomment']['timestamp'];
+						$original = $duplicate_record['Gcomment']['created'];
 						$today = time(); /* Current unix time */
 						$since = $today - strtotime($original);
 						if ($since < 60) {
@@ -2563,7 +2563,7 @@ Class GalleriesController extends AppController {
 					if (empty($duplicate_record)) {
 						$duplicate = false;
 					} else {
-						$original = $duplicate_record['Gcomment']['timestamp'];
+						$original = $duplicate_record['Gcomment']['created'];
 						$today = time(); /* Current unix time */
 						$since = $today - strtotime($original);
 						if ($since < 60) {
