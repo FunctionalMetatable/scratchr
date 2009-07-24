@@ -914,7 +914,7 @@ class UsersController extends AppController {
 		foreach($myProjects as $project)
 		{
 			$pid = $project['Project']['id'];
-			$total_comments = $this->Pcomment->findCount("project_id = $pid && visibility = 1");
+			$total_comments = $this->Pcomment->findCount(array('Pcomment.project_id'=>$pid,'Pcomment.comment_visibility'=>'visible'));
 			$temp_project = $project;
 			$temp_project['Project']['totalComments'] = $total_comments;
 			$final_projects[$counter] = $temp_project;
