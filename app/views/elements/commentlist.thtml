@@ -37,7 +37,7 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
             <?php echo $comment['User']['username']; ?>
         </a>
         <?php if (empty($date) || (isset($date) && $date != "Now")):
-            printf(___('%s ago', true), friendlyDate($comment['Pcomment']['timestamp']));
+            printf(___('%s ago', true), friendlyDate($comment['Pcomment']['created']));
         endif; ?>
     </h5>
 
