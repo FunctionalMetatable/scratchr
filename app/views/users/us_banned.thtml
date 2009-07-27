@@ -4,11 +4,13 @@
 <p>
 <?php printf(___('Another account accessing the Scratch Website from the same IP address was used to post comments or projects that fall outside of the guidelines described in the Scratch Website %sTerms of Use%s', true), '<a href="http://info.scratch.mit.edu/Terms_of_use" >', '</a>'); ?>
 </p>
-<?php ___('Account : ')?>&lt;<?php echo $blockedusername?>&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<?php ___('Blocked On : ')?>&lt;<?php echo $blockedon?>&gt;
-<br /><br /><?php ___('Reason : ')?>
+<?php ___('Account : ')?><?php echo $blockedusername?>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<?php ___('Blocked On : ')?><?php echo $blockedon?>
+<br /><br />
+<?php ___('Reason : ')?>
 <div style="border:#CCCCCC 1px solid; padding:2px;margin:5px 0px 5px 0px;"><?php echo $reasonsforblocking;?></div>
+<br /><br />
 <?php ___("Please contact us with the form below to discuss this issue.")?>
 <?php endif?>
 <?php
@@ -31,18 +33,18 @@
 <div id="main">
 <p>
 	 <label for="User" ><?php ___('Name'); ?>&nbsp;:</label>
-	<?php echo $form->input('User.name',array('size'=>25,'label'=>''))?>
+	<?php echo $form->input('User.name',array('size'=>50,'label'=>''))?>
 	
 </p>
 <p>
  <label for="User" ><?php ___('Email'); ?>&nbsp;:</label>
-<?php echo $form->input('User.email',array('size'=>25,'label'=>''))?>
+<?php echo $form->input('User.email',array('size'=>50,'label'=>''))?>
 	
 </p>
 
 <p>
    <label for="User" ><?php ___('Message'); ?>&nbsp;:</label>
-   <?php echo $form->input('User.message',array('type'=>'textArea','rows'=>10,'cols'=>25,'label'=>''))?>
+   <?php echo $form->input('User.message',array('type'=>'textArea','rows'=>10,'cols'=>50,'label'=>''))?>
    
 </p>
 <p >
