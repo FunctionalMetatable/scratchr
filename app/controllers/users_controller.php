@@ -60,41 +60,33 @@ class UsersController extends AppController {
 	function multiaccountwarn() {
 		$this->pageTitle = ___("Scratch | Signup", true);
 		$client_ip = ip2long($this->RequestHandler->getClientIP());
-		$isBlocked_from_this_ip = false;
-		$locked_account = false;
-		$signup_interval = SIGNUP_INTERVAL;
-		
-		$blocked_record =$this->User->find("User.ipaddress = $client_ip and User.status='locked'",array(),'User.timestamp DESC');
-			if($blocked_record){
-				$isBlocked_from_this_ip = true;
-			}
-		
-		$whitelisted_ip = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = $client_ip");
-		if(!$whitelisted_ip){
-			$locked_user_id = $this->checkLockedUser();
-			if($locked_user_id){
-				$locked_account = true;
-			} 
-		}
-		if(($isBlocked_from_this_ip || $locked_account) && !$whitelisted_ip)
-		{
-			if($locked_account){
-				$this->redirect("/users/us_banned/".$locked_user_id);
-				return;
-			}
-			else
-			{
-				$this->redirect("/users/us_banned");
-				return;
-			}	
-			
-		}
+
+        $ip_whitelisted = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = $client_ip");
+
+        //find if there's any blocked user from this ip
+		$ip_blocked = $this->User->find("User.ipaddress = $client_ip and User.status = 'locked'",
+                                            array(), 'User.timestamp DESC');
+
+        //check if any blocked user used this ip in last one month
+        $user_blocked = $this->__checkLockedUser();
+
+        if(!$ip_whitelisted && ($ip_blocked || $user_blocked)) {
+            //store to session
+            if($user_blocked) {
+                $this->redirect('/users/us_banned/'.$user_blocked);
+            }
+            else {
+                $this->redirect('/users/us_banned');
+            }
+            exit;
+        }
+        
 		/* First we find if the IP has been used before or not, if not then simply redirect him to sign up page */
 		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip");
 		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = $client_ip");
 		
 		/* Some Activity from Same IP in past */
-		if(($creation_from_same_ip || $access_from_same_ip) && !$whitelisted_ip) {
+		if(($creation_from_same_ip || $access_from_same_ip) && !$ip_whitelisted) {
 	
 			/* Get All the users who have accessed the projects or created a profile using same IP */
 			$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = $client_ip", 'user_id'); 
@@ -104,10 +96,12 @@ class UsersController extends AppController {
 			}
 			$user_ids_accessing_same_ip =array_unique($user_ids_accessing_same_ip);
 			$user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
-			if(!empty($user_ids_accessing_same_ip))
-			$user_records = $this->User->findAll("User.ipaddress = $client_ip or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
-			else
-			$user_records = $this->User->findAll("User.ipaddress = $client_ip ",'urlname','created DESC');
+			if(!empty($user_ids_accessing_same_ip)) {
+                $user_records = $this->User->findAll("User.ipaddress = $client_ip or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
+            }
+			else {
+                $user_records = $this->User->findAll("User.ipaddress = $client_ip ",'urlname','created DESC');
+            }
             
 			/*
             // Check if there was activity from Same IP inside SIGNUP INTERVAL
@@ -2162,18 +2156,29 @@ class UsersController extends AppController {
         return $projects_count;
     }
 	
-	function checkLockedUser()
+	function __checkLockedUser()
 	{
 		$client_ip = ip2long($this->RequestHandler->getClientIP());
-		$listLockedUser = $this->User->findAll("User.status='locked' AND User.ipaddress != $client_ip",'id','User.timestamp DESC');
-		$locked_user_ids =  Set::extract('/User/id', $listLockedUser);
-		$ndays = USED_IP_BY_BLOCKED_ACCOUNT_IN_PAST_N_DAYS;
-		foreach($locked_user_ids as $locked_user_id){
-		$hasAnyIpUsedByLockedUser = $this->ViewStat->hasAny("ViewStat.timestamp > DATE_SUB(NOW(), INTERVAL $ndays DAY) AND  ViewStat.ipaddress = $client_ip AND ".'ViewStat.user_id ='.$locked_user_id);
-		if($hasAnyIpUsedByLockedUser)
-		return $locked_user_id;
-		}
-		
+        $ndays = USED_IP_BY_BLOCKED_ACCOUNT_IN_PAST_N_DAYS;
+        $this->ViewStat->unbindModel(array('belongsTo' => array('Project')));
+        $users_from_this_ip =
+        $this->ViewStat->findAll(
+            "ViewStat.timestamp > DATE_SUB(NOW(), INTERVAL $ndays DAY) AND  ViewStat.ipaddress = $client_ip",
+            'DISTINCT user_id', "ViewStat.timestamp DESC");
+        $users_from_this_ip =  Set::extract('/ViewStat/user_id', $users_from_this_ip);
+        $users_from_this_ip = array_chunk($users_from_this_ip, 20);
+
+        $locked_user_id = 0;
+        foreach($users_from_this_ip as $users) {
+            $user_ids = implode($users, ',');
+            $locked_user_id = $this->User->find("User.status='locked' AND User.id IN ($user_ids)",
+                            'id','User.timestamp DESC');
+            if($locked_user_id) {
+                $locked_user_id = $locked_user_id['User']['id'];
+                break;
+            }
+        }
+        return $locked_user_id;
 	}
   }
 ?>
