@@ -62,14 +62,17 @@ class UsersController extends AppController {
 		$client_ip = ip2long($this->RequestHandler->getClientIP());
 
         $ip_whitelisted = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = $client_ip");
+		$ip_blocked = false;
+		$user_blcoked = false;
 
-        //find if there's any blocked user from this ip
-		$ip_blocked = $this->User->find("User.ipaddress = $client_ip and User.status = 'locked'",
-                                            array(), 'User.timestamp DESC');
-
-        //check if any blocked user used this ip in last one month
-        $user_blocked = $this->__checkLockedUser();
-
+		if(!$ip_whitelisted){
+			//find if there's any blocked user from this ip
+			$ip_blocked = $this->User->find("User.ipaddress = $client_ip and User.status = 'locked'",
+												array(), 'User.timestamp DESC');
+	
+			//check if any blocked user used this ip in last one month
+			$user_blocked = $this->__checkLockedUser();
+		}
         if(!$ip_whitelisted && ($ip_blocked || $user_blocked)) {
             //store to session
             if($user_blocked) {
@@ -2086,7 +2089,7 @@ class UsersController extends AppController {
 			$this->pageTitle = ___('Scratch | Blocked Account | Contact us', true);
 			$client_ip = ip2long($this->RequestHandler->getClientIP());
 			if($locked_id)
-			$blocked_record =$this->User->find("User.status='locked'");
+			$blocked_record =$this->User->find("User.id = $locked_id AND User.status='locked'");
 			else
 			$blocked_record =$this->User->find("User.ipaddress = $client_ip and User.status='locked'",array(),'User.timestamp DESC');
 			if($blocked_record){
