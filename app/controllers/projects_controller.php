@@ -858,7 +858,7 @@ class ProjectsController extends AppController {
 		$this->data['Flagger']['ipaddress'] = $flagger_ip;
 
 		if ($user_id) {
-			if (!$this->Flagger->hasAny("project_id = $pid AND user_id = $user_id")) {
+			if (!$this->Flagger->hasAny("Flagger.project_id = $pid AND (Flagger.user_id = $user_id OR Flagger.ipaddress = $flagger_ip)")) {
 				if ($project_status == 'notreviewed') {
 					$subject= "Project '$pname' flagged";
 				} else {
@@ -876,11 +876,8 @@ class ProjectsController extends AppController {
 				$this->Flagger->save($this->data);
 				$prev_flaggers_count = (int)$project['Project']['flagit'];
 				
-				$flaggerIpCount = $this->Flagger->findCount("Flagger.project_id = $pid AND Flagger.ipaddress = $flagger_ip");
-				//Increment flagit count only if user is from different ip
-				if ($flaggerIpCount <=1) {
-					$this->Project->saveField('flagit',($prev_flaggers_count + 1));
-				}
+				$this->Project->saveField('flagit',($prev_flaggers_count + 1));
+				
 				$flags = $this->Project->field('flagit',"Project.id = $pid");
 				$this->set('just_flagged', true);
 				$this->set('pid', $pid);
