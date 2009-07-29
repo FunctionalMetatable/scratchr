@@ -2112,14 +2112,14 @@ class UsersController extends AppController {
 			$user_agent = $_SERVER['HTTP_USER_AGENT'];
 			$name = $this->data['User']['name'];
 			$email = $this->data['User']['email'];
-			$subject = ___("Message from :".$name.' at IP: '. long2ip($client_ip),true);
-			$message = $this->data['User']['message']. "\r\n";
-			$message = $message.___("Blocked Account Name : ". $blockedusername,true). "\r\n";
-			$message = $message.___("Blocked On : ".$blocked_date,true). "\r\n";
-			$message = $message.___("Reason : "."\r\n"."<div style='border:#CCCCCC 1px solid; padding:2px;margin:5px 0px 5px 0px;'>".$reasonsforblocking."</div>",true). "\r\n";
+			$subject = ___("Message from " . $name . ' at IP: '. long2ip($client_ip),true);
+			$message = $this->data['User']['message']. "<br/>";
+			$message = $message.___("Blocked Account Name : ". $blockedusername,true). "<br/>";
+			$message = $message.___("Blocked On : ".$blocked_date,true). "<br/>";
+			$message = $message.___("Reason : "."<div style='border:#CCCCCC 1px solid; padding:2px;margin:5px 0px 5px 0px;'>".$reasonsforblocking."</div>",true);
 			
-			$message = $message.___("Author's Ip address : ".$author_ip,true). "\r\n";
-			$message = $message.___("User agent Info : ".$user_agent,true). "\r\n";
+			$message = $message.___("Author's Ip address : ".long2ip($author_ip),true). " ";
+			$message = $message.___("User agent Info : ".$user_agent,true);
 			
 			
 			if(empty($this->data['User']['name']))
