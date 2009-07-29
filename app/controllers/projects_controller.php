@@ -504,15 +504,16 @@ class ProjectsController extends AppController {
 			}
 			if ($inappropriate_count > $max_count) {
 				$this->Mpcomment->bindUser();
-				$allflaggers = $this->Mpcomment->findAll("comment_id=$comment_id");
-				$linked_stringwflaggernames='';
-				foreach ($allflaggers as $flagger) {
-					$user_href =TOPLEVEL_URL.'/users/'.$flagger['User']['username'];
-					$linked_stringwflaggernames .="<a href ='$user_href'>";
-					$linked_stringwflaggernames .= $flagger['User']['username'] . "</a>,";
+				$flaggers = $this->Mpcomment->findAll("comment_id=$comment_id");
+				$flaggernames = array();
+				foreach ($flaggers as $flagger) {
+					$user_href = TOPLEVEL_URL.'/users/'.$flagger['User']['username'];
+					$flaggernames[] = sprintf('<a href ="%s">%s</a>', $user_href,
+                                                $flagger['User']['username']);
 				}
+                $flaggernames = implode(', ', $flaggernames);
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on '$pname'";
-				$msg = "Users  $linked_stringwflaggernames have flagged this comment by  $linked_creatorname :\n$content\n $project_creater_url";
+				$msg = "Users  $flaggernames have flagged this comment by  $linked_creatorname :\n$content\n $project_creater_url";
 			}
 			$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
 		}
