@@ -505,9 +505,10 @@ class ProjectsController extends AppController {
 			if ($inappropriate_count > $max_count) {
 				$this->Mpcomment->bindUser();
 				$allflaggers = $this->Mpcomment->findAll("comment_id=$comment_id");
+				$linked_stringwflaggernames='';
 				foreach ($allflaggers as $flagger) {
 					$user_href =TOPLEVEL_URL.'/users/'.$flagger['User']['username'];
-					$linked_stringwflaggernames ="<a href ='$user_href'>";
+					$linked_stringwflaggernames .="<a href ='$user_href'>";
 					$linked_stringwflaggernames .= $flagger['User']['username'] . "</a>,";
 				}
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on '$pname'";
