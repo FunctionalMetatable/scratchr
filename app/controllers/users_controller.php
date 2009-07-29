@@ -2113,7 +2113,7 @@ class UsersController extends AppController {
 			$name = $this->data['User']['name'];
 			$email = $this->data['User']['email'];
 			$subject = ___("Message from " . $name . ' at IP: '. long2ip($client_ip),true);
-			$message = $this->data['User']['message']. "<br/>";
+			$message = $this->data['User']['message']. "<br/><br/>";
 			$message = $message.___("Blocked Account Name : ". $blockedusername,true). "<br/>";
 			$message = $message.___("Blocked On : ".$blocked_date,true). "<br/>";
 			$message = $message.___("Reason : "."<div style='border:#CCCCCC 1px solid; padding:2px;margin:5px 0px 5px 0px;'>".$reasonsforblocking."</div>",true);
@@ -2138,10 +2138,9 @@ class UsersController extends AppController {
 			if($this->User->validates($this->data['User'])){
 				$this->Email->email($email,$name, $message, $subject, TO_REQUEST_FOR_MULTIPLE_ACCOUNT,$email);
 				$this->Session->setFlash(___('The message was sent.', true));
-				$this->set('isBannedUser',false);
+				$this->set('isBannedUser', false);
 				$this->data['User']['name'] = '';
 				$this->data['User']['email'] = '';
-				
 				$this->data['User']['message'] ='';
 			}
 		}//!empty
