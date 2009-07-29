@@ -2561,7 +2561,10 @@
 	function notifications() {
 		if(!empty($this->data)) {
 			$this->data['is_admin'] = 1;
-			$this->Notification->NotificationType->save($this->data);
+            if(isset($this->data['negative'])) {
+                $this->data['negative'] = 1;
+            }
+            $this->Notification->NotificationType->save($this->data);
 		}
 		
 		$notifications = $this->Notification->NotificationType->find('all', 
@@ -2597,6 +2600,17 @@
 		}
 		exit;
 	}
+
+    //update notification remark / negative field
+    function update_notif_remark($id) {
+        $negative = 0;
+        if($this->params['url']['remark']) {
+            $negative = 1;
+        }
+		$this->Notification->NotificationType->id = $id;
+		$this->Notification->NotificationType->saveField('negative', $negative);
+        exit;
+    }
 
     function send_bulk_notifications() {
         if(!empty($this->data)) {

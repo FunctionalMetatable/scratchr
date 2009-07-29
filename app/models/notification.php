@@ -62,7 +62,7 @@ class Notification extends AppModel {
 	}
 	
 	function getInappropriateNotifications($user_id, $page, $limit) {
-		$inappropriate_conditions = ' AND `NotificationType`.`inappropriate` = 1';
+		$inappropriate_conditions = ' AND `NotificationType`.`negative` = 1';
 		$offset = ($page -1) * $limit;
 		$notification_query = $this->__createNotificationQuery($user_id, $inappropriate_conditions);
         $notification_query .= ' LIMIT ' . $offset . ', ' . $limit;
