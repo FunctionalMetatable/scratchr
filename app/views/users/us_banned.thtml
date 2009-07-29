@@ -44,7 +44,7 @@
 
 <p>
    <label for="User" ><?php ___('Message'); ?>&nbsp;:</label>
-   <?php echo $form->input('User.message',array('type'=>'textArea','rows'=>10,'cols'=>50,'label'=>''))?>
+   <?php echo $form->input('User.message',array('type'=>'textArea','rows'=>10,'cols'=>46,'label'=>''))?>
 
 </p>
 <p >
