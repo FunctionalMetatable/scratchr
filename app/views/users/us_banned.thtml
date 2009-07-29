@@ -2,12 +2,11 @@
 <?php if($isBannedUser):?>
 <h3><?php ___("Sorry, creation of new accounts from your network address has been suspended...")?></h3>
 <p>
-<?php printf(___('Another account accessing the Scratch Website from the same IP address was used to post comments or projects that fall outside of the guidelines described in the Scratch Website %sTerms of Use%s'.' .', true), '<a href="http://info.scratch.mit.edu/Terms_of_use" >', '</a>'); ?>
-&nbsp;&nbsp;&nbsp;
-<?php ___('Blocked On : ')?><?php echo $blockedon?>
+<?php printf(___('Another account accessing the Scratch Website from the same IP address was used to post comments or projects that fall outside of the guidelines described in the Scratch Website %sTerms of Use%s.', true), '<a href="http://info.scratch.mit.edu/Terms_of_use" >', '</a>'); ?>
 </p>
 <?php ___('Account : ')?><?php echo $blockedusername?>
-
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<?php ___('Blocked On : ')?><?php echo $blockedon?>
 <br /><br />
 <?php ___('Reason : ')?>
 <div style="border:#CCCCCC 1px solid; padding:2px;margin:5px 0px 5px 0px;"><?php echo $reasonsforblocking;?></div>
@@ -20,7 +19,7 @@
 						$session->flash();
 				endif;
 				echo "</div>";
-			
+
 ?>
 <?php $psetParams='';
 	if(!empty($this->params['pass']['0'])){
@@ -35,22 +34,22 @@
 <p>
 	 <label for="User" ><?php ___('Name'); ?>&nbsp;:</label>
 	<?php echo $form->input('User.name',array('size'=>50,'label'=>''))?>
-	
+
 </p>
 <p>
  <label for="User" ><?php ___('Email'); ?>&nbsp;:</label>
 <?php echo $form->input('User.email',array('size'=>50,'label'=>''))?>
-	
+
 </p>
 
 <p>
    <label for="User" ><?php ___('Message'); ?>&nbsp;:</label>
-   <?php echo $form->input('User.message',array('type'=>'textArea','rows'=>10,'cols'=>36,'label'=>''))?>
-   
+   <?php echo $form->input('User.message',array('type'=>'textArea','rows'=>10,'cols'=>50,'label'=>''))?>
+
 </p>
 <p >
 <input type="submit" value="<?php ___('Send email')?>" />
-   
+
 </p>
 </form>
 </div>
