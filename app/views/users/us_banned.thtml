@@ -34,12 +34,12 @@
 <div id="main">
 <p>
 	 <label for="User" ><?php ___('Name'); ?>&nbsp;:</label>
-	<?php echo $form->input('User.name',array('size'=>62,'label'=>''))?>
+	<?php echo $form->input('User.name',array('size'=>46,'label'=>''))?>
 
 </p>
 <p>
  <label for="User" ><?php ___('Email'); ?>&nbsp;:</label>
-<?php echo $form->input('User.email',array('size'=>62,'label'=>''))?>
+<?php echo $form->input('User.email',array('size'=>46,'label'=>''))?>
 
 </p>
 
