@@ -2698,13 +2698,13 @@ class ProjectsController extends AppController {
 		if($this->Pcomment->del($comment_id)){
 			$commentLists = $this->Pcomment->findAll('Pcomment.project_id = '
                     . $project_id . ' AND Pcomment.reply_to = '. $comment_id,'id');
-			
+			if($commentLists):
 			foreach($commentLists as $commentList){
 				$this->Pcomment->id = $commentList['Pcomment']['id'];
 				$this->Pcomment->saveField('comment_visibility','delbyparentcomment');
 				$this->Pcomment->id = false;
 			}		
-		
+			endif;
 		}
         $this->Pcomment->deleteCommentsFromMemcache($project_id);
 		exit;
