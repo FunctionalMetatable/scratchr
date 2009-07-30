@@ -1,1 +1,5 @@
 ALTER TABLE `flaggers` ADD `ipaddress` INT( 12 ) NULL ;
+ALTER TABLE `projects` ADD INDEX ( `flagit` );
+ALTER TABLE `users` CHANGE `ipaddress` `ipaddress` INT( 32 ) UNSIGNED NOT NULL;
+ALTER TABLE `flaggers` CHANGE `ipaddress` `ipaddress` INT( 32 ) UNSIGNED NULL;
+ALTER TABLE `view_stats` CHANGE `ipaddress` `ipaddress` INT( 32 ) UNSIGNED NULL;
