@@ -55,9 +55,15 @@ class NotificationsController extends AppController {
 
         $username = $user_record['User']['username'];
         $this->set('username', $username);
+		
 		$i = 0;
+		$options = array( 'show'=>25  );
+		$this->Pagination->ajaxAutoDetect = false;
+		list($order, $limit, $page) = $this->Pagination->init(null, null, $options,
+												$this->Notification->countAllNotification($user_id));
+		
 		$inappropriate_notifications = array();
-		$notifications = $this->Notification->getInappropriateNotifications($user_id, 1, 10);
+		$notifications = $this->Notification->getInappropriateNotifications($user_id, $page, $limit);
 		foreach($notifications as $notification) {
 			$inappropriate_notifications[$i++]['0'] = array_merge($notification['Notification'], $notification['NotificationType'], $notification['0']);
 		}

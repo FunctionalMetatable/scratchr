@@ -70,6 +70,15 @@ class Notification extends AppModel {
 		return $notifications;
 	}
 	
+	function countAllNotification($user_id) {
+		
+		$nstatus_conditions = ' AND `NotificationType`.`negative` = 1';;
+		$ncount = $this->findCount("Notification.to_user_id =".$user_id . $nstatus_conditions);
+		
+		
+		return intval($ncount);
+	}
+	
 	/**
 	* returns number of unread/pending notifications/friend_requests
 	* Precondition: must be logged in
