@@ -864,7 +864,7 @@ class ProjectsController extends AppController {
 		$user_id = $this->getLoggedInUserID();
 		$userflagger = $this->User->find("User.id = '$user_id'");
 		$flaggername = $userflagger['User']['username'];
-		$flagger_ip = $userflagger['User']['ipaddress'];
+		$flagger_ip = ip2long($this->RequestHandler->getClientIP());
 
 		$this->data['Flagger']['user_id'] = $user_id;
 		$this->data['Flagger']['project_id'] = $pid;
