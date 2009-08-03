@@ -2707,13 +2707,28 @@ class ProjectsController extends AppController {
 			foreach($commentLists as $commentList){
 				$this->Pcomment->id = $commentList['Pcomment']['id'];
 				$this->Pcomment->saveField('comment_visibility','delbyparentcomment');
+				$this->__deleteChildComment($project_id, $commentList['Pcomment']['id']);
 				$this->Pcomment->id = false;
-			}		
+			}
 			endif;
 		}
         $this->Pcomment->deleteCommentsFromMemcache($project_id);
 		exit;
 	}
+	
+	function __deleteChildComment($project_id, $child_comment_id){
+		$childCommentLists = $this->Pcomment->findAll('Pcomment.project_id = '
+                    . $project_id . ' AND Pcomment.reply_to = '. $child_comment_id,'id');
+					if($childCommentLists):
+					foreach($childCommentLists as $childCommentList){
+						$this->Pcomment->id = $childCommentList['Pcomment']['id'];
+						$this->Pcomment->saveField('comment_visibility','delbyparentcomment');
+						$this->Pcomment->id = false;
+					}
+					endif;
+					return;
+	}
+	
 	
 	/**
 	* Returns all comments relevant to logged in user viewing a project
