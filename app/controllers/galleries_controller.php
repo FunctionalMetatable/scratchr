@@ -729,11 +729,25 @@ Class GalleriesController extends AppController {
 			foreach($commentLists as $commentList){
 				$this->Gcomment->id = $commentList['Gcomment']['id'];
 				$this->Gcomment->saveField('comment_visibility','delbyparentcomment');
+				$this->__deleteChildComment($gallery_id, $commentList['Gcomment']['id']);
 				$this->Gcomment->id = false;
 			}
 			endif;
         $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 		exit;
+	}
+	
+	function __deleteChildComment($gallery_id, $child_comment_id){
+		$childCommentLists = $this->Gcomment->findAll('Gcomment.gallery_id = '
+                    . $gallery_id . ' AND Gcomment.reply_to = '. $child_comment_id,'id');
+					if($childCommentLists):
+					foreach($childCommentLists as $childCommentList){
+						$this->Gcomment->id = $childCommentList['Gcomment']['id'];
+						$this->Gcomment->saveField('comment_visibility','delbyparentcomment');
+						$this->Gcomment->id = false;
+					}
+					endif;
+					return;
 	}
 
 	/**
