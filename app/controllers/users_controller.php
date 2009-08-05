@@ -59,20 +59,22 @@ class UsersController extends AppController {
 	
 	function multiaccountwarn() {
 		$this->pageTitle = ___("Scratch | Signup", true);
-		$client_ip = ip2long($this->RequestHandler->getClientIP());
+        $client_ip = $this->RequestHandler->getClientIP();
+		$client_ip_long = ip2long($this->RequestHandler->getClientIP());
 
-        $ip_whitelisted = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = $client_ip");
+        $ip_whitelisted = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = $client_ip_long");
 		$ip_blocked = false;
 		$user_blcoked = false;
 
 		if(!$ip_whitelisted){
 			//find if there's any blocked user from this ip
-			$ip_blocked = $this->User->find("User.ipaddress = $client_ip and User.status = 'locked'",
+			$ip_blocked = $this->User->find("User.ipaddress = $client_ip_long and User.status = 'locked'",
 												array(), 'User.timestamp DESC');
 	
 			//check if any blocked user used this ip in last one month
 			$user_blocked = $this->__checkLockedUser();
 		}
+        
         if(!$ip_whitelisted && ($ip_blocked || $user_blocked)) {
             //store to session
             if($user_blocked) {
@@ -85,41 +87,31 @@ class UsersController extends AppController {
         }
         
 		/* First we find if the IP has been used before or not, if not then simply redirect him to sign up page */
-		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip");
-		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = $client_ip");
+		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip_long");
+		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = INET_ATON('$client_ip')");
 		
 		/* Some Activity from Same IP in past */
 		if(($creation_from_same_ip || $access_from_same_ip) && !$ip_whitelisted) {
 	
 			/* Get All the users who have accessed the projects or created a profile using same IP */
-			$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = $client_ip", 'user_id'); 
+			$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = INET_ATON('$client_ip')", 'DISTINCT user_id');
 			$user_ids_accessing_same_ip = array();
 			foreach($view_stats as $view_stat) {
 				array_push($user_ids_accessing_same_ip, $view_stat['ViewStat']['user_id']); 
 			}
-			$user_ids_accessing_same_ip =array_unique($user_ids_accessing_same_ip);
-			$user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
+
+            $user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
+            
 			if(!empty($user_ids_accessing_same_ip)) {
-                $user_records = $this->User->findAll("User.ipaddress = $client_ip or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
+                $user_records = $this->User->findAll("User.ipaddress = $client_ip_long or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
             }
 			else {
-                $user_records = $this->User->findAll("User.ipaddress = $client_ip ",'urlname','created DESC');
+                $user_records = $this->User->findAll("User.ipaddress = $client_ip_long ",'urlname','created DESC');
             }
-            
-			/*
-            // Check if there was activity from Same IP inside SIGNUP INTERVAL
-			$creation_from_same_ip_in_signup_interval = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
-			$access_from_same_ip_in_signup_interval = $this->ViewStat->hasAny("ViewStat.timestamp > now() - interval $signup_interval minute  AND  ViewStat.ipaddress = $client_ip");
-	
-			// Activity from Same IP inside SIGNUP INTERVAL
-			if ($creation_from_same_ip_in_signup_interval || $access_from_same_ip_in_signup_interval) {
-				$this->set('activity_from_same_ip_signup_interval', true);
-			}			
-			*/
             
 			/* Some activity in past from same IP so we need to show the message with user records and ipaddress (send them to view) */
 			$this->set('user_records', $user_records);
-			$this->set('ip_address',long2ip($client_ip));
+			$this->set('ip_address',$client_ip);
 		}
 		
 		/* Same IP never used before */
@@ -131,7 +123,8 @@ class UsersController extends AppController {
 	function signup() {
 				
 		$this->pageTitle = ___("Scratch | Signup", true);
-        $client_ip = ip2long($this->RequestHandler->getClientIP());
+        $client_ip = $this->RequestHandler->getClientIP();
+        $client_ip_long = ip2long($client_ip);
         $server_ip = ip2long($_SERVER['SERVER_ADDR']);
         $local_ip = 2130706433;
         
@@ -141,45 +134,35 @@ class UsersController extends AppController {
 
         $ipNotAllowed =false;
         //server is not localhost and client ip is 127.0.0.1
-		if($server_ip != $local_ip && $client_ip == $local_ip)
+		if($server_ip != $local_ip && $client_ip_long == $local_ip)
 		{
 			$ipNotAllowed =true;
 			$this->setFlash(___("We are unable to identify your IP address. Please  <a href='/contact/us/'>contact us</a>.", true));
 		}
 				
-		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip");
-		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = $client_ip");
-	
+		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip_long");
+		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = INET_ATON('$client_ip')");
+        
 		/* Some Activity from Same IP in past */
 		if($creation_from_same_ip || $access_from_same_ip) {
 			/* Get All the users who have accessed the projects or created a profile using same IP */
-			$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = $client_ip", 'user_id'); 
-			$user_ids_accessing_same_ip = array();
+			$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = INET_ATON('$client_ip')", 'DISTINCT user_id');
+
+            $user_ids_accessing_same_ip = array();
 			foreach($view_stats as $view_stat) {
 				array_push($user_ids_accessing_same_ip, $view_stat['ViewStat']['user_id']); 
 			}
-			$user_ids_accessing_same_ip =array_unique($user_ids_accessing_same_ip);
 			$user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
 			
-			if(!empty($user_ids_accessing_same_ip))
-			$user_records = $this->User->findAll("User.ipaddress = $client_ip or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
-			else
-			$user_records = $this->User->findAll("User.ipaddress = $client_ip ",'urlname','created DESC');
-			
-			/*
-            // Check if there was activity from Same IP inside SIGNUP INTERVAL
-			$creation_from_same_ip_in_signup_interval = $this->User->hasAny("User.timestamp > now() - interval $signup_interval minute  AND  User.ipaddress = $client_ip");
-			$access_from_same_ip_in_signup_interval = $this->ViewStat->hasAny("ViewStat.timestamp > now() - interval $signup_interval minute  AND  ViewStat.ipaddress = $client_ip");
-	
-			// Activity from Same IP inside SIGNUP INTERVAL
-			if ($creation_from_same_ip_in_signup_interval || $access_from_same_ip_in_signup_interval) {
-				$this->set('activity_from_same_ip_signup_interval', true);
-			}			
-			*/
-            
+			if(!empty($user_ids_accessing_same_ip)) {
+                $user_records = $this->User->findAll("User.ipaddress = $client_ip_long or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
+            }
+            else {
+                $user_records = $this->User->findAll("User.ipaddress = $client_ip_long ",'urlname','created DESC');
+            }
 			/* Some activity in past from same IP so we need to show the message with user records and ipaddress (send them to view) */
 			$this->set('user_records', $user_records);
-			$this->set('ip_address',long2ip($client_ip));
+			$this->set('ip_address', $client_ip);
 				
 			if(isset($_SERVER['HTTP_REFERER']))
 			{
@@ -266,7 +249,7 @@ class UsersController extends AppController {
 
 				 //at some point we though of having a urlname
 				 $this->data['User']['urlname'] =  $this->data['User']['username'];
-				 $this->data['User']['ipaddress'] = $client_ip;
+				 $this->data['User']['ipaddress'] = $client_ip_long;
 				 
 					if ($this->User->save($this->data['User'], false)) {
 						$this->data['User']['id'] = $this->User->getLastInsertID();
@@ -2162,13 +2145,14 @@ class UsersController extends AppController {
 	
 	function __checkLockedUser()
 	{
-		$client_ip = ip2long($this->RequestHandler->getClientIP());
+		$client_ip = $this->RequestHandler->getClientIP();
         $ndays = USED_IP_BY_BLOCKED_ACCOUNT_IN_PAST_N_DAYS;
         $this->ViewStat->unbindModel(array('belongsTo' => array('Project')));
         $users_from_this_ip =
         $this->ViewStat->findAll(
-            "ViewStat.timestamp > DATE_SUB(NOW(), INTERVAL $ndays DAY) AND  ViewStat.ipaddress = $client_ip",
+            "ViewStat.timestamp > DATE_SUB(NOW(), INTERVAL $ndays DAY) AND  ViewStat.ipaddress = INET_ATON('$client_ip')",
             'DISTINCT user_id', "ViewStat.timestamp DESC");
+        
         $users_from_this_ip =  Set::extract('/ViewStat/user_id', $users_from_this_ip);
         $users_from_this_ip = array_chunk($users_from_this_ip, 20);
 

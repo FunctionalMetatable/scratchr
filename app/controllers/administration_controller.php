@@ -1420,15 +1420,16 @@
 		$this->set('search_term', $search_term);
 		$this->set('search_column', $search_column);
 		$this->set('search_table', $search_table);
-		if($search_column == 'ipaddress'){
-		$search_ip =ip2long($search_term);
-		$this->set('is_banned',$this->BlockedIp->hasAny("BlockedIp.ip=$search_ip"));
-		$this->set('orig_ip',$search_ip);
-		$this->set('search_term',$search_term);
-		$this->render('admin_search_ip', 'ajax');
+		if($search_column == 'ipaddress') {
+            $search_ip =ip2long($search_term);
+            $this->set('is_banned',$this->BlockedIp->hasAny("BlockedIp.ip=$search_ip"));
+            $this->set('orig_ip',$search_ip);
+            $this->set('search_term',$search_term);
+            $this->render('admin_search_ip', 'ajax');
 		}
-		else
-		$this->render('admin_search', 'ajax');
+		else {
+            $this->render('admin_search', 'ajax');
+        }
 	}
 	
 	function unbolck_ip($ip){
@@ -1665,13 +1666,14 @@
 		} else {
 			$user = $this->User->find("User.id = $user_id");
 			$user_name = $user['User']['username'];
-			$actual_ip = long2ip($overload);
+			$actual_ip = $overload;
 		}
 		//list user linked to this ip 
 		$final_users = Array();
 		if($overload){
 			$counter = 0;
-			$stats = $this->ViewStat->findAll("ViewStat.ipaddress = $overload AND ViewStat.user_id != 0", "DISTINCT user_id, ipaddress");
+            $this->ViewStat->recursion = -1;
+			$stats = $this->ViewStat->findAll("ViewStat.ipaddress = INET_ATON('$overload') AND ViewStat.user_id != 0", "DISTINCT user_id, ipaddress");
 			foreach ($stats as $current_stat) {
 				$temp_stat = $current_stat;
 				$current_user_id = $temp_stat['ViewStat']['user_id'];
@@ -1693,12 +1695,12 @@
 	/**
 	* Handles viewing of all users who use a particular ip address
 	**/
-	function expand_ip($long_ip) {
+	function expand_ip($ip) {
 		$this->autoRender = false;
 		
 		$final_users = Array();
 		$counter = 0;
-		$stats = $this->ViewStat->findAll("ViewStat.ipaddress = $long_ip AND ViewStat.user_id != 0", "DISTINCT user_id, ipaddress");
+		$stats = $this->ViewStat->findAll("ViewStat.ipaddress = INET_ATON('$ip') AND ViewStat.user_id != 0", "DISTINCT user_id, ipaddress");
 		foreach ($stats as $current_stat) {
 			$temp_stat = $current_stat;
 			$current_user_id = $temp_stat['ViewStat']['user_id'];
@@ -1707,8 +1709,8 @@
 			$final_users[$counter] = $temp_stat;
 			$counter++;
 		}
-		$actual_ip = long2ip($long_ip);
-		$this->set('ip', $actual_ip);
+
+        $this->set('ip', $ip);
 		$this->set('data', $final_users);
 		$this->render('expand_ip');
 	}
@@ -2176,24 +2178,14 @@
 		$this->autoRender = false;
 		$this->User->id = $user_id;
 		$user = $this->User->read();
-		
-		$stats = $this->ViewStat->findAll("ViewStat.user_id = $user_id", "DISTINCT user_id, ipaddress",'ViewStat.timestamp DESC');
-		$final_ips = Array();
-		$counter = 0;
-		foreach ($stats as $current_stat) {
-			$temp_stat = $current_stat;
-			$current_ip = $temp_stat['ViewStat']['ipaddress'];
-			$actual_ip = long2ip($current_ip);
-			$temp_stat['ViewStat']['actual_ip'] = $actual_ip;
-			$final_ips[$counter] = $temp_stat;
-			$counter++;
-		}
-		
+
+        $this->ViewStat->recursion = -1;
+		$stats = $this->ViewStat->findAll("ViewStat.user_id = $user_id", "DISTINCT user_id, INET_NTOA(ipaddress) ipaddress",'ViewStat.timestamp DESC');
 		$status = $user['User']['status'];
 		
 		$this->set('user_name', $user['User']['username']);
 		$this->set('status', $status);
-		$this->set('data', $final_ips);
+		$this->set('data', $stats);
 		$this->render('ip_info');
 	}
 	
