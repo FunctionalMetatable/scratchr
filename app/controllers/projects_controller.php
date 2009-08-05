@@ -1775,10 +1775,11 @@ class ProjectsController extends AppController {
 			$owner_id = $project['User']['id'];
 			$isMine = $logged_id == $owner_id;
 
-            $client_ip = ip2long($this->RequestHandler->getClientIP());
+            $client_ip = $this->RequestHandler->getClientIP();
             if ($isLogged) {
                 //logged user did not visit this project before
-                if($this->ViewStat->findCount("ipaddress = '$client_ip' && project_id = $pid") == 0) {
+                $this->ViewStat->recursive = -1;
+                if($this->ViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid") == 0) {
                     $project['Project']['views']++;
                     //increment the viewcount in database
                     $this->Project->saveField('views', $project['Project']['views']);
@@ -1787,8 +1788,9 @@ class ProjectsController extends AppController {
                 }
 
                 //store project view statistics in database
-                $viewstat = array('ViewStat' => array("id" => null, "user_id" => $logged_id,"project_id" => $project_id, "ipaddress" => $client_ip));
-                $this->ViewStat->save($viewstat);
+                $sql = "INSERT INTO `view_stats` (`id`,`user_id`,`project_id`,`ipaddress`) VALUES"
+                        ." (NULL, $logged_id, $project_id, INET_ATON('$client_ip'))";
+                $this->ViewStat->query($sql);
             }
 
             //do we need this? it's already implement in line #759-761 in services_controller

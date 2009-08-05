@@ -1,15 +1,14 @@
 <div>
-<?php		
+<?php
 	foreach ($data as $ip) {
-		$actual_ip = $ip['ViewStat']['actual_ip'];
 		$user_id = $ip['ViewStat']['user_id'];
-		$orig_ip = 	$ip['ViewStat']['ipaddress'];	
-		$expand_address = "/administration/expand_ip/$orig_ip";
-		$ban_address = "/administration/ban_ip/$user_id/$orig_ip";
+		$user_ip = 	$ip[0]['ipaddress'];
+		$expand_address = "/administration/expand_ip/$user_ip";
+		$ban_address = "/administration/ban_ip/$user_id/$user_ip";
 		
 		echo "<div class='gallerythumb clearme'>\n";
 		echo "\t<div class='admin_leftcolumn'>\n";
-		echo "<span>IP: $actual_ip</span>\n";
+		echo "<span>IP: $user_ip</span>\n";
 		echo "\t</div>";
 		echo "\t<div class='admin_rightcolumn'>\n";
 		echo "<span>"; 

@@ -8,7 +8,7 @@
  ?>
 <a href="<?php echo $html->url('/administration/unbolck_ip/'.$orig_ip)?>">Unblock Ip</a>
 <?php } else {?>
-<a href="<?php echo $html->url('/administration/ban_ip/null/'.$orig_ip)?>">Ban Ip</a>
+<a href="<?php echo $html->url('/administration/ban_ip/null/'.trim($search_term))?>">Ban Ip</a>
 <?php }?>
 </h5>
 <?php
