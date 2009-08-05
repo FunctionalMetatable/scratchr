@@ -1,5 +1,10 @@
 ALTER TABLE `flaggers` ADD `ipaddress` INT( 12 ) NULL ;
 ALTER TABLE `projects` ADD INDEX ( `flagit` );
-ALTER TABLE `users` CHANGE `ipaddress` `ipaddress` INT( 32 ) UNSIGNED NOT NULL;
-ALTER TABLE `flaggers` CHANGE `ipaddress` `ipaddress` INT( 32 ) UNSIGNED NULL;
-ALTER TABLE `view_stats` CHANGE `ipaddress` `ipaddress` INT( 32 ) UNSIGNED NULL;
+
+ALTER TABLE `users` CHANGE `ipaddress` `ipaddress` BIGINT( 20 ) NOT NULL;
+ALTER TABLE `flaggers` CHANGE `ipaddress` `ipaddress` BIGINT( 20 ) NULL;
+ALTER TABLE `view_stats` CHANGE `ipaddress` `ipaddress` BIGINT( 20 ) NULL;
+
+ALTER TABLE `projects` CHANGE `upload_ip` `upload_ip` BIGINT( 20 ) NULL DEFAULT NULL;
+ALTER TABLE `thanks` CHANGE `ipaddress` `ipaddress` BIGINT( 20 ) NOT NULL;
+ALTER TABLE `whitelisted_ip_addresses` CHANGE `ipaddress` `ipaddress` BIGINT( 20 ) NOT NULL;
