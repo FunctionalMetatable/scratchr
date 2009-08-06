@@ -466,12 +466,13 @@ class UsersController extends AppController {
 				else {
 					$this->UserStat->save(array('UserStat'=>array("user_id"=>$userID, "lastin"=>$time)));
 				}
-
+				//for these action redirect to Mystuff page.
+				$action = array('/','/multiaccountwarn');
 				//Now, let's figure out where to redirect this person to.
 				if($user_record['User']['email']=="" || $user_record['User']['email']=="rather-not-say@scratchr.org"){
 					$this->redirect('/users/set_email/'.$user_record['User']['urlname']);
 				}
-				else if(isset($_REQUEST['refer'])&& $_REQUEST['refer']!="/"){
+				else if(isset($_REQUEST['refer'])&& !in_array($_REQUEST['refer'],$action)){
 					$this->redirect($_REQUEST['refer']);
 				}
 				else {
