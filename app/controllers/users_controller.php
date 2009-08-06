@@ -466,8 +466,14 @@ class UsersController extends AppController {
 				else {
 					$this->UserStat->save(array('UserStat'=>array("user_id"=>$userID, "lastin"=>$time)));
 				}
+				
+				    $user_blocked = $this->__checkLockedUser();
+					if($user_blocked)
+					$ban_url = '/users/us_banned/'.$user_blocked;
+					else
+					$ban_url = '/users/us_banned/';
 				//for these action redirect to Mystuff page.
-				$action = array('/','/multiaccountwarn');
+				$action = array('/','/multiaccountwarn',$ban_url);
 				//Now, let's figure out where to redirect this person to.
 				if($user_record['User']['email']=="" || $user_record['User']['email']=="rather-not-say@scratchr.org"){
 					$this->redirect('/users/set_email/'.$user_record['User']['urlname']);
@@ -2102,7 +2108,7 @@ class UsersController extends AppController {
 			$message = $message.___("Blocked On : ".$blocked_date,true). "<br/>";
 			$message = $message.___("Reason : "."<div style='border:#CCCCCC 1px solid; padding:2px;margin:5px 0px 5px 0px;'>".$reasonsforblocking."</div>",true);
 			
-			$message = $message.___("Author's Ip address : ".long2ip($author_ip),true). " ";
+			//$message = $message.___("Author's Ip address : ".long2ip($author_ip),true). " ";
 			$message = $message.___("User agent Info : ".$user_agent,true);
 			
 			
