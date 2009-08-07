@@ -739,15 +739,17 @@ Class GalleriesController extends AppController {
 	
 	function __deleteChildComment($gallery_id, $child_comment_id){
 		$childCommentLists = $this->Gcomment->findAll('Gcomment.gallery_id = '
-                    . $gallery_id . ' AND Gcomment.reply_to = '. $child_comment_id,'id');
-					if($childCommentLists):
-					foreach($childCommentLists as $childCommentList){
-						$this->Gcomment->id = $childCommentList['Gcomment']['id'];
-						$this->Gcomment->saveField('comment_visibility','delbyparentcomment');
-						$this->Gcomment->id = false;
-					}
-					endif;
-					return;
+                            . $gallery_id . ' AND Gcomment.reply_to = '. $child_comment_id,'id');
+        if($childCommentLists) {
+            foreach($childCommentLists as $childCommentList) {
+                //only if the child is not deleted before
+                if($childCommentList['Gcomment']['comment_visibility'] == 'visible') {
+                    $this->Gcomment->id = $childCommentList['Gcomment']['id'];
+                    $this->Gcomment->saveField('comment_visibility','delbyparentcomment');
+                    $this->Gcomment->id = false;
+                }
+            }
+        }
 	}
 
 	/**

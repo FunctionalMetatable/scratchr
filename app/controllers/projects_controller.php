@@ -2718,17 +2718,19 @@ class ProjectsController extends AppController {
 		exit;
 	}
 	
-	function __deleteChildComment($project_id, $child_comment_id){
+	function __deleteChildComment($project_id, $child_comment_id) {
 		$childCommentLists = $this->Pcomment->findAll('Pcomment.project_id = '
                     . $project_id . ' AND Pcomment.reply_to = '. $child_comment_id,'id');
-					if($childCommentLists):
-					foreach($childCommentLists as $childCommentList){
-						$this->Pcomment->id = $childCommentList['Pcomment']['id'];
-						$this->Pcomment->saveField('comment_visibility','delbyparentcomment');
-						$this->Pcomment->id = false;
-					}
-					endif;
-					return;
+        if($childCommentLists) {
+            foreach($childCommentLists as $childCommentList) {
+                //only if the child is not deleted before
+                if($childCommentList['Pcomment']['comment_visibility'] == 'visible') {
+                    $this->Pcomment->id = $childCommentList['Pcomment']['id'];
+                    $this->Pcomment->saveField('comment_visibility','delbyparentcomment');
+                    $this->Pcomment->id = false;
+                }
+            }
+        }
 	}
 	
 	
