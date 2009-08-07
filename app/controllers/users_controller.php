@@ -1120,7 +1120,7 @@ class UsersController extends AppController {
 			$this->set('upload_error', $upload_error);
 			$this->Session->del('upload_error');
 		}
-		
+		$this->set('notification_count',$this->Notification->countAllNotification($user_id));
 		$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id"));
 		$this->set('isIgnored',$isIgnored);
 		$this->set('comment_count', $comment_count);

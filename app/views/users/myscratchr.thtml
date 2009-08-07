@@ -175,7 +175,7 @@ function langList($countries) {
 			<p>
             <a onclick="document.getElementById('user_icon').style.display='block'; return false;" href="#"><?php ___('change picture'); ?></a>
 			<?php if($isAdmin):?>
-			<br /><a href="<?php echo $html->url('/notifications/view/')?><?php echo $user_id?>"><?php ___('Inappropriate message(s)')?></a>
+			<br /><a href="<?php echo $html->url('/notifications/view/')?><?php echo $user_id?>"><?php ___('Past Notiifications:');?></a>&nbsp;<?php echo $notification_count?>
 			<br /><br /><a href="<?php echo $html->url('/administration/viewuser/')?><?php echo $user_id?>"><span class='button2'><?php ___('View Details')?></span></a>
 			
 			<?php endif;?>
