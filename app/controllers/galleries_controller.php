@@ -723,35 +723,32 @@ Class GalleriesController extends AppController {
 		} else {
 			$this->hide_gcomment($comment_id, "delbyadmin");
 		}
-		$commentLists = $this->Gcomment->findAll('Gcomment.gallery_id = '
-                    . $gallery_id . ' AND Gcomment.reply_to = '. $comment_id,'id');
-			if($commentLists):
-			foreach($commentLists as $commentList){
-				$this->Gcomment->id = $commentList['Gcomment']['id'];
-				$this->Gcomment->saveField('comment_visibility','delbyparentcomment');
-				$this->__deleteChildComment($gallery_id, $commentList['Gcomment']['id']);
-				$this->Gcomment->id = false;
-			}
-			endif;
+
+        $this->__deleteChildrenComments($gallery_id, $comment_id, true);
+
         $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 		exit;
 	}
 	
-	function __deleteChildComment($gallery_id, $child_comment_id){
-		$childCommentLists = $this->Gcomment->findAll('Gcomment.gallery_id = '
-                            . $gallery_id . ' AND Gcomment.reply_to = '. $child_comment_id,'id');
-        if($childCommentLists) {
-            foreach($childCommentLists as $childCommentList) {
+	function __deleteChildrenComments($gallery_id, $comment_id, $has_children = false) {
+		$children_comments = $this->Gcomment->findAll(
+                'Gcomment.gallery_id = ' . $gallery_id . ' AND Gcomment.reply_to = '. $comment_id,
+                'id, comment_visibility');
+        if($children_comments) {
+            foreach($children_comments as $comment) {
                 //only if the child is not deleted before
-                if($childCommentList['Gcomment']['comment_visibility'] == 'visible') {
-                    $this->Gcomment->id = $childCommentList['Gcomment']['id'];
-                    $this->Gcomment->saveField('comment_visibility','delbyparentcomment');
+                if($comment['Gcomment']['comment_visibility'] == 'visible') {
+                    $this->Gcomment->id = $comment['Gcomment']['id'];
+                    $this->Gcomment->saveField('comment_visibility', 'delbyparentcomment');
+                    if($has_children) {
+                        $this->__deleteChildrenComments($gallery_id, $comment['Gcomment']['id']);
+                    }
                     $this->Gcomment->id = false;
                 }
             }
         }
 	}
-
+    
 	/**
 	 * Updates the picture of the specified gallery
 	 * $gallery_id => gallery identifier
