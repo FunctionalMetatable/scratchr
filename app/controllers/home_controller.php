@@ -337,8 +337,9 @@ Class HomeController extends AppController {
         if ($this->getContentStatus() == 'safe') {
             $onlysafesql =  "Project.status = 'safe'";
 	    }
+        $this->Project->recursive = -1;
         $resultset =  $this->Project->findCount($onlysafesql);
-	return number_format(0.0 + $resultset);
+        return number_format(0.0 + $resultset);
     }
 
     function __getTotalProjects7days() {
