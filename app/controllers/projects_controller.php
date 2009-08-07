@@ -2702,31 +2702,27 @@ class ProjectsController extends AppController {
 			$this->checkPermission('delete_project_comments');
 		}
 		
-		if($this->Pcomment->del($comment_id)){
-			$commentLists = $this->Pcomment->findAll('Pcomment.project_id = '
-                    . $project_id . ' AND Pcomment.reply_to = '. $comment_id,'id');
-			if($commentLists):
-			foreach($commentLists as $commentList){
-				$this->Pcomment->id = $commentList['Pcomment']['id'];
-				$this->Pcomment->saveField('comment_visibility','delbyparentcomment');
-				$this->__deleteChildComment($project_id, $commentList['Pcomment']['id']);
-				$this->Pcomment->id = false;
-			}
-			endif;
+		if($this->Pcomment->del($comment_id)) {
+            $this->__deleteChildrenComments($project_id, $comment_id, true);
 		}
         $this->Pcomment->deleteCommentsFromMemcache($project_id);
 		exit;
 	}
 	
-	function __deleteChildComment($project_id, $child_comment_id) {
-		$childCommentLists = $this->Pcomment->findAll('Pcomment.project_id = '
-                    . $project_id . ' AND Pcomment.reply_to = '. $child_comment_id,'id');
-        if($childCommentLists) {
-            foreach($childCommentLists as $childCommentList) {
+	function __deleteChildrenComments($project_id, $comment_id, $has_children = false) {
+		$children_comments = $this->Pcomment->findAll(
+            'Pcomment.project_id = '. $project_id . ' AND Pcomment.reply_to = '. $comment_id,
+            'id, comment_visibility');
+        
+        if($children_comments) {
+            foreach($children_comments as $comment) {
                 //only if the child is not deleted before
-                if($childCommentList['Pcomment']['comment_visibility'] == 'visible') {
-                    $this->Pcomment->id = $childCommentList['Pcomment']['id'];
+                if($comment['Pcomment']['comment_visibility'] == 'visible') {
+                    $this->Pcomment->id = $comment['Pcomment']['id'];
                     $this->Pcomment->saveField('comment_visibility','delbyparentcomment');
+                    if($has_children) {
+                        $this->__deleteChildrenComments($project_id, $comment['Pcomment']['id']);
+                    }
                     $this->Pcomment->id = false;
                 }
             }
