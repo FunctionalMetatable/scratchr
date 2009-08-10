@@ -2,3 +2,4 @@ ALTER TABLE `notification_types` ADD `negative` TINYINT( 1 ) NOT NULL DEFAULT '0
 ALTER TABLE `notification_types` ADD INDEX ( `negative` ) ;
 UPDATE `notification_types` SET `negative` = '1' WHERE `id` BETWEEN 6 AND 22;
 UPDATE `notification_types` SET `negative` = '1' WHERE `id` = 24;
+UPDATE `notification_types` SET `negative` = '1' WHERE `id` in(28,29)
