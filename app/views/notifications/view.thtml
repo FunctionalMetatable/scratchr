@@ -18,7 +18,7 @@
 				?>
 				&nbsp;
 				<?php
-				echo friendlyDate($notification['created']);___(' ago');
+				echo $notification['created'];
 				?></small>
 			</div>
 	 </div>  
