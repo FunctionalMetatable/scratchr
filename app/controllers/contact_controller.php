@@ -29,7 +29,7 @@ class ContactController extends AppController {
 #		$this->set('content_status', $this->getContentStatus());
 		if (!empty($this->data))
 		{
-			$this->msg();
+			$this->sendmsg();
 		} else {
 			$this->render('us_banned','scratchr_default');
 		}
@@ -88,6 +88,37 @@ class ContactController extends AppController {
 
 			$this->Email->email($email, $name, $message, $subject, $mailto, $email);  //here is the email sent
 			$this->Email->email($email, $name, $message, $subject, $cc_topic, $email);  //copy of the email sent to the person in charge of the topic selected
+			$this->set('succes', ___('The message was sent', true) . " <br />" . ___('Thank you!', true));
+	      }
+	}
+	
+	function sendmsg($mailto=null){
+
+		  $email = $this->data['Page']['email'];
+		  $name = $this->data['Page']['name'];
+		  $subject = $this->data['Page']['subject'];
+		  $message = $this->data['Page']['message'];
+		
+		  if ($this->Email->validMail($email) == 0 )
+		  {
+			$this->set('error', ___("Invalid e-mail:", true) . " '$email'");
+		  }
+		  elseif(strlen(trim($subject)) < 4 )
+		  {
+			$this->set('error', ___("Subject is too short", true));
+		  }
+		  elseif(strlen(trim($message)) < 4 )
+		  {
+			$this->set('error', ___("Message is too short", true));
+		  }
+		 
+		  else{
+			// append user information to message
+			$ip=$_SERVER['REMOTE_ADDR'];
+			$message.="\n\nIP Address of user: ".$ip."\nHTTP_USER_AGENT: ".$_SERVER['HTTP_USER_AGENT'];
+
+			$this->Email->email($email, $name, $message, $subject, $mailto, $email);  //here is the email sent
+			
 			$this->set('succes', ___('The message was sent', true) . " <br />" . ___('Thank you!', true));
 	      }
 	}

@@ -23,7 +23,7 @@ ___('Contact Us if you have any questions');
 	  <?php echo $html->image('/img/contact_thanks.png')?>
 	 </p> 
 <?php }else{?>
-	 <form method="post" enctype="multipart/form-data" action="<?php echo $html->url('/contact/us/')?>">
+	 <form method="post"  action="<?php echo $html->url('/contact/us_banned/')?>">
 
 <?php if (isset($error)){?> 
 	  <p><h2><?php echo($error) ?></h2></p>
