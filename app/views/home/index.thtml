@@ -276,6 +276,12 @@
 		}
 	?>
 
+     <div id="club" class="sidecontainer">
+      <h4><?php ___('ScratchEd'); ?></h4>
+        <p><a href="http://scratched.media.mit.edu/"><img src="http://info.scratch.mit.edu/@api/deki/files/1255/=scratched2.png?size=webview" alt="ScratchEd" width="77"></a><?php ___('Do you help people learn Scratch? Join ScratchEd, our new online community for educators.'); ?></p>
+      <p class="more"><a href="http://scratched.media.mit.edu/"><?php ___('Find out more');?></a> </p>
+     </div>
+
     <div  id="club" class="sidecontainer">
     <h4><?php ___('Scratch Design Studio');?></h4>
       <h5><a href="/galleries/view/<?php e($scratch_club['id']) ?>"><?php e($club_name_s)?></a></h5>
@@ -321,18 +327,11 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
     </div>
 
 
-            <div id="club" class="sidecontainer">
-      <h4><?php ___('Scratch Day'); ?></h4>
-        <p><a href="http://day.scratch.mit.edu/"><img src="http://download.scratch.mit.edu/logo/scratchdaylogo.png" alt="Scratch Day" width="77"></a><?php ___('
-A worldwide network of gatherings, where people came together to meet, share, and learn more about Scratch.'); ?></p>
-      <p class="more"><a href="http://day.scratch.mit.edu/"><?php ___('Find out more');?></a> </p>
-     </div>
-
 
 	<div id="socialmedia" class="sidecontainer">
       <h4><?php ___('Blog and more'); ?></h4>
       <ul class="sidelist">
-				<li><?php ___('The official <a href="http://blog.scratch.mit.edu">blog</a> of the Scratch Team with links to our <a href="http://twitter.com/scratchteam">Twitter</a> updates, <a href="http://www.youtube.com/view_play_list?p=8F524C7B4C81B3EA">YouTube</a> playlist, <a href="http://www.facebook.com/pages/Scratch/19016461889">Facebook</a> group and <a href="http://www.flickr.com/groups/scratchmit/pool/">Flickr</a> pool'); ?>
+				<li><?php ___('Check out our <a href="http://blog.scratch.mit.edu">blog</a>, <a href="http://twitter.com/scratchteam">Twitter page</a>, <a href="http://www.youtube.com/group/scratchprogramming">YouTube group</a>, <a href="http://www.facebook.com/scratchteam/">Facebook page</a> and <a href="http://www.flickr.com/groups/scratchmit/pool/">Flickr pool</a>.'); ?>
       <p class="more"><a href="http://blog.scratch.mit.edu/"><?php ___('Take a look');?></a> </p>
 				</li>
       </ul>
@@ -376,12 +375,13 @@ A worldwide network of gatherings, where people came together to meet, share, an
       </ul>
     </div>
 
-	    <div id="stats" class="sidecontainer">
-      <h4><?php ___('Stats');?></h4>
+    <div id="stats" class="sidecontainer">
+      <h4>Scratch <?php ___('Stats');?></h4>
       <ul class="sidelist">
-				<li><?php printf(___("There are %s projects%s with a total of %s scripts and %s sprites created by %s contributors of our %s registered members. That's a lot of Scratch-ing!", true), "<a href='/channel/recent'>" . $totalprojects, "</a>", $totalscripts, $totalsprites, $totalcreators, $totalusers); ?></li>
+	<li><?php printf(___("There are %s projects%s with a total of %s scripts and %s sprites created by %s contributors of our %s registered members. That's a lot of Scratch-ing!", true), "<a href='/channel/recent'>" . $totalprojects, "</a>", $totalscripts, $totalsprites, $totalcreators, $totalusers); ?></li>
       </ul>
     </div>
+
 
   </div>
 <!-- ////// End main sidebar ////// -->
