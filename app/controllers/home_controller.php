@@ -269,7 +269,7 @@ Class HomeController extends AppController {
     }
 
     function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids) {
-        return $this->Project->getTopProjects('`loveit`', '`loveit` DESC', '10',
+        return $this->Project->getTopProjects('`loveitsuniqueip`', '`loveitsuniqueip` DESC', '10',
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED);
     }
 
