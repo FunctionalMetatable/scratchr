@@ -2944,10 +2944,19 @@ class ProjectsController extends AppController {
 		$comment_content  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/projects/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to project', true) . ")</a>",  $comment_content);
 		$comment_content  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/forums/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to forums', true) . ")</a>",  $comment_content);
 		$comment_content = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/galleries/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to gallery', true) . ")</a>",  $comment_content);
-		$comment_content = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", $comment_content);
+		//$comment_content = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", $comment_content);
+		$comment_content = $this->auto_link($comment_content);
 		return $comment_content;
 	}
 
+	function auto_link($text) {
+	  $pattern = "/(((http[s]?:\/\/)|(www\.))?(([a-z][-a-z0-9]+\.)?[a-z][-a-z0-9]+\.[a-z]+(\.[a-z]{2,2})?)\/?[a-z0-9._\/~#&=;%+?-]+[a-z0-9\/#=?]{1,1})/is";
+	 	$text = preg_replace($pattern, " <a href='$1'>$1</a>", $text);
+	  // fix URLs without protocols
+	  
+	  $text = preg_replace("/href='www/", "href='http://www", $text);
+	  return $text;
+}
 	/**
 	* Helper for checking whether a project has a corresponding entry in the projects_flag table 
 	**/
