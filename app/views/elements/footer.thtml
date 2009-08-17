@@ -3,7 +3,7 @@
 
 <a href="/terms"><?php ___('Terms of Use')?></a> | 
 <a href="/copyright"><?php ___('Copyright Policy')?></a> | 
-
+<a href="/donate"><?php ___('Donate')?></a> | 
 <a href="<?php echo $html->url('/contact/us')?>"><?php ___('Contact Us')?> </a>
 
 <?php
