@@ -744,24 +744,35 @@ class ProjectsController extends AppController {
 
         if (empty($project) || $project['User']['urlname'] !== $urlname)
             exit();
-
+		$client_ip = $this->RequestHandler->getClientIP();
 		$user_id = $this->getLoggedInUserID();
 		$this->data['Lover']['user_id'] = $user_id;
+		$this->data['Lover']['ipaddress'] = ip2long($client_ip);;
 		$this->data['Lover']['project_id'] = $pid;
 		$this->data['Lover']['id'] = null;
 		if ($user_id) {
-			if (!$this->Lover->hasAny("project_id = $pid AND user_id = $user_id")) {
-				$this->Lover->save($this->data);
-				$prev_lovers_count = $project['Project']['loveit'];
-				if ($prev_lovers_count == 0) {
-					$prev_lovers_count = 0;
+			
+				if (!$this->Lover->hasAny("project_id = $pid AND user_id = $user_id")) {
+					$this->Lover->save($this->data);
+					$prev_lovers_count = $project['Project']['loveit'];
+					if ($prev_lovers_count == 0) {
+						$prev_lovers_count = 0;
+					}
+					$this->Project->set_loveits($pid, $prev_lovers_count + 1);
+					
+					if($this->Lover->findCount("Lover.ipaddress = INET_ATON('$client_ip') && Lover.project_id = $pid") == 1) {
+						$prev_loveitsuniqueip_count = $project['Project']['loveitsuniqueip'];
+						if ($prev_loveitsuniqueip_count == 0) {
+							$prev_loveitsuniqueip_count = 0;
+						}
+						$this->Project->set_loveitsuniqueip($pid, $prev_loveitsuniqueip_count + 1);
+					}
+					
+					$this->set('just_loved', true);
+					$this->set('pid', $pid);
+					$this->set('urlname', $urlname);
+					
 				}
-				$this->Project->set_loveits($pid, $prev_lovers_count + 1);
-				$this->set('just_loved', true);
-				$this->set('pid', $pid);
-				$this->set('urlname', $urlname);
-				
-			}
 		}
         $this->render("projectloving_ajax", "ajax");
     }
@@ -783,7 +794,7 @@ class ProjectsController extends AppController {
 
         if (empty($project) || $project['User']['urlname'] !== $urlname)
             exit();
-
+		$client_ip = $this->RequestHandler->getClientIP();
 		$user_id = $this->getLoggedInUserID();
 		if ($user_id) {
 			$lover = $this->Lover->find("project_id = $pid AND user_id = $user_id");
@@ -792,6 +803,12 @@ class ProjectsController extends AppController {
 				$prev_lovers_count = (int)$project['Project']['loveit'];
 				$new_lovers_count = $prev_lovers_count - 1;
 				$this->Project->saveField('loveit', ($new_lovers_count == 0 ? null : $new_lovers_count));
+				
+				if($this->Lover->findCount("Lover.ipaddress = INET_ATON('$client_ip') && Lover.project_id = $pid") == 0) {
+					$prev_loveitsuniqueip_count = (int)$project['Project']['loveitsuniqueip'];
+					$new_loveitsuniqueip_count = $prev_loveitsuniqueip_count - 1;
+					$this->Project->saveField('loveitsuniqueip', ($new_loveitsuniqueip_count == 0 ? null : $new_loveitsuniqueip_count));
+				}
 				$this->set('pid', $pid);
 				$this->set('urlname', $urlname);
 				

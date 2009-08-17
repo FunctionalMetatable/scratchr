@@ -136,7 +136,7 @@ Class ChannelController extends AppController {
 
         $key = 'channel-toploved-';
         $ttl = CHANNEL_TOPLOVED_CACHE_TTL;
-        $projects_count = $this->_getProjectsCount('loveit > 0 AND proj_visibility = "visible"',
+        $projects_count = $this->_getProjectsCount('loveitsuniqueip > 0 AND proj_visibility = "visible"',
                                                 $key, $ttl);
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
@@ -148,7 +148,7 @@ Class ChannelController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+            $final_projects = $this->Project->findAll("Project.loveitsuniqueip > 0 AND Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }

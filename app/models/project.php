@@ -722,6 +722,13 @@ Class Project extends AppModel
 			$this->saveField('loveit', $love_its);
 		}
 	}
+	
+	function set_loveitsuniqueip($id, $love_its) {
+		if ($id) {
+			$this->id = $id;
+			$this->saveField('loveitsuniqueip', $love_its);
+		}
+	}
 
     function register_frontpage($project_ids, $type) {
         if(!empty($project_ids)) {
