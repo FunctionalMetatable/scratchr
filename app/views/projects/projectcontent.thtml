@@ -132,36 +132,45 @@ if ($user_status == "normal") {
 	  <!-- ::: Begin viewers, lovers, taggers and favoriters ::: -->
 	  <?php
         $viewtxt = ''; $lovetxt = ''; $favandtagtxt =''; $downloadtxt = ''; $relatedtxt = ''; $taggerstxt = '';
+		
 		if($viewcount > 1) {
 			$viewtxt = "$viewcount" . " " . ___("views", true);
 		}
 		else if($viewcount == 1){
 		     	$viewtxt = "$viewcount" . " " . ___("view", true);
 		}
+		$project_details[] = $viewtxt;
+		
 		$tagurl=$html->url('/projects/'.$urlname.'/'.$pid.'/taggers');
 		if($taggers > 1) {
 			
-			$taggerstxt = ", <a href='$tagurl'><span id='taggers-count'>$taggers" . " " . ___('taggers', true) . "</span></a>";
+			$taggerstxt = "<a href='$tagurl'><span id='taggers-count'>$taggers" . " " . ___('taggers', true) . "</span></a>";
 		}
 		else if($taggers == 1){
-		     	$taggerstxt = ", <a href='$tagurl'><span id='taggers-count'>$taggers" . " " . ___('tagger', true) . "</span></a>";
+		     	$taggerstxt = "<a href='$tagurl'><span id='taggers-count'>$taggers" . " " . ___('tagger', true) . "</span></a>";
 		}
+		if($taggerstxt)
+		$project_details[] = $taggerstxt;
+		
 		$loveurl=$html->url('/projects/'.$urlname.'/'.$pid.'/lovers');
 		if($lovers_count == 1)
 		{
 			
 			if ($isMine || $isAdmin) {
-				$lovetxt = ", <a href='$loveurl'><span id='lovers-count'>1</span> " . ___('person', true) . "</a> " . ___('loves it', true);
+				$lovetxt = "<a href='$loveurl'><span id='lovers-count'>1</span> " . ___('person', true) . "</a> " . ___('loves it', true);
 			} else {
-				$lovetxt = ", <span id='lovers-count'>1</span> " . ___('person loves it', true);
+				$lovetxt = "<span id='lovers-count'>1</span> " . ___('person loves it', true);
 			}
 		} elseif($lovers_count > 1) {
 			if ($isMine || $isAdmin) {
-				$lovetxt = ", <a href='$loveurl'><span id='lovers-count'>$lovers_count</span> " . ___('people', true) . "</a> " . ___('love it ', true);
+				$lovetxt = "<a href='$loveurl'><span id='lovers-count'>$lovers_count</span> " . ___('people', true) . "</a> " . ___('love it ', true);
 			} else {
-				$lovetxt = ", <span id='lovers-count'>$lovers_count</span> " . ___('people love it', true);
+				$lovetxt = "<span id='lovers-count'>$lovers_count</span> " . ___('people love it', true);
 			}
 		}
+		if($lovetxt)
+		$project_details[] = $lovetxt;
+		
 		$favtag = $html->url('/projects/'.$urlname.'/'.$pid.'/favoriters');
 		if ($isMine || $isAdmin) {
 			$favandtagtxt = ___("Check for", true) ." <a href='$favtag'>" . ___("favoriters", true) . "</a> " . ___('or', true) . " <a href='$tagurl'>" . ___('taggers', true) . "</a>";
@@ -171,11 +180,13 @@ if ($user_status == "normal") {
 		$downloadtxt = '';
 		$relatedtag = $html->url('/projects/'.$urlname.'/'.$pid.'/mods');
 		if(!empty($relatedcount)) {
-			$relatedtxt = ", <a href='$relatedtag'>$relatedcount " . ___('remix', true);
+			$relatedtxt = "<a href='$relatedtag'>$relatedcount " . ___('remix', true);
 		 	if ($relatedcount > 1)
-				$relatedtxt = ", <a href='$relatedtag'>$relatedcount " . ___('remixes', true);
+				$relatedtxt = "<a href='$relatedtag'>$relatedcount " . ___('remixes', true);
 			$relatedtxt .= '</a>';
 		}
+		if($relatedtxt)
+		$project_details[] = $relatedtxt;
 		
 		// for real remixes
 		//$remixer =$project['Project']['remixer'];
@@ -190,15 +201,18 @@ if ($user_status == "normal") {
 			 else
 			 $remixertxt .= "$remixer " . ___('person', true);
 		 	}
-			
+			if($remixertxt)
+			$project_details[] = $remixertxt;
 		
 		
 		if(!empty($downloadcount)) {
-			$downloadtxt = ", $downloadcount " . ___('download', true);
+			$downloadtxt = "$downloadcount " . ___('download', true);
 		 	if ($downloadcount > 1)
-				$downloadtxt = ", $downloadcount " . ___('downloads', true);
+				$downloadtxt = "$downloadcount " . ___('downloads', true);
 		}
-
+		if($downloadtxt)
+		$project_details[] = $downloadtxt;
+		
 		$numgals = 0;
 		$ingals = '';
 		foreach($gallerylist as $gallery) {
@@ -208,15 +222,17 @@ if ($user_status == "normal") {
 		}
 		$gallerytag = $html->url('/projects/'.$urlname.'/'.$pid.'/gallerylist');
 		if($numgals > 0) {
-			$ingals .= ", " . ___("in", true) . " <a href='$gallerytag'>$numgals ";
+			$ingals .=  ___("in", true) . " <a href='$gallerytag'>$numgals ";
 			if($numgals > 1)
 				$ingals .= ___('galleries', true);
 			else
 				$ingals .= ___('gallery', true);
 			$ingals .= "</a>";
 		}
-
-		e("<h5>$viewtxt$lovetxt$taggerstxt$downloadtxt$ingals$relatedtxt$remixertxt</h5><h6>$favandtagtxt</h6>");
+		if($ingals)
+		$project_details[] = $ingals;
+		//e("<h5>$viewtxt$lovetxt$taggerstxt$downloadtxt$ingals$relatedtxt$remixertxt</h5><h6>$favandtagtxt</h6>");
+		e("<h5>".implode(', ', $project_details)."</h5><h6>$favandtagtxt</h6>");
 	  ?>
 </div>
        <!-- ::: End lovers, taggers and favoriters ::: -->
