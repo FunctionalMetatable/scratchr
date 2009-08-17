@@ -399,9 +399,13 @@ ___('Download this project!');
                 $notes = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/galleries/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to gallery', true) . ")</a>",  $notes);
 		  //$notes = ereg_replace("[a-zA-Z]+://([.]?[a-zA-Z0-9_/-])*", "<a href=\"\\0\">\\0</a>", $notes);
 		  //$notes = ereg_replace("(^| |.)(www([.]?[a-zA-Z0-9_/-])*)", "\\1<a href=\"http://\\2\">\\2</a>", $notes);	
-		 $notes = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", $notes);
-			
-		  echo '<p id="pdesc">', $notes;
+		 //$notes = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", $notes);
+		 
+		 $pattern = "/(((http[s]?:\/\/)|(www\.))?(([a-z][-a-z0-9]+\.)?[a-z][-a-z0-9]+\.[a-z]+(\.[a-z]{2,2})?)\/?[a-z0-9._\/~#&=;%+?-]+[a-z0-9\/#=?]{1,1})/is";
+	  $notes = preg_replace($pattern, " <a href='$1'>$1</a>", $notes);
+	  // fix URLs without protocols
+	  $notes = preg_replace("/href='www/", "href='http://www", $notes);
+		echo '<p id="pdesc">', $notes;
 	?>
 </p>
       <?php if ($isMine || $isAdmin) echo $ajax->editor("pdesc", "/projects/$urlname/$pid/describe", Array("callback"=>"return 'description=' + encodeURIComponent(value);", "rows" => 4, "cols" => 20)); ?>
