@@ -1,0 +1,2 @@
+ALTER TABLE `lovers` ADD `ipaddress` BIGINT( 20 ) NOT NULL AFTER `user_id` ;
+ALTER TABLE `projects` ADD `loveitsuniqueip` INT( 10 ) UNSIGNED NULL AFTER `loveit` ;
