@@ -31,8 +31,12 @@ if ($user_status == "normal") {
 						$embed_project ='../..'.$p_path.'?version='.$verson;
 					 	
 					 }
-					 else if ($proj_visibility == "censbyadmin" || $proj_visibility == "censbycomm")
-					$embed_project ='../../static/misc/censored.sb';
+					 	else if ($proj_visibility == "censbyadmin"){
+						$embed_project ='../../static/misc/censoredbyadmin.sb';
+						}
+						else if($proj_visibility == "censbycomm"){
+						$embed_project ='../../static/misc/censoredbycommunity.sb';
+						}
 				}
 				else
 				{
@@ -41,9 +45,13 @@ if ($user_status == "normal") {
 					$verson = $project['Project']['version'];
 					$embed_project ='../..'.$p_path.'?version='.$verson;
 					}
-else if ($proj_visibility == "censbyadmin" || $proj_visibility == "censbycomm")
-					$embed_project ='../../static/misc/censored.sb';
-else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
+					else if ($proj_visibility == "censbyadmin" ){
+						$embed_project ='../../static/misc/censoredbyadmin.sb';
+					}
+					else if($proj_visibility == "censbycomm"){
+						$embed_project ='../../static/misc/censoredbycommunity.sb';
+					}
+					else if ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")
 					$embed_project ='../../static/misc/deleted.sb';
 				}	
 				?>
