@@ -45,7 +45,7 @@ Class ChannelController extends AppController {
         $this->Project->mc_connect();
         $mc_key = $key.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
-        if ( !$final_projects) {
+        if ($final_projects === false) {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
@@ -78,7 +78,7 @@ Class ChannelController extends AppController {
         $this->Project->mc_connect();
         $mc_key = $key.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
-        if ( !$final_projects) {
+        if ($final_projects === false) {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
@@ -110,7 +110,7 @@ Class ChannelController extends AppController {
         $this->Project->mc_connect();
         $mc_key = $key.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
-        if ( !$final_projects) {
+        if ($final_projects === false) {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
@@ -144,7 +144,7 @@ Class ChannelController extends AppController {
         $this->Project->mc_connect();
         $mc_key = $key.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
-        if ( !$final_projects) {
+        if ($final_projects === false) {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
@@ -201,7 +201,7 @@ Class ChannelController extends AppController {
 		$this->Project->mc_connect();
         $mc_key = $key.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
-        if ( !$final_projects) {
+        if ($final_projects === false) {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
@@ -302,7 +302,7 @@ Class ChannelController extends AppController {
         $model_class = $this->modelClass;
         $mc_key = $key.'count';
         $projects_count = $this->Project->mc_get($mc_key);
-        if(!$projects_count) {
+        if($projects_count === false) {
             $projects_count = $this->$model_class->findCount($condition, $recursion, 'all', true);
             $this->Project->mc_set($mc_key, $projects_count, false, $ttl);
         }

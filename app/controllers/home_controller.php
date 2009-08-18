@@ -21,7 +21,7 @@ Class HomeController extends AppController {
        	$user_ids =array();
         $this->set('client_ip', $this->RequestHandler->getClientIP());
         $home_projects = $this->Project->mc_get('home_projects_data');
-        if(!$home_projects) {
+        if($home_projects === false) {
 			$curator_name = $this->___getCuratorName();
 			
 			$frontpage_blocked_user = $this->__getBlockedUserFrontpage();
@@ -112,7 +112,7 @@ Class HomeController extends AppController {
             $this->set('friendsprojects', $myfriendsprojects);
             
             $newprojects = $this->Project->mc_get("newprojects");
-            if (!$newprojects) {
+            if ($newprojects === false) {
                 $newprojects = $this->__getNewProjects();
                 $this->Project->mc_set("newprojects", $newprojects, false, HOMEL_NEW_PROJECTS_TTL);
             }
@@ -130,14 +130,14 @@ Class HomeController extends AppController {
         $this->set('toprandoms', $toprandoms);
 */      
         $scratch_club = $this->Project->mc_get("scratch_club");
-        if (!$scratch_club) {
+        if ($scratch_club === false) {
        	    $scratch_club = $this->__getScratchClub();
             $this->Project->mc_set("scratch_club", $scratch_club, false, HOME_SCRATCH_CLUB_TTL);
         }
         $this->set('scratch_club', $scratch_club);
         
         $featuredthemes = $this->Project->mc_get("featuredthemes");
-        if (!$featuredthemes) {
+        if ($featuredthemes === false) {
        	    $featuredthemes = $this->__getFeaturedGalleries();
             $featuredthemes_ids   = Set::extract('/Gallery/id', $featuredthemes);
             $this->Gallery->register_frontpage($featuredthemes_ids, 'featured');
@@ -146,56 +146,56 @@ Class HomeController extends AppController {
         $this->set('featuredthemes', $featuredthemes);
         
         $recentvisitors = $this->Project->mc_get("recentvisitors");
-        if (!$recentvisitors) {
+        if ($recentvisitors === false) {
        	    $recentvisitors = $this->__getRecentVisitors();
             $this->Project->mc_set("recentvisitors", $recentvisitors, false, HOME_RECENT_VISITORS_TTL);
         }
         $this->set('recentvisitors', $recentvisitors);
         
         $newmembers = $this->Project->mc_get("newmembers");
-        if (!$newmembers) {
+        if ($newmembers === false) {
        	    $newmembers = $this->__getNewMembers();
             $this->Project->mc_set("newmembers", $newmembers, false, HOME_NEW_MEMBERS_TTL);
         }
         $this->set('newmembers', $newmembers);
         
         $totalprojects = $this->Project->mc_get("totalprojects");
-        if (!$totalprojects) {
+        if ($totalprojects === false) {
        	    $totalprojects = $this->__getTotalProjects();
             $this->Project->mc_set("totalprojects", $totalprojects, false, HOME_TOTAL_PROJECTS_TTL);
         }
         $this->set('totalprojects', $totalprojects);
         
         $totalscripts = $this->Project->mc_get("totalscripts");
-        if (!$totalscripts) {
+        if ($totalscripts === false) {
        	    $totalscripts = $this->__getTotalScripts();
             $this->Project->mc_set("totalscripts", $totalscripts, false, HOME_TOTAL_SCRIPTS_TTL);
         }
         $this->set('totalscripts', $totalscripts);
         
         $totalsprites = $this->Project->mc_get("totalsprites");
-        if (!$totalsprites) {
+        if ($totalsprites === false) {
        	    $totalsprites = $this->__getTotalSprites();
             $this->Project->mc_set("totalsprites", $totalsprites, false, HOME_TOTAL_SPRITES_TTL);
         }
         $this->set('totalsprites', $totalsprites);
         
         $totalcreators = $this->Project->mc_get("totalcreators");
-        if (!$totalcreators) {
+        if ($totalcreators === false) {
        	    $totalcreators = $this->__getTotalCreators();
             $this->Project->mc_set("totalcreators", $totalcreators, false, HOME_TOTAL_CREATOR_TTL);
         }
         $this->set('totalcreators', $totalcreators);
         
         $totalusers = $this->Project->mc_get("totalusers");
-        if (!$totalusers) {
+        if ($totalusers === false) {
        	    $totalusers = $this->__getTotalUsers();
             $this->Project->mc_set("totalusers", $totalusers, false, HOME_TOTAL_USERS_TTL);
         }
         $this->set('totalusers', $totalusers);
         
         $tags = $this->Project->mc_get("tags");
-        if (!$tags) {
+        if ($tags === false) {
        	    $tags = $this->__getTagCloud();
             $this->Project->mc_set("tags", $tags, false, HOME_TAGS_TTL);
         }

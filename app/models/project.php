@@ -749,7 +749,7 @@ Class Project extends AppModel
     //populate friends 3 latest project
     function getMyFriendsLatest3Projects($user_id) {
         $my_friends_latest3_projects = $this->mc_get('my_friends_latest3_projects', $user_id);
-        if (!$my_friends_latest3_projects) {
+        if ($my_friends_latest3_projects === false) {
        	    $project_ids = array();
             list($project_count, $project_ids) = $this->__getMyFriendsProjectIds($user_id);
             $my_friends_latest3_projects = $this->__getProjectsFromIds($project_ids, 0, 3);
@@ -772,7 +772,7 @@ Class Project extends AppModel
         $my_friends_latest_projects = $this->mc_get('my_friends_latest_projects',
             $user_id.'_'.$page.'_'.$limit);
 
-        if (!$my_friends_latest_projects) {
+        if ($my_friends_latest_projects === false) {
             $project_ids = array();
             list($project_count, $project_ids) = $this->__getMyFriendsProjectIds($user_id);
             $offset = ($page-1)*$limit;
@@ -804,7 +804,7 @@ Class Project extends AppModel
     function __getMyFriendsProjectIds($user_id) {
         $project_data = $this->mc_get('friends_projects_data', $user_id);
 
-        if(!$project_data) {
+        if($project_data === false) {
             $project_count = 0;
             $project_ids = array();
             

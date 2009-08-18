@@ -1083,7 +1083,7 @@ class UsersController extends AppController {
 		$this->Project->mc_connect();
 		$mc_key = $key.$limit.'-'.$page;
 		$friends_project = $this->Project->mc_get($mc_key, $user_id);
-		if(!$friends_project){
+		if($friends_project === false){
 			$friends_project = $this->Project->findAll("Project.id in (".$project_ids.") ",null,$order, $limit, $page);
 			$this->Project->mc_set($mc_key, $friends_project, $user_id, $ttl);
 			$this->Project->mc_close();
@@ -2143,7 +2143,7 @@ class UsersController extends AppController {
         $model_class = 'Project';
         $mc_key = $key.'count';
         $projects_count = $this->Project->mc_get($mc_key);
-        if(!$projects_count) {
+        if($projects_count === false) {
             $projects_count = $this->$model_class->findCount($condition, $recursion, 'all', true);
             $this->Project->mc_set($mc_key, $projects_count, false, $ttl);
         }
