@@ -35,7 +35,7 @@ class AppModel extends Model{
 	
 	function mc_connect() {
 		$this->memcache = new Memcache();
-		$this->memcache->connect(MEMCACHE_SERVER, MEMCACHE_PORT) or die ("OMG. Scratch could not connect to memcached. Please try again later.");
+		$this->memcache->pconnect(MEMCACHE_SERVER, MEMCACHE_PORT) or die ("OMG. Scratch could not connect to memcached. Please try again later.");
 	}
 	
 	function mc_get($str, $postfix = false) {
