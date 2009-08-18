@@ -1121,7 +1121,7 @@ class UsersController extends AppController {
 			$this->Session->del('upload_error');
 		}
 		$this->set('notification_count',$this->Notification->countAllNotification($user_id));
-		$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id"));
+		$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id AND Curator.visibility = 'visible'"));
 		$this->set('isIgnored',$isIgnored);
 		$this->set('comment_count', $comment_count);
 		$this->set('ignore_count', $ignore_count);
@@ -2011,7 +2011,7 @@ class UsersController extends AppController {
 		$this->data['Curator']['user_id'] = $user_id;
 		$this->Curator->save($this->data);
 		}
-	$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id"));
+	$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id AND Curator.visibility = 'visible'"));
 	$this->redirect('/users/'.$user['User']['urlname']);
 	}
 	function uncurator($user_id=null){
@@ -2025,10 +2025,11 @@ class UsersController extends AppController {
 		}
 		
 		if ($this->isAdmin()){
-		$curator = $this->Curator->find("user_id=$user_id");
-		$this->Curator->del($curator['Curator']['id']);
+		$curator = $this->Curator->find("user_id=$user_id AND Curator.visibility = 'visible'");
+		$this->Curator->id = $curator['Curator']['id'];
+		$this->Curator->saveField('visibility','deleted');
 		}
-	$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id"));
+	$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id AND Curator.visibility = 'visible'"));
 	$this->redirect('/users/'.$user['User']['urlname']);
 	}
 	
