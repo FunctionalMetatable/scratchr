@@ -1757,7 +1757,7 @@ class ProjectsController extends AppController {
 			$users_permission =$this->isAnyPermission();
             //$this->Project->mc_connect();
             //$project = $this->Project->mc_get('project', $project_id);
-            //if(!$project) {
+            //if($project === false) {
                 //unbind GalleryProject, we don't need it here
                 $this->Project->unbindModel(
                     array('hasMany' => array('GalleryProject'))
@@ -2008,7 +2008,7 @@ class ProjectsController extends AppController {
 
             //sets the tags and taggers relating to this project
             //$tag_data = $this->Project->mc_get('project_tag', $project_id);
-            //if(!$tag_data) {
+            //if($tag_data === false) {
                 $tag_data = array();
 
                 //find all project tags
@@ -2052,7 +2052,7 @@ class ProjectsController extends AppController {
             //set remixes and remixer
 			/*$this->Project->mc_connect();
             $project_history = $this->Project->mc_get('project_history', $project_id);
-			if(!$project_history) {
+			if($project_history === false) {
                 $project_history = $this->Project->query(
                     "SELECT  count(*) AS original_remixes,count(distinct user_id) AS remixer"
                     . " FROM `projects` WHERE (proj_visibility='visible' OR proj_visibility='censbycomm' OR proj_visibility='censbyadmin')"

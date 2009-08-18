@@ -94,7 +94,7 @@ Class TagsController extends AppController {
         $mc_key = 'project_tag_'.$tag_id.'_'.$content_status.'_'. $order.'_'. $limit.'_'. $page;
         $this->ProjectTag->mc_connect();
         $tag_projects = $this->ProjectTag->mc_get($mc_key);
-        if(empty($tag_projects)) {
+        if($tag_projects === false) {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );

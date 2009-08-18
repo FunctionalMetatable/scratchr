@@ -33,7 +33,7 @@ class Notification extends AppModel {
 			$this->mc_connect();
 			$notifications = $this->mc_get('notifications_page1', $user_id);
 		}
-		if ($notifications == false) {
+		if ($notifications === false) {
 			$offset = ($page -1) * $limit;
             $notification_query = $this->__createNotificationQuery($user_id, $nstatus_conditions);
 				
@@ -98,7 +98,7 @@ class Notification extends AppModel {
 			$rstatus_conditions = ' AND `status` = "pending" ';
 		}
 		
-		if ($notification_count == false) {
+		if ($notification_count === false) {
 			$notification_query =  'SELECT COUNT( id ) AS count FROM `notifications`'
 								.' WHERE `to_user_id` = '. $user_id . $nstatus_conditions;
 			$ncount = $this->query($notification_query);
