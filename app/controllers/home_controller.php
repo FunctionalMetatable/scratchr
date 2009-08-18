@@ -383,7 +383,7 @@ Class HomeController extends AppController {
 	}
 	
 	function __getCuratorFavorites($exclude_project_ids, $exclude_user_ids) {
-        $curator = $this->Curator->find(null, array(), 'Curator.id DESC');
+        $curator = $this->Curator->find(array('visibility'=>'visible'), array(), 'Curator.id DESC');
         $curator_id  = $curator['Curator']['user_id'];
 
         if(empty($curator_id)) { return null; }
@@ -401,7 +401,7 @@ Class HomeController extends AppController {
 	}
     
 	function ___getCuratorName(){
-    	$curator =$this->Curator->find(null,array(),'Curator.id DESC');
+    	$curator =$this->Curator->find(array('visibility'=>'visible'),array(),'Curator.id DESC');
         return $curator['User']['urlname'];
 	}
 	
