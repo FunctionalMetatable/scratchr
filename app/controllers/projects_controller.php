@@ -541,19 +541,6 @@ class ProjectsController extends AppController {
 		$this->render('reply_comment_ajax', 'ajax');
 	}
 
-    /**
-     * Redirects to project page based on a project id
-     * @parm int $pid => project id
-     */
-    function id2url($pid=null) {
-	$this->autoRender=false;
-        $this->Project->bindUser();
-        $this->Project->id=$pid;
-        $project = $this->Project->read();
-	$this->redirect("/projects/" . $project['User']['urlname'] . "/" . $project['Project']['id']); 
-    }
-
-
 	/**
      * Download project
      * @param string $urlname => user url
