@@ -88,7 +88,6 @@ Router::connect('/users/*', array('controller' => 'users', 'action' => 'view'));
 
 // Project pages
 
-Router::connect('/projects/id2url/*', array('controller' => 'projects', 'action' => 'id2url'));
 Router::connect('/projects/gallerylist/*', array('controller' => 'projects', 'action' => 'gallerylist'));
 Router::connect('/projects/feature/*', array('controller' => 'projects', 'action' => 'feature'));
 Router::connect('/projects/defeature/*', array('controller' => 'projects', 'action' => 'defeature'));
