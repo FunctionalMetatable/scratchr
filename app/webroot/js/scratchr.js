@@ -332,6 +332,7 @@ function updateNotificationsCounter(hide) {
     {
         notificationcontainer.style.display = "none";
 		document.getElementById("messages").style.display = "none";
+		document.getElementById("hide_all_notification").style.display = "none";
     } else {
 		notificationscount.innerHTML = notify_count.toString() + " messages";
 	}
