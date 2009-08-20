@@ -2192,14 +2192,20 @@ Class GalleriesController extends AppController {
 				$this->Mgcomment->bindUser();
 				$linked_stringwflaggernames = "";
 				$allflaggers = $this->Mgcomment->findAll("comment_id = $comment_id");
+				$flaggernames = array();
 				foreach ($allflaggers as $flagger) {
 					$user_href =TOPLEVEL_URL.'/users/'.$flagger['User']['username'];
-					$linked_stringwflaggernames .="<a href ='$user_href'>";
-					$linked_stringwflaggernames .= $flagger['User']['username'] . "</a>,";
+					$flaggernames[] = sprintf('<a href ="%s">%s</a>', $user_href,
+                                                $flagger['User']['username']);
+					
 				}
+				$flaggernames = implode(', ', $flaggernames);
 				
+				$this->hide_gcomment($comment_id, "censbycomm");
+                $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
+					
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on the gallery: '$gallery_name'";
-				$msg = "Users  $linked_stringwflaggernames have flagged this comment by  $linked_creatorname :\n$content\n $gallery_creater_url";
+				$msg = "Users  $flaggernames have flagged this comment by  $linked_creatorname :\n$content\n $gallery_creater_url";
 				
 			}
 			
