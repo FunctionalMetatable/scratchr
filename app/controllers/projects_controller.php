@@ -512,6 +512,10 @@ class ProjectsController extends AppController {
                                                 $flagger['User']['username']);
 				}
                 $flaggernames = implode(', ', $flaggernames);
+				
+				$this->Pcomment->saveField("comment_visibility", "censbycomm") ;
+                $this->Pcomment->deleteCommentsFromMemcache($pid);
+				
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on '$pname'";
 				$msg = "Users  $flaggernames have flagged this comment by  $linked_creatorname :\n$content\n $project_creater_url";
 			}
