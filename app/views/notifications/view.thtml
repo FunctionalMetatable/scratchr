@@ -9,13 +9,15 @@
 		$notification = $notification[0]; 
 		$id = $notification['id'];
 		$message = $template->create($notification, $username);
+        $from_user_name = $notification['from_user_name'];
+        if(empty($from_user_name)) {
+            $from_user_name = ($notification['is_admin']) ? 'admin' : 'system';
+        }
 	?>
 	<div id='notification_<?php echo $id; ?>' class="notification" style='display:block;' align='left'>
 			<?php echo $message; ?>
 			<div style="text-align:right">
-				<small>By <?php 
-				echo (!empty($notification['from_user_name'])) ? $notification['from_user_name']: 'system';
-				?>
+				<small>By <?php echo $from_user_name; ?>
 				&nbsp;
 				<?php
 				echo $notification['created'];
