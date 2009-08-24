@@ -716,20 +716,19 @@ Class Project extends AppModel
 					'dependent' => true))));
     }
 	
-	function set_loveits($id, $love_its) {
+	function update_loveits($id) {
 		if ($id) {
-			$this->id = $id;
-			$this->saveField('loveit', $love_its);
+            $sql = 'SELECT count(DISTINCT user_id) loveits, count(DISTINCT ipaddress)'
+                  .' loveitsuniqueip FROM lovers WHERE project_id = '. $id;
+            $loveit = $this->query($sql);
+            $sql = 'UPDATE projects'
+                  .' SET loveit = ' . $loveit[0][0]['loveits'] . ','
+                  .' loveitsuniqueip = ' . $loveit[0][0]['loveitsuniqueip']
+                  .' WHERE `id` = ' . $id;
+            $this->query($sql);
 		}
 	}
 	
-	function set_loveitsuniqueip($id, $love_its) {
-		if ($id) {
-			$this->id = $id;
-			$this->saveField('loveitsuniqueip', $love_its);
-		}
-	}
-
     function register_frontpage($project_ids, $type) {
         if(!empty($project_ids)) {
             //the following code will create some part of the SQL efficiently, sacrificing the readability
