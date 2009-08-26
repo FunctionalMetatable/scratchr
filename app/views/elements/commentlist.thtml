@@ -125,9 +125,9 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
     <div class="comment_reply_main_visible" id="reply_list_<?php echo $comment_id; ?>">
         <?php if(!empty($comment['Pcomment']['replylist'])): ?>
             <?php echo $this->renderElement('projects/reply_list',
-                array('comments' => $comment['Pcomment']['replylist']['comments'],
-                    'ignored_commenters' => $comment['Pcomment']['replylist']['ignored_commenters'],
-                    'ignored_comments' => $comment['Pcomment']['replylist']['ignored_comments'],
+                array('comments' => $comment['Pcomment']['replylist'],
+                    'ignored_commenters' => $ignored_commenters,
+                    'ignored_comments' => $ignored_comments,
                         'comment_level' => ($comment_level + 1), 'isLocked' => $isLocked)); ?>
         <?php endif;  ?>
      </div>

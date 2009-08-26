@@ -492,14 +492,14 @@ class ProjectsController extends AppController {
 				}
 				else
 				{
-				$this->Pcomment->saveField("comment_visibility", "delbyadmin") ;
-                $this->Pcomment->deleteCommentsFromMemcache($pid);
-				$subject= "Comment deleted because it was flagged by an admin";
-				$msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
-				$this->notify('pcomment_removed', $creator_id,
-								array('project_id' => $pid,
-									'project_owner_name' => $project_creator),
-									array($content));
+                    $this->Pcomment->saveField("comment_visibility", "delbyadmin") ;
+                    $this->Pcomment->deleteCommentsFromMemcache($pid);
+                    $subject= "Comment deleted because it was flagged by an admin";
+                    $msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
+                    $this->notify('pcomment_removed', $creator_id,
+                                    array('project_id' => $pid,
+                                        'project_owner_name' => $project_creator),
+                                        array($content));
 				}
 			}
 			if ($inappropriate_count > $max_count) {
@@ -2786,8 +2786,12 @@ class ProjectsController extends AppController {
 
                 $comment['Pcomment']['replylist'] = array();
                 if($comment['Pcomment']['replies'] > 0) {
-                    $comment['Pcomment']['replylist'] = $this->set_replies($project_id,
-                        $creator_id, $comment['Pcomment']['id'], $this->getLoggedInUserID(), NUM_COMMENT_REPLY);
+                    $replies = $this->set_replies($project_id,
+                        $creator_id, $comment['Pcomment']['id'], $this->getLoggedInUserID(),
+                        NUM_COMMENT_REPLY, true);
+                    $commenter_ids = array_merge($commenter_ids, $replies['commenter_ids']);
+                    $comment_ids = array_merge($comment_ids, $replies['comment_ids']);
+                    $comment['Pcomment']['replylist'] = $replies['comments'];
                 }
 
                 //replace the comment in $comments list
@@ -2835,28 +2839,18 @@ class ProjectsController extends AppController {
                 'user_id = ' . $this->getLoggedInUserID() . ' AND comment_id IN ' . $comment_data['comment_ids'],
                 'fields' => 'comment_id'));
             
-            $comment_data['ignored_commenters'] = $comment_data['ignored_commenters'] + $user_ignored_commenters;
-            $comment_data['ignored_comments']   = $comment_data['ignored_comments'] + $user_ignored_comments;
+            $comment_data['ignored_commenters'] = array_merge($comment_data['ignored_commenters'], $user_ignored_commenters);
+            $comment_data['ignored_comments']   = array_merge($comment_data['ignored_comments'], $user_ignored_comments);
         }
 
         $comment_data['single_thread'] = !empty($comment_id);
         return $comment_data;
 	}
 	
-	function set_comment_errors($errors = Array()) {
-		if (empty($errors)) {
-			$this->set('isCommentError', false);
-			$this->set('commentErrors', $errors);
-		} else {
-			$this->set('isCommentError', true);
-			$this->set('commentErrors', $errors);
-		}
-	}
-
     /**
 	* Returns all replies relevant to logged in user viewing a project
 	**/
-	function set_replies($project_id, $creator_id, $parent_id, $user_id, $limit = 0) {
+	function set_replies($project_id, $creator_id, $parent_id, $user_id, $limit = 0, $from_set_comments = false) {
         $this->Pcomment->unbindModel( array('belongsTo' => array('Project')) );
         $comments = $this->Pcomment->findAll( 'project_id = ' . $project_id
                 . ' AND Pcomment.comment_visibility = "visible" AND reply_to = ' . $parent_id,
@@ -2880,41 +2874,58 @@ class ProjectsController extends AppController {
             $comments[$key] = $comment;
         }
 
-        $commenter_ids  = $this->IgnoredUser->createString($commenter_ids);
-        $comment_ids    = $this->IgnoredUser->createString($comment_ids);
-
-        $this->IgnoredUser->recursive = -1;
-        $ignored_commenters = $this->IgnoredUser->find('list',
-                array('conditions' =>
-                'blocker_id = '. $creator_id . ' AND user_id IN ' . $commenter_ids,
-                'fields' => 'user_id'));
-
         $comment_data = array();
         $comment_data['comments'] = $comments;
-        $comment_data['ignored_commenters'] = $ignored_commenters;
-        $comment_data['ignored_comments'] = array();
         
-        //if the user is logged in
-        if($user_id) {
-            $this->IgnoredUser->recursive = -1;
-            $user_ignored_commenters = $this->IgnoredUser->find('list',
-                array('conditions' =>
-                'blocker_id = '. $this->getLoggedInUserID()
-                . ' AND user_id IN ' . $commenter_ids,
-                'fields' => 'user_id'));
-
-            $this->Mpcomment->recursive = -1;
-            $user_ignored_comments = $this->Mpcomment->findAll(
-                'user_id = ' . $this->getLoggedInUserID() . ' AND comment_id IN ' . $comment_ids,
-                'comment_id');
-                
-            $comment_data['ignored_commenters'] = $comment_data['ignored_commenters'] + $user_ignored_commenters;
-            $comment_data['ignored_comments']   = $comment_data['ignored_comments'] + $user_ignored_comments;
+        if($from_set_comments) {
+            $comment_data['commenter_ids'] = $commenter_ids;
+            $comment_data['comment_ids'] = $comment_ids;
         }
+        else {
+            $commenter_ids  = $this->IgnoredUser->createString($commenter_ids);
+            $comment_ids    = $this->IgnoredUser->createString($comment_ids);
+            $this->IgnoredUser->recursive = -1;
+            $ignored_commenters = $this->IgnoredUser->find('list',
+                    array('conditions' =>
+                    'blocker_id = '. $creator_id . ' AND user_id IN ' . $commenter_ids,
+                    'fields' => 'user_id'));
 
+            $comment_data['ignored_commenters'] = $ignored_commenters;
+            $comment_data['ignored_comments'] = array();
+
+            //if the user is logged in
+            if($user_id) {
+                $this->IgnoredUser->recursive = -1;
+                $user_ignored_commenters = $this->IgnoredUser->find('list',
+                    array('conditions' =>
+                      'blocker_id = '. $this->getLoggedInUserID()
+                    . ' AND user_id IN ' . $commenter_ids,
+                    'fields' => 'user_id'));
+
+                $this->Mpcomment->recursive = -1;
+                $user_ignored_comments = $this->Mpcomment->find('list',
+                    array('conditions' =>
+                      'user_id = ' . $this->getLoggedInUserID()
+                    . ' AND comment_id IN ' . $comment_ids,
+                    'fields' => 'comment_id'));
+                $comment_data['ignored_commenters'] = array_merge($comment_data['ignored_commenters'], $user_ignored_commenters);
+                $comment_data['ignored_comments']   = array_merge($comment_data['ignored_comments'], $user_ignored_comments);
+            }
+        }
+        
         return $comment_data;
 	}
-	
+
+	function set_comment_errors($errors = Array()) {
+		if (empty($errors)) {
+			$this->set('isCommentError', false);
+			$this->set('commentErrors', $errors);
+		} else {
+			$this->set('isCommentError', true);
+			$this->set('commentErrors', $errors);
+		}
+	}
+
 	/**
 	* Helper for setting up html links for comments
 	**/
