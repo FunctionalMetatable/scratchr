@@ -28,8 +28,9 @@
 		<?php foreach($data as $project): ?>
 			<?php
 				$pid = $project['Project']['id'];
+				$visibility = $project['Project']['proj_visibility'];
 				$project_name = htmlspecialchars($project['Project']['name']);
-				$project_thumbnail = getThumbnailImg($urlname, $pid, 'mini', true);
+				$project_thumbnail = getThumbnailImg($urlname, $pid, 'mini', true, '/', $visibility);
 				$project_url = "/projects/".$urlname."/".$pid;
 				$project_owner_url = "/users/".$urlname;
 				$project_totalComments = $project['Project']['totalComments'];

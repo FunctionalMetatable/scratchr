@@ -205,7 +205,7 @@ define('CACHE_DURATION', '1 day');
 /**
  * Memcache constants
  */
-define("MEMCACHE_SERVER", 'scratchstore'); //memcache server
+define("MEMCACHE_SERVER", 'scratchstore'); //memcache server 
 define("MEMCACHE_PORT", 11211); //memcache port
 define("HOMEL_PAGE_TTL", 60); //for home page
 define("HOMEL_NEW_PROJECTS_TTL", 60);
@@ -283,11 +283,34 @@ define('JAVA_PATH', '/usr/java/latest/bin/java');
  /**
   * Returns thumbnail location
   */
- function getThumbnailImg($urlname, $pid, $type='mini', $prepend_slash=true, $ds="/") {
+ function getThumbnailImg($urlname, $pid, $type='mini', $prepend_slash=true, $ds="/", $visibility='visible') {
     $prefix = ($prepend_slash) ? $ds:"";
+	if($visibility === 'visible'){
     return ($type === 'mini') ?
         $prefix."static".$ds."projects".$ds.$urlname.$ds.$pid."_sm".THUMBNAIL_EXTENSION:
         $prefix."static".$ds."projects".$ds.$urlname.$ds.$pid."_med".THUMBNAIL_EXTENSION;
+	}
+	else if($visibility === 'censbyadmin'){
+	return ($type === 'mini') ?
+        $prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbyadmin_sm".THUMBNAIL_EXTENSION:
+		$prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbyadmin_med".THUMBNAIL_EXTENSION;
+	}
+	else if($visibility === 'censbycomm'){
+	return ($type === 'mini') ?
+        $prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbycommunity_sm".THUMBNAIL_EXTENSION:
+		$prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbycommunity_med".THUMBNAIL_EXTENSION;
+	}
+	else if($visibility === 'delbyadmin'){
+	return ($type === 'mini') ?
+        $prefix."static".$ds."misc".$ds."thumbs".$ds."deletedbyadmin_sm".THUMBNAIL_EXTENSION:
+		$prefix."static".$ds."misc".$ds."thumbs".$ds."deletedbyadmin_med".THUMBNAIL_EXTENSION;
+	}
+	else if($visibility === 'delbyusr'){
+	return ($type === 'mini') ?
+        $prefix."static".$ds."misc".$ds."thumbs".$ds."deletedbyuser_sm".THUMBNAIL_EXTENSION:
+		$prefix."static".$ds."misc".$ds."thumbs".$ds."deletedbyuser_med".THUMBNAIL_EXTENSION;
+	}
+		
  }
 
  /**
@@ -530,6 +553,7 @@ function friendlyDate($original) {
 	}
 	return "$print"; // the "ago" is removed since this structure is not compatible with other languages...
 }
+
 
 	function isInappropriate($str) {
 		#words or just part of words
