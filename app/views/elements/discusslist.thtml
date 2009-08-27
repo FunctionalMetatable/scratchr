@@ -126,9 +126,9 @@ $markcomment_url = '/galleries/markcomment/' . $theme_id . '/' . $comment_id . '
     <div class="comment_reply_main_visible" id="reply_list_<?= $comment_id; ?>">
         <?php if(!empty($comment['Gcomment']['replylist'])): ?>
             <?= $this->renderElement('gallery/reply_list',
-                array('comments' => $comment['Gcomment']['replylist']['comments'],
-                    'ignored_commenters' => $comment['Gcomment']['replylist']['ignored_commenters'],
-                    'ignored_comments' => $comment['Gcomment']['replylist']['ignored_comments'],
+                array('comments' => $comment['Gcomment']['replylist'],
+                    'ignored_commenters' => $ignored_commenters,
+                    'ignored_comments' => $ignored_comments,
                         'comment_level' => ($comment_level + 1))); ?>
         <?php endif;  ?>
      </div>

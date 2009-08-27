@@ -2636,7 +2636,7 @@ Class GalleriesController extends AppController {
 			}
 		}
 
-		$replies = $this->set_replies($gallery_id, $gallery_owner_id, $source_id, $user_id, $isLogged);
+		$replies = $this->set_replies($gallery_id, $gallery_owner_id, $source_id, $user_id);
 		$this->set_comment_errors(array());
 		
 		$this->set('replies', $replies);
@@ -2660,7 +2660,7 @@ Class GalleriesController extends AppController {
         $gallery = $this->Gallery->find('Gallery.id = '.$gallery_id,
                                             'Gallery.user_id');
 		$replies = $this->set_replies($gallery_id, $gallery['Gallery']['user_id'],
-                                                $source_id, $user_id, $isLogged);
+                                                $source_id, $user_id);
 
 		$this->set('replies', $replies);
 		$this->set('isThemeOwner', $user_id == $gallery['Gallery']['user_id']);
@@ -2750,8 +2750,11 @@ Class GalleriesController extends AppController {
 
                 $comment['Gcomment']['replylist'] = array();
                 if($comment['Gcomment']['replies'] > 0) {
-                    $comment['Gcomment']['replylist'] = $this->set_replies($gallery_id,
-                        $owner_id, $comment['Gcomment']['id'], $user_id, $isLoggedIn, NUM_COMMENT_REPLY);
+                    $replies = $this->set_replies($gallery_id,
+                        $owner_id, $comment['Gcomment']['id'], $user_id, NUM_COMMENT_REPLY, true);
+ 		            $commenter_ids = array_merge($commenter_ids, $replies['commenter_ids']);
+                    $comment_ids = array_merge($comment_ids, $replies['comment_ids']);
+ 		            $comment['Gcomment']['replylist'] = $replies['comments'];
                 }
 
                 //replace the comment in $comments list
@@ -2799,8 +2802,8 @@ Class GalleriesController extends AppController {
                 'user_id = ' . $user_id . ' AND comment_id IN ' . $comment_data['comment_ids'],
                 'fields' => 'comment_id'));
 
-            $comment_data['ignored_commenters'] = $comment_data['ignored_commenters'] + $user_ignored_commenters;
-            $comment_data['ignored_comments']   = $comment_data['ignored_comments'] + $user_ignored_comments;
+            $comment_data['ignored_commenters'] = array_merge($comment_data['ignored_commenters'], $user_ignored_commenters);
+            $comment_data['ignored_comments']   = array_merge($comment_data['ignored_comments'], $user_ignored_comments);
         }
 
         $comment_data['single_thread'] = !empty($comment_id);
@@ -2881,7 +2884,7 @@ Class GalleriesController extends AppController {
 	/**
 	* Returns all replies relevant to logged in user viewing a gallery
 	**/
-	function set_replies($gallery_id, $owner_id, $parent_id, $user_id, $isLoggedIn, $limit = 0) {
+	function set_replies($gallery_id, $owner_id, $parent_id, $user_id, $limit = 0, $from_set_comments = false) {
 		$this->Gcomment->unbindModel( array('belongsTo' => array('Gallery')) );
         $comments = $this->Gcomment->findAll('gallery_id = ' . $gallery_id
             . ' AND comment_visibility = "visible" AND reply_to = ' . $parent_id,
@@ -2904,41 +2907,46 @@ Class GalleriesController extends AppController {
             $comments[$key] = $comment;
         }
 
-        $commenter_ids  = $this->IgnoredUser->createString($commenter_ids);
-        $comment_ids    = $this->IgnoredUser->createString($comment_ids);
-
-        $this->IgnoredUser->recursive = -1;
-        $ignored_commenters = $this->IgnoredUser->find('list',
-            array('conditions' =>
-            'blocker_id = '. $owner_id . ' AND user_id IN ' . $commenter_ids,
-            'fields' => 'user_id'));
-
         $comment_data = array();
         $comment_data['comments'] = $comments;
-        $comment_data['ignored_commenters'] = $ignored_commenters;
-        $comment_data['ignored_comments'] = array();
-        $comment_data['commenter_ids'] = $commenter_ids;
-        $comment_data['comment_ids'] = $comment_ids;
 
-        //if the user is logged in
-        if($isLoggedIn) {
+        if($from_set_comments) {
+            $comment_data['commenter_ids'] = $commenter_ids;
+            $comment_data['comment_ids'] = $comment_ids;
+        }
+        else {
+            $commenter_ids  = $this->IgnoredUser->createString($commenter_ids);
+            $comment_ids    = $this->IgnoredUser->createString($comment_ids);
             $this->IgnoredUser->recursive = -1;
-            $user_ignored_commenters = $this->IgnoredUser->find('list',
+            $ignored_commenters = $this->IgnoredUser->find('list',
+                            array('conditions' =>
+                            'blocker_id = '. $owner_id . ' AND user_id IN ' . $commenter_ids,
+                            'fields' => 'user_id'));
+
+            $comment_data['ignored_commenters'] = $ignored_commenters;
+            $comment_data['ignored_comments'] = array();
+                        
+            //if the user is logged in
+            if($user_id) {
+                $this->IgnoredUser->recursive = -1;
+                $user_ignored_commenters = $this->IgnoredUser->find('list',
+                        array('conditions' =>
+                        'blocker_id = '. $user_id. ' AND user_id IN ' . $commenter_ids,
+                        'fields' => 'user_id'));
+
+                $this->Mgcomment->recursive = -1;
+                $user_ignored_comments = $this->Mgcomment->find('list',
                     array('conditions' =>
-                    'blocker_id = '. $user_id. ' AND user_id IN ' . $comment_data['commenter_ids'],
-                    'fields' => 'user_id'));
+                    'user_id = ' . $user_id
+                  . ' AND comment_id IN ' . $comment_ids,
+                    'fields' => 'comment_id'));
 
-            $this->Mgcomment->recursive = -1;
-            $user_ignored_comments = $this->Mgcomment->find('list',
-                array('conditions' =>
-                'user_id = ' . $user_id . ' AND comment_id IN ' . $comment_data['comment_ids'],
-                'fields' => 'comment_id'));
-
-            $comment_data['ignored_commenters'] = $comment_data['ignored_commenters'] + $user_ignored_commenters;
-            $comment_data['ignored_comments']   = $comment_data['ignored_comments'] + $user_ignored_comments;
+                $comment_data['ignored_commenters'] = array_merge($comment_data['ignored_commenters'], $user_ignored_commenters);
+                $comment_data['ignored_comments']   = array_merge($comment_data['ignored_comments'], $user_ignored_comments);
+            }
         }
 
-		return $comment_data;
+        return $comment_data;
 	}
 	
 	/**
