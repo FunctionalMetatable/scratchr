@@ -24,7 +24,11 @@ class NotificationsController extends AppController {
 		if(empty($user_record)) {
 			$this->cakeError('error404');
 		}
-		
+		$client_ip = $this->RequestHandler->getClientIP();
+		$sql = "INSERT INTO `notification_histories` (`id`,`user_id`,`ipaddress`) VALUES"
+                        ." (NULL, $user_id, INET_ATON('$client_ip'))";
+        $this->Notification->query($sql);
+				
 		$username = $user_record['User']['username'];
 		$notify_pcomment = $user_record['User']['notify_pcomment'];
 		$notify_gcomment = $user_record['User']['notify_gcomment'];
