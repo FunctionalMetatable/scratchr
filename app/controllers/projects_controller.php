@@ -2898,14 +2898,14 @@ class ProjectsController extends AppController {
                 $this->IgnoredUser->recursive = -1;
                 $user_ignored_commenters = $this->IgnoredUser->find('list',
                     array('conditions' =>
-                      'blocker_id = '. $this->getLoggedInUserID()
+                      'blocker_id = '. $user_id
                     . ' AND user_id IN ' . $commenter_ids,
                     'fields' => 'user_id'));
 
                 $this->Mpcomment->recursive = -1;
                 $user_ignored_comments = $this->Mpcomment->find('list',
                     array('conditions' =>
-                      'user_id = ' . $this->getLoggedInUserID()
+                      'user_id = ' . $user_id
                     . ' AND comment_id IN ' . $comment_ids,
                     'fields' => 'comment_id'));
                 $comment_data['ignored_commenters'] = array_merge($comment_data['ignored_commenters'], $user_ignored_commenters);
