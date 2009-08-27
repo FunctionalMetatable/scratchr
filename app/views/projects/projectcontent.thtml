@@ -32,10 +32,10 @@ if ($user_status == "normal") {
 					 	
 					 }
 					 	else if ($proj_visibility == "censbyadmin"){
-						$embed_project ='../../static/misc/censoredbyadmin.sb';
+						$embed_project ='../../static/misc/sb/censoredbyadmin.sb';
 						}
 						else if($proj_visibility == "censbycomm"){
-						$embed_project ='../../static/misc/censoredbycommunity.sb';
+						$embed_project ='../../static/misc/sb/censoredbycommunity.sb';
 						}
 				}
 				else
@@ -46,16 +46,16 @@ if ($user_status == "normal") {
 					$embed_project ='../..'.$p_path.'?version='.$verson;
 					}
 					else if ($proj_visibility == "censbyadmin" ){
-						$embed_project ='../../static/misc/censoredbyadmin.sb';
+						$embed_project ='../../static/misc/sb/censoredbyadmin.sb';
 					}
 					else if($proj_visibility == "censbycomm"){
-						$embed_project ='../../static/misc/censoredbycommunity.sb';
+						$embed_project ='../../static/misc/sb/censoredbycommunity.sb';
 					}
 					else if ($proj_visibility == "delbyadmin"){
-					$embed_project ='../../static/misc/deletedbyadmin.sb';
+					$embed_project ='../../static/misc/sb/deletedbyadmin.sb';
 					}
 					else if ($proj_visibility == "delbyusr")
-					$embed_project ='../../static/misc/deletedbyuser.sb';
+					$embed_project ='../../static/misc/sb/deletedbyuser.sb';
 				}	
 				?>
 				<applet id="ProjectApplet" style="display:block" code="ScratchApplet" codebase="/static/misc/" archive="ScratchApplet.jar" height="387" width="482"><param name="project" value="<?php echo $embed_project;?>"><h3>Your browser needs java to view projects. Click <a href="http://java.com/getjava/index.jsp">here</a> to install Java.</h3></applet>
