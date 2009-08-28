@@ -1,4 +1,4 @@
-CREATE TABLE `scratchr`.`remix_notifications` (
+CREATE TABLE `remix_notifications` (
 `id` INT NOT NULL AUTO_INCREMENT ,
 `user_id` INT( 10 ) UNSIGNED NOT NULL ,
 `ntype` ENUM( 'positive', 'neutral' ) NOT NULL ,
