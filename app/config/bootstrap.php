@@ -284,33 +284,24 @@ define('JAVA_PATH', '/usr/java/latest/bin/java');
   * Returns thumbnail location
   */
  function getThumbnailImg($urlname, $pid, $type='mini', $prepend_slash=true, $ds="/", $visibility='visible') {
-    $prefix = ($prepend_slash) ? $ds:"";
-	if($visibility === 'visible'){
-    return ($type === 'mini') ?
-        $prefix."static".$ds."projects".$ds.$urlname.$ds.$pid."_sm".THUMBNAIL_EXTENSION:
-        $prefix."static".$ds."projects".$ds.$urlname.$ds.$pid."_med".THUMBNAIL_EXTENSION;
+    $prefix = ($prepend_slash) ? $ds : "";
+    $size = ($type === 'mini') ? "_sm" : "_med";
+    
+	if($visibility === 'visible') {
+        return $prefix."static".$ds."projects".$ds.$urlname.$ds.$pid.$size.THUMBNAIL_EXTENSION;
 	}
-	else if($visibility === 'censbyadmin'){
-	return ($type === 'mini') ?
-        $prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbyadmin_sm".THUMBNAIL_EXTENSION:
-		$prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbyadmin_med".THUMBNAIL_EXTENSION;
+	else if($visibility === 'censbyadmin') {
+        return $prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbyadmin_".$size.THUMBNAIL_EXTENSION;
 	}
-	else if($visibility === 'censbycomm'){
-	return ($type === 'mini') ?
-        $prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbycommunity_sm".THUMBNAIL_EXTENSION:
-		$prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbycommunity_med".THUMBNAIL_EXTENSION;
+	else if($visibility === 'censbycomm') {
+        return $prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbycommunity".$size.THUMBNAIL_EXTENSION;
 	}
-	else if($visibility === 'delbyadmin'){
-	return ($type === 'mini') ?
-        $prefix."static".$ds."misc".$ds."thumbs".$ds."deletedbyadmin_sm".THUMBNAIL_EXTENSION:
-		$prefix."static".$ds."misc".$ds."thumbs".$ds."deletedbyadmin_med".THUMBNAIL_EXTENSION;
+	else if($visibility === 'delbyadmin') {
+        return $prefix."static".$ds."misc".$ds."thumbs".$ds."deletedbyadmin".$size.THUMBNAIL_EXTENSION;
 	}
-	else if($visibility === 'delbyusr'){
-	return ($type === 'mini') ?
-        $prefix."static".$ds."misc".$ds."thumbs".$ds."deletedbyuser_sm".THUMBNAIL_EXTENSION:
-		$prefix."static".$ds."misc".$ds."thumbs".$ds."deletedbyuser_med".THUMBNAIL_EXTENSION;
+	else if($visibility === 'delbyusr') {
+        return $prefix."static".$ds."misc".$ds."thumbs".$ds."deletedbyuser".$size.THUMBNAIL_EXTENSION;
 	}
-		
  }
 
  /**
