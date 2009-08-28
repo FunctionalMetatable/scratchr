@@ -1,4 +1,4 @@
-CREATE TABLE `scratchr`.`notification_histories` (
+CREATE TABLE `notification_histories` (
 `id` INT NOT NULL AUTO_INCREMENT ,
 `user_id` INT NOT NULL ,
 `ipaddress` BIGINT( 20 ) NOT NULL ,
