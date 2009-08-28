@@ -9,46 +9,53 @@ if ($user_status == "normal") {
 } else {
     $user_locked = 1;
 }
+
+$project_removed = false;
+
+if($proj_visibility == "visible") {
+    $sb_path = getBinary($urlname, $pid);
+    $embed_project ='../..'.$sb_path.'?version='.$project['Project']['version'];
+}
+else {
+    if($isAdmin || isset($users_permission['censor_projects'])
+        || isset($users_permission['project_view_permission'])) {
+        $sb_path = getBinary($urlname, $pid) . '.hid';
+        $embed_project ='../..'.$sb_path.'?version='. $project['Project']['version'];
+        $admin_msg = 'This project has been deleted or censored. Project visibility is "'.$proj_visibility.'"';
+    }
+    else {
+        $project_removed = true;
+        if($proj_visibility == "censbyadmin") {
+            $sb_path = 'censoredbyadmin.sb';
+        }
+        else if($proj_visibility == "censbycomm") {
+            $sb_path = 'censoredbycommunity.sb';
+        }
+        else if($proj_visibility == "delbyadmin") {
+            $sb_path = 'deletedbyadmin.sb';
+        }
+        else if($proj_visibility == "delbyusr") {
+            $sb_path = 'deletedbyuser.sb';
+        }
+        $embed_project = '../../static/misc/sb/' . $sb_path;
+    }
+}
 ?>
   <!-- |||||| Begin content area ||||||| -->
   <div id="main">
     <!-- ::: Begin project ::: -->
     <div class="container">
-    <?php if( ($isAdmin || isset($users_permission['censor_projects']) || isset($users_permission['project_view_permission'])) && ($proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr")):?>
-	<div style="color:#FF0000">Project has been deleted</div>
-	<?php endif?>
+
+    <?php if(isset($admin_msg)) :?>
+        <div style="color:#FF0000">
+        <?php echo $admin_msg; ?>
+        </div>
+	<?php endif; ?>
+
       <h2 id="project_title"><?php $project_title =htmlspecialchars($project['Project']['name']); e($project_title);?> </h2>
 		<?php  if ($isMine || $isAdmin) echo $ajax->editor("project_title", "/projects/$urlname/$pid/name", Array("callback"=>"return 'name=' + encodeURIComponent(value)")); ?>
 		<div id="projectwrapper">
 			<div id="projectload" style="display:block;" align="center">
-				
-				<?php
-                 if($proj_visibility != "visible") {
-                    if($isAdmin) {
-                        $sb_path = getBinary($urlname, $pid) . '.hid';
-						$embed_project ='../..'.$sb_path.'?version='. $project['Project']['version'];
-                    }
-                    else {
-                        if($proj_visibility == "censbyadmin") {
-                            $sb_path = 'censoredbyadmin.sb';
-                        }
-                        else if($proj_visibility == "censbycomm") {
-                            $sb_path = 'censoredbycommunity.sb';
-                        }
-					    else if($proj_visibility == "delbyadmin") {
-                            $sb_path = 'deletedbyadmin.sb';
-                        }
-                        else if($proj_visibility == "delbyusr") {
-                            $sb_path = 'deletedbyuser.sb';
-                        }
-                        $embed_project = 'static/misc/sb/' . $sb_path;
-                    }
-                 }
-                 else {
-                    $sb_path = getBinary($urlname, $pid);
-					$embed_project ='../..'.$sb_path.'?version='.$project['Project']['version'];
-                 }
-				?>
 				<applet id="ProjectApplet" style="display:block" code="ScratchApplet" codebase="/static/misc/" archive="ScratchApplet.jar" height="387" width="482"><param name="project" value="<?php echo $embed_project;?>"><h3>Your browser needs java to view projects. Click <a href="http://java.com/getjava/index.jsp">here</a> to install Java.</h3></applet>
 			</div>
 			
@@ -122,6 +129,7 @@ if ($user_status == "normal") {
 	<!-- ::: End license ::: -->
 </div>
 
+<?php if(!$project_removed): ?>
 <div id="pactivity">
 	  <!-- ::: Begin viewers, lovers, taggers and favoriters ::: -->
 	  <?php
@@ -179,24 +187,21 @@ if ($user_status == "normal") {
 				$relatedtxt = "<a href='$relatedtag'>$relatedcount " . ___('remixes', true);
 			$relatedtxt .= '</a>';
 		}
-		
-		
-		// for real remixes
+
+        // for real remixes
 		//$remixer =$project['Project']['remixer'];
 		$remixertag = $html->url('/projects/'.$urlname.'/'.$pid.'/'.'real'.'/mods');
 
 		if(!empty($remixer)) {
 			 $remixertxt =___(' by ',true);
-			 
-			 
 			 if($remixer >1)
-			 $remixertxt .= "$remixer " . ___('people', true);
+                $remixertxt .= "$remixer " . ___('people', true);
 			 else
-			 $remixertxt .= "$remixer " . ___('person', true);
-		 	}
-			if($remixertxt && $relatedtxt)
-			$project_details[] = $relatedtxt.' '.$remixertxt;
-		
+                $remixertxt .= "$remixer " . ___('person', true);
+             }
+             if($remixertxt && $relatedtxt) {
+                $project_details[] = $relatedtxt.' '.$remixertxt;
+             }
 		
 		if(!empty($downloadcount)) {
 			$downloadtxt = "$downloadcount " . ___('download', true);
@@ -228,213 +233,205 @@ if ($user_status == "normal") {
 		e("<h5>".implode(', ', $project_details)."</h5><h6>$favandtagtxt</h6>");
 	  ?>
 </div>
-       <!-- ::: End lovers, taggers and favoriters ::: -->
+<!-- ::: End lovers, taggers and favoriters ::: -->
 	  
 <div id='pactions'>
-	 <div class="project_commands">
-		<!-- ::: Begin loveit ::: --> 
-			<div id="loveitDiv" class="loveit"><?php e($this->renderElement("loveit")); ?></div>
-		<!-- ::: End loveit ::: -->
-	  
-		<!-- ::: Begin favorite ::: -->
-			<div id="favoriteDiv" class="favoriteit"><?php e($this->renderElement("favorite")); ?></div>
-		<!-- ::: End favorite ::: -->	
+    <div class="project_commands">
+        <!-- ::: Begin loveit ::: -->
+        <div id="loveitDiv" class="loveit"><?php e($this->renderElement("loveit")); ?></div>
+        <!-- ::: End loveit ::: -->
 
-		<!--- ::: Flag it ::: -->
-		<?php if (! $isMine && $pid != 22021) : ?>
-			<div id="flagDiv" class="flag"><?php e($this->renderElement("flag")); ?></div>
-		<?php endif;?>
-		<!-- ::: Flag it::: -->
-		
-		
-	  </div>
-	  <?php if ($isLogged): ?>
-		<div class="project_commands">
-			<!-- ::: Begin add to gallery ::: --> 
-				<div id="gallery_project_add"><?php e($ajax->link("<h5>" . ___('Add to a gallery', true) . "</h5>", '#', array('url'=>'/galleries/addtogallery/' . $pid, 'update'=>'gallery_connect', 'condition'=>'checkLogin()'), NULL, false)) ?></div>
-			<!-- ::: End add to gallery ::: --> 
-		</div>
-		<!--- ::: Lock it ::: -->
-		<?php if ($isMine || $isAdmin): ?>
-			<div id="lockDiv" class="flag"><?php e($this->renderElement("projects/project_lock")); ?></div>
-		<?php endif;?>
-		<!-- ::: Lock it::: -->
-	  <?php endif; ?>
-	  <div id="gallerylistDiv">
-		
-	  </div>
-</div>
-<div id="gallerybox">
-		<?php
-            e($ajax->div("gallery_connect"));
-				
-            e($ajax->divEnd("gallery_connect"));
-        ?>
-</div>
-	  <?php if ($isAdmin || isset($users_permission['censor_projects']) || isset($users_permission['feature_projects']) || isset($users_permission['project_view_permission'])): ?>
-	  <p>
-	  <div id="adminActions"/>
-	<br>
-	  <?php e($this->renderElement('project_admin_actions', array('admin_name'=> $admin_name, 'isCensored' => $isCensored, 'flags' => $flags, 'project_id' => $pid)));?>
-	  </div>
-	  </p>
-	  <?php endif;?>
+        <!-- ::: Begin favorite ::: -->
+        <div id="favoriteDiv" class="favoriteit"><?php e($this->renderElement("favorite")); ?></div>
+        <!-- ::: End favorite ::: -->
+
+        <!--- ::: Flag it ::: -->
+        <?php if (! $isMine && $pid != 22021) : ?>
+            <div id="flagDiv" class="flag"><?php e($this->renderElement("flag")); ?></div>
+        <?php endif;?>
+        <!-- ::: Flag it::: -->
     </div>
-    <!-- ::: End info ::: -->
+    
+    <?php if($isLogged): ?>
+        <div class="project_commands">
+        <!-- ::: Begin add to gallery ::: -->
+            <div id="gallery_project_add"><?php e($ajax->link("<h5>" . ___('Add to a gallery', true) . "</h5>", '#', array('url'=>'/galleries/addtogallery/' . $pid, 'update'=>'gallery_connect', 'condition'=>'checkLogin()'), NULL, false)) ?></div>
+        <!-- ::: End add to gallery ::: -->
+        </div>
+        <!--- ::: Lock it ::: -->
+        <?php if ($isMine || $isAdmin): ?>
+            <div id="lockDiv" class="flag"><?php e($this->renderElement("projects/project_lock")); ?></div>
+        <?php endif;?>
+        <!-- ::: Lock it::: -->
+    <?php endif; ?>
+    
+    <div id="gallerylistDiv">
 
+    </div>
+</div>
 
-    <!-- ::: Begin comments ::: -->
-	<?php if($content_status == "all"): ?>
-    <div id="comments" class="container">
-      <h3><?php ___('Comments'); ?></h3>
-	   <?php 
-	     if (!$isLogged) {
-			echo "<h5>You need to be logged in to post comments</h5>";
-		 } elseif($user_locked) {
-			echo "<h5>Your account has been locked and you can no longer post comments</h5>";
-		 } elseif ($isLocked) {
-			echo "<h5>The creator of this project has locked it so new comments are no longer accepted</h5>";
-		 }
-	   ?>
-	   <?php if(!$isLocked && !$user_locked || $isMine): ?>
-		<h4><?php ___('Add a Comment'); ?> </h4>	  
-		<form id="pcomment" action="<?php e("/projects/$urlname/$pid/comment")?>" method="post">
+<div id="gallerybox">
+<?php
+    e($ajax->div("gallery_connect"));
+    e($ajax->divEnd("gallery_connect"));
+?>
+</div>
 
-			<p><textarea id='pcomment_textarea' name="pcomment_textarea" cols="55" rows="3"></textarea>
-			<div id="counter-pcomment_textarea"></div></p>
-			<?php echo $ajax->submit(___('Add', true), 
-                array('id' => 'pcomment_submit', "condition"=>"(checkAll('pcomment_textarea', $lock, $user_locked))",
-                    "class"=>"button","url"=>"/projects/$urlname/$pid/comment", "update"=>"ajax_pagination_secondary",
-                    "loading" => "document.getElementById('pcomment_submit').disabled = true;",
-                    'position' => 'top',
-                    "complete" => "document.getElementById('pcomment_textarea').value = ''; document.getElementById('pcomment_submit').disabled = false;" ));?>
-		</form>
-	   <?php endif; ?>
-       <div style="height:9px;">&nbsp</div>
-		<div id="ajax_pagination_secondary">
-	    <?php
-            e($ajax->div("project_comment_list"));
-            e($this->renderElement('commentlist'));
-            e($ajax->divEnd("project_comment_list"));
-        ?>
-		</div>
-	</div>
-	<?php endif; ?>
-	<!-- ::: End comments ::: -->
+<?php if ($isAdmin || isset($users_permission['censor_projects']) || isset($users_permission['feature_projects']) || isset($users_permission['project_view_permission'])): ?>
+<p>
+  <div id="adminActions">
+  <br />
+  <?php e($this->renderElement('project_admin_actions', array('admin_name'=> $admin_name, 'isCensored' => $isCensored, 'flags' => $flags, 'project_id' => $pid)));?>
   </div>
-  <!-- ////// End main content ////// -->
+</p>
+<?php endif;?>
+
+<?php endif; ?>
+</div>
+<!-- ::: End info ::: -->
+
+
+<!-- ::: Begin comments ::: -->
+<?php if(!$project_removed): ?>
+<?php if($content_status == "all"): ?>
+<div id="comments" class="container">
+  <h3><?php ___('Comments'); ?></h3>
+   <?php
+     if (!$isLogged) {
+        echo "<h5>You need to be logged in to post comments</h5>";
+     } elseif($user_locked) {
+        echo "<h5>Your account has been locked and you can no longer post comments</h5>";
+     } elseif ($isLocked) {
+        echo "<h5>The creator of this project has locked it so new comments are no longer accepted</h5>";
+     }
+   ?>
+   <?php if(!$isLocked && !$user_locked || $isMine): ?>
+    <h4><?php ___('Add a Comment'); ?> </h4>
+    <form id="pcomment" action="<?php e("/projects/$urlname/$pid/comment")?>" method="post">
+
+        <p><textarea id='pcomment_textarea' name="pcomment_textarea" cols="55" rows="3"></textarea>
+        <div id="counter-pcomment_textarea"></div></p>
+        <?php echo $ajax->submit(___('Add', true),
+            array('id' => 'pcomment_submit', "condition"=>"(checkAll('pcomment_textarea', $lock, $user_locked))",
+                "class"=>"button","url"=>"/projects/$urlname/$pid/comment", "update"=>"ajax_pagination_secondary",
+                "loading" => "document.getElementById('pcomment_submit').disabled = true;",
+                'position' => 'top',
+                "complete" => "document.getElementById('pcomment_textarea').value = ''; document.getElementById('pcomment_submit').disabled = false;" ));?>
+    </form>
+   <?php endif; ?>
+   <div style="height:9px;">&nbsp</div>
+    <div id="ajax_pagination_secondary">
+    <?php
+        e($ajax->div("project_comment_list"));
+        e($this->renderElement('commentlist'));
+        e($ajax->divEnd("project_comment_list"));
+    ?>
+    </div>
+</div>
+<?php endif; ?>
+<?php endif; ?>
+<!-- ::: End comments ::: -->
+
+</div>
+<!-- ////// End main content ////// -->
 
 
   <!-- |||||| Begin sidebar ||||||| -->
   <div id="sidebar">
 
 	<div  id="projectdown" class="sidecontainer highlight">
-<h3>
-<?php 
-if(isset($project['Project']['scratch_version_date'])) {
-   $scratch_version_date = strtotime($project['Project']['scratch_version_date']);
-   $v1_3_date = strtotime("2008-08-01");
-   $v1_4_date = strtotime("2009-06-01");
-   if ($scratch_version_date > $v1_4_date) {
-      echo '<img src="/img/gr_code_1.4.png" alt="Project made in Scratch 1.4" width="86" height="50">';
-   }
-   elseif ($scratch_version_date > $v1_3_date) {
-      echo '<img src="/img/gr_code_1.3.png" alt="Project made in Scratch 1.3" width="86" height="50">';
-   }
-}
-else {
-   echo '<img src="/img/gr_code.png" alt="Project Made in Scratch 1.2" width="86" height="50">';
-}
-___('Download this project!');
-?>
-</h3>
+        <h3>
+        <?php
+        if(isset($project['Project']['scratch_version_date'])) {
+           $scratch_version_date = strtotime($project['Project']['scratch_version_date']);
+           $v1_3_date = strtotime("2008-08-01");
+           $v1_4_date = strtotime("2009-06-01");
+           if ($scratch_version_date > $v1_4_date) {
+              echo '<img src="/img/gr_code_1.4.png" alt="Project made in Scratch 1.4" width="86" height="50">';
+           }
+           elseif ($scratch_version_date > $v1_3_date) {
+              echo '<img src="/img/gr_code_1.3.png" alt="Project made in Scratch 1.3" width="86" height="50">';
+           }
+        }
+        else {
+           echo '<img src="/img/gr_code.png" alt="Project Made in Scratch 1.2" width="86" height="50">';
+        }
+        ___('Download this project!');
+        ?>
+        </h3>
 
-    <?php
-	$download_project_name = htmlspecialchars($project['Project']['name']);
-	if (strlen($project['Project']['name']) > 20) {
-		$download_project_name = substr($download_project_name,0,20) . "&#0133;";
-	}
+        <?php
+        if(!$project_removed) {
+            $download_project_name = htmlspecialchars($project['Project']['name']);
+            if (strlen($project['Project']['name']) > 20) {
+                $download_project_name = substr($download_project_name,0,20) . "&#0133;";
+            }
 
-	$nos = $project['Project']['numberOfSprites'];
-	$ts = $project['Project']['totalScripts'];
-    $ssmsg = '';
+            $nos = $project['Project']['numberOfSprites'];
+            $ts = $project['Project']['totalScripts'];
+            $ssmsg = '';
 
-    if ($nos == 1) {
-        $ssmsg .= ___('one sprite', true) ;
-    }
-	elseif ($nos > 1) {
-        $ssmsg .=  $nos.' '. ___('sprites', true) ;
-    }
-
-    if($ssmsg && $ts) {
-        $ssmsg .= ' ' . ___('and', true) . ' ';
-    }
-
-    if ($ts == 1) {
-        $ssmsg .=  ___('one script', true) . ' ';
-    }
-	elseif ($ts > 1) {
-        $ssmsg .=  $ts.' '. ___('scripts', true) . ' ';
-    }
-
-    if($ssmsg) {
-        $ssmsg = ' '.___('the', true).' '.$ssmsg.' '.___('of', true);
-    }
-
-		if($isLoggedIn) {
-			//check if project is censored
-			if(($project['Project']['proj_visibility'] !== 'visible')&&(!$isAdmin)){
-				echo "" . __("This project is not available. ", true);
-			}else{
-			?>
-				
-				<?php ___('Download')?><?php echo $ssmsg; ?>&nbsp;&quot;<a href="<?php echo $html->url('/projects/'.$urlname)?>/<?php echo $project['Project']['id']?>/download"><strong><?php echo $download_project_name; ?></strong></a>&quot;&nbsp;<?php ___('and open it in')?>
-				
-				<a href="<?php echo $html->url('/download')?>">Scratch</a>
-				
-		<?php
-		}
-		} else {
-			//check if project is censored
-			if($project['Project']['proj_visibility'] !== 'visible'){
-				echo "" . __("This project is not available. ", true);
-			}else{
-				echo "" . ___("Download ", true) . "&quot;<a href='#' onClick='checkLogin();'><strong>" . $download_project_name . "</strong></a>&quot;" . $ssmsg . ___("and open it in", true) . " <a href='/'>Scratch</a> ";	 }}
-
+            if ($nos == 1) {
+                $ssmsg .= ___('one sprite', true) ;
+            }
+            elseif ($nos > 1) {
+                $ssmsg .=  $nos.' '. ___('sprites', true) ;
+            }
+            if($ssmsg && $ts) {
+                $ssmsg .= ' ' . ___('and', true) . ' ';
+            }
+            if ($ts == 1) {
+                $ssmsg .=  ___('one script', true) . ' ';
+            }
+            elseif ($ts > 1) {
+                $ssmsg .=  $ts.' '. ___('scripts', true) . ' ';
+            }
+            if($ssmsg) {
+                $ssmsg = ' '.___('the', true).' '.$ssmsg.' '.___('of', true);
+            }
+            if($isLoggedIn) {
+                $project_href = $html->url('/projects/' . $urlname . $project['Project']['id'])  .'/download';
+            }
+            else {
+                $project_href = 'javascript:checkLogin();';
+            }
+            echo ___('Download', true) . $ssmsg . ' &quot';
+            echo '<a href="' . $project_href . '">';
+            echo '<strong>'.$download_project_name.'</strong></a>'.'&quot; ';
+            echo ___('and open it in', true) .' <a href="'. $html->url('/download') . '">Scratch</a>';
+        }
+        else {
+            echo  __("This project is not available. ", true);
+        }
 	?>
     </div>
 
-
+    <?php if(!$project_removed): ?>
 	<!-- ::: Begin notes ::: -->
     <div id="notes">
       <h3><?php ___('Project Notes');?> </h3>
-	  <?php
-		  $notes = htmlspecialchars($project['Project']['description'], ENT_QUOTES);
-		  $pattern = '/[\n]/';
-		  $rep = '<br>';
-		  $notes = preg_replace($pattern, $rep, $notes);
-		  $notes = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/projects/([^<>[:space:]]+[[:alnum:]/])/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to project', true) . ")</a>", $notes);
-                  $notes  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/projects/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to project', true) . ")</a>",  $notes);
-                 $notes  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/forums/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to forums', true) . ")</a>",  $notes);
-                $notes = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/galleries/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to gallery', true) . ")</a>",  $notes);
-		  //$notes = ereg_replace("[a-zA-Z]+://([.]?[a-zA-Z0-9_/-])*", "<a href=\"\\0\">\\0</a>", $notes);
-		  //$notes = ereg_replace("(^| |.)(www([.]?[a-zA-Z0-9_/-])*)", "\\1<a href=\"http://\\2\">\\2</a>", $notes);	
-		 //$notes = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", $notes);
-		 
-		 $pattern = "/(((http[s]?:\/\/)|(www\.))?(([a-z][-a-z0-9]+\.)?[a-z][-a-z0-9]+\.[a-z]+(\.[a-z]{2,2})?)\/?[a-z0-9._\/~#&=;%+?-]+[a-z0-9\/#=?]{1,1})/is";
-	  $notes = preg_replace($pattern, " <a href='$1'>$1</a>", $notes);
-	  // fix URLs without protocols
-	  $notes = preg_replace("/href='www/", "href='http://www", $notes);
-		echo '<p id="pdesc">', $notes;
-	?>
-</p>
+      <?php
+        $notes = htmlspecialchars($project['Project']['description'], ENT_QUOTES);
+        $pattern = '/[\n]/';
+        $rep = '<br>';
+        $notes = preg_replace($pattern, $rep, $notes);
+        $notes = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/projects/([^<>[:space:]]+[[:alnum:]/])/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to project', true) . ")</a>", $notes);
+        $notes  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/projects/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to project', true) . ")</a>",  $notes);
+        $notes  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/forums/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to forums', true) . ")</a>",  $notes);
+        $notes = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/galleries/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to gallery', true) . ")</a>",  $notes);
+        $pattern = "/(((http[s]?:\/\/)|(www\.))?(([a-z][-a-z0-9]+\.)?[a-z][-a-z0-9]+\.[a-z]+(\.[a-z]{2,2})?)\/?[a-z0-9._\/~#&=;%+?-]+[a-z0-9\/#=?]{1,1})/is";
+        $notes = preg_replace($pattern, " <a href='$1'>$1</a>", $notes);
+        // fix URLs without protocols
+        $notes = preg_replace("/href='www/", "href='http://www", $notes);
+      ?>
+      <p id="pdesc"><?php echo $notes; ?></p>
       <?php if ($isMine || $isAdmin) echo $ajax->editor("pdesc", "/projects/$urlname/$pid/describe", Array("callback"=>"return 'description=' + encodeURIComponent(value);", "rows" => 4, "cols" => 20)); ?>
     </div>
     <!-- ::: End notes ::: -->
 
 
 	<!-- ::: Begin tags ::: -->
-	<?php if($content_status == "all"): ?>
+    <?php if($content_status == "all"): ?>
     <div id="club" class="sidecontainer">
        <h4><?php ___('Tags');?></h4>
 	    <?php
@@ -456,35 +453,25 @@ ___('Download this project!');
 	   <?php endif; ?>
     </div>
 	<?php endif; ?>
-	<!-- ::: End tags ::: -->
+    <!-- ::: End tags ::: -->
 
 	<!-- ::: Begin share ::: -->
     <div id="share" class="sidecontainer">
         <h4><?php ___('Link to this Project'); ?></h4>
-	<?php  e($this->renderElement('projectshare')); ?>
-<!-- ADDTHIS BUTTON BEGIN -->
-<script type="text/javascript">
-addthis_pub = '[ACCOUNT-ID]';
-addthis_options         = 'email, favorites, digg, delicious, google, facebook, live, more';
-</script>
-<a href="http://www.addthis.com/bookmark.php" onMouseOver="return addthis_open(this, '', '[URL]', '[TITLE]')" onMouseOut="addthis_close()" onClick="return addthis_sendto()"><img src="http://s9.addthis.com/button1-bm.gif" width="125" height="16" border="0" alt="" /></a><script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
-<!-- ADDTHIS BUTTON END -->
-<!---
-
-<a href="#" onclick="var share=window.open('http://del.icio.us/post?url='+share_uri+'&title='+share_title+'&notes='+share_description, 'share', 'width=765,height=368'+share_windowoptions);return false;"><img src="http://del.icio.us/static/img/delicious.small.gif" alt="logo"> del.icio.us</a>
-<br>
-<a href="#" onclick="var share=window.open('http://digg.com/remote-submit?phase=2&url=' + share_uri + '&title=' + share_title + '&bodytext=' + share_description + '&topic=programming', 'share', 'width=650,height=450'+share_windowoptions);return false;"><img src="http://digg.com/img/digg.gif" alt="logo"> Digg</a>
-<br><a href="#" onclick="var share=window.open('http://www.facebook.com/sharer.php?u='+share_uri+'&t='+share_title,'share', 'height=436,width=646'+share_windowoptions);return false;"><img src="http://static.ak.facebook.com/images/share/facebook_share_icon.gif" alt="logo"> Facebook</a>
-<br><a href="#" onclick="var share=window.open('http://reddit.com/submit?url='+share_uri+'&title='+share_title, 'share','width=650,height=450'+share_windowoptions);return false;"><img src="http://sp.reddit.com/reddithead4.gif" alt="logo"> Reddit</a>
-//-->
-
+        <?php  e($this->renderElement('projectshare')); ?>
+        <!-- ADDTHIS BUTTON BEGIN -->
+        <script type="text/javascript">
+        addthis_pub = '[ACCOUNT-ID]';
+        addthis_options         = 'email, favorites, digg, delicious, google, facebook, live, more';
+        </script>
+        <a href="http://www.addthis.com/bookmark.php" onMouseOver="return addthis_open(this, '', '[URL]', '[TITLE]')" onMouseOut="addthis_close()" onClick="return addthis_sendto()"><img src="http://s9.addthis.com/button1-bm.gif" width="125" height="16" border="0" alt="" /></a><script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
+        <!-- ADDTHIS BUTTON END -->
     </div>
-	<!-- ::: End share ::: -->
-
-
+	<?php endif; ?>
+    
 	<!-- ::: Begin more projects ::: -->
     <div  id="div" class="sidecontainer">
-      <h4><?php ___('More Projects by'); ?> <?php e($html->link($urlname, '/users/'.$urlname))?> </h4>
+      <h4><?php ___('More Projects by'); ?> <?php e($html->link($urlname, '/users/'.$urlname))?></h4>
 	  <div id="moreProjContent">
 		<div id="ajax_pagination">
 			<?php e($this->renderElement('moreprojects')); ?>
