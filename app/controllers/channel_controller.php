@@ -37,7 +37,7 @@ Class ChannelController extends AppController {
         
         $key = 'channel-recent-';
         $ttl = CHANNEL_RECENT_CACHE_TTL;
-        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"',
+        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"  AND status != "notsafe"',
                                                 $key, $ttl);
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
@@ -49,7 +49,7 @@ Class ChannelController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -70,7 +70,7 @@ Class ChannelController extends AppController {
 
         $key = 'channel-featured-';
         $ttl = CHANNEL_FEATURED_CACHE_TTL;
-        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"',
+        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"  AND status != "notsafe"',
                                                 $key, $ttl, 0);
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
@@ -82,7 +82,7 @@ Class ChannelController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->FeaturedProject->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, 2, $this->getContentStatus());
+            $final_projects = $this->FeaturedProject->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, 2, $this->getContentStatus());
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
         $this->set('data', $final_projects);
@@ -102,7 +102,7 @@ Class ChannelController extends AppController {
 
         $key = 'channel-topviewed-';
         $ttl = CHANNEL_TOPVIEWED_CACHE_TTL;
-        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"',
+        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"  AND status != "notsafe"',
                                                 $key, $ttl);
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
@@ -114,7 +114,7 @@ Class ChannelController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -137,7 +137,7 @@ Class ChannelController extends AppController {
         $key = 'channel-toploved-';
         $ttl = CHANNEL_TOPLOVED_CACHE_TTL;
         //$projects_count = $this->_getProjectsCount('loveitsuniqueip > 0 AND proj_visibility = "visible"',
-        $projects_count = $this->_getProjectsCount('loveit > 0 AND proj_visibility = "visible"',
+        $projects_count = $this->_getProjectsCount('loveit > 0 AND proj_visibility = "visible"  AND status != "notsafe"',
                                                 $key, $ttl);
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
@@ -150,7 +150,7 @@ Class ChannelController extends AppController {
                 array('hasMany' => array('GalleryProject'))
             );
             //$final_projects = $this->Project->findAll("Project.loveitsuniqueip > 0 AND Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
-            $final_projects = $this->Project->findAll("Project.loveit > 0 AND Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+            $final_projects = $this->Project->findAll("Project.loveit > 0 AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -195,7 +195,7 @@ Class ChannelController extends AppController {
 
         $key = 'channel-remixed-';
         $ttl = CHANNEL_REMIXED_CACHE_TTL;        
-        $projects_count = $this->_getProjectsCount('remixer > 0 AND proj_visibility = "visible"',
+        $projects_count = $this->_getProjectsCount('remixer > 0 AND proj_visibility = "visible"  AND status != "notsafe"',
                                                 $key, $ttl);
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
@@ -207,7 +207,7 @@ Class ChannelController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->Project->findAll("remixer > 0 AND Project.proj_visibility = 'visible'", NULL, $order, $limit, $page, NULL);
+            $final_projects = $this->Project->findAll("remixer > 0 AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, NULL);
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -235,14 +235,13 @@ Class ChannelController extends AppController {
         $random = rand(1, $result[0][0]['maxid']);
         $query = "Project.id >= $random AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible'";
         $count = $this->Project->findCount($query);
-        if ($count < 10) $query = "Project.id <= ".($random+$count);
+        if ($count < 10) $query = "Project.id <= ".($random+$count)." AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible'";
 
         $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
         );
         $final_projects = $this->Project->findAll($query, NULL, "Project.id", 10, 1, NULL);
 		
-        //$final_projects = $this->Project->findAll("remixes > 0", NULL, $order, $limit, $page, NULL);
 		$final_projects = $this->set_projects($final_projects);
 		
 		$this->set('data', $final_projects);
