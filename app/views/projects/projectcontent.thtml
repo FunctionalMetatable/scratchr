@@ -31,12 +31,12 @@ if ($user_status == "normal") {
 						$embed_project ='../..'.$p_path.'?version='.$verson;
 					 	
 					 }
-					 	else if ($proj_visibility == "censbyadmin"){
-						$embed_project ='../../static/misc/sb/censoredbyadmin.sb';
-						}
-						else if($proj_visibility == "censbycomm"){
-						$embed_project ='../../static/misc/sb/censoredbycommunity.sb';
-						}
+                    else if ($proj_visibility == "censbyadmin"){
+                        $embed_project ='../../static/misc/sb/censoredbyadmin.sb';
+                    }
+                    else if($proj_visibility == "censbycomm"){
+                        $embed_project ='../../static/misc/sb/censoredbycommunity.sb';
+                    }
 				}
 				else
 				{
@@ -366,18 +366,29 @@ ___('Download this project!');
 
 	$nos = $project['Project']['numberOfSprites'];
 	$ts = $project['Project']['totalScripts'];
-	if (! empty($nos) || ! empty($ts) ) {
-		$ssmsg = "the ";
-		if ($nos == 1) { $ssmsg .= ___('one sprite', true) ; }
-		elseif ($nos > 1) { $ssmsg .= "$nos " . ___('sprites', true) ; }
-		//else { $ssmsg .= ___('no sprites', true) . " "; }
-		if($nos > 0 && $ts > 0) { $ssmsg .= " " . ___('and', true); }
-		if ($ts == 1) { $ssmsg .= " " . ___('one script of', true) . " "; }
-		elseif ($ts > 1) { $ssmsg .=  " $ts " . ___('scripts of', true) . " "; }
-		//else { $ssmsg .= " " . ___('no scripts of', true) . " "; }
-	} else {
-		$ssmsg = " ";
-	}
+    $ssmsg = '';
+
+    if ($nos == 1) {
+        $ssmsg .= ___('one sprite', true) ;
+    }
+	elseif ($nos > 1) {
+        $ssmsg .=  $nos.' '. ___('sprites', true) ;
+    }
+
+    if($ssmsg && $ts) {
+        $ssmsg .= ' ' . ___('and', true) . ' ';
+    }
+
+    if ($ts == 1) {
+        $ssmsg .=  ___('one script', true) . ' ';
+    }
+	elseif ($ts > 1) {
+        $ssmsg .=  $ts.' '. ___('scripts', true) . ' ';
+    }
+
+    if($ssmsg) {
+        $ssmsg = ___('the', true).' '.$ssmsg.' '.___('of', true);
+    }
 
 		if($isLoggedIn) {
 			//check if project is censored
