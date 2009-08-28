@@ -22,41 +22,32 @@ if ($user_status == "normal") {
 		<div id="projectwrapper">
 			<div id="projectload" style="display:block;" align="center">
 				
-				<?php 
-				 if ($isAdmin || isset($users_permission['censor_projects']) || isset($users_permission['project_view_permission'])){ 
-				
-					if ($proj_visibility == "visible" || $proj_visibility == "delbyadmin" || $proj_visibility == "delbyusr"){
-						$p_path =getBinary($urlname, $pid);
-						$verson = $project['Project']['version'];
-						$embed_project ='../..'.$p_path.'?version='.$verson;
-					 	
-					 }
-                    else if ($proj_visibility == "censbyadmin"){
-                        $embed_project ='../../static/misc/sb/censoredbyadmin.sb';
+				<?php
+                 if($proj_visibility != "visible") {
+                    if($isAdmin) {
+                        $sb_path = getBinary($urlname, $pid) . '.hid';
+						$embed_project ='../..'.$sb_path.'?version='. $project['Project']['version'];
                     }
-                    else if($proj_visibility == "censbycomm"){
-                        $embed_project ='../../static/misc/sb/censoredbycommunity.sb';
+                    else {
+                        if($proj_visibility == "censbyadmin") {
+                            $sb_path = 'censoredbyadmin.sb';
+                        }
+                        else if($proj_visibility == "censbycomm") {
+                            $sb_path = 'censoredbycommunity.sb';
+                        }
+					    else if($proj_visibility == "delbyadmin") {
+                            $sb_path = 'deletedbyadmin.sb';
+                        }
+                        else if($proj_visibility == "delbyusr") {
+                            $sb_path = 'deletedbyuser.sb';
+                        }
+                        $embed_project = 'static/misc/sb/' . $sb_path;
                     }
-				}
-				else
-				{
-				if ($proj_visibility == "visible"){
-				 	$p_path =getBinary($urlname, $pid);
-					$verson = $project['Project']['version'];
-					$embed_project ='../..'.$p_path.'?version='.$verson;
-					}
-					else if ($proj_visibility == "censbyadmin" ){
-						$embed_project ='../../static/misc/sb/censoredbyadmin.sb';
-					}
-					else if($proj_visibility == "censbycomm"){
-						$embed_project ='../../static/misc/sb/censoredbycommunity.sb';
-					}
-					else if ($proj_visibility == "delbyadmin"){
-					$embed_project ='../../static/misc/sb/deletedbyadmin.sb';
-					}
-					else if ($proj_visibility == "delbyusr")
-					$embed_project ='../../static/misc/sb/deletedbyuser.sb';
-				}	
+                 }
+                 else {
+                    $sb_path = getBinary($urlname, $pid);
+					$embed_project ='../..'.$sb_path.'?version='.$project['Project']['version'];
+                 }
 				?>
 				<applet id="ProjectApplet" style="display:block" code="ScratchApplet" codebase="/static/misc/" archive="ScratchApplet.jar" height="387" width="482"><param name="project" value="<?php echo $embed_project;?>"><h3>Your browser needs java to view projects. Click <a href="http://java.com/getjava/index.jsp">here</a> to install Java.</h3></applet>
 			</div>
