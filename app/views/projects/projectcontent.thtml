@@ -397,7 +397,7 @@ ___('Download this project!');
 			}else{
 			?>
 				
-				<?php ___('Download ')?><?php echo $ssmsg?>&nbsp;&nbsp;&quot;<a href="<?php echo $html->url('/projects/'.$urlname)?>/<?php echo $project['Project']['id']?>/download"><strong><?php echo $download_project_name?></strong></a>&quot;&nbsp;<?php ___('and open it in')?>
+				<?php ___('Download ')?><?php echo $ssmsg; ?>&nbsp;&quot;<a href="<?php echo $html->url('/projects/'.$urlname)?>/<?php echo $project['Project']['id']?>/download"><strong><?php echo $download_project_name; ?></strong></a>&quot;&nbsp;<?php ___('and open it in')?>
 				
 				<a href="<?php echo $html->url('/download')?>">Scratch</a>
 				
