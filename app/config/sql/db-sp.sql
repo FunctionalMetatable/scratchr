@@ -23,6 +23,7 @@ declare  cur_friend_project cursor for
        from projects
        where user_id = cur_friend_id
        and proj_visibility = 'visible'
+	 and status != 'notsafe'
        order by created desc
        limit 1;
 declare  continue handler for not found
