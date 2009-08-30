@@ -116,6 +116,11 @@ $this->params['webservices']
  define("TOP_VIEWED_PERIOD", 24);
  define("NEW_PERIOD", 24);
 
+/*
+ * cesored by community is activated from the date - 2009-09-01
+ */
+    define("CENSBYCOMM_ACTIVE_FROM", "2009-08-30 12:00:00");
+
  /**
   * External webservices interface key for scratchr
   */
@@ -205,7 +210,7 @@ define('CACHE_DURATION', '1 day');
 /**
  * Memcache constants
  */
-define("MEMCACHE_SERVER", 'scratchstore'); //memcache server 
+define("MEMCACHE_SERVER", 'scratchstore'); //memcache server
 define("MEMCACHE_PORT", 11211); //memcache port
 define("HOMEL_PAGE_TTL", 60); //for home page
 define("HOMEL_NEW_PROJECTS_TTL", 60);

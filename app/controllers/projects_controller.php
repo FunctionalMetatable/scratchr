@@ -1758,6 +1758,14 @@ class ProjectsController extends AppController {
             if ($project['User']['urlname'] !== $urlname) {
 				$this->cakeError('error404');
             }
+
+            //if project visibility is censbycommunity and project created before the new code change date
+            if($project['Project']['proj_visibility'] == 'censbycomm'
+                && $project['Project']['created'] < CENSBYCOMM_ACTIVE_FROM) {
+                //make visiblity = censbyadmin
+                $project['Project']['proj_visibility'] = 'censbyadmin';
+            }
+            
 			//if project is not visible redirect the non-admin user to 404
             $project_visibility = $project['Project']['proj_visibility'];
             if($project_visibility == "delbyusr" || $project_visibility ==  "delbyadmin") {
