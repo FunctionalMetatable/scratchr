@@ -15,7 +15,7 @@ $visibilities = array (
     "censbycomm" => array( 'sb_path' => 'censoredbycommunity.sb', 'msg' => 'Censored by Community'),
     "delbyadmin" => array( 'sb_path' => 'deletedbyadmin.sb', 'msg' => 'Deleted by Admin'),
     "delbyadmin" => array( 'sb_path' => 'deletedbyuser.sb', 'msg' => 'Deleted by author'),
-)
+);
 if($proj_visibility == "visible") {
     $sb_path = getBinary($urlname, $pid);
     $embed_project ='../..'.$sb_path.'?version='.$project['Project']['version'];
