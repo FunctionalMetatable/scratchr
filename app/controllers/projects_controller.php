@@ -1760,7 +1760,13 @@ class ProjectsController extends AppController {
             }
 			//if project is not visible redirect the non-admin user to 404
             $project_visibility = $project['Project']['proj_visibility'];
-			
+            if($project_visibility == "delbyusr" || $project_visibility ==  "delbyadmin") {
+                if( !($this->isAdmin() || isset($users_permission['censor_projects'])
+                || isset($users_permission['project_view_permission'])) ) {
+                    $this->cakeError('error',array('code'=>'404', 'message'=>'project_deleted', 'name' => __('Not Found', true)));
+                }
+            }
+            
 			$project_id = $project['Project']['id'];
 			$owner_id = $project['User']['id'];
 			$isMine = $logged_id == $owner_id;

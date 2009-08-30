@@ -10,8 +10,12 @@ if ($user_status == "normal") {
     $user_locked = 1;
 }
 
-$project_removed = false;
-
+$visibilities = array (
+    "censbyadmin" => array( 'sb_path' => 'censoredbyadmin.sb', 'msg' => 'Censored by Admin'),
+    "censbycomm" => array( 'sb_path' => 'censoredbycommunity.sb', 'msg' => 'Censored by Community'),
+    "delbyadmin" => array( 'sb_path' => 'deletedbyadmin.sb', 'msg' => 'Deleted by Admin'),
+    "delbyadmin" => array( 'sb_path' => 'deletedbyuser.sb', 'msg' => 'Deleted by author'),
+)
 if($proj_visibility == "visible") {
     $sb_path = getBinary($urlname, $pid);
     $embed_project ='../..'.$sb_path.'?version='.$project['Project']['version'];
@@ -21,22 +25,10 @@ else {
         || isset($users_permission['project_view_permission'])) {
         $sb_path = getBinary($urlname, $pid) . '.hid';
         $embed_project ='../..'.$sb_path.'?version='. $project['Project']['version'];
-        $admin_msg = 'This project has been deleted or censored. Project visibility is "'.$proj_visibility.'"';
+        $admin_msg = 'This project has been '. $visibilities[$proj_visibility]['msg'];
     }
     else {
-        $project_removed = true;
-        if($proj_visibility == "censbyadmin") {
-            $sb_path = 'censoredbyadmin.sb';
-        }
-        else if($proj_visibility == "censbycomm") {
-            $sb_path = 'censoredbycommunity.sb';
-        }
-        else if($proj_visibility == "delbyadmin") {
-            $sb_path = 'deletedbyadmin.sb';
-        }
-        else if($proj_visibility == "delbyusr") {
-            $sb_path = 'deletedbyuser.sb';
-        }
+        $sb_path = $visibilities[$proj_visibility]['sb_path'];
         $embed_project = '../../static/misc/sb/' . $sb_path;
     }
 }
@@ -129,7 +121,6 @@ else {
 	<!-- ::: End license ::: -->
 </div>
 
-<?php if(!$project_removed): ?>
 <div id="pactivity">
 	  <!-- ::: Begin viewers, lovers, taggers and favoriters ::: -->
 	  <?php
@@ -286,13 +277,11 @@ else {
 </p>
 <?php endif;?>
 
-<?php endif; ?>
 </div>
 <!-- ::: End info ::: -->
 
 
 <!-- ::: Begin comments ::: -->
-<?php if(!$project_removed): ?>
 <?php if($content_status == "all"): ?>
 <div id="comments" class="container">
   <h3><?php ___('Comments'); ?></h3>
@@ -329,7 +318,6 @@ else {
     </div>
 </div>
 <?php endif; ?>
-<?php endif; ?>
 <!-- ::: End comments ::: -->
 
 </div>
@@ -361,7 +349,10 @@ else {
         </h3>
 
         <?php
-        if(!$project_removed) {
+        //allow download if admin OR if project visibility is not deleted
+        if(( ($isAdmin || isset($users_permission['censor_projects']) || isset($users_permission['project_view_permission']))
+            || ($proj_visibility != "delbyadmin" && $proj_visibility != "delbyusr") ) {
+
             $download_project_name = htmlspecialchars($project['Project']['name']);
             if (strlen($project['Project']['name']) > 20) {
                 $download_project_name = substr($download_project_name,0,20) . "&#0133;";
@@ -406,7 +397,6 @@ else {
 	?>
     </div>
 
-    <?php if(!$project_removed): ?>
 	<!-- ::: Begin notes ::: -->
     <div id="notes">
       <h3><?php ___('Project Notes');?> </h3>
@@ -452,7 +442,6 @@ else {
         </form>
 	   <?php endif; ?>
     </div>
-	<?php endif; ?>
     <!-- ::: End tags ::: -->
 
 	<!-- ::: Begin share ::: -->
