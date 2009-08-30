@@ -14,7 +14,7 @@ $visibilities = array (
     "censbyadmin" => array( 'sb_path' => 'censoredbyadmin.sb', 'msg' => 'Censored by Admin'),
     "censbycomm" => array( 'sb_path' => 'censoredbycommunity.sb', 'msg' => 'Censored by Community'),
     "delbyadmin" => array( 'sb_path' => 'deletedbyadmin.sb', 'msg' => 'Deleted by Admin'),
-    "delbyadmin" => array( 'sb_path' => 'deletedbyuser.sb', 'msg' => 'Deleted by author'),
+    "delbyusr" => array( 'sb_path' => 'deletedbyuser.sb', 'msg' => 'Deleted by author'),
 );
 if($proj_visibility == "visible") {
     $sb_path = getBinary($urlname, $pid);
@@ -381,10 +381,10 @@ else {
                 $ssmsg = ' '.___('the', true).' '.$ssmsg.' '.___('of', true);
             }
             if($isLoggedIn) {
-                $project_href = $html->url('/projects/' . $urlname . $project['Project']['id'])  .'/download';
+                $project_href = $html->url('/projects/' . $urlname .'/'. $project['Project']['id'])  .'/download';
             }
             else {
-                $project_href = 'javascript:checkLogin();';
+                $project_href = 'javascript:alert(\'Please login\');';
             }
             echo ___('Download', true) . $ssmsg . ' &quot';
             echo '<a href="' . $project_href . '">';
