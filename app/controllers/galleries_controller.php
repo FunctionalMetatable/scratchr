@@ -1011,6 +1011,29 @@ Class GalleriesController extends AppController {
         if(isset($this->params['url']['comment'])) {
             $comment_id = $this->params['url']['comment'];
         }
+		 //custom 404 error for deeplinked comment
+		if($comment_id){
+			  $this->Gcomment->recursive = -1;
+			  $comment_details = $this->Gcomment->find(array('Gcomment.gallery_id'=>$pid,'Gcomment.id'=>$comment_id));
+				if(empty($comment_details)){
+				$this->cakeError('error',array('code'=>'404', 'message'=>'comment_not_found', 'name' => __('Not Found', true)));
+				}
+				$visibilities = array (
+					"delbyadmin" => array( 'msg' => 'del_by_admin'),
+					"censbycomm" => array( 'msg' => 'cens_by_comm'),
+					"censbyadmin" => array( 'msg' => 'cens_by_admin'),
+					"delbyparentcomment" => array( 'msg' => 'del_by_parent_comment'),
+					"suspended" => array( 'msg' => 'suspended'),
+					"delbyusr" => array( 'msg' => 'gcomment_del_by_user')
+				);
+				$comment_visibility = $comment_details['Gcomment']['comment_visibility'];
+				if($comment_visibility == 'visible'){
+				}
+				else{
+				$this->cakeError('error',array('code'=>'404', 'message'=>$visibilities[$comment_visibility]['msg'], 'name' => __('Not Found', true)));
+				}
+		}//if comment id
+		
         $comment_data = $this->set_comments($gallery_id, $owner_id, $user_id, $isLogged, $comment_id);
         $this->set_comment_errors(array());
         $this->set('comments', $comment_data['comments']);

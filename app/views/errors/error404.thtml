@@ -20,19 +20,45 @@ font-weight:bold;
 </div>
 	
 <?php
+switch ($message)
+{
+	case "project_deleted":
+		echo ___('This project has been deleted.');
+		break;
+	case "project_not_found":
+		echo ___('Project Not Found.');
+		break;
+	case "comment_not_found":
+		echo ___('This comment does not exist.');
+		break;
+	case "del_by_admin":
+		printf(___('This comment has been deleted by an administrator. Please read the %sTerms of Use%s.', true), '<a href="'.TOS_URL.'" >', '</a>');
+		break;
+	case "cens_by_comm":
+		printf(___('This comment has been deleted because the Scratch community considered it to be inappropriate. Please read the %sTerms of Use%s.', true), '<a href="'.TOS_URL.'" >', '</a>');
+		break;
+	case "cens_by_admin":
+		printf(___('This comment has been deleted by a Scratch administrator because it was considered inappropriate. Please read the %sTerms of Use%s.', true), '<a href="'.TOS_URL.'" >', '</a>');
+		break;
+	case "del_by_parent_comment":
+		echo ___('This comment is not available because its parent comment was deleted.');
+		break;
+	case "suspended":
+		echo ___('This comment is not available because the poster\'s account has been suspended.');
+		break;
+	case "pcomment_del_by_user":
+		echo ___('This comment has been deleted by the author of this project.');
+		break;
+	case "gcomment_del_by_user":
+		echo ___('This comment has been deleted by the creator of this gallery.');
+		break;
+	default:
+		echo ___('The page') ?> <strong>- <?php echo $_SERVER['HTTP_HOST']?><?php echo $_SERVER['REQUEST_URI']?> - </strong><?php ___('cannot be found. Try again later or search for something else:');
+		break;
+}
+?>
 
-if($message=='project_deleted') {
-	 echo sprintf(__("This project has been deleted"));
-}
-else if($message=='project_not_found') {
-	 echo sprintf(__("Project Not Found"));
-}
-else {
-	echo ___('The page') ?> <strong>- <?php echo $_SERVER['HTTP_HOST']?><?php echo $_SERVER['REQUEST_URI']?> - </strong><?php ___('cannot be found. Try again later or search for something else:')?>
-<br />
-<?PHP
-}
- ?>
+
 
 <style type="text/css">
 #goog-wm { }
