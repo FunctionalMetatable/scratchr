@@ -49,7 +49,7 @@ Class RelationshipsController extends AppController {
 					foreach($galleries as $gallery)
 					{
 						if (!$this->GalleryMembership->hasAny("GalleryMembership.user_id = ".$friend_id." AND GalleryMembership.gallery_id = ".$gallery['Gallery']['id'])) {
-							$info = Array('GalleryMembership' => Array('id' => null, 'user_id' => $friend_id, 'gallery_id' => $gallery['Gallery']['id'], 'type' => 3, 'rank' => 'member'));
+							$info = Array('GalleryMembership' => Array('id' => null, 'user_id' => $friend_id, 'gallery_id' => $gallery['Gallery']['id'], 'type' => 2, 'rank' => 'member'));
 							$this->GalleryMembership->save($info);
 							$this->GalleryMembership->id = false;
 						}

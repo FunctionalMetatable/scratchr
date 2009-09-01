@@ -398,7 +398,7 @@ Class GalleriesController extends AppController {
 						$relations = $this->Relationship->findAll("Relationship.user_id = $user_id");
 			
 						foreach($relations as $relation){
-							$member = Array('GalleryMembership' => Array('id' => null, 'user_id' => $relation['Relationship']['friend_id'], 'gallery_id' => $gallery_id, 'type' => 3, 'rank' => 'member'));
+							$member = Array('GalleryMembership' => Array('id' => null, 'user_id' => $relation['Relationship']['friend_id'], 'gallery_id' => $gallery_id, 'type' => 2, 'rank' => 'member'));
 							$this->GalleryMembership->save($member);
 							$this->GalleryMembership->id = false;
 						}
@@ -1681,7 +1681,7 @@ Class GalleriesController extends AppController {
 			$relations = $this->Relationship->findAll("user_id = $owner_id");
 			
 			foreach($relations as $relation){
-				$info = Array('GalleryMembership' => Array('id' => null, 'user_id' => $relation['Relationship']['friend_id'], 'gallery_id' => $gallery_id, 'type' => 3, 'rank' => 'member'));
+				$info = Array('GalleryMembership' => Array('id' => null, 'user_id' => $relation['Relationship']['friend_id'], 'gallery_id' => $gallery_id, 'type' => 2, 'rank' => 'member'));
 				$this->GalleryMembership->save($info);
 				$this->GalleryMembership->id = false;
 			}

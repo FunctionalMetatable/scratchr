@@ -1831,7 +1831,7 @@ class UsersController extends AppController {
 	}
 	
 	function set_galleries($user_id) {
-		$gallery_membership = $this->GalleryMembership->findAll("Gallery.visibility = 'visible' AND GalleryMembership.user_id = $user_id");
+		$gallery_membership = $this->GalleryMembership->findAll("Gallery.visibility = 'visible' AND GalleryMembership.user_id = $user_id AND GalleryMembership.type = 0");
 		
 		$return_array = array_splice($gallery_membership, 0, 5);
 		return $return_array;
