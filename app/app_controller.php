@@ -42,6 +42,7 @@ class AppController extends Controller {
 		$users_permission =$this->isAnyPermission();
 		$this->set('users_permission',$users_permission);
 		$this->set('content_status', $this->getContentStatus());
+		$this->set('client_ip', $this->RequestHandler->getClientIP());
 		$blocked = $this->checkIP();
 		$isBanned = false;
 		$annoucements = $this->Announcement->findAll("content != ''");
