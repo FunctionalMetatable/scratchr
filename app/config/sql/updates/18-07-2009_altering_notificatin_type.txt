@@ -3,3 +3,5 @@ ALTER TABLE `notification_types` ADD INDEX ( `negative` ) ;
 UPDATE `notification_types` SET `negative` = '1' WHERE `id` BETWEEN 6 AND 22;
 UPDATE `notification_types` SET `negative` = '1' WHERE `id` = 24;
 UPDATE `notification_types` SET `negative` = '1' WHERE  is_admin =1
+
+UPDATE `notification_types` SET `template` = 'Because your project was flagged by multiple members of the Scratch community, your account has been temporarily blocked. The Scratch Team will review your project based on the Terms of Use and make a final decision.' WHERE `notification_types`.`id` =24 LIMIT 1 ;
