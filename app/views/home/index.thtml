@@ -188,7 +188,7 @@
 //-->
 
     <div id="TopLovedLately" class="container">
-      <h3><?php printf(___('%sTop Loved Lately%s',true),'<a href="'.FRONPAGE_FAQ_URL.'">','</a>');?></h3>
+      <h3><?php ___('Top Loved Lately');?></h3>
 		<?php
 		foreach ($toploved as $toplove):
 		$pid = $toplove['Project']['id'];
