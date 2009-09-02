@@ -22,8 +22,11 @@ font-weight:bold;
 <?php
 switch ($message)
 {
-	case "project_deleted":
-		echo ___('This project has been deleted.');
+	case "project_deleted_delbyusr":
+		echo ___('This project has been deleted by its author.');
+		break;
+    case "project_deleted_delbyadmin":
+		echo ___('This project has been deleted by an administrator.');
 		break;
 	case "project_not_found":
 		echo ___('Project Not Found.');

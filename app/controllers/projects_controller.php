@@ -1771,7 +1771,9 @@ class ProjectsController extends AppController {
             if($project_visibility == "delbyusr" || $project_visibility ==  "delbyadmin") {
                 if( !($this->isAdmin() || isset($users_permission['censor_projects'])
                 || isset($users_permission['project_view_permission'])) ) {
-                    $this->cakeError('error',array('code'=>'404', 'message'=>'project_deleted', 'name' => __('Not Found', true)));
+                    $this->cakeError('error',
+                        array('code'=>'404', 'message'=>'project_deleted_'.$project_visibility,
+                              'name' => __('Not Found', true)));
                 }
             }
             
