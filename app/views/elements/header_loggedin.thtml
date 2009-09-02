@@ -38,33 +38,7 @@ else { document.getElementById(d).style.display = "none"; }
 
 <div id="langmenu">
 <?php
-$dir = APP.'/'.'locale';
-$i=0;
-$dh  = scandir($dir);
-$dh = array_slice($dh, 3);
-	foreach($dh as $d){
-	$isDirectory = is_dir(APP.'/'.'locale/'.$d);;
-		if($isDirectory){
-			$files[$i++] = $d;
-		}
-	}
-
-
-App::import('Vendor','l10n.php');
-$l10n = new L10n();
-$l10nMapp = $l10n->__l10nMap;
-$l10nCatalog = $l10n->__l10nCatalog;
-foreach($files as $lang_dir_name){
-	if (array_key_exists($lang_dir_name, $l10nMapp)) {
-	
-		$lang[] = array($l10nCatalog[ $l10nMapp[$lang_dir_name] ] ['language'],'/lang/'.$lang_dir_name,'Language');
-	}
-	else{
-	$mapped_error[] = $lang_dir_name;
-	}
-}
-
-/*$lang = array( array("العربية", "/lang/ara", "اللغة"),
+$lang = array( array("العربية", "/lang/ara", "اللغة"),
 			   array("Basque", "/lang/baq", "Language"),
 			   array("Bulgarian", "/lang/bul", "Language"),
 			   array("Catalan", "/lang/cat", "Language"),
@@ -109,7 +83,7 @@ foreach($files as $lang_dir_name){
 			   array("Chinese", "/lang/zh-cn", "Language"),
 			   array("Chinese (Test)", "/lang/zh-cn", "Language"),
 			   array("漢字", "/lang/zh-tw", "語言")
-             ); */
+             );
 
 $langnum = count($lang)-1;			 
 $langi=0;		
