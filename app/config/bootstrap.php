@@ -296,7 +296,7 @@ define('JAVA_PATH', '/usr/java/latest/bin/java');
         return $prefix."static".$ds."projects".$ds.$urlname.$ds.$pid.$size.THUMBNAIL_EXTENSION;
 	}
 	else if($visibility === 'censbyadmin') {
-        return $prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbyadmin_".$size.THUMBNAIL_EXTENSION;
+        return $prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbyadmin".$size.THUMBNAIL_EXTENSION;
 	}
 	else if($visibility === 'censbycomm') {
         return $prefix."static".$ds."misc".$ds."thumbs".$ds."censoredbycommunity".$size.THUMBNAIL_EXTENSION;
