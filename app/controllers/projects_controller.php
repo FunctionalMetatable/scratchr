@@ -1809,26 +1809,30 @@ class ProjectsController extends AppController {
                 $comment_id = $this->params['url']['comment'];
             }
             //custom 404 error for deeplinked comment
-			if($comment_id){
-			  $this->Pcomment->recursive = -1;
-			  $comment_details = $this->Pcomment->find(array('Pcomment.project_id'=>$pid,'Pcomment.id'=>$comment_id));
-				if(empty($comment_details)){
-				$this->cakeError('error',array('code'=>'404', 'message'=>'comment_not_found', 'name' => __('Not Found', true)));
-				}
-				$visibilities = array (
-					"delbyadmin" => array( 'msg' => 'del_by_admin'),
-					"censbycomm" => array( 'msg' => 'cens_by_comm'),
-					"censbyadmin" => array( 'msg' => 'cens_by_admin'),
-					"delbyparentcomment" => array( 'msg' => 'del_by_parent_comment'),
-					"suspended" => array( 'msg' => 'suspended'),
-					"delbyusr" => array( 'msg' => 'pcomment_del_by_user')
-				);
-				$comment_visibility = $comment_details['Pcomment']['comment_visibility'];
-				if($comment_visibility == 'visible'){
-				}
-				else{
-				$this->cakeError('error',array('code'=>'404', 'message'=>$visibilities[$comment_visibility]['msg'], 'name' => __('Not Found', true)));
-				}
+            if($comment_id) {
+                $this->Pcomment->recursive = -1;
+                $comment_details = $this->Pcomment->find(
+                                    array('Pcomment.project_id' => $pid,'Pcomment.id' => $comment_id),
+                                    array('Pcomment.comment_visibility')
+                                );
+
+                $error_msg = null;
+                if(empty($comment_details)) {
+                    $error_msg = 'comment_not_found';
+                }
+                else {
+                    $comment_visibility = $comment_details['Pcomment']['comment_visibility'];
+    				if($comment_visibility != 'visible') {
+                        if($comment_visibility == 'delbyusr') { 
+                            $comment_visibility .= '_project';
+                        }
+                        $error_msg = 'comment_'.$comment_visibility;
+                    }
+                }
+                
+                if($error_msg) {
+                    $this->cakeError('error',array('code'=>'404', 'message'=> $error_msg, 'name' => __('Not Found', true)));
+                }
 			}//if comment id
 			
 			$comment_data = $this->set_comments($pid, $owner_id, $isLogged, $comment_id);
