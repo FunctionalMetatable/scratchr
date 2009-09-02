@@ -1015,7 +1015,7 @@ Class GalleriesController extends AppController {
 		if($comment_id){
             $this->Gcomment->recursive = -1;
             $comment_details = $this->Gcomment->find(
-                                array('Gcomment.gallery_id' => $pid,'Gcomment.id' => $comment_id),
+                                array('Gcomment.gallery_id' => $gallery_id,'Gcomment.id' => $comment_id),
                                 array('Gcomment.comment_visibility')
                             );
 
