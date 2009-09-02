@@ -117,9 +117,9 @@ $this->params['webservices']
  define("NEW_PERIOD", 24);
 
 /*
- * cesored by community is activated from the date - 2009-09-01
+ * cesored by community is activated from the date - 2009-09-02
  */
-    define("CENSBYCOMM_ACTIVE_FROM", "2009-08-30 12:00:00");
+    define("CENSBYCOMM_ACTIVE_FROM", "2009-08-31 12:00:00");
 
  /**
   * External webservices interface key for scratchr
