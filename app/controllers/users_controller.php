@@ -448,7 +448,7 @@ class UsersController extends AppController {
 				$user_status = $user_record['User']['status']; 
 			}
 			
-			if ($user_status == 'delbyadmin') {
+			if ($user_status == 'delbyadmin' || $user_status == 'delbyusr') {
 				array_push($errors, ___("Invalid username and password pair", true));
 				$this->setFlash(___("Invalid username and password pair", true), FLASH_ERROR_KEY);
 			}
@@ -2179,5 +2179,40 @@ class UsersController extends AppController {
         }
         return $locked_user_id;
 	}
+	
+	function close_account($user_id){
+		$session_user_id = $this->getLoggedInUserID();
+		$this->User->id = $user_id;
+        $user = $this->User->read();
+		$user_name = $user['User']['username'];
+		$this->pageTitle = "Scratch | $user_name | Close account";
+		if (empty($user)){
+			$this->cakeError('error404');
+		}
+		
+		if (!$this->isAdmin() && $user['User']['id'] !== $session_user_id) {
+			$this->__err();
+		}
+		if(!empty($this->data))
+		{
+			if(empty($this->data['User']['reasons']))
+			$this->User->invalidate('reason',___('Enter why do you want to close account?',true));
+			if($this->User->validates($this->data['User'])){
+				$client_ip = $this->RequestHandler->getClientIP();
+				$reasons = $this->data['User']['reasons'];
+				$sql = "INSERT INTO `closure_reasons` (`id`,`user_id`,`ipaddress`,`reasons`) VALUES"
+                        ." (NULL, $user_id, INET_ATON('$client_ip'), '$reasons')";
+       		 	$this->User->query($sql);
+				//hide project , gallery, pcomment, gcomment, friends
+				$this->hide_user($user_id, "delbyusr");
+				$this->Session->delete('User'); //kill session info
+	  			$this->Session->delete('UsersPermission'); //kill users permission
+	  			$this->redirect('/');
+	  			die;
+			 }
+		}
+		$this->set('username', $user['User']['username']);
+		$this->set('user_id', $user['User']['id']);
+	}//function
   }
 ?>
