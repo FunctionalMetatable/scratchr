@@ -44,6 +44,19 @@ $this->params['webservices']
  define("NUM_TOP_COUNTRIES", 6);
  define("PROJECT_COMMENT_PAGE_LIMIT", 60);
  define("GALLERY_COMMENT_PAGE_LIMIT", 40);
+ //day interval to calculate top viewed project on home controller
+ define("TOP_VIEWED_DAY_INTERVAL", 4);
+ //day interval to calculate top remixed project on home controller for filterd host
+ define("TOP_VIEWED_DAY_INTERVAL_SAFE", 20);
+ //day interval to calculate top remixed project on home controller
+ define("TOP_REMIXED_DAY_INTERVAL", 10);
+ //day interval to calculate top remixed project on home controller for filterd host
+ define("TOP_REMIXED_DAY_INTERVAL_SAFE", 20);
+ //day interval to calculate top loved project on home controller
+ define("TOP_LOVED_DAY_INTERVAL", 10);
+ //day interval to calculate top download project on home controller
+ define("TOP_DOWNLOAD_DAY_INTERVAL", 10);
+ define("NUM_TOP_DOWNLOAD", 3);
 /**
  * Email Address Related to Flagging
  */

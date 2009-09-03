@@ -249,9 +249,9 @@ Class HomeController extends AppController {
 
     function __getTopViewedProjects($exclude_project_ids, $exclude_user_ids) {
         if ($this->getContentStatus() == 'safe') {
-		    $days = 20;
+		    $days = TOP_VIEWED_DAY_INTERVAL_SAFE;
         } else {
-		    $days = 4;
+		    $days = TOP_VIEWED_DAY_INTERVAL;
         }
         return $this->Project->getTopProjects('`views`', '`views` DESC', $days,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED);
@@ -259,9 +259,9 @@ Class HomeController extends AppController {
 
     function __getTopRemixedProjects($exclude_project_ids, $exclude_user_ids) {
         if ($this->getContentStatus() =='safe') {
-		    $days = 20;
+		    $days = TOP_REMIXED_DAY_INTERVAL_SAFE;
         } else {
-		    $days = 10;
+		    $days = TOP_REMIXED_DAY_INTERVAL;
         }
 
         return $this->Project->getTopProjects('`remixer`', '`remixer` DESC', $days,
@@ -270,7 +270,7 @@ Class HomeController extends AppController {
 
     function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids) {
         //return $this->Project->getTopProjects('`loveitsuniqueip`', '`loveitsuniqueip` DESC', '10',
-        return $this->Project->getTopProjects('`loveit`', '`loveit` DESC', '10',
+        return $this->Project->getTopProjects('`loveit`', '`loveit` DESC', TOP_LOVED_DAY_INTERVAL,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED);
     }
 
@@ -292,7 +292,9 @@ Class HomeController extends AppController {
         else {
             $onlysafesql =  " AND projects.status <> 'notsafe'";
         }
-        $topdpids =  $this->Project->query("SELECT project_id, COUNT(*) FROM `downloaders`,`projects` WHERE projects.created > now()  - interval 7 day AND projects.id = downloaders.project_id AND proj_visibility = 'visible' $exclude_clause $exclude_user_id_clause $onlysafesql GROUP BY project_id ORDER BY COUNT(*) DESC LIMIT 3");
+		$days = TOP_DOWNLOAD_DAY_INTERVAL;
+		$limits = NUM_TOP_DOWNLOAD;
+        $topdpids =  $this->Project->query("SELECT project_id, COUNT(*) FROM `downloaders`,`projects` WHERE projects.created > now()  - interval $days day AND projects.id = downloaders.project_id AND proj_visibility = 'visible' $exclude_clause $exclude_user_id_clause $onlysafesql GROUP BY project_id ORDER BY COUNT(*) DESC LIMIT $limits");
 		$sqlor = "Project.id = " . (isset($topdpids[0]['downloaders']['project_id'])?$topdpids[0]['downloaders']['project_id']:-1) . " OR ";
 		$sqlor .= "Project.id = " . (isset($topdpids[1]['downloaders']['project_id'])?$topdpids[1]['downloaders']['project_id']:-1) . " OR ";
 		$sqlor .= "Project.id = " . (isset($topdpids[2]['downloaders']['project_id'])?$topdpids[2]['downloaders']['project_id']:-1);		
@@ -300,7 +302,7 @@ Class HomeController extends AppController {
         $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-        return $this->Project->findAll($sqlor . ' GROUP BY Project.user_id', NULL, NULL, 3, 1, NULL, $this->getContentStatus());
+        return $this->Project->findAll($sqlor . ' GROUP BY Project.user_id', NULL, NULL, $limits, 1, NULL, $this->getContentStatus());
     }
 
 	/* Selects NUM_TOP_RATED random projects, consecutively */	
