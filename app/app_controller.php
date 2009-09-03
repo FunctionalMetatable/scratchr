@@ -98,7 +98,7 @@ class AppController extends Controller {
 			$user = $this->User->find("User.id = $user_id");
 						
 			$isLocked = false;
-			
+			$temporary_locked = false;
 			//locked user
 			if (isset($user['User']['status']) && $user['User']['status'] == 'locked') {
 				//if temp blocked user
@@ -111,7 +111,8 @@ class AppController extends Controller {
 					//block time is in future..
 					else {
 						$isLocked = true;
-					}
+						$temporary_locked = true;
+						}
 				}
 				//permanent block..
 				else {
@@ -124,7 +125,11 @@ class AppController extends Controller {
 				
 				$ban_record = $this->BlockedUser->find("BlockedUser.user_id = $user_id");
 				$ban_reason = $ban_record['BlockedUser']['reason'];
-				
+				/*if user temporary blocked then set ban reason from notification where notification_type_id is 24 and to_user_id is temp blocked user id. Here 24 is notification_types.id which is for account_lock.*/
+				if(!$ban_reason && $temporary_locked === true){
+					$notification = $this->Notification->find(array('Notification.to_user_id'=>$user['User']['id'],'Notification.notification_type_id'=>24),'NotificationType.template');
+					$ban_reason = $notification['NotificationType']['template'];
+				}
 				if ($controller == "contact") {
 					$this->set('ban_reason', $ban_reason);
 					$this->set('isBanned', $isBanned);
