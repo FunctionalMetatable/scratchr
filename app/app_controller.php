@@ -770,7 +770,7 @@ ini_restore ("memory_limit");
 		
 		$this->User->id = $user_id;
 		$user = $this->User->read();
-		$this->User->saveField("status", "delbyadmin");
+		$this->User->saveField("status", $visibility);
 		
 		foreach ($friends as $friend) {
 			$friend_id = $friend['Relationship']['id'];
@@ -810,7 +810,7 @@ ini_restore ("memory_limit");
 	/**
 	* Hides project comment
 	**/
-	function hide_pcomment($pcomment_id, $visibility = "delbyurs") {
+	function hide_pcomment($pcomment_id, $visibility = "delbyusr") {
 		$this->Pcomment->id = $pcomment_id;
 		$pcomment = $this->Pcomment->read();
 		$this->Pcomment->saveField("comment_visibility", $visibility);
