@@ -1782,10 +1782,15 @@ class ProjectsController extends AppController {
 			$isMine = $logged_id == $owner_id;
 
             $client_ip = $this->RequestHandler->getClientIP();
-            if ($isLogged) {
+			
+			$select = "SELECT ((SELECT COUNT(*) AS `vcount` FROM  anon_view_stats where ipaddress = INET_ATON('$client_ip') && project_id = $pid)+(SELECT COUNT(*) AS `vcount` FROM  view_stats where ipaddress = INET_ATON('$client_ip') && project_id = $pid)) as total";
+				$row = $this->Project->query($select);
+				$anon_view_stats_count = $row['0']['0']['total'];
+           
+		    if ($isLogged) {
                 //logged user did not visit this project before
                 $this->ViewStat->recursive = -1;
-                if($this->ViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid") == 0) {
+                if($anon_view_stats_count == 0){
                     $project['Project']['views']++;
                     //increment the viewcount in database
                     $this->Project->saveField('views', $project['Project']['views']);
@@ -1798,6 +1803,17 @@ class ProjectsController extends AppController {
                         ." (NULL, $logged_id, $project_id, INET_ATON('$client_ip'))";
                 $this->ViewStat->query($sql);
             }
+			else{
+				
+				if($anon_view_stats_count == 0){
+				 	$project['Project']['anonviews']++;
+                    //increment the viewcount in database
+                    $this->Project->saveField('anonviews', $project['Project']['anonviews']);
+				}
+				$sql = "INSERT INTO `anon_view_stats` (`id`,`project_id`,`ipaddress`) VALUES"
+                        ." (NULL, $project_id, INET_ATON('$client_ip'))";
+                $this->Project->query($sql);
+			}
 
             //do we need this? it's already implement in line #759-761 in services_controller
             /*$remix_count = count($this->ProjectShare->findAll("related_project_id = $pid group by project_id, user_id")) - 1;
@@ -2086,7 +2102,7 @@ class ProjectsController extends AppController {
             $this->set('remixer', $project['Project']['remixer']);
 
             $this->set('isGalleryOwner', $isGalleryOwner);
-            $this->set('viewcount', $project['Project']['views']);
+            $this->set('viewcount', $project['Project']['views']+$project['Project']['anonviews']);
             $this->set('user_projects', $user_projects);
             $this->set('proj_visibility', $project['Project']['proj_visibility']);
             $this->set('isLogged', $isLogged);
