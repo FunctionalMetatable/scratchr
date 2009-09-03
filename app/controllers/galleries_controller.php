@@ -2761,7 +2761,7 @@ Class GalleriesController extends AppController {
             $this->Gcomment->unbindModel( array('belongsTo' => array('Gallery')) );
             $comments = $this->Gcomment->findAll('gallery_id = ' . $gallery_id
                 . ' AND comment_visibility = "visible"' . $comment_condition,
-                null, $order, $limit, $page);
+                null, $order, $limit, $page, 1);
 
             $commenter_ids = array();
             $comment_ids = array();
