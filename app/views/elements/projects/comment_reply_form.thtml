@@ -2,16 +2,13 @@
 	<div class="project_comment_reply_main">
 	<h5> Comment Reply </h5>
 	<form id="project_comment_reply_form_<?php e($comment_id); ?>" action="<?php echo $html->url('/projects/comment_reply/')?><?php e($comment_id); echo "/" . $comment_level; ?>" method="post">
-		<?php if ($comment_level == 0): ?>
-		<p><textarea name="project_comment_reply_input_<?php e($comment_id) ?>" id="project_comment_reply_input_<?php e($comment_id) ?>"  cols="55" rows="3"></textarea></p>
-		<?php endif; ?>
-		<?php if ($comment_level > 0): ?>
-		<p><textarea name="project_comment_reply_input_<?php e($comment_id) ?>" id="project_comment_reply_input_<?php e($comment_id) ?>"  cols="50" rows="3"></textarea></p>
-		<?php endif; ?>
+		<p><textarea name="project_comment_reply_input_<?php e($comment_id) ?>" 
+        id="project_comment_reply_input_<?php e($comment_id) ?>"
+        cols="<?php echo ($comment_level > 0) ? 50 : 55; ?>" rows="3"></textarea></p>
 		<?php
 			echo $ajax->submit(___('Reply', true), 
 				array('id' => 'project_comment_reply_submit_' . $comment_id, 
-				
+				"condition"=>"(checkLogin('project_comment_reply_input_$comment_id'))",
 				"class"=>"button",
 				"url"=>"/projects/comment_reply/$comment_id/$comment_level", 
 				"update"=>"reply_list_$comment_id", 
