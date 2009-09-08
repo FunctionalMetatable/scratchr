@@ -198,6 +198,9 @@ define ('PROJECT_PATH', WWW_ROOT . HREF_RESOURCE_PROJECT);
 
 define('CONTENT_STATUS', "all");
 
+//list of url patterns that will be converted to hyperlinks, separated by |
+define('WHITELISTED_URL_PATTERN', 'wikipedia.org|ac.uk|flickr.com|.edu');
+
 /**
  * Email addresses for contact page
  */

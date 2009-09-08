@@ -2575,7 +2575,10 @@ class ProjectsController extends AppController {
             if ($user_id) {
 				$content_name = 'project_comment_reply_input_' . $parent_id;
                 $comment = htmlspecialchars($this->params['form'][$content_name]);
-
+                //check if the comment content is empty
+                if(empty($comment)) {
+                    return false;
+                }
 				// SPAM checking
 				$possible_spam = false;
 				$duplicate = false;
@@ -2982,24 +2985,38 @@ class ProjectsController extends AppController {
 	/**
 	* Helper for setting up html links for comments
 	**/
-	function set_comment_content($initial_content) {
-		$comment_content = $initial_content;
-		$comment_content  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/projects/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to project', true) . ")</a>",  $comment_content);
-		$comment_content  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/forums/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to forums', true) . ")</a>",  $comment_content);
-		$comment_content = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/galleries/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to gallery', true) . ")</a>",  $comment_content);
-		//$comment_content = ereg_replace("[[:alpha:]]+://[^<>[:space:]]+[[:alnum:]/]","<a href=\"\\0\">\\0</a>", $comment_content);
-		$comment_content = $this->auto_link($comment_content);
-		return $comment_content;
-	}
+	function set_comment_content($content) {
+        $pattern = '/\b(https?:\/\/)?(www.)?[A-Z0-9.]*('
+                    . WHITELISTED_URL_PATTERN
+                    . ')[-A-Z0-9+&@#()\/%?=~_|!:,.;]*/i';
 
-	function auto_link($text) {
-	  $pattern = "/(((http[s]?:\/\/)|(www\.))?(([a-z][-a-z0-9]+\.)?[a-z][-a-z0-9]+\.[a-z]+(\.[a-z]{2,2})?)\/?[a-z0-9._\/~#&=;%+?-]+[a-z0-9\/#=?]{1,1})/is";
-	 	$text = preg_replace($pattern, " <a href='$1'>$1</a>", $text);
-	  // fix URLs without protocols
-	  
-	  $text = preg_replace("/href='www/", "href='http://www", $text);
-	  return $text;
-}
+        return preg_replace_callback(
+                $pattern, array( &$this,'linkify'),
+                $content
+            );
+    }
+
+    /*
+     * callback function for set_comment_content's preg_replace
+     */
+    function linkify($matches) {
+        $url = $text = $matches[0];
+        $url_texts = array(
+            'scratch.mit.edu/projects' => ___('link to project', true),
+            'scratch.mit.edu/galleries' => ___('link to gallery', true),
+            'scratch.mit.edu/forums' => ___('link to forum', true),
+        );
+        foreach($url_texts as $u => $t) {
+            if(strpos($url, $u) !== false) {
+                $text = '('.$t.')';
+                break;
+            }
+        }
+        if(strpos($url, "http://") !== 0) { $url = "http://" . $url; }
+
+        return "<a href=\"{$url}\">{$text}</a>";
+    }
+
 	/**
 	* Helper for checking whether a project has a corresponding entry in the projects_flag table 
 	**/
