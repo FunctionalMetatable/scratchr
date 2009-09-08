@@ -1,0 +1,16 @@
+@charset "utf-8";
+/* CSS Document */
+.registered {margin-left:20px;}
+h3 {font-size:1em; padding-top:0px;}
+dt {margin:0 10px -10px 0;}
+dd {margin:1px 0 -25px 0;}
+#submitform {margin-top:-20px;}
+
+#loginForm fieldset {width:100px; padding:0px; margin:0px; background:none; border:none;}
+#loginForm dd {width:100%; margin:0px; padding:0px; float:none;}
+#loginForm dt {width:auto; margin: 0px; line-height:0px;}
+#loginForm .NFSelect {background:#FFFFFF; border:0px;}
+.forgot {width:200px; position:absolute; top:135px;}
+#UserM {margin-right:40px;}
+
+#usernameResult {margin-left:5px; margin-top:2px; font-weight:bold; position:absolute; overflow:hidden;}
