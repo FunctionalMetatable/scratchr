@@ -59,6 +59,7 @@ Router::connect('/lang/*', array('controller' => 'p28n', 'action' => 'change'));
 // User pages
 Router::connect('/users/flag_list', array('controller' => 'users', 'action' => 'flag_list'));
 Router::connect('/users/update', array('controller' => 'users', 'action' => 'update'));
+Router::connect('/users/checkUserName', array('controller' => 'users', 'action' => 'checkUserName'));
 Router::connect('/users/whitelistip', array('controller' => 'users', 'action' => 'whitelistip'));
 Router::connect('/users/us_banned/*', array('controller' => 'users', 'action' => 'us_banned'));
 Router::connect('/users/updatepic/*', array('controller' => 'users', 'action' => 'updatepic'));
