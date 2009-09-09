@@ -1254,7 +1254,7 @@ Class GalleriesController extends AppController {
 				array_push($final_memberships, $final_membership);
 			}
 		} elseif ($option == "memberof") {
-			$all_memberships = $this->GalleryMembership->findAll("GalleryMembership.user_id = $logged_id AND GalleryMembership.rank = 'member'");
+			$all_memberships = $this->GalleryMembership->findAll("GalleryMembership.user_id = $logged_id AND GalleryMembership.rank = 'member'",null,'GalleryMembership.timestamp DESC');
 			foreach ($all_memberships as $membership) {
 				$final_membership = $membership;
 				$gallery_id = $membership['GalleryMembership']['gallery_id'];
