@@ -83,17 +83,31 @@ else {
 	<div id="whowhen">
 	<?php echo $html->image(getBuddyIconBySize($owner_id,'mini', $content_status),array('alt'=>'user_icon','width'=>'28','height'=>'28'))?>
 	<a href="<?php echo $html->url('/users/')?><?php echo $urlname?>"><?php echo $urlname?></a>
+	<?php if($project['User']['role'] === 'admin') :?>
+		<a href="http://info.scratch.mit.edu/Admins" class="asterisk">*</a>
+	<?php endif;?>
 	<?php ___('shared it ');echo $date;___(' ago')?><br />
 	
 	<?php
 	if($based_on_pid && !empty($based_on_uid)) {
 		$related  = '<img src="'. getBuddyIconBySize($based_on_uid,'mini', $content_status) . '" alt="user_icon" width="28" height="28">';
-		$related .= ___("Based on", true) . " <a href='/users/$based_on_username'>$based_on_username</a>" . ___("'s", true) . " ";
-        		
+		$related .= ___("Based on", true) . " <a href='/users/$based_on_username'>$based_on_username</a>" . ___("'s", true);
+        if($based_on_username_role === 'admin'){
+			$related .="<a href='http://info.scratch.mit.edu/Admins' class='asterisk'>*</a>" . " ";
+		}
+		else{
+			$related .=" ";
+		}		
         if(!empty($original_username)) {
             $related .= "<a href='/projects/$based_on_username/$based_on_pid'>".___('version', true)."</a> ";
-            $related .= "of <a href='/users/$original_username'>$original_username</a>" . ___("'s", true) . " ";
-
+            $related .= "of <a href='/users/$original_username'>$original_username</a>" . ___("'s", true) ;
+			
+			if($original_username_role === 'admin'){
+			$related .="<a href='http://info.scratch.mit.edu/Admins' class='asterisk'>*</a>" . " ";
+			}
+			else{
+				$related .=" ";
+			}
             if (!empty($original_pid)) {
                 $related .= "<a href='/projects/$original_username/$original_pid'>" . ___('project', true) . "</a>";
             }

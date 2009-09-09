@@ -1982,29 +1982,33 @@ class ProjectsController extends AppController {
 
                 if($based_on_data === false) {
                     //find out the based on username
-                    $based_on_user = $this->Project->query( "SELECT User.id, User.username, Project.id"
+                    $based_on_user = $this->Project->query( "SELECT User.id, User.username, User.role, Project.id"
                                                         ." FROM projects as Project, users as User"
                                                         ." WHERE Project.id = " . $based_on_pid
                                                         ." and Project.user_id = User.id");
                     
                     $based_on_uid = $based_on_user['0']['User']['id'];
                     $based_on_username = $based_on_user['0']['User']['username'];
+					$based_on_username_role = $based_on_user['0']['User']['role'];
 
                     //find out the root based on username
                     $root_based_on_username = false;
                     if($root_based_on_pid) {
-                        $root_based_on_user = $this->Project->query( "SELECT User.username, Project.id"
+                        $root_based_on_user = $this->Project->query( "SELECT User.username, User.role, Project.id"
                                                             ." FROM projects as Project, users as User"
                                                             ." WHERE Project.id = " . $root_based_on_pid
                                                             ." and Project.user_id = User.id");
 
                         $root_based_on_username = $root_based_on_user['0']['User']['username'];
+						$root_based_on_username_role = $root_based_on_user['0']['User']['role'];
                     }
                     
                     $based_on_data = array(
                         'based_on_uid'      => $based_on_uid,
                         'based_on_username' => $based_on_username,
-                        'original_username' => $root_based_on_username
+                        'original_username' => $root_based_on_username,
+						'based_on_username_role' => $based_on_username_role,
+                        'original_username_role' => $root_based_on_username_role
                     );
                     $this->Project->mc_set('based_on', $based_on_data, $project_id);
                 }
@@ -2015,6 +2019,8 @@ class ProjectsController extends AppController {
                 $this->set('based_on_uid',      $based_on_data['based_on_uid']);
                 $this->set('based_on_username', $based_on_data['based_on_username']);
                 $this->set('original_username', $based_on_data['original_username']);
+				$this->set('based_on_username_role', $based_on_data['based_on_username_role']);
+                $this->set('original_username_role', $based_on_data['original_username_role']);
 			}
 
             $this->set('based_on_pid', $project['Project']['based_on_pid']);
@@ -2824,7 +2830,7 @@ class ProjectsController extends AppController {
             $this->Pcomment->unbindModel( array('belongsTo' => array('Project')) );
             $comments = $this->Pcomment->findAll( 'project_id = ' . $project_id
                 . ' AND Pcomment.comment_visibility = "visible"'.$comment_condition,
-                'Pcomment.*, User.id, User.username, User.urlname, User.timestamp',
+                'Pcomment.*, User.id, User.username, User.urlname, User.role, User.timestamp',
                 $order, $limit, $page, 1, 'all', 0, true);
 
             //set comments info
@@ -2910,7 +2916,7 @@ class ProjectsController extends AppController {
         $this->Pcomment->unbindModel( array('belongsTo' => array('Project')) );
         $comments = $this->Pcomment->findAll( 'project_id = ' . $project_id
                 . ' AND Pcomment.comment_visibility = "visible" AND reply_to = ' . $parent_id,
-                'Pcomment.*, User.id, User.username, User.urlname, User.timestamp',
+                'Pcomment.*, User.id, User.username, User.urlname, User.role, User.timestamp',
                 'Pcomment.created DESC', $limit, 1, 1, 'all', 0, true);
 
         //set comments info
