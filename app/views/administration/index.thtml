@@ -31,6 +31,11 @@
 	</div>
 	
 	<div class="gallerythumb clearme"> 
+    <a href="/administration/search_ip"></a>
+	<h3><a href="<?php echo $html->url('/administration/search_ip')?>"> Search IP </a></h3>			
+	</div>
+	
+	<div class="gallerythumb clearme"> 
     <a href="/administration/karma"></a>
 	<h3><a href="<?php echo $html->url('/administration/karma')?>"> Karma Settings </a></h3>			
 	</div>

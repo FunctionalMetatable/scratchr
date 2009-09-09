@@ -1,0 +1,85 @@
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+<div class="fullcontent">
+	<div id="admin_project_header">
+	</div>
+	<div id="admin_project_content">	
+	<form id="admin_search" action="<?=e("/administration/search_ip")?>" method="post">
+		<p><h3>Admin IP Search: </h3> <textarea id='admin_search_ip_textarea' name="admin_search_ip_textarea" cols="60" rows="2"></textarea></p>
+		<br />
+		<br />
+		<?php 
+		echo $form->submit('Search Ip',array('class'=>'button'));
+			
+	?>
+	
+    </div>
+</div>
+<?php if($ip) :?>
+<div class="fullcontent">
+	
+	<div id="admin_search_ip_results">
+		<h5> Results for ip:<?php echo $ip?>
+		 <?php 
+			 if($is_banned):?>
+			<a href="<?php echo $html->url('/administration/unblock_ip/null/'.$ip)?>">Unblock Ip</a>
+			<?php endif;?>
+			
+		</h5>	
+		<?php
+				if (!empty($results)) {
+					foreach ($results as $current_result) {
+						if ($search_table == 'users') {
+							$user = $current_result;
+							$user_id = $user['User']['id'];
+							$user_name = $user['User']['username'];
+							$user_email = $user['User']['email'];
+							$user_birth = $user['User']['byear'];
+							$user_country = $user['User']['country'];
+							$user_created = $user['User']['created'];
+							$user_status = $user['User']['status'];
+							$user_url = "/users/$user_name";
+							
+							echo "<div class='gallerythumb clearme'>\n";
+							echo "\t<div class='admin_leftcolumn'>\n";
+							?>
+							<span>Name: <a href="<?php echo $html->url($user_url)?>"><?php e($user_name)?></a></span><br />
+							
+							<?php
+							echo "\t\t<span>Email:";
+							echo "$user_email"; echo "</span><br/>\n";
+							echo "\t\t<span>Created:";
+							echo "$user_created"; echo "</span>\n";
+							echo "\t</div>";
+							echo "\t<div class='admin_rightcolumn'>\n";
+							echo "\t\t<span>Country:";
+							echo " $user_country" ; 
+							echo "\t\t</span><br/>\n";
+							echo "\t\t<span> Birth ";
+							echo "$user_birth"; 
+							echo "\t\t</span><br/>\n";
+							echo "\t\t<span><br/>\n";
+							$delete_user_url = '/administration/deleteuser/' . $user_id;
+							$restore_user_url = '/administration/restore/' . $user_id;
+							if ($user_status == 'delbyadmin') {
+								echo "Restore";
+								echo " | ";
+							} else {
+								echo $html->link('Delete', $delete_user_url, Array(), 'Are you sure?', false);
+								echo " | ";
+							}
+							?>
+							
+							<a href="<?php echo $html->url('/administration/viewuser/'.$user_id)?>">View Details</a>
+							<?php
+							echo "\t\t</span>\n";
+							echo "\t</div>\n";
+							echo "</div>\n";
+						} 
+					}
+				}
+			?>
+	</div>
+</div>
+<?php endif;?>

@@ -127,6 +127,27 @@
 	
 	/****************End Set Permission************/
 	
+	function search_ip(){
+	 $blocked_record = array();
+	 $ip = null;
+	 $is_banned = false;
+		if(!empty($this->params['form'])){ 
+		 $ip =  $this->params['form']['admin_search_ip_textarea'];
+		//check if any blocked user used this ip in last one month
+			
+			 $locked_id = $this->checkLockedUser($ip); 
+			 if($locked_id){
+			 	$is_banned =true;
+			 	$blocked_record =$this->User->find("User.id = $locked_id AND User.status='locked'");
+			 }
+		}
+		$this->set('result', $blocked_record);
+		$this->set('ip', $ip);
+		$this->set('is_banned',$is_banned);
+	}
+	
+	
+	
 	/******************DB Repair********************/
 	/******************DO NOT RUN THESE UNLESS YOU KNOW YOU ARE DOING***********************/
 	
@@ -1432,11 +1453,20 @@
         }
 	}
 	
-	function unbolck_ip($ip){
-	$data = $this->BlockedIp->find("BlockedIp.ip=$ip");
-	$ip_id = $data['BlockedIp']['id'];
-	$this->BlockedIp->del($ip_id);
-	$this->redirect('/administration/search');
+	function unblock_ip($ip = null, $search_ip =null){
+	if($search_ip){
+		//make ip sa whitelisted
+                $sql = "INSERT INTO `whitelisted_ip_addresses` (`id`,`ipaddress`) VALUES"
+                        ." (NULL, INET_ATON('$search_ip'))";
+                $this->BlockedIp->query($sql);
+				$this->redirect('/administration/search_ip');
+	}
+	else{
+			$data = $this->BlockedIp->find("BlockedIp.ip=$ip");
+			$ip_id = $data['BlockedIp']['id'];
+			$this->BlockedIp->del($ip_id);
+			$this->redirect('/administration/search');
+		}
 	
 	}//function
  

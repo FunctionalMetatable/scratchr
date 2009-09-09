@@ -72,7 +72,7 @@ class UsersController extends AppController {
 												array(), 'User.timestamp DESC');
 	
 			//check if any blocked user used this ip in last one month
-			$user_blocked = $this->__checkLockedUser();
+			$user_blocked = $this->checkLockedUser();
 		}
         
         if(!$ip_whitelisted && ($ip_blocked || $user_blocked)) {
@@ -406,7 +406,7 @@ class UsersController extends AppController {
 					$this->UserStat->save(array('UserStat'=>array("user_id"=>$userID, "lastin"=>$time)));
 				}
 				
-				    $user_blocked = $this->__checkLockedUser();
+				    $user_blocked = $this->checkLockedUser();
 					if($user_blocked)
 					$ban_url = '/users/us_banned/'.$user_blocked;
 					else
@@ -2093,31 +2093,7 @@ class UsersController extends AppController {
         return $projects_count;
     }
 	
-	function __checkLockedUser()
-	{
-		$client_ip = $this->RequestHandler->getClientIP();
-        $ndays = USED_IP_BY_BLOCKED_ACCOUNT_IN_PAST_N_DAYS;
-        $this->ViewStat->unbindModel(array('belongsTo' => array('Project')));
-        $users_from_this_ip =
-        $this->ViewStat->findAll(
-            "ViewStat.timestamp > DATE_SUB(NOW(), INTERVAL $ndays DAY) AND  ViewStat.ipaddress = INET_ATON('$client_ip')",
-            'DISTINCT user_id', "ViewStat.timestamp DESC");
-        
-        $users_from_this_ip =  Set::extract('/ViewStat/user_id', $users_from_this_ip);
-        $users_from_this_ip = array_chunk($users_from_this_ip, 20);
-
-        $locked_user_id = 0;
-        foreach($users_from_this_ip as $users) {
-            $user_ids = implode($users, ',');
-            $locked_user_id = $this->User->find("User.status='locked' AND User.id IN ($user_ids)",
-                            'id','User.timestamp DESC');
-            if($locked_user_id) {
-                $locked_user_id = $locked_user_id['User']['id'];
-                break;
-            }
-        }
-        return $locked_user_id;
-	}
+	
 	
 	function close_account($user_id){
 		$session_user_id = $this->getLoggedInUserID();
