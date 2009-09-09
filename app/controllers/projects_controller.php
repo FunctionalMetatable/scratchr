@@ -2,7 +2,7 @@
 
 class ProjectsController extends AppController {
 
-    var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject');
+    var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject', 'AnonViewStat');
     var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
     var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
 
@@ -1783,14 +1783,10 @@ class ProjectsController extends AppController {
 
             $client_ip = $this->RequestHandler->getClientIP();
 			
-			$select = "SELECT ((SELECT COUNT(*) AS `vcount` FROM  anon_view_stats where ipaddress = INET_ATON('$client_ip') && project_id = $pid)+(SELECT COUNT(*) AS `vcount` FROM  view_stats where ipaddress = INET_ATON('$client_ip') && project_id = $pid)) as total";
-				$row = $this->Project->query($select);
-				$anon_view_stats_count = $row['0']['0']['total'];
-           
-		    if ($isLogged) {
-                //logged user did not visit this project before
+			if ($isLogged) {
                 $this->ViewStat->recursive = -1;
-                if($anon_view_stats_count == 0){
+                //user's first visit to this project
+                if($this->ViewStat->findCount("ViewStat.user_id = $logged_id && project_id = $pid") == 0) {
                     $project['Project']['views']++;
                     //increment the viewcount in database
                     $this->Project->saveField('views', $project['Project']['views']);
@@ -1803,13 +1799,20 @@ class ProjectsController extends AppController {
                         ." (NULL, $logged_id, $project_id, INET_ATON('$client_ip'))";
                 $this->ViewStat->query($sql);
             }
-			else{
-				
-				if($anon_view_stats_count == 0){
+			else {
+                //first visit from this ip
+                $this->ViewStat->recursive = -1;
+                $visits_from_this_ip =
+                $this->ViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid")
+                + $this->AnonViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid");
+                
+				if($visits_from_this_ip == 0){
 				 	$project['Project']['anonviews']++;
-                    //increment the viewcount in database
+                    //increment the anonviewcount in database
                     $this->Project->saveField('anonviews', $project['Project']['anonviews']);
 				}
+
+                //store project anon view statistics in database
 				$sql = "INSERT INTO `anon_view_stats` (`id`,`project_id`,`ipaddress`) VALUES"
                         ." (NULL, $project_id, INET_ATON('$client_ip'))";
                 $this->Project->query($sql);
