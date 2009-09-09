@@ -128,6 +128,11 @@ td, th{
 	text-align: right;
 }
 
+.asterisk{
+font-weight:bold;
+text-decoration:none;
+} 
+
 /*-------------------- headers---------------------*/ 
 h1{
 	color: #111111;
