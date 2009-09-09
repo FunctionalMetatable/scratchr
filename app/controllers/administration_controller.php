@@ -5,7 +5,7 @@
     var $uses = array('AdminTag', 'KarmaSetting', 'KarmaRating', 'KarmaEvent', 'KarmaRank', 'Mgcomment', 'RemixedProject', 'GalleryMembership', 
 	'BlockedUser', 'ViewStat', 'Gcomment', 'BlockedIp', 'ProjectFlag', 'Announcement', 'AdminComment', 'Apcomment', 'Mpcomment', 'Project', 
 	'FeaturedGallery', 'ClubbedGallery', 'Pcomment', 'User', 'Gallery', 'Tag', 'Flagger', 'Downloader', 'Favorite', 'Lover', 'Notification',
-	'Permission','PermissionUser', 'BlockedUserFrontpage');
+	'Permission','PermissionUser', 'BlockedUserFrontpage','WhitelistedIpAddress');
     var $components = array('RequestHandler','Pagination', 'Email');
     var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination', 'Template');
 
@@ -141,7 +141,7 @@
 			 	$blocked_record =$this->User->find("User.id = $locked_id AND User.status='locked'");
 			 }
 		}
-		$this->set('result', $blocked_record);
+		$this->set('results', $blocked_record);
 		$this->set('ip', $ip);
 		$this->set('is_banned',$is_banned);
 	}
@@ -1455,11 +1455,15 @@
 	
 	function unblock_ip($ip = null, $search_ip =null){
 	if($search_ip){
+	$ip_whitelisted = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = INET_ATON('$search_ip')");
+		if(!$ip_whitelisted){
 		//make ip sa whitelisted
                 $sql = "INSERT INTO `whitelisted_ip_addresses` (`id`,`ipaddress`) VALUES"
                         ." (NULL, INET_ATON('$search_ip'))";
                 $this->BlockedIp->query($sql);
-				$this->redirect('/administration/search_ip');
+				
+			}
+			$this->redirect('/administration/search_ip');	
 	}
 	else{
 			$data = $this->BlockedIp->find("BlockedIp.ip=$ip");

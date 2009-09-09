@@ -29,9 +29,9 @@
 		</h5>	
 		<?php
 				if (!empty($results)) {
-					foreach ($results as $current_result) {
-						if ($search_table == 'users') {
-							$user = $current_result;
+					
+						
+							$user = $results;
 							$user_id = $user['User']['id'];
 							$user_name = $user['User']['username'];
 							$user_email = $user['User']['email'];
@@ -77,8 +77,8 @@
 							echo "\t</div>\n";
 							echo "</div>\n";
 						} 
-					}
-				}
+					
+				
 			?>
 	</div>
 </div>
