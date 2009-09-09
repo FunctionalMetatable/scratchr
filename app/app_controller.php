@@ -938,5 +938,36 @@ ini_restore ("memory_limit");
             ? (int) $id
             : 0;
     }
+	
+	function checkLockedUser($ip = null)
+	{
+		if(!$ip){
+		$client_ip = $this->RequestHandler->getClientIP();
+		}
+		else{
+		$client_ip = $ip;
+		}
+        $ndays = USED_IP_BY_BLOCKED_ACCOUNT_IN_PAST_N_DAYS;
+        $this->ViewStat->unbindModel(array('belongsTo' => array('Project')));
+        $users_from_this_ip =
+        $this->ViewStat->findAll(
+            "ViewStat.timestamp > DATE_SUB(NOW(), INTERVAL $ndays DAY) AND  ViewStat.ipaddress = INET_ATON('$client_ip')",
+            'DISTINCT user_id', "ViewStat.timestamp DESC");
+        
+        $users_from_this_ip =  Set::extract('/ViewStat/user_id', $users_from_this_ip);
+        $users_from_this_ip = array_chunk($users_from_this_ip, 20);
+		
+        $locked_user_id = 0;
+        foreach($users_from_this_ip as $users) {
+            $user_ids = implode($users, ',');
+            $locked_user_id = $this->User->find("User.status='locked' AND User.id IN ($user_ids)",
+                            'id','User.timestamp DESC');
+            if($locked_user_id) {
+                $locked_user_id = $locked_user_id['User']['id'];
+                break;
+            }
+        }
+        return $locked_user_id;
+	}
 }
 ?>
