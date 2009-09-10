@@ -1,7 +1,20 @@
 CREATE TABLE `remix_notifications` (
 `id` INT NOT NULL AUTO_INCREMENT ,
 `user_id` INT( 10 ) UNSIGNED NOT NULL ,
-`ntype` ENUM( 'positive', 'neutral' ) NOT NULL ,
+`ntype` ENUM( 'positive', 'neutral' ) NOT NULL DEFAULT 'neutral',
 `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 PRIMARY KEY ( `id` )
-) 
+);
+
+INSERT INTO `notification_types` (
+`id` ,
+`type` ,
+`template` ,
+`is_admin` ,
+`negative`
+)
+VALUES (
+NULL , 'project_remixed_positive', 'Congratulations, your project "<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>" has been remixed as "<a href="/projects/{from_user_name}/%s">%s</a>"! <img src="img/pages/credits/cat-face-bullet.gif" />>', '0', '0'
+), (
+NULL , 'project_remixed_neutral', 'Your project "<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>" has been remixed as "<a href="/projects/{from_user_name}/%s">%s</a>"!', '0', '0'
+);
