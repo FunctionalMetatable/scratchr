@@ -29,7 +29,7 @@ define("IP_BLOCKED_ERROR", 409);
 
 Class ServicesController extends AppController {
 
-    var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave','ProjectScript','BlockedIp');
+    var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave','ProjectScript','BlockedIp', 'RemixNotification');
 	var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
 	var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
     var $doc = null;
@@ -44,7 +44,7 @@ Class ServicesController extends AppController {
     );
 
     function beforeFilter() {
-        if ($this->action == 'share_project') {
+       if ($this->action == 'share_project') {
             $this->autoRender = true;
         }
         else {
@@ -745,8 +745,14 @@ Class ServicesController extends AppController {
             $this->log("\nDBG: SUCCESSFULLY STORED: $project_shared_id "
                     ."is based on $based_on_pid and root is $root_based_on_pid\n");
 
+            if(REMIX_NOTIFICATION_TO_ROOT_BASED) {
+                $this->__notify_remix($root_based_on_pid, $project_shared_id);
+            }
             $this->__update_remixes_remixer($root_based_on_pid);
             if($based_on_pid != $root_based_on_pid)  {
+                if(REMIX_NOTIFICATION_TO_LAST_BASED) {
+                    $this->__notify_remix($based_on_pid, $project_shared_id);
+                }
                 $this->__update_remixes_remixer($based_on_pid);
             }
         }
@@ -822,6 +828,30 @@ Class ServicesController extends AppController {
         $this->log("\nDBG: SUCCESSFULLY UPDATED: " . $pid
             . ' has ' .$project[0]['remixes'] . ' remixes and '
             . $project[0]['remixer'] . " remixer \n");
+    }
+
+    function __notify_remix($base_project_id, $remixed_project_id) {
+        $this->Project->recursive = 0;
+        //find out the users
+        $base = $this->Project->find('Project.id = '.$base_project_id,
+                                   'Project.id, Project.name, User.id, User.username');
+        $remixed = $this->Project->find('Project.id = '.$remixed_project_id,
+                                    'Project.id, Project.name, User.id, User.username');
+        
+        //find out if the base user is different than remix user
+        if($base['User']['id']==$remixed['User']['id']) {
+            return false;
+        }
+
+        //find out if the base user wants remix notification
+        $notify = $this->RemixNotification->find('user_id = '.$base['User']['id']);
+        if(!empty($notify)) {
+            $this->__notify('project_remixed_'.$notify['RemixNotification']['ntype'],
+                            $base['User']['id'],
+                            array('project_id' => $base['Project']['id'],
+                             'from_user_name' => $remixed['User']['username']),
+                            array($remixed['Project']['id'], $remixed['Project']['name']));
+        }
     }
     
     /*
