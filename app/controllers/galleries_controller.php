@@ -4,7 +4,7 @@ Class GalleriesController extends AppController {
 	var $name = "Gallery";
     var $uses = array("ClubbedGallery", "IgnoredUser", "GalleryFlag", "Mgcomment", "Tag", "GalleryTag", "TagFlag", "Project", "ClubbedGallery", "FeaturedGallery", "GalleryProject", "Gallery", "GalleryMembership","Gcomment","User","RelationshipType","Relationship","GalleryRequest", "Relationship", "Notification"); //apparently order matters for associative finds
     var $helpers = array('PaginationSecondary', 'Pagination','Ajax','Javascript');
-    var $components = array('PaginationSecondary', 'Email',  'Pagination', 'RequestHandler', 'FileUploader');
+    var $components = array('PaginationSecondary', 'Email',  'Pagination', 'RequestHandler', 'FileUploader', 'Scratch');
 
 	/**
 	/* Function List
@@ -2554,7 +2554,10 @@ Class GalleriesController extends AppController {
             if ($user_id) {
 				$content_name = 'gallery_comment_reply_input_' . $source_id;
                 $comment = htmlspecialchars($this->params['form'][$content_name]);
-
+                //check if the comment content is empty
+                if(empty($comment)) {
+                    return false;
+                }
 				// SPAM checking
 				$possible_spam = false;
 				$excessive_commenting = false;
@@ -2770,7 +2773,7 @@ Class GalleriesController extends AppController {
                 $commenter_ids[] = $comment['Gcomment']['user_id'];
                 $comment_ids[]   = $comment['Gcomment']['id'];
 
-                $comment['Gcomment']['content'] = $this->set_comment_content($comment['Gcomment']['content']);
+                $comment['Gcomment']['content'] = $this->Scratch->linkify($comment['Gcomment']['content']);
 
                 $comment['Gcomment']['replies'] = $this->Gcomment->findCount('gallery_id = '
                     . $gallery_id . ' AND reply_to = '. $comment['Gcomment']['id']);
@@ -2835,18 +2838,6 @@ Class GalleriesController extends AppController {
 
         $comment_data['single_thread'] = !empty($comment_id);
 		return $comment_data;
-	}
-	
-	/**
-	* Helper for setting comment content
-	**/
-	function set_comment_content($initial_content) {
-		$comment_content = $initial_content;
-		$comment_content  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/projects/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to project', true) . ")</a>",  $comment_content);
-		$comment_content  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/forums/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to forums', true) . ")</a>",  $comment_content);
-		$comment_content = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/galleries/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to gallery', true) . ")</a>",  $comment_content);
-		
-		return $comment_content;
 	}
 	
 	/**
@@ -2925,7 +2916,7 @@ Class GalleriesController extends AppController {
             $commenter_ids[] = $comment['Gcomment']['user_id'];
             $comment_ids[]   = $comment['Gcomment']['id'];
 
-            $comment['Gcomment']['content'] = $this->set_comment_content($comment['Gcomment']['content']);
+            $comment['Gcomment']['content'] = $this->Scratch->linkify($comment['Gcomment']['content']);
 
             $comment['Gcomment']['replies'] = $this->Gcomment->findCount('gallery_id = '
                 . $gallery_id . ' AND reply_to = '. $comment['Gcomment']['id']);

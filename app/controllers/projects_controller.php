@@ -3,7 +3,7 @@
 class ProjectsController extends AppController {
 
     var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject', 'AnonViewStat');
-    var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
+    var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb', 'Scratch');
     var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
 
     /**
@@ -390,7 +390,7 @@ class ProjectsController extends AppController {
 		$this->set_comment_errors($errors);
 		//the comment is saved
         if(!empty($new_pcomment)) {
-          $new_pcomment['Pcomment']['content'] = $this->set_comment_content($new_pcomment['Pcomment']['content']);
+          $new_pcomment['Pcomment']['content'] = $this->Scratch->linkify($new_pcomment['Pcomment']['content']);
 		  $new_pcomment['User'] =  $commenter_userrecord['User'];
           $this->set('comment', $new_pcomment);
           $this->set('isProjectOwner', $user_id == $logged_id);
@@ -641,7 +641,7 @@ class ProjectsController extends AppController {
 	    else
 	    {
 		if($this->Project->saveField('description', $newdesc)) {
-                	$this->set('pdesc', $this->set_comment_content($newdesc));
+                	$this->set('pdesc', $this->Scratch->linkify($newdesc));
                 	$this->render('projectdescription_ajax','ajax');
                 	return;
             	}
@@ -2844,7 +2844,7 @@ class ProjectsController extends AppController {
                 $commenter_ids[] = $comment['Pcomment']['user_id'];
                 $comment_ids[]   = $comment['Pcomment']['id'];
 
-                $comment['Pcomment']['content'] = $this->set_comment_content($comment['Pcomment']['content']);
+                $comment['Pcomment']['content'] = $this->Scratch->linkify($comment['Pcomment']['content']);
 
                 $comment['Pcomment']['replies'] = $this->Pcomment->findCount('project_id = '
                     . $project_id . ' AND reply_to = '. $comment['Pcomment']['id']);
@@ -2930,7 +2930,7 @@ class ProjectsController extends AppController {
             $commenter_ids[] = $comment['Pcomment']['user_id'];
             $comment_ids[]   = $comment['Pcomment']['id'];
 
-            $comment['Pcomment']['content'] = $this->set_comment_content($comment['Pcomment']['content']);
+            $comment['Pcomment']['content'] = $this->Scratch->linkify($comment['Pcomment']['content']);
 
             $comment['Pcomment']['replies'] = $this->Pcomment->findCount('project_id = '
                 . $project_id . ' AND reply_to = '. $comment['Pcomment']['id']);
@@ -2990,41 +2990,6 @@ class ProjectsController extends AppController {
 			$this->set('commentErrors', $errors);
 		}
 	}
-
-	/**
-	* Helper for setting up html links for comments
-	**/
-	function set_comment_content($content) {
-        $pattern = '/\b(https?:\/\/)?(www.)?[A-Z0-9.]*('
-                    . WHITELISTED_URL_PATTERN
-                    . ')[-A-Z0-9+&@#()\/%?=~_|!:,.;]*/i';
-
-        return preg_replace_callback(
-                $pattern, array( &$this,'linkify'),
-                $content
-            );
-    }
-
-    /*
-     * callback function for set_comment_content's preg_replace
-     */
-    function linkify($matches) {
-        $url = $text = $matches[0];
-        $url_texts = array(
-            'scratch.mit.edu/projects' => ___('link to project', true),
-            'scratch.mit.edu/galleries' => ___('link to gallery', true),
-            'scratch.mit.edu/forums' => ___('link to forum', true),
-        );
-        foreach($url_texts as $u => $t) {
-            if(strpos($url, $u) !== false) {
-                $text = '('.$t.')';
-                break;
-            }
-        }
-        if(strpos($url, "http://") !== 0) { $url = "http://" . $url; }
-
-        return "<a href=\"{$url}\">{$text}</a>";
-    }
 
 	/**
 	* Helper for checking whether a project has a corresponding entry in the projects_flag table 
