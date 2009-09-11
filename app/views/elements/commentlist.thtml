@@ -33,12 +33,9 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
     <h5>
         <?php echo $html->image($commenter_icon,
                 array('alt' => $comment['User']['username'], 'width'=>'28', 'height'=>'28')); ?>
-        <a href="<?php echo $html->url( '/users/' . $comment['User']['urlname'] ); ?>">
-            <?php echo $comment['User']['username']; ?>
-        </a>
-		<?php if($comment['User']['role'] === 'admin'):?>
-			<a href="http://info.scratch.mit.edu/Admins" class="asterisk">*</a>
-		<?php endif;?>
+       
+	   <?php echo $util->username($comment['User']['username'], $comment['User']['role'])?>
+	   
         <?php if (empty($date) || (isset($date) && $date != "Now")):
             printf(___('%s ago', true), friendlyDate($comment['Pcomment']['created']));
         endif; ?>

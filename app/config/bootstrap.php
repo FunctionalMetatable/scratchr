@@ -174,6 +174,7 @@ $this->params['webservices']
 /**
  * Resource URLs
  */
+define ('INFO_URL', 'http://info.scratch.mit.edu'); 
 define ('TOPLEVEL_URL', 'http://scratch.mit.edu');
 define ('ABOUT_SCRATCH_URL', 'info.scratch.mit.edu/About_Scratch');
 define ('SUPPORT_URL', 'info.scratch.mit.edu/Support');
@@ -230,7 +231,7 @@ define('CACHE_DURATION', '1 day');
 /**
  * Memcache constants
  */
-define("MEMCACHE_SERVER", 'localhost'); //memcache server
+define("MEMCACHE_SERVER", 'scratchstore'); //memcache server
 define("MEMCACHE_PORT", 11211); //memcache port
 define("HOMEL_PAGE_TTL", 60); //for home page
 define("HOMEL_NEW_PROJECTS_TTL", 60);

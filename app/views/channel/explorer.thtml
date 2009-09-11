@@ -24,6 +24,7 @@
 				$pid = $project['id'];
 				$urlname = $project['User']['urlname'];
 				$username = htmlspecialchars($project['User']['username']);
+				$user_role = $project['User']['role'];
 				$project_url = "/projects/".$urlname."/".$pid;
 				$project_desc = htmlspecialchars($project['description']);
 				$project_desc = wordwrap($project_desc, 88, "\n",true);
@@ -40,7 +41,9 @@
 				<div id="<?php echo $pid?>" class="gallerythumb clearme">
 				<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
 				<h3><a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></h3>
-				<p><strong><?php ___('By');?>: </strong><a href="<?php echo $html->url('/users/'.$username)?>"><?php echo $username?></a></p>
+				<p><strong><?php ___('By');?>: </strong>
+				<?php echo $util->username($username, $user_role);?>
+				</p>
 				<p><strong><?php ___('Views');?></strong>: <?php echo $views?>|<strong><?php ___("LoveIt's");?></strong>: <?php echo $lovers?></p>
 				<p><strong><?php ___('Description');?></strong>: <?php echo $project_desc?>
 				<?php 
@@ -65,6 +68,7 @@
 				$pid = $project['Project']['id'];
 				$urlname = $project['User']['urlname'];
 				$username = htmlspecialchars($project['User']['username']);
+				$user_role = $project['User']['role'];
 				$project_url = "/projects/$urlname/$pid";
 				$project_desc = htmlspecialchars($project['Project']['description']);
 				$project_desc = wordwrap($project_desc, 88, "\n",true);
@@ -88,7 +92,9 @@
 					?>
 						<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
 				<h3><a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></h3>
-				<p><strong><?php ___('By');?>: </strong><a href="<?php echo $html->url('/users/'.$username)?>"><?php echo $username?></a></p>
+				<p><strong><?php ___('By');?>: 
+				<?php echo $util->username($username, $user_role);?>
+				</p>
 						
 						
 						
@@ -144,6 +150,7 @@
 				$pid = $project['Project']['id'];
 				$urlname = $project['User']['urlname'];
 				$username = htmlspecialchars($project['User']['username']);
+				$user_role = $project['User']['role'];
 				$project_url = "/projects/$urlname/$pid";
 				$project_desc = htmlspecialchars($project['Project']['description']);
 				$project_desc = wordwrap($project_desc, 88, "\n",true);
@@ -169,7 +176,9 @@
 					?>
 						<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
 				<h3><a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></h3>
-				<p><strong><?php ___('By');?>: </strong><a href="<?php echo $html->url('/users/'.$username)?>"><?php echo $username?></a></p>
+				<p><strong><?php ___('By');?>: </strong>
+				<?php echo $util->username($username, $user_role);?>
+				</p>
 								
 					<?php			
 								echo "<p>\n"; 

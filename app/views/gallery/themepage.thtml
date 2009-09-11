@@ -81,6 +81,7 @@
 		$urlname = htmlspecialchars($project['Project']['User']['urlname']);
 		$owner_url = "/users/".$urlname;
 		$owner_username = htmlspecialchars($project['Project']['User']['username']);
+		$owner_role = $project['Project']['User']['role'];
 		$project_name = htmlspecialchars($project['Project']['name']);
 		$project_id = $project['Project']['id'];
 		$project_url = "/projects/$urlname/$pid";
@@ -107,11 +108,12 @@
 		</a>
 		  
 		  <h6><a href="<?php echo $html->url($project_url)?>"><?php e($project_name)?></a></h6>
-		  <p><?php ___('by'); ?><a href="<?php echo $html->url($owner_url)?>"> <?php
+		  <p><?php ___('by'); ?><?php
 		if (isset($owner_username{16})){
 			$owner_username = substr($owner_username, 0, 13)."&#0133;";
 		}; 
- e($owner_username)?></a> 
+ ?>
+		 <?php echo $util->username($owner_username, $owner_role);?>
 		  <?php if ($isThemeOwner || $isProjectOwner || $isAdmin): ?>
 		  | <a href="<?php echo $html->url('/galleries/removeproject/')?><?php e($theme_id) ?>/<?php e($project_id)?>">[x]</a></p>
 		  <?php endif; ?>
@@ -201,7 +203,9 @@
 	<?php endif?>
 
 
-	<h5><?php ___('Gallery owner'); ?>: <a href="<?php echo $html->url('/users/')?><?php e($theme_owner['urlname'])?>"><?php e($theme_owner['username'])?>
+	<h5><?php ___('Gallery owner'); ?>: 
+	 <?php echo $util->username($theme_owner['urlname'], $theme_owner['role']);?>
+	<a href="<?php echo $html->url('/users/')?><?php e($theme_owner['urlname'])?>">
 	<?php echo $html->image(getBuddyIconBySize($theme_owner['id'],'mini', $content_status, $theme_owner['timestamp']),array('title'=>$theme_owner['username'],'alt'=>$theme_owner['username'],'width'=>'28','height'=>'28'))?>
 	</a></h5>
 	<?php echo "<p> <strong>"; ___('Created'); echo "</strong>: $actual_creation_date " . ___("ago", 'false') . "</p>"; ?>

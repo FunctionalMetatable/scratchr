@@ -860,7 +860,7 @@ Class Project extends AppModel
             $order_by_clause_outer = ' ORDER BY `Project`.'.$order_by_clause;
         }
 
-        $sql = 'SELECT `Project`.id, `Project`.name, `User`.id, `User`.urlname'
+        $sql = 'SELECT `Project`.id, `Project`.name, `User`.id, `User`.urlname, `User`.role'
                .' FROM ('
                .' SELECT `projects`.`id`, `projects`.`user_id`, `name`'.$fields
                .' FROM `projects`' . $join_table
