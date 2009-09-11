@@ -478,7 +478,7 @@ a, a:active, a:hover, a:visited{ outline:0; }
 .loginf {width:188px; float:right; margin-left:30px; background: #F0F0F0; padding:0 15px 5px 15px; border:1px solid #CCCCCC; margin-top:16px;}
 *+html .loginf {padding:0 15px 0px 15px;} /* IE7 */
 * html .loginf {width:188px;  margin:0px 0 0 15px; background: #F0F0F0; padding:0 15px 5px 15px; border:1px solid #CCCCCC; } /* IE6 */
-* html .loginbox {float:none; margin-top:200px; width:188px; height:500px; position:absolute;}
+* html .loginbox {float:none; margin-top:200px; width:188px; height:500px; position:absolute;margin-left:0px;}
 
 
 #passwordlogin {width:111px;}
@@ -549,9 +549,9 @@ input.error {position: relative; margin-left:0px;}
 @media screen and (-webkit-min-device-pixel-ratio:0){
 	#passwordlogin {width:72px;}
 	#signupForm .jNiceInputInner {width:188px;}
-	.forgot {margin-top:20px;}
+	.forgot {margin-top:110px;}
 /*	.rules {float:left; z-index:999; text-align:center;font-size:0.88em; padding:0px; margin: 0;}
-*/	.loginbox {width:188px; float:left;}
+*/	.loginbox {width:188px; float:left;margin-left:0px;}
 /*	.error {position: absolute; padding: -50px 0 0 190px; margin-top:1px; background-color:#FFFFFF; background:none;}*/
  	.policy {margin-top:-5px; margin-left:210px;} 
 	.emailerr {margin-top:-18px; margin-left:190px;}
