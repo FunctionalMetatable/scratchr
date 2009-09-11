@@ -1,17 +1,37 @@
 <div id='ajax_pagination'>
-<h5> Results for ip:<?php echo $search_term?>
+<h5> Results for ip:<?php echo $search_term?></h5>
+<br />
 
- <?php 
- if($is_banned)
- {
+Access :
+ <?php if($banned):?>
+ <?php echo "Blocked\t\t";?>
+	<a href="<?php echo $html->url('/administration/unblock_ip/'.$orig_ip)?>">Unblock Ip</a>
+<br />
+<p>Reasin : <?php echo $banned['BlockedIp']['reason']?></p>
+<?php  else :?>
+<?php echo "Open\t\t";?>
+<!--<a href="<?php echo $html->url('/administration/ban_ip/null/'.trim($search_term))?>">Ban Ip</a>-->
+<?php endif;?>
 
- ?>
-<a href="<?php echo $html->url('/administration/unblock_ip/'.$orig_ip)?>">Unblock Ip</a>
-<?php } else {?>
-<a href="<?php echo $html->url('/administration/ban_ip/null/'.trim($search_term))?>">Ban Ip</a>
-<?php }?>
-</h5>
-<?php
+<br />
+Account Creation :
+<?php 
+if($is_allow_account_creation){
+echo "Open";
+}
+else{
+echo "Blocked\t\t";
+}
+
+?>
+&nbsp;&nbsp;&nbsp;
+<?php if($isWhitelisted):?>
+<a href="<?php echo $html->url('/administration/remove_whitelisted_ip/'.$orig_ip)?>">Unwhitelist IP</a>
+<?php else:?>
+<a href="<?php echo $html->url('/administration/add_whitelisted_ip/'.$search_term)?>">Whitelist IP</a>
+<?php endif;?>
+
+<?php //echo"<pre>";print_r($results);echo "</pre>";
 	if (!empty($results)) {
 		foreach ($results as $current_result) {
 			if ($search_table == 'users') {
@@ -26,39 +46,41 @@
 				$user_url = "/users/$user_name";
 				
 				echo "<div class='gallerythumb clearme'>\n";
-				echo "\t<div class='admin_leftcolumn'>\n";
+				//echo "\t<div class='admin_leftcolumn'>\n";
+				if($user_status === 'normal'):
 				?>
-				<span>Name: <a href="<?php echo $html->url($user_url)?>"><?php e($user_name)?></a></span><br />
+				<span ><a href="<?php echo $html->url($user_url)?>"><?php e($user_name)?></a></span>
 				
 				<?php
-				echo "\t\t<span>Email:";
-				echo "$user_email"; echo "</span><br/>\n";
-				echo "\t\t<span>Created:";
-				echo "$user_created"; echo "</span>\n";
-				echo "\t</div>";
-				echo "\t<div class='admin_rightcolumn'>\n";
-				echo "\t\t<span>Country:";
-				echo " $user_country" ; 
-				echo "\t\t</span><br/>\n";
-				echo "\t\t<span> Birth ";
-				echo "$user_birth"; 
-				echo "\t\t</span><br/>\n";
-				echo "\t\t<span><br/>\n";
-				$delete_user_url = '/administration/deleteuser/' . $user_id;
-				$restore_user_url = '/administration/restore/' . $user_id;
-				if ($user_status == 'delbyadmin') {
-					echo "Restore";
-					echo " | ";
-				} else {
-					echo $html->link('Delete', $delete_user_url, Array(), 'Are you sure?', false);
-					echo " | ";
-				}
+				else:
+				?>
+				<span><a  style="color:#FF0000" href="<?php echo $html->url($user_url)?>"><?php e($user_name)?></a></span>
+				<?php
+				endif;
+				//echo "\t\t<span>Email:";
+				//echo "$user_email"; echo "</span><br/>\n";
+				//echo "\t\t<span>Created:";
+				//echo "$user_created"; echo "</span>\n";
+				//echo "\t</div>";
+				//echo "\t<div class='admin_rightcolumn'>\n";
+				//echo "\t\t<span>Country:";
+				//echo " $user_country" ; 
+				//echo "\t\t</span><br/>\n";
+				//echo "\t\t<span> Birth ";
+				//echo "$user_birth"; 
+				//echo "\t\t</span><br/>\n";
+				echo "\t\t<span>";
+				
 				?>
 				
 				<a href="<?php echo $html->url('/administration/viewuser/'.$user_id)?>">View Details</a>
 				<?php
 				echo "\t\t</span>\n";
-				echo "\t</div>\n";
+				echo "\t\t<span>";
+					if( $user['User']['last_access_date_time'])
+					echo friendlyDate($user['User']['last_access_date_time'])." "."ago";
+				echo "\t\t</span>\n";
+				//echo "\t</div>\n";
 				echo "</div>\n";
 			} 
 		}
