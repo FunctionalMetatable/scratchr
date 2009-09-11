@@ -1372,7 +1372,14 @@
 				$options = Array("sortBy"=>"created", "sortByClass" => "User", 
 							"direction"=> "DESC", "url" => "/administration/render_results/" . $search_table . "/" . $search_column . "/" . $search_term);
 				list($order,$limit,$page) = $this->Pagination->init("ipaddress = $search_ip", Array(), $options);
-				$results = $this->User->findAll("ipaddress = $search_ip", null, $order, $limit, $page);
+				$users = $this->User->findAll("ipaddress = $search_ip", null, $order, $limit, $page);
+				foreach($users as $result){
+					$view_details =  $this->set_view_date_time($search_term, $result['User']['id']);
+					 $result['User']['last_access_date_time'] = $view_details;
+					
+					$results[] =$result;
+					
+				}
 			}
 		} elseif ($search_table == 'projects') {
 			$this->Pagination->show = 10;
@@ -1443,7 +1450,17 @@
 		$this->set('search_table', $search_table);
 		if($search_column == 'ipaddress') {
             $search_ip =ip2long($search_term);
-            $this->set('is_banned',$this->BlockedIp->hasAny("BlockedIp.ip=$search_ip"));
+			$is_allow_account_creation = true;
+			$this->BlockedIp->unbindModel(
+                array('belongsTo' => array('User'))
+            );
+             $locked_id = $this->checkLockedUser($search_term); 
+			 if($locked_id){
+			 	$is_allow_account_creation = false;
+				}
+			$this->set('is_allow_account_creation', $is_allow_account_creation);
+			$this->set('banned',$this->BlockedIp->find("BlockedIp.ip=$search_ip"));
+			$this->set('isWhitelisted',$this->WhitelistedIpAddress->find("WhitelistedIpAddress.ipaddress =$search_ip"));
             $this->set('orig_ip',$search_ip);
             $this->set('search_term',$search_term);
             $this->render('admin_search_ip', 'ajax');
@@ -1453,17 +1470,15 @@
         }
 	}
 	
+	function set_view_date_time($ip, $user_id){
+	 	return $view_details = $this->ViewStat->field('timestamp', "ipaddress = INET_ATON('$ip') && user_id = $user_id", 'timestamp DESC');
+	 	
+	}
+	
+	//used for unblocked ip and override prevention of account creation from ip by creating ip as whitelist
 	function unblock_ip($ip = null, $search_ip =null){
 	if($search_ip){
-	$ip_whitelisted = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = INET_ATON('$search_ip')");
-		if(!$ip_whitelisted){
-		//make ip sa whitelisted
-                $sql = "INSERT INTO `whitelisted_ip_addresses` (`id`,`ipaddress`) VALUES"
-                        ." (NULL, INET_ATON('$search_ip'))";
-                $this->BlockedIp->query($sql);
-				
-			}
-			$this->redirect('/administration/search_ip');	
+		$this->add_whitelisted_ip($search_ip);
 	}
 	else{
 			$data = $this->BlockedIp->find("BlockedIp.ip=$ip");
@@ -1473,6 +1488,25 @@
 		}
 	
 	}//function
+	
+	function add_whitelisted_ip($ip){
+		$ip_whitelisted = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = INET_ATON('$ip')");
+		if(!$ip_whitelisted){
+		//make ip as whitelisted
+                $sql = "INSERT INTO `whitelisted_ip_addresses` (`id`,`ipaddress`) VALUES"
+                        ." (NULL, INET_ATON('$ip'))";
+                $this->WhitelistedIpAddress->query($sql);
+				
+			}
+			$this->redirect($_SERVER['HTTP_REFERER']);
+	}
+	
+	function remove_whitelisted_ip($ip){
+			$data = $this->WhitelistedIpAddress->find("WhitelistedIpAddress.ipaddress = $ip");
+			$ip_id = $data['WhitelistedIpAddress']['id'];
+			$this->WhitelistedIpAddress->del($ip_id);
+			$this->redirect('/administration/search');
+	}
  
 	/** 
 	* Ajax helper for pagination of search results
