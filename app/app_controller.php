@@ -5,7 +5,7 @@
  */
 class AppController extends Controller {
 
-    var $helpers = array("head",'Time');
+    var $helpers = array("head",'Time', "Util");
     var $uses = array('AdminTag', 'Relationship', 'Project', 'Pcomment', 'Gcomment', 'Gallery', 'GalleryProject', 'GalleryMembership', 'BlockedUser', 'Notification', 'User', 'Announcement', 'BlockedIp', 'FriendRequest');
 	var $components = array('RequestHandler', 'Cookie', 'Session');
     var $layout = 'scratchr_default';
