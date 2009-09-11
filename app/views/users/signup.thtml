@@ -51,31 +51,31 @@ jQuery(document).ready(function($) {
 	// validate signup form on keyup and submit
 	jQuery("#signupForm").validate({
 		rules: {
-			username: {
+			"data[User][username]": {
 				required: true,
 				minlength: 3
 			},
-			password: {
+			"data[User][password]": {
 				required: true,
 				minlength: 6
 			},
-			email: {
+			"data[User][email]": {
 				required: true,
 				email: true
 			},
 			agree: "required"
 		},
 		messages: {
-			username: {
+			"data[User][username]": {
 				required: "<div class='usererr'><img src='../img/wrong.png' />&nbsp;Please enter a username</div>",
 				minlength: "<div class='usererr'><img src='../img/wrong.png' />&nbsp;Too short. Minimum 3 characters</div>"
 			},
-			password: {
+			"data[User][password]": {
 				required: "",
 /*<img src='../img/wrong.png' />&nbsp;<p style='margin-top:-19px; margin-left:17px; color:#CC0000; font-weight:bold;' id='pass1'>Please provide a password</p>*/				
 				minlength: ""
 			},			
-			email: "<div class='emailerr'><img src='../img/wrong.png' />&nbsp;Please enter a valid email address</div>",
+			"data[User][email]": "<div class='emailerr'><img src='../img/wrong.png' />&nbsp;Please enter a valid email address</div>",
 			agree: "<div class='policy'><img src='../img/wrong.png' />&nbsp;Please accept our policy</div>"
 		}
 	});
@@ -163,7 +163,7 @@ On the Scratch website, you can share projects and ideas with other members of t
 <h3 align="center">Is this your account?</h3>
 
 <form action="<?php echo $html->url('/login')?>" method="post" class="jNice" id="loginbox">               
-<table width="210" border="0" cellpadding="3" cellspacing="0">
+<table width="200" border="0" cellpadding="3" cellspacing="0">
     <tr>
     	<td><label for="usernamelogin">Username:</label></td>
                     <td id="allusers2">
@@ -209,8 +209,8 @@ On the Scratch website, you can share projects and ideas with other members of t
 <table width="410" border="0" cellpadding="3" cellspacing="0">
   <tr>
     <td width="100" align="right"><label for="username">Username:</label></td>
-    <td><?php //echo $form->input('User.username',array('label'=>'','id'=>'username'))?>
-	<input type="text" name="username" id="username" size="32" maxlength="128" />
+    <td><?php echo $form->input('User.username',array('label'=>'','id'=>'username','size'=>32,'maxlength'=>128))?>
+	<!--<input type="text" name="data[User][username]" id="username" size="32" maxlength="128" />-->
     <span style="display: none; margin-left:5px; position:absolute;" id="usernameLoading">
 	<?php echo $html->image('indicator.gif', array('alt'=>'Ajax Indicator'))?>
 	</span><span id="usernameResult"></span>
@@ -223,7 +223,8 @@ On the Scratch website, you can share projects and ideas with other members of t
  
   <tr>
     <td align="right"><label for="password">Password:</label></td>
-    <td><input type="password" name="password" id="password" size="32" maxlength="32" /><span id='result'></span>
+    <td><?php echo $form->input('User.password',array('label'=>'','id'=>'password','size'=>32,'maxlength'=>32))?>
+	<!--<input type="password" name="data[User][password]" id="password" size="32" maxlength="32" />--><span id='result'></span>
     </td>
   </tr>
   <tr>
@@ -270,7 +271,8 @@ On the Scratch website, you can share projects and ideas with other members of t
   </tr>
   <tr>
     <td align="right"><label for="email" id="email_age">Email Address:</label></td>
-    <td><input type="text" name="email" id="email" size="32" maxlength="128" />
+    <td><?php echo $form->input('User.email',array('label'=>'','id'=>'email','size'=>32,'maxlength'=>128))?>
+	<!--<input type="text" name="data[User][email]" id="email" size="32" maxlength="128" />-->
         </td>
   </tr>  
   <tr>
