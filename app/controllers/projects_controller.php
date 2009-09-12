@@ -918,7 +918,7 @@ class ProjectsController extends AppController {
 						if($project['Project']['created'] >= $block_time) {
 							//block user for X mins
 							$this->User->tempblock($project['Project']['user_id']);
-							$this->notify('account_lock', $project['Project']['user_id'], array());
+							$this->notify('account_temp_lock', $project['Project']['user_id'], array());
 						}
 					}
 				}
