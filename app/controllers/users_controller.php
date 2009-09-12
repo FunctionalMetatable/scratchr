@@ -796,7 +796,7 @@ class UsersController extends AppController {
 		$username = $user_record['User']['username'];
 		
 		$user_status = $user_record['User']['status'];
-		if ($user_status == 'delbyadmin') {
+		if ($user_status == 'delbyadmin' || $user_status == 'delbyusr') {
             $this->cakeError('error404');
         }
 		//Find number of featured project for a particular user
