@@ -58,6 +58,7 @@
 		foreach ($tag_projects as $tag_project):
 		$project = $tag_project['Project'];
 		$project_name = htmlspecialchars($project['name']);
+		$ribbon_name = $project['ribbon_name'];
 		$views = $project['views'];
 		$pid = $project['id'];
 		$visibility = $project['proj_visibility'];
@@ -84,6 +85,13 @@
 	?>
 		<?php if(!$ignored): ?>
 			<div id="project_<?php e($pid); ?>" class="gallerythumb clearme"> 
+			<?php
+			if(SHOW_RIBBON ==1 && $ribbon_name):?>
+			
+			<a href="<?php echo $html->url($project_url)?>">
+			<?php echo $html->image('small_ribbon/'.$ribbon_name,array('class'=>'channel_ribbon'));?>
+			</a>
+			<?php endif;?>
 			<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
 			
 				<h3><a href="<?php echo $html->url($project_url) ?>"><?php e($project_name)?> </a></h3>			

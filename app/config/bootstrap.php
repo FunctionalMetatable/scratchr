@@ -96,7 +96,7 @@ $this->params['webservices']
  /**
  Show ribbon on featured project. Value 1 means fetured is active and 0 means deactive.
  */
- define("SHOW_RIBBON", 0);
+ define("SHOW_RIBBON", 1);
  /**
  To enable/disable to write debug log for service controller.Value 1 for enable and 0 for desable
  */

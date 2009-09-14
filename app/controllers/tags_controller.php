@@ -1,7 +1,7 @@
 <?php
 Class TagsController extends AppController {
 
-    var $uses = array('IgnoredUser', 'Project','ProjectTag', 'Tag', 'Gallery', 'GalleryTag', 'Notification');
+    var $uses = array('IgnoredUser', 'Project','ProjectTag', 'Tag', 'Gallery', 'GalleryTag', 'Notification', 'FeaturedProject');
     var $helpers = array('Tagcloud','Pagination');
     var $components = array("Pagination");
     var $layout = 'scratchr_default';
@@ -182,6 +182,17 @@ Class TagsController extends AppController {
 					$temp_project['Project']['ignored'] = false;
 				}
 			}
+			//Ribbon feature
+			if(SHOW_RIBBON ==1){
+				$featured_time = $this->FeaturedProject->field('timestamp',array('project_id'=>$project['Project']['id']));
+				$image_name ='';
+				if(!empty($featured_time)){
+					$text =$this->convertDate($featured_time);
+					$image_name =$this->ribbonImageName($featured_time );
+					$this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='40x30',125,125);	
+				}
+			}
+			$temp_project['Project']['ribbon_name'] = $image_name;	
 			array_push($return_projects, $temp_project);
 		}
 		return $return_projects;

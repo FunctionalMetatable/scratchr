@@ -2,7 +2,7 @@
 Class GalleriesController extends AppController {
 
 	var $name = "Gallery";
-    var $uses = array("ClubbedGallery", "IgnoredUser", "GalleryFlag", "Mgcomment", "Tag", "GalleryTag", "TagFlag", "Project", "ClubbedGallery", "FeaturedGallery", "GalleryProject", "Gallery", "GalleryMembership","Gcomment","User","RelationshipType","Relationship","GalleryRequest", "Relationship", "Notification"); //apparently order matters for associative finds
+    var $uses = array("ClubbedGallery", "IgnoredUser", "GalleryFlag", "Mgcomment", "Tag", "GalleryTag", "TagFlag", "Project", "ClubbedGallery", "FeaturedGallery", "GalleryProject", "Gallery", "GalleryMembership","Gcomment","User","RelationshipType","Relationship","GalleryRequest", "Relationship", "Notification", "FeaturedProject"); //apparently order matters for associative finds
     var $helpers = array('PaginationSecondary', 'Pagination','Ajax','Javascript');
     var $components = array('PaginationSecondary', 'Email',  'Pagination', 'RequestHandler', 'FileUploader', 'Scratch');
 
@@ -3087,8 +3087,23 @@ Class GalleriesController extends AppController {
 					$temp_project['GalleryProject']['ignored'] = false;
 				}
 			}
+			//Ribbon feature
+			if(SHOW_RIBBON ==1){
+				$featured_time = $this->FeaturedProject->field('timestamp',array('project_id'=>$current_project['Project']['id']));
+				$image_name ='';
+				if(!empty($featured_time)){
+					$text =$this->convertDate($featured_time);
+					$image_name =$this->ribbonImageName($featured_time );
+					$this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='40x30',125,125);	
+				}
+				
+
+			}
+			$temp_project['Project']['ribbon_name'] = $image_name;	
+			//End Ribbon feature
 			array_push($return_projects, $temp_project);
-		}
+		}//outer foreach
+		
 		return $return_projects;
 	}
 	
