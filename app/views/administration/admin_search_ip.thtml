@@ -7,7 +7,7 @@ Access :
  <?php echo "Blocked\t\t";?>
 	<a href="<?php echo $html->url('/administration/unblock_ip/'.$orig_ip)?>">Unblock Ip</a>
 <br />
-<p>Reasin : <?php echo $banned['BlockedIp']['reason']?></p>
+<p>Reason : <?php echo $banned['BlockedIp']['reason']?></p>
 <?php  else :?>
 <?php echo "Open\t\t";?>
 <!--<a href="<?php echo $html->url('/administration/ban_ip/null/'.trim($search_term))?>">Ban Ip</a>-->
@@ -73,7 +73,7 @@ echo "Blocked\t\t";
 				
 				?>
 				
-				<a href="<?php echo $html->url('/administration/viewuser/'.$user_id)?>">View Details</a>
+				&nbsp;<a href="<?php echo $html->url('/administration/viewuser/'.$user_id)?>">View Details</a>
 				<?php
 				echo "\t\t</span>\n";
 				echo "\t\t<span>";
