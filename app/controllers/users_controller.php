@@ -785,6 +785,7 @@ class UsersController extends AppController {
 	function view($urlname=null, $option = "projects") {
 		$this->autoRender = false;
 		$this->modelNames =array('User','ForumUser');
+		$urlname = trim($urlname);
 		if(!$urlname)
 		$this->cakeError('error404');
 		$content_status = $this->getContentStatus();
