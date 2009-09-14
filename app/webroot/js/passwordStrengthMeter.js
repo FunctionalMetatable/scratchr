@@ -5,6 +5,7 @@
 
 var shortPass = '<div class="passerr"><img src="img/wrong.png" />&nbsp;Too short. Minimum 6 characters.</div>'
 var badPass = '<div class="passerr"><img src="img/wrong.png" />&nbsp;Weak password</div>'
+var invalidPass = '<div class="passerr"><img src="img/wrong.png" />&nbsp;Password should not contain username</div>'
 var goodPass = '<div class="passcorr"><img src="img/correct.png" />&nbsp;Good password</div>'
 var strongPass = '<div class="passcorr"><img src="img/correct.png" />&nbsp;Strong password</div>'
 
@@ -12,13 +13,16 @@ var strongPass = '<div class="passcorr"><img src="img/correct.png" />&nbsp;Stron
 function passwordStrength(password,username)
 {
     score = 0 
-    
+    //password shouldnot contain username
+	pass = password.toLowerCase();
+	user = username.toLowerCase();
+	if(pass.search(user)== -1){} else {return invalidPass};
     //password < 6
     if (password.length < 6 ) { return shortPass }
     
     //password == username
     if (password.toLowerCase()==username.toLowerCase()) return badPass
-
+	
 	//password length
     score += password.length * 6
     score += ( checkRepetition(1,password).length - password.length ) * 1

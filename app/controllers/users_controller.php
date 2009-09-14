@@ -606,6 +606,13 @@ class UsersController extends AppController {
 					array_push($errors, ___("Password too short.", true));
 					$errorFlag=true;
 					}
+					$pos = strpos(strtolower($this->data['User']['password']), strtolower($username)); 
+					if ($pos === false) {} 
+					else 
+					{ 
+						array_push($errors, ___("Password should not contain username.", true));
+						$errorFlag=true;
+					}
 					
 					if (strcmp($this->data['User']['password'], $this->data['User']['password2']) == 0) {
 					} else {
@@ -1193,7 +1200,14 @@ class UsersController extends AppController {
 		$submit_pwd_new = $this->params['form']['password_new'];
 		$submit_pwd_confirm = $this->params['form']['password_confirm'];
 		$user_record = $this->User->findById($user_id);
-
+		
+		$pos = strpos(strtolower($submit_pwd_new), strtolower($user_record['User']['username'])); 
+		if ($pos === false) {} 
+		else 
+		{ 
+			$this->setFlash(___("Password should not contain username.", true), FLASH_NOTICE_KEY);
+			$this->redirect('/users/'.$user['User']['urlname']);
+		}
 		if ($this->isAdmin() || (!empty($user_record['User']['password']) &&  $user_record['User']['password'] == sha1($submit_pwd_old))) {
 		   if ($submit_pwd_new == $submit_pwd_confirm) {
 		      $this->User->saveField("password",sha1($submit_pwd_new));
