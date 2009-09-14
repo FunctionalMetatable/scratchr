@@ -15,13 +15,14 @@
 	
     <?php echo $this->element('channel_menu'); ?>
 	
-	<?php
+	<?php	
 		if ($option == "featured") {
 	
 			foreach ($data as $featured) {
 				$project = $featured['Project'];
 				$views = $project['views'];
 				$pid = $project['id'];
+				$ribbon_image = $project['ribbon_name'];
 				$urlname = $project['User']['urlname'];
 				$username = htmlspecialchars($project['User']['username']);
 				$user_role = $project['User']['role'];
@@ -39,6 +40,11 @@
 				}
 				?>
 				<div id="<?php echo $pid?>" class="gallerythumb clearme">
+				<?php if(SHOW_RIBBON ==1):?>
+				<a href="<?php echo $html->url($project_url)?>">
+				<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'channel_ribbon'));?>
+				</a>
+				<?php endif;?>
 				<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
 				<h3><a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></h3>
 				<p><strong><?php ___('By');?>: </strong>

@@ -2144,6 +2144,12 @@ border:none !important;
 position:absolute;
 opacity:0.9;
 }
+.channel_ribbon{
+margin-left:-110px !important;
+border:none !important;
+position:absolute;
+opacity:0.9;
+}
 /******showing ribbon on feature projects****/
 
 /*********project sharing*******/

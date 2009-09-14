@@ -74,11 +74,12 @@
 	<a href="<?php echo $html->url($feed_link)?>" title="Subscribe to my feed"><?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe'); ?></a>
 	
 	<div id="gallery_view_projects">
-	<?php
+	<?php 
 	foreach ($theme_projects as $project):
 		$pid = $project['Project']['id'];
 		$visibility = $project['Project']['proj_visibility'];
 		$urlname = htmlspecialchars($project['Project']['User']['urlname']);
+		$ribbon_name = $project['Project']['ribbon_name'];
 		$owner_url = "/users/".$urlname;
 		$owner_username = htmlspecialchars($project['Project']['User']['username']);
 		$owner_role = $project['Project']['User']['role'];
@@ -103,6 +104,13 @@
 	<?php endif; ?>
 	<?php if(!$ignored || $isProjectOwner): ?>
 		<div class="thumb">
+		<?php
+		if(SHOW_RIBBON ==1 && $ribbon_name):?>
+		
+		<a href="<?php echo $html->url($project_url)?>">
+		<?php echo $html->image('small_ribbon/'.$ribbon_name,array('class'=>'ribbon'));?>
+		</a>
+		<?php endif;?>
 		<a href="<?php echo $html->url($project_url)?>">
 		<?php echo $html->image($thumbnail_src,array('title'=>htmlspecialchars($project['Project']['name']),'alt'=>htmlspecialchars($project['Project']['name']),'width'=>'148','hight'=>'111'))?>
 		</a>

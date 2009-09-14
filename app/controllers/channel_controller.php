@@ -83,6 +83,7 @@ Class ChannelController extends AppController {
                 array('hasMany' => array('GalleryProject'))
             );
             $final_projects = $this->FeaturedProject->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, 2, $this->getContentStatus());
+			$final_projects = $this->set_ribbon($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
         $this->set('data', $final_projects);
@@ -94,6 +95,18 @@ Class ChannelController extends AppController {
 		$this->render('explorer');
     }
 
+	function set_ribbon($final_projects) {
+		$i =0;
+		foreach($final_projects as $final_project){
+				$text =$this->convertDate($final_project['FeaturedProject']['timestamp']);
+			 	$image_name =$this->ribbonImageName($final_project['FeaturedProject']['timestamp']);
+			 	$this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='40x30',125,125);
+				$final_project['Project']['ribbon_name'] = $image_name ;
+				$temp[$i++] = $final_project;
+				
+		}
+		return $temp;
+	}
     function topviewed() {
         $this->layout = 'scratchr_explorer';
         $this->pageTitle = ___("Scratch | Top viewed projects", true);
