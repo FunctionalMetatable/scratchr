@@ -1,0 +1,1 @@
+ALTER TABLE `projects_frontpage` CHANGE `type` `type` ENUM( 'top_loved', 'top_viewed', 'top_downloaded', 'top_remixed', 'featured', 'surprise', 'feature_gallery', 'curator_favorites', 'design_studio' ) NOT NULL;
