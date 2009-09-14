@@ -28,59 +28,64 @@ Class HomeController extends AppController {
 			$frontpage_blocked_user_id = Set::extract('/BlockedUserFrontpage/user_id', $frontpage_blocked_user);
 			$user_ids       = array_merge($user_ids, $frontpage_blocked_user_id);
 			
-			$clubedprojects = $this->__getDesignStudioProjects($user_ids);
-            $clubed_project_id = Set::extract('/Project/id', $clubedprojects);
-			$clubed_project_user_ids   = Set::extract('/User/id', $clubedprojects);
-            $project_ids    = array_merge($project_ids, $clubed_project_id);
-			$user_ids       = array_merge($user_ids, $clubed_project_user_ids);
-			
+			/*The priority should be:
+			featured > curator > top loved > top remixed > top viewed > design studio.*/
+			//1.Featured
+			$featured       = $this->__getFeaturedProjects($user_ids);
+            $featured_ids   = Set::extract('/Project/id', $featured);
+			$featured_user_ids   = Set::extract('/User/id', $featured);
+            $this->Project->register_frontpage($featured_ids, 'featured');
+            $project_ids    = array_merge($project_ids, $featured_ids);
+            $user_ids       = array_merge($user_ids, $featured_user_ids);
+			//2.Curator
 			$favorites = $this->__getCuratorFavorites($project_ids, $user_ids);
 			$favorites_id = Set::extract('/Project/id', $favorites);
 			$favorites_user_ids   = Set::extract('/User/id', $favorites);
             $this->Project->register_frontpage($favorites_id, 'curator_favorites');
 			$project_ids    = array_merge($project_ids, $favorites_id);
             $user_ids       = array_merge($user_ids, $favorites_user_ids);
-            
-            $featured       = $this->__getFeaturedProjects($project_ids, $user_ids);
-            $featured_ids   = Set::extract('/Project/id', $featured);
-			$featured_user_ids   = Set::extract('/User/id', $featured);
-            $this->Project->register_frontpage($featured_ids, 'featured');
-            $project_ids    = array_merge($project_ids, $featured_ids);
-            $user_ids       = array_merge($user_ids, $featured_user_ids);
-			
-            $topremixed     = $this->__getTopRemixedProjects($project_ids, $user_ids);
-            $topremixed_ids = Set::extract('/Project/id', $topremixed);
-			$topremixed_user_ids = Set::extract('/User/id', $topremixed);
-            $this->Project->register_frontpage($topremixed_ids, 'top_remixed');
-            $project_ids    = array_merge($project_ids, $topremixed_ids);
-			$user_ids       = array_merge($user_ids, $topremixed_user_ids);
-			
-            $toploved       = $this->__getTopLovedProjects($project_ids, $user_ids);
+			//3.Top Loved
+			$toploved       = $this->__getTopLovedProjects($project_ids, $user_ids);
             $toploved_ids   = Set::extract('/Project/id', $toploved);
 			$toploved_user_ids   = Set::extract('/User/id', $toploved);
             $this->Project->register_frontpage($toploved_ids, 'top_loved');
             $project_ids    = array_merge($project_ids, $toploved_ids);
 			$user_ids       = array_merge($user_ids, $toploved_user_ids);
-			
-            $topviewed      = $this->__getTopViewedProjects($project_ids, $user_ids);
+			//4.Top Remixed
+			$topremixed     = $this->__getTopRemixedProjects($project_ids, $user_ids);
+            $topremixed_ids = Set::extract('/Project/id', $topremixed);
+			$topremixed_user_ids = Set::extract('/User/id', $topremixed);
+            $this->Project->register_frontpage($topremixed_ids, 'top_remixed');
+            $project_ids    = array_merge($project_ids, $topremixed_ids);
+			$user_ids       = array_merge($user_ids, $topremixed_user_ids);
+			//5.Top Viwed
+			$topviewed      = $this->__getTopViewedProjects($project_ids, $user_ids);
             $topviewed_ids  = Set::extract('/Project/id', $topviewed);
 			$topviewed_user_ids  = Set::extract('/User/id', $topviewed);
             $this->Project->register_frontpage($topviewed_ids, 'top_viewed');
             $project_ids    = array_merge($project_ids, $topviewed_ids);
 			$user_ids       = array_merge($user_ids, $topviewed_user_ids);
-
+			//6.Design Studio
+			
+			$clubedprojects = $this->__getDesignStudioProjects($project_ids, $user_ids);
+            $clubed_project_id = Set::extract('/Project/id', $clubedprojects);
+			$clubed_project_user_ids   = Set::extract('/User/id', $clubedprojects);
+            $project_ids    = array_merge($project_ids, $clubed_project_id);
+			$user_ids       = array_merge($user_ids, $clubed_project_user_ids);
+			
+			
            // $topdownloaded  = $this->__getTopDownloadedProjects($project_ids, $user_ids);
            // $topdownloaded_ids  = Set::extract('/Project/id', $topdownloaded);
            // $this->Project->register_frontpage($topdownloaded_ids, 'top_downloaded');
 		 
 			$home_projects = array('featured' => $featured,
-                                   'topremixed' => $topremixed,
-                                   'toploved' => $toploved,
-                                   'topviewed' => $topviewed,
+									'favorites' => $favorites,
+									'curator_name' =>$curator_name,
+									'toploved' => $toploved,
+                                    'topremixed' => $topremixed,
+                                    'topviewed' => $topviewed,
                                    //'topdownloaded' => $topdownloaded,
-								   'favorites' => $favorites,
-								   'curator_name' =>$curator_name,
-								   'clubedprojects' => $clubedprojects
+								    'clubedprojects' => $clubedprojects
                                 );
                                 
             $this->Project->mc_set('home_projects_data', $home_projects,
@@ -88,12 +93,12 @@ Class HomeController extends AppController {
         }
         else {
             $featured       = $home_projects['featured'];
-            $topremixed     = $home_projects['topremixed'];
-            $toploved       = $home_projects['toploved'];
-            $topviewed      = $home_projects['topviewed'];
-            //$topdownloaded  = $home_projects['topdownloaded'];
 			$favorites      = $home_projects['favorites'];
 			$curator_name   = $home_projects['curator_name'];
+			$toploved       = $home_projects['toploved'];
+            $topremixed     = $home_projects['topremixed'];
+            $topviewed      = $home_projects['topviewed'];
+            //$topdownloaded  = $home_projects['topdownloaded'];
 			$clubedprojects   = $home_projects['clubedprojects'];
         }
 		
@@ -238,10 +243,10 @@ Class HomeController extends AppController {
 	return $this->BlockedUserFrontpage->findAll(null,'BlockedUserFrontpage.user_id');
 	}
 	
-	function __getFeaturedProjects($exclude_project_ids, $exclude_user_ids) {
+	function __getFeaturedProjects($exclude_user_ids) {
         $condition = '`projects`.`id` = `featured_projects`.`project_id`';
         $projects = $this->Project->getTopProjects('`featured_projects`.`id` `featured`',
-                    '`featured` DESC', null, $exclude_project_ids, $exclude_user_ids,
+                    '`featured` DESC', null, null, $exclude_user_ids,
                     NUM_FEATURED_PROJECTS,
                     $condition, '`featured_projects`');
         return $projects;
@@ -408,7 +413,7 @@ Class HomeController extends AppController {
         return $curator['User']['urlname'];
 	}
 	
-    function __getDesignStudioProjects($exclude_user_ids) {
+    function __getDesignStudioProjects($exclude_project_ids, $exclude_user_ids) {
 		$clubbed_gallery = $this->__getScratchClub();
         $gallery_id = $clubbed_gallery['id'];
         
@@ -417,7 +422,7 @@ Class HomeController extends AppController {
         $condition = '`gallery_id` = '. $gallery_id
                         .' AND `projects`.`id` = `gallery_projects`.`project_id`';
         
-        $projects = $this->Project->getTopProjects('', 'RAND()', null, null,
+        $projects = $this->Project->getTopProjects('', 'RAND()', null, $exclude_project_ids,
                     $exclude_user_ids, NUM_DESIGN_STUDIO_PROJECT,
                     $condition, '`gallery_projects`');
 
