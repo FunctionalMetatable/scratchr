@@ -1996,6 +1996,7 @@ class ProjectsController extends AppController {
 
                     //find out the root based on username
                     $root_based_on_username = false;
+                    $root_based_on_username_role = false;
                     if($root_based_on_pid) {
                         $root_based_on_user = $this->Project->query( "SELECT User.username, User.role, Project.id"
                                                             ." FROM projects as Project, users as User"
@@ -2009,8 +2010,8 @@ class ProjectsController extends AppController {
                     $based_on_data = array(
                         'based_on_uid'      => $based_on_uid,
                         'based_on_username' => $based_on_username,
+                        'based_on_username_role' => $based_on_username_role,
                         'original_username' => $root_based_on_username,
-						'based_on_username_role' => $based_on_username_role,
                         'original_username_role' => $root_based_on_username_role
                     );
                     $this->Project->mc_set('based_on', $based_on_data, $project_id);
