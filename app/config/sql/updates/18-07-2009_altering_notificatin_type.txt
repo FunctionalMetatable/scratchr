@@ -22,3 +22,6 @@ VALUES (
 NULL , 'account_temp_lock',
 'Because your project was flagged by multiple members of the Scratch community, your account has been temporarily blocked. The Scratch Team will review your project based on the <a href="/terms">Terms of Use</a> and make a final decision.', '0', '0'
 );
+
+
+UPDATE `scratchr`.`notification_types` SET `template` = 'Congratulations, your project "<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>" has been remixed as "<a href="/projects/{from_user_name}/%s">%s</a>"! <img src="img/pages/credits/cat-face-bullet.gif" />' WHERE `notification_types`.`id` =30 LIMIT 1 ;
