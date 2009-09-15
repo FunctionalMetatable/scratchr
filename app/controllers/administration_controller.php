@@ -1368,32 +1368,28 @@
 			
 			if ($search_column == 'ipaddress') {
 				$search_ip =ip2long($search_term);
-				
-				/*$options = Array("sortBy"=>"created", "sortByClass" => "User", 
-							"direction"=> "DESC", "url" => "/administration/render_results/" . $search_table . "/" . $search_column . "/" . $search_term);
-				list($order,$limit,$page) = $this->Pagination->init("ipaddress = $search_ip", Array(), $options);
-				$users = $this->User->findAll("ipaddress = $search_ip", null, $order, $limit, $page);
-				*/
+				$users_records = array();
+
 				$users = $this->User->findAll("User.ipaddress = INET_ATON('$search_term')");
-				foreach($users as $user){
-					$id = $user['User']['id'];
-					$users_record[$id] =  $user;
+				foreach($users as $user) {
+					$users_records[$user['User']['id']] =  $user;
 				}
-				$this->ViewStat->bindModel(array('belongsTo' => array('User')));
+
+                $this->ViewStat->bindModel(array('belongsTo' => array('User')));
 				$view_users = $this->ViewStat->findAll("ViewStat.ipaddress = INET_ATON('$search_term')",'DISTINCT user_id',"ViewStat.timestamp DESC",null,null,2);
 				foreach($view_users as $view){
-					$id = $view['User']['id'];
-					$view_records[$id] = $view;
-				
+					if(!isset($users_records[$view['User']['id']])) {
+                        $users_records[$view['User']['id']] =  $view;
+                    }
 				}
-				$searchResults = $users_record + $view_records;
-				//echo "<pre>";print_r($searchResults);echo"</pre>";
-				foreach($searchResults as $result){
-					$view_details =  $this->set_view_date_time($search_term, $result['User']['id']);
-					 $result['User']['last_access_date_time'] = $view_details;
+
+                $results = array();
+				foreach($users_records as $users_record){
+					$users_record['User']['last_access_date_time'] =
+                                        $this->set_view_date_time($search_term,
+                                                    $users_record['User']['id']);
 					
-					$results[] =$result;
-					
+					$results[] = $users_record;
 				}
 			}
 		} elseif ($search_table == 'projects') {
