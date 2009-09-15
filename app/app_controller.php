@@ -125,10 +125,9 @@ class AppController extends Controller {
 				
 				$ban_record = $this->BlockedUser->find("BlockedUser.user_id = $user_id");
 				$ban_reason = $ban_record['BlockedUser']['reason'];
-				/*if user temporary blocked then set ban reason from notification where notification_type_id is 24 and to_user_id is temp blocked user id. Here 24 is notification_types.id which is for account_lock.*/
+				/*if user temporary blocked then set ban reason . */
 				if(!$ban_reason && $temporary_locked === true){
-					$notification = $this->Notification->find(array('Notification.to_user_id'=>$user['User']['id'],'Notification.notification_type_id'=>24),'NotificationType.template');
-					$ban_reason = $notification['NotificationType']['template'];
+					$ban_reason =sprintf(___('Because your project was flagged by multiple members of the Scratch community, your account has been temporarily blocked. The Scratch Team will review your project based on the %sTerms of Use%s and make a final decision.', true), '<a href="'.TOS_URL.'" >', '</a>');
 				}
 				if ($controller == "contact") {
 					$this->set('ban_reason', $ban_reason);
