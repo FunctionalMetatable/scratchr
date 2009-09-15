@@ -88,8 +88,8 @@ echo "Blocked\t\t";
 ?>
 <div class="gallery_pagination_container">
 	<?php 
-		$pagination->setPaging($paging);
-		echo $this->renderElement('pagination'); 
+		//$pagination->setPaging($paging);
+		//echo $this->renderElement('pagination'); 
 	?>
 </div>
 </div>
