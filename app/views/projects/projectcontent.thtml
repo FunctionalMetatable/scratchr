@@ -90,12 +90,12 @@ else {
 	<?php
 	if($based_on_pid && !empty($based_on_uid)) {
 		$related  = '<img src="'. getBuddyIconBySize($based_on_uid,'mini', $content_status) . '" alt="user_icon" width="28" height="28">';
-		$related .= ___("Based on", true) ;
-		$related .= $util->username($based_on_username, $based_on_username_role, 's');
+		$related .= " ". ___("Based on", true) .
+                    " ". $util->username($based_on_username, $based_on_username_role, 's');
 			
         if(!empty($original_username)) {
             $related .= "<a href='/projects/$based_on_username/$based_on_pid'>".___('version', true)."</a> ";
-            $related .= "of" .$util->username($original_username, $original_username_role, 's');
+            $related .= "of " .$util->username($original_username, $original_username_role, 's');
 			
             if (!empty($original_pid)) {
                 $related .= "<a href='/projects/$original_username/$original_pid'>" . ___('project', true) . "</a>";
