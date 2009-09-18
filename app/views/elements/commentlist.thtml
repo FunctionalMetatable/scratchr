@@ -43,7 +43,7 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
 
     <p>
     <?php if ($is_comment_ok): ?>
-        <?php echo $comment['Pcomment']['content']; ?>
+    <?php echo $util->linkify($comment['Pcomment']['content']); ?>
     <?php elseif ($is_comment_ignored): ?>
         <?php echo $ignored_commment_text; ?>
     <?php else: ?>

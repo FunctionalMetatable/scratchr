@@ -403,21 +403,9 @@ else {
 	<!-- ::: Begin notes ::: -->
     <div id="notes">
       <h3><?php ___('Project Notes');?> </h3>
-      <?php
-        $notes = htmlspecialchars($project['Project']['description'], ENT_QUOTES);
-        $pattern = '/[\n]/';
-        $rep = '<br>';
-        $notes = preg_replace($pattern, $rep, $notes);
-        $notes = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/projects/([^<>[:space:]]+[[:alnum:]/])/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to project', true) . ")</a>", $notes);
-        $notes  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/projects/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to project', true) . ")</a>",  $notes);
-        $notes  = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/forums/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to forums', true) . ")</a>",  $notes);
-        $notes = ereg_replace("([[:alpha:]]+://)?scratch.mit.edu(/galleries/([^<>[:space:]]+[[:alnum:]/]))", "<a href=\"\\2\">(" . ___('link to gallery', true) . ")</a>",  $notes);
-        $pattern = "/(((http[s]?:\/\/)|(www\.))?(([a-z][-a-z0-9]+\.)?[a-z][-a-z0-9]+\.[a-z]+(\.[a-z]{2,2})?)\/?[a-z0-9._\/~#&=;%+?-]+[a-z0-9\/#=?]{1,1})/is";
-        $notes = preg_replace($pattern, " <a href='$1'>$1</a>", $notes);
-        // fix URLs without protocols
-        $notes = preg_replace("/href='www/", "href='http://www", $notes);
-      ?>
-      <p id="pdesc"><?php echo $notes; ?></p>
+      <p id="pdesc">
+      <?php echo nl2br($util->linkify($project['Project']['description'])); ?>
+      </p>
       <?php if ($isMine || $isAdmin) echo $ajax->editor("pdesc", "/projects/$urlname/$pid/describe", Array("callback"=>"return 'description=' + encodeURIComponent(value);", "rows" => 4, "cols" => 20)); ?>
     </div>
     <!-- ::: End notes ::: -->

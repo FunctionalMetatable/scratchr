@@ -3,8 +3,8 @@
 class ProjectsController extends AppController {
 
     var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject', 'AnonViewStat');
-    var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb', 'Scratch');
-    var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
+    var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
+    var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination', 'Util');
 
     /**
      * Called before every controller action
@@ -390,8 +390,7 @@ class ProjectsController extends AppController {
 		$this->set_comment_errors($errors);
 		//the comment is saved
         if(!empty($new_pcomment)) {
-          $new_pcomment['Pcomment']['content'] = $this->Scratch->linkify($new_pcomment['Pcomment']['content']);
-		  $new_pcomment['User'] =  $commenter_userrecord['User'];
+          $new_pcomment['User'] =  $commenter_userrecord['User'];
           $this->set('comment', $new_pcomment);
           $this->set('isProjectOwner', $user_id == $logged_id);
           $this->set('project_id', $pid);
@@ -629,24 +628,23 @@ class ProjectsController extends AppController {
 				$this->cakeError('error404');
 
         if (isset($this->params['form']['description'])) {
-            #$newdesc = htmlspecialchars($this->params['form']['description']);
             $newdesc = strip_tags($this->params['form']['description']);
-	    if(isInappropriate($newdesc))
-	    {
-		$user_record = $this->Session->read('User');
-		$user_id = $user_record['id'];
-		$this->notify('inappropriate_pdesc', $user_id,
-					array('project_id' => $pid));
-		}
-	    else
-	    {
-		if($this->Project->saveField('description', $newdesc)) {
-                	$this->set('pdesc', $this->Scratch->linkify($newdesc));
-                	$this->render('projectdescription_ajax','ajax');
-                	return;
-            	}
-	    }
+            if(isInappropriate($newdesc)) {
+                $user_record = $this->Session->read('User');
+                $user_id = $user_record['id'];
+                $this->notify('inappropriate_pdesc', $user_id,
+                array('project_id' => $pid));
+            }
+            else {
+                if($this->Project->saveField('description', $newdesc)) {
+                    $this->set('linkify', true);
+                    $this->set('pdesc', $newdesc);
+                    $this->render('projectdescription_ajax','ajax');
+                    return;
+                }
+            }
         }
+        
         $this->set('pdesc',$project['Project']['description']);
         $this->render('projectdescription_ajax','ajax');
         return;
@@ -2845,8 +2843,6 @@ class ProjectsController extends AppController {
                 $commenter_ids[] = $comment['Pcomment']['user_id'];
                 $comment_ids[]   = $comment['Pcomment']['id'];
 
-                $comment['Pcomment']['content'] = $this->Scratch->linkify($comment['Pcomment']['content']);
-
                 $comment['Pcomment']['replies'] = $this->Pcomment->findCount('project_id = '
                     . $project_id . ' AND reply_to = '. $comment['Pcomment']['id']);
 
@@ -2930,8 +2926,6 @@ class ProjectsController extends AppController {
         foreach ($comments as $key => $comment) {
             $commenter_ids[] = $comment['Pcomment']['user_id'];
             $comment_ids[]   = $comment['Pcomment']['id'];
-
-            $comment['Pcomment']['content'] = $this->Scratch->linkify($comment['Pcomment']['content']);
 
             $comment['Pcomment']['replies'] = $this->Pcomment->findCount('project_id = '
                 . $project_id . ' AND reply_to = '. $comment['Pcomment']['id']);
