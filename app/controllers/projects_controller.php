@@ -1882,6 +1882,7 @@ class ProjectsController extends AppController {
             $this->set('project',$project);
             $this->set('pid', $pid);
             $this->set('project_id', $project['Project']['id']);
+            $this->set('proj_visibility', $project['Project']['proj_visibility']);
             $this->set('owner_id', $project['User']['id']);
             $this->set('date', friendlyDate($project['Project']['created']));
             $isProjectOwner = $owner_id == $logged_id;
@@ -2114,7 +2115,6 @@ class ProjectsController extends AppController {
             $this->set('isGalleryOwner', $isGalleryOwner);
             $this->set('viewcount', $project['Project']['views']+$project['Project']['anonviews']);
             $this->set('user_projects', $user_projects);
-            $this->set('proj_visibility', $project['Project']['proj_visibility']);
             $this->set('isLogged', $isLogged);
             $this->set('isCensored', $isCensored);
             $this->set('status', $project['Project']['status']);
