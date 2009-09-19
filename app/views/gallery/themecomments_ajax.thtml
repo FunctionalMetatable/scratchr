@@ -24,7 +24,7 @@ if(isset($comment) && $comment['Gcomment']['comment_visibility'] == 'visible'):
         </h5>
 
         <p>
-            <?= $comment['Gcomment']['content']; ?>
+            <?= $util->linkify($comment['Gcomment']['content']); ?>
         </p>
 
         <span class="flag_comment">

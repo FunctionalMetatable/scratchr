@@ -45,7 +45,7 @@ $markcomment_url = '/galleries/markcomment/' . $theme_id . '/' . $comment_id . '
 
     <p>
     <?php if ($is_comment_ok): ?>
-        <?= $comment['Gcomment']['content']; ?>
+        <?= $util->linkify($comment['Gcomment']['content']); ?>
     <?php elseif ($is_comment_ignored): ?>
         <?= $ignored_commment_text; ?>
     <?php else: ?>
