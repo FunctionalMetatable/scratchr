@@ -3,8 +3,8 @@ Class GalleriesController extends AppController {
 
 	var $name = "Gallery";
     var $uses = array("ClubbedGallery", "IgnoredUser", "GalleryFlag", "Mgcomment", "Tag", "GalleryTag", "TagFlag", "Project", "ClubbedGallery", "FeaturedGallery", "GalleryProject", "Gallery", "GalleryMembership","Gcomment","User","RelationshipType","Relationship","GalleryRequest", "Relationship", "Notification", "FeaturedProject"); //apparently order matters for associative finds
-    var $helpers = array('PaginationSecondary', 'Pagination','Ajax','Javascript');
-    var $components = array('PaginationSecondary', 'Email',  'Pagination', 'RequestHandler', 'FileUploader', 'Scratch');
+    var $helpers = array('PaginationSecondary', 'Pagination','Ajax','Javascript', 'Util');
+    var $components = array('PaginationSecondary', 'Email',  'Pagination', 'RequestHandler', 'FileUploader');
 
 	/**
 	/* Function List
@@ -2773,8 +2773,6 @@ Class GalleriesController extends AppController {
                 $commenter_ids[] = $comment['Gcomment']['user_id'];
                 $comment_ids[]   = $comment['Gcomment']['id'];
 
-                $comment['Gcomment']['content'] = $this->Scratch->linkify($comment['Gcomment']['content']);
-
                 $comment['Gcomment']['replies'] = $this->Gcomment->findCount('gallery_id = '
                     . $gallery_id . ' AND reply_to = '. $comment['Gcomment']['id']);
 
@@ -2915,8 +2913,6 @@ Class GalleriesController extends AppController {
         foreach ($comments as $key => $comment) {
             $commenter_ids[] = $comment['Gcomment']['user_id'];
             $comment_ids[]   = $comment['Gcomment']['id'];
-
-            $comment['Gcomment']['content'] = $this->Scratch->linkify($comment['Gcomment']['content']);
 
             $comment['Gcomment']['replies'] = $this->Gcomment->findCount('gallery_id = '
                 . $gallery_id . ' AND reply_to = '. $comment['Gcomment']['id']);
