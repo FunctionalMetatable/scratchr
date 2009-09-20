@@ -120,128 +120,33 @@ class UsersController extends AppController {
 		}
 	}
 
-		function signup() {
-
+	function signup() {
+		$this->layout = 'scratchr_signup';
 		$this->pageTitle = ___("Scratch | Signup", true);
-        $client_ip = $this->RequestHandler->getClientIP();
-        $client_ip_long = ip2long($client_ip);
+		$client_ip = $this->RequestHandler->getClientIP();
+		$client_ip_long = ip2long($client_ip);
         $server_ip = ip2long($_SERVER['SERVER_ADDR']);
-        $local_ip = 2130706433;
-
-		$user_data = $this->data;
-		$errors = Array();
-		$signup_interval = SIGNUP_INTERVAL;
-
-        $ipNotAllowed =false;
+		 $local_ip = 2130706433;
+		$ipNotAllowed =false;
         //server is not localhost and client ip is 127.0.0.1
-		if($server_ip != $local_ip && $client_ip_long == $local_ip)
-		{
+		if($server_ip != $local_ip && $client_ip_long == $local_ip) {
 			$ipNotAllowed =true;
 			$this->setFlash(___("We are unable to identify your IP address. Please  <a href='/contact/us/'>contact us</a>.", true));
 		}
 
-		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip_long");
-		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = INET_ATON('$client_ip')");
-
-		/* Some Activity from Same IP in past */
-		if($creation_from_same_ip || $access_from_same_ip) {
-			/* Get All the users who have accessed the projects or created a profile using same IP */
-			$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = INET_ATON('$client_ip')", 'DISTINCT user_id');
-
-            $user_ids_accessing_same_ip = array();
-			foreach($view_stats as $view_stat) {
-				array_push($user_ids_accessing_same_ip, $view_stat['ViewStat']['user_id']);
-			}
-			$user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
-
-			if(!empty($user_ids_accessing_same_ip)) {
-                $user_records = $this->User->findAll("User.ipaddress = $client_ip_long or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
-            }
-            else {
-                $user_records = $this->User->findAll("User.ipaddress = $client_ip_long ",'urlname','created DESC');
-            }
-			/* Some activity in past from same IP so we need to show the message with user records and ipaddress (send them to view) */
-			$this->set('user_records', $user_records);
-			$this->set('ip_address', $client_ip);
-
-			if(isset($_SERVER['HTTP_REFERER']))
-			{
-			 	$referers = $_SERVER['HTTP_REFERER'];
-				$referer_array = explode('/',$referers);
-				$refer_from =$referer_array['3'];
-			}
-			if(!isset($referers)&& $refer_from!="multiaccountwarn")
-			$this->redirect('/multiaccountwarn');
-
-		}
-
-		$this->set('username_error', ___('username must be at least 3 letters and/or numbers, no spaces', true));
-		if(!empty($this->data['User'])) {
-			$this->data['User']['username']  = str_replace(" ", "", $this->data['User']['username']);
-			if(strlen($this->data['User']['username']) < 3 || strlen($this->data['User']['username']) > 19) {
-				$this->User->invalidate('username');
-				$errors['name_length'] = ___('Username must be between 3 to 20 characters', true);
-			}
-
-			if (eregi("^[a-z0-9_\-]+$", $this->data['User']['username'])) {
-			} else {
-				$this->User->invalidate('username');
-				$errors['name_characters'] = ___('Username cannot contain special characters or spaces except _ and -', true);
-			}
-
-			if($this->User->findByUsername($this->data['User']['username'])) {
-				$this->User->invalidate('username');
-				$errors['name_taken'] = ___('Username is taken', true);
-			}
-
-			if (isInappropriate($this->data['User']['username'])) {
-				$this->User->invalidate('username');
-				$errors['name_invalid'] = ___('Invalid username', true);
-			}
-
-			if(strlen($this->data['User']['password']) < 6) {
-				$this->User->invalidate('password');
-				$errors['password_length'] =  ___('Password too short', true);
-			}
-
-			if (strcmp($this->data['User']['password'], $this->data['User']['password2']) == 0) {
-			} else {
-				$this->User->invalidate('password2');
-				$errors['password_confirmation'] = ___("Passwords don't match", true);
-			}
-			$email = $this->data['User']['email'];
-			$byear = $this->data['User']['byear'];
-			$bmonth = $this->data['User']['bmonth'];
-			$gender = $this->data['User']['gender'];
-			$country = $this->data['User']['country'];
-
-			if ($byear == 0 || $bmonth == 0) {
-				$this->User->invalidate('bmonth');
-				$this->User->invalidate('byear');
-				$errors['birthdate_invalid'] =  ___('You must enter a valid birthdate', true);
-			}
-
-			if (eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $email)) {
-			} else {
-				$this->User->invalidate('email');
-				$errors['email_invalid'] =  ___('Invalid email address', true);
-			}
-
-			if ($gender == "") {
-				$this->User->invalidate('gender');
-				$errors['gender_empty'] =  ___('You must select your gender', true);
-			}
-
-			if ($country == "") {
-				$this->User->invalidate('country');
-				$errors['country_empty'] =  ___('You must select your country', true);
-			}
-
-			$age = date("Y") - $this->data['User']['byear'];
+		if(!empty($this->params['form'])) {
+			//validation
+			if(empty($this->params['form']['username']))
+			$this->User->invalidate('username',__('Please enter a username.',true));
+			if(empty($this->params['form']['password']))
+			$this->User->invalidate('password',__('Please provide a password.',true));
+			if(empty($this->params['form']['email']))
+			$this->User->invalidate('email',__('Please enter a valid email address.',true));
 
 			if ($this->User->validates($this->data['User']) && !$ipNotAllowed) {
-				$this->data['User']['password'] = sha1($this->data['User']['password']);
-
+				$this->data['User']['username'] = $this->params['form']['username'];
+				$this->data['User']['password'] = sha1($this->params['form']['password']);
+				$this->data['User']['email'] = $this->params['form']['email'];
 				//These fields don't have default values and should be validated
 				$this->data['User']['villager'] = 0;
 				$this->data['User']['firstname'] = 'test';
@@ -250,7 +155,7 @@ class UsersController extends AppController {
 				 //at some point we though of having a urlname
 				 $this->data['User']['urlname'] =  $this->data['User']['username'];
 				 $this->data['User']['ipaddress'] = $client_ip_long;
-
+				 //print_r($this->data);exit;
 					if ($this->User->save($this->data['User'], false)) {
 						$this->data['User']['id'] = $this->User->getLastInsertID();
 						$this->setFlash(___("Welcome!", true) . " <a href='/pages/download'>" . ___('Download Scratch', true) . "</a>", FLASH_NOTICE_KEY);
@@ -259,23 +164,34 @@ class UsersController extends AppController {
 						$this->Session->write('User', $user_record['User']);
 						$this->redirect('/users/'.$this->data['User']['username']);
 					} else {
-						$this->data['User']['password'] = '';
-						$this->data['User']['password2'] = '';
+
 						$this->setFlash(___("could not save information, try again", true), FLASH_ERROR_KEY);
 					}
-
-
-			} else {
-				if($this->data['User']['email'] == 'rather-not-say@scratchr.org') {
-					$this->data['User']['email'] = '';
-				}
-				$this->validateErrors($this->User);
 			}
+
+		}//$this->params['form']
+
+
+		if(isset($_SERVER['HTTP_REFERER'])) {
+            $referers = $_SERVER['HTTP_REFERER'];
+            $referer_array = explode('/',$referers);
+            $refer_from =$referer_array['3'];
+        }
+
+        if(!isset($referers) && $refer_from != "multiaccountwarn") {
+            $this->redirect('/multiaccountwarn');
+        }
+
+		$user_records = $this->User->findAll("User.ipaddress = INET_ATON('$client_ip')",'username','created DESC');
+		$user_list = array();
+		foreach($user_records as $users) {
+			$username = $users['User']['username'];
+			$user_list[$username] = $username;
 		}
+
+        $this->set('user_list', $user_list);
 		$this->set('ipNotAllowed',$ipNotAllowed);
 		$this->set_signup_variables();
-		$this->set('errors', $errors);
-		$this->render('signup');
 	}
 	
 	function checkUserName(){
