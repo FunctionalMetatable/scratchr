@@ -285,7 +285,8 @@ font-family:"Trebuchet MS","Luxi Sans",Verdana,Arial,Helvetica,sans-serif;
 
 .error-message{
 color:#FF0000;
-margin-left:140px;
+margin-left:200px;
+width:300px;
 }
 
 /* -------------
@@ -487,6 +488,7 @@ a, a:active, a:hover, a:visited{ outline:0; }
 .loginbox {width:188px; float:left; margin-left:45px;}
 .error {position: absolute; margin-left:10px; display:inline; margin-top:1px; background-color:#FFFFFF; background:none;}
 input.error {position: relative; margin-left:0px;}
+select.error {position: relative; margin-left:0px;}
 
 .gender1 {height:68px;}
 .forgot {width:150px; position:absolute; }

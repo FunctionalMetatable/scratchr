@@ -134,19 +134,30 @@ class UsersController extends AppController {
 			$this->setFlash(___("We are unable to identify your IP address. Please  <a href='/contact/us/'>contact us</a>.", true));
 		}
 
-		if(!empty($this->params['form'])) {
+		if(!empty($this->data)) {
 			//validation
-			if(empty($this->params['form']['username']))
-			$this->User->invalidate('username',__('Please enter a username.',true));
-			if(empty($this->params['form']['password']))
-			$this->User->invalidate('password',__('Please provide a password.',true));
-			if(empty($this->params['form']['email']))
-			$this->User->invalidate('email',__('Please enter a valid email address.',true));
-
+			if(empty($this->data['User']['username']))
+			$this->User->invalidate('username',___('Please enter a username.',true));
+			if(empty($this->data['User']['password']))
+			$this->User->invalidate('password',___('Please provide a password.',true));
+			if(empty($this->data['User']['email']))
+			$this->User->invalidate('email',__('Please enter  email address.',true));
+			if(!empty($this->data['User']['email'])){
+				if (eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $this->data['User']['email'])) 			{
+				}
+				else{
+				$this->User->invalidate('email',___('Please enter a valid email address.',true));
+				}
+			}
+			if($this->data['User']['gender'] == " ")
+			$this->User->invalidate('gender',___('Please select your proper gender.',true));
+			if($this->data['User']['country'] == " ")
+			$this->User->invalidate('country',___('Please select your country.',true));
+			
 			if ($this->User->validates($this->data['User']) && !$ipNotAllowed) {
-				$this->data['User']['username'] = $this->params['form']['username'];
-				$this->data['User']['password'] = sha1($this->params['form']['password']);
-				$this->data['User']['email'] = $this->params['form']['email'];
+				$this->data['User']['username'] = $this->data['User']['username'];
+				$this->data['User']['password'] = sha1($this->data['User']['password']);
+				$this->data['User']['email'] = $this->data['User']['email'];
 				//These fields don't have default values and should be validated
 				$this->data['User']['villager'] = 0;
 				$this->data['User']['firstname'] = 'test';
@@ -169,7 +180,7 @@ class UsersController extends AppController {
 					}
 			}
 
-		}//$this->params['form']
+		}//$this->data
 
 
 		if(isset($_SERVER['HTTP_REFERER'])) {
@@ -198,7 +209,14 @@ class UsersController extends AppController {
 	Configure::write('debug',0);
 	$this->layout=null;
 	if($_POST['username']){
+			$_POST['username']  = str_replace(" ", "", $_POST['username']);
 			if(strlen($_POST['username']) > 2){
+				if (eregi("^[a-z0-9_\-]+$", $_POST['username'])){
+				}
+				else{
+				echo '<div class="usererr"><img src="../img/wrong.png" />&nbsp;Username cannot contain special characters or spaces except _ and - </div>';
+				exit;
+				}
 				if (isInappropriate($_POST['username'])) {
 					echo '<div class="usererr"><img src="../img/wrong.png" />&nbsp;Invalid Username </div>';
 					exit;

@@ -216,7 +216,9 @@ function getAge() {
 	elmonth = document.getElementById('UserBmonth');
 	var byear = elyear.options[elyear.selectedIndex].value; 
 	var bmonth = elmonth.options[elmonth.selectedIndex].value; 
-
+	if(byear == 0 || bmonth == 0){
+		return true;
+	}
 	var age = curryear - byear;
 	if (age == 13) {
 		if (bmonth >= currmonth) {
