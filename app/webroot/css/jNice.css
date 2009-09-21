@@ -478,6 +478,7 @@ a, a:active, a:hover, a:visited{ outline:0; }
 
 .loginf {width:188px; float:right; margin-left:30px; background: #F0F0F0; padding:0 15px 5px 15px; border:1px solid #CCCCCC; margin-top:16px;}
 *+html .loginf {padding:0 15px 0px 15px;} /* IE7 */
+*+html .loginbox {width:188px; float:left; margin-left:0px;} /* IE7 */
 * html .loginf {width:188px;  margin:0px 0 0 15px; background: #F0F0F0; padding:0 15px 5px 15px; border:1px solid #CCCCCC; } /* IE6 */
 * html .loginbox {float:none; margin-top:200px; width:188px; height:500px; position:absolute;margin-left:0px;}
 
@@ -492,7 +493,7 @@ select.error {position: relative; margin-left:0px;}
 
 .gender1 {height:68px;}
 .forgot {width:150px; position:absolute; }
-*+html .forgot {width:200px; position:absolute; top:155px;}
+*+html .forgot {width:200px; position:absolute; top:270px;}
 *+html .loginf h3 {margin:15px 0 -10px 0;}
 
 
