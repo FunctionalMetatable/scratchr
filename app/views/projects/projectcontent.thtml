@@ -403,8 +403,15 @@ else {
 	<!-- ::: Begin notes ::: -->
     <div id="notes">
       <h3><?php ___('Project Notes');?> </h3>
+	  <?php
+	   $notes = $project['Project']['description'];
+       $pattern = '/[\n\r]{4,}/';
+       $rep = '<br><br><br>';
+	   $notes = preg_replace($pattern, $rep, $notes);
+	  ?>
       <p id="pdesc">
-      <?php echo nl2br($util->linkify($project['Project']['description'])); ?>
+	
+      <?php echo nl2br($util->linkify($notes)); ?>
       </p>
       <?php if ($isMine || $isAdmin) echo $ajax->editor("pdesc", "/projects/$urlname/$pid/describe", Array("callback"=>"return 'description=' + encodeURIComponent(value);", "rows" => 4, "cols" => 20)); ?>
     </div>
