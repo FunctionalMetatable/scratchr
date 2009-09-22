@@ -170,5 +170,70 @@ Class User extends AppModel
 			array('id' => $id)
 		);
 	}
+	
+	function addUserEvent($table_name, $user_id, $ipadddress, $channel = null, $pid = null, $gid = null, $comment_id = null, $tag_id = null, $upload_pid = null, $action = null){
+	if($user_id){
+		$sql ="INSERT IGNORE INTO " .$table_name." ( `id`, `user_id`, `ipaddress`";
+		if(!empty($channel)){
+			$sql .= " ,`channel`" ;	
+		}
+		
+		if(!empty($pid) && empty($comment_id) && empty($tag_id)){
+			$sql .= " ,`project_id`" ;	
+		}
+		if($pid && $comment_id){
+			$sql .= " ,`project_id`, `pcomment_id`" ;	
+		}
+		
+		if($pid && $tag_id){
+			$sql .= " ,`project_id`, `tag_id`" ;	
+		}
+		
+		if(!empty($gid) && empty($comment_id)){
+			$sql .= " ,`gallery_id`" ;	
+		}
+		
+		if($gid && $comment_id){
+			$sql .= " ,`gallery_id`, `gcomment_id`" ;	
+		}
+		
+		if($upload_pid && $action){
+			$sql .= " ,`project_id`, `action`" ;	
+		}
+		
+		$sql .=") VALUES ( NULL, $user_id, INET_ATON('$ipadddress')";
+		if(!empty($channel)){
+			$channel = "'".$channel."'";
+			$sql .= " ,$channel" ;	
+		}
+		
+		if(!empty($pid) && empty($comment_id) && empty($tag_id)){
+			$sql .= " ,$pid"; 	
+		}
+		
+		if($pid && $comment_id){
+			$sql .= " ,$pid, $comment_id"; 	
+		}
+		
+		if($pid && $tag_id){
+			$sql .= " ,$pid, $tag_id"; 	
+		}
+		
+		if(!empty($gid) && empty($comment_id)){
+			$sql .= " ,$gid"; 	
+		}
+		if($gid && $comment_id){
+			$sql .= " ,$gid, $comment_id"; 	
+		}
+		if($upload_pid && $action){
+			$action =  "'".$action."'";
+			$sql .= " ,$upload_pid, $action" ;	
+		}
+		
+		$sql .= ")";
+		//echo $sql;exit;
+		$this->query($sql);
+	  }
+	}//function
 }
 ?>

@@ -349,8 +349,12 @@ class ProjectsController extends AppController {
 					} else {
 						$new_pcomment = array('Pcomment'=>array('id' => null, 'project_id'=>$pid, 'user_id'=>$commenter_id, 'content'=>$comment, 'comment_visibility' => $vis, 'reply_to_id'=>$comment_id, 'created' => date("Y-m-d G:i:s") ));
 						$this->Pcomment->save($new_pcomment);
-                        $new_pcomment['Pcomment']['id'] = $this->Pcomment->getInsertID();
+						$pcomment_id = $this->Pcomment->getInsertID();
+                        $new_pcomment['Pcomment']['id'] = $pcomment_id;
                         $this->Pcomment->deleteCommentsFromMemcache($pid);
+						//add user event
+						$client_ip = $this->RequestHandler->getClientIP();
+						$this->User->addUserEvent('project_user_comments', $user_id, $client_ip, null, $pid, null, $pcomment_id);
 					}
 				}
             }
@@ -1393,7 +1397,7 @@ class ProjectsController extends AppController {
 		$project_id = $pid;
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
-		
+		$client_ip = $this->RequestHandler->getClientIP();
 		$isLocked = $this->check_locked($pid);
 		
         if (empty($project) || $project['User']['urlname'] !== $urlname) exit();
@@ -1436,6 +1440,7 @@ class ProjectsController extends AppController {
 							// create project_tag record
 							$this->ProjectTag->save(array('ProjectTag'=>array('id' => null, 'project_id' => $pid, 'tag_id' => $tag_record['Tag']['id'], 'user_id' => $tagger)));
 							$this->ProjectTag->id=null;
+							$this->User->addUserEvent('project_user_tags', $user_id, $client_ip, null, $pid, null, null, $tag_record['Tag']['id']);
 						}
 					}
 				else
@@ -1446,6 +1451,7 @@ class ProjectsController extends AppController {
 						$tag_id = $this->Tag->getLastInsertID();
 						$this->ProjectTag->save(array('ProjectTag'=>array('id' => null, 'project_id'=>$pid, 'tag_id'=>$tag_id, 'user_id' => $tagger)));
 						$this->ProjectTag->id=null;
+						$this->User->addUserEvent('project_user_tags', $user_id, $client_ip, null, $pid, null, null, $tag_id);
 					}
 				}
 			}
@@ -1717,12 +1723,12 @@ class ProjectsController extends AppController {
             //TODO: make only one call to find in this clause
             //TODO: set global associations to bind model at load-time
             //TODO: get $uid from hidden field when possible / from directory lookup
-
+			$client_ip = $this->RequestHandler->getClientIP();
             $isLogged   = $this->isLoggedIn();
             $logged_id  = $this->getLoggedInUserID();
             $project_id = $pid;
             $current_user_id = $logged_id;
-
+			$this->User->addUserEvent('view_projects', $logged_id, $client_ip, null, $pid);
             //TODO: Cache username
             //forgive missmatch in upper/lower case of urlname
             $usrobj = $this->User->find(array('urlname' =>  $urlname), 'username');
@@ -1779,8 +1785,6 @@ class ProjectsController extends AppController {
 			$project_id = $project['Project']['id'];
 			$owner_id = $project['User']['id'];
 			$isMine = $logged_id == $owner_id;
-
-            $client_ip = $this->RequestHandler->getClientIP();
 
             $this->ViewStat->recursive = -1;
             $visits_from_this_ip =

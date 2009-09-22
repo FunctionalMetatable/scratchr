@@ -15,7 +15,10 @@ Class HomeController extends AppController {
 		$this->set('content_status', $this->getContentStatus());
     }
 	
-    function index() {
+    function index() { 
+		$user_id = $this->getLoggedInUserID();
+		$client_ip = $this->RequestHandler->getClientIP();
+		$this->User->addUserEvent('view_frontpages', $user_id, $client_ip);
         $this->Project->mc_connect();
         $project_ids = array();
        	$user_ids =array();
