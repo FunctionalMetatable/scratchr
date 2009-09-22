@@ -479,8 +479,8 @@ a, a:active, a:hover, a:visited{ outline:0; }
 .loginf {width:188px; float:right; margin-left:30px; background: #F0F0F0; padding:0 15px 5px 15px; border:1px solid #CCCCCC; margin-top:16px;}
 *+html .loginf {padding:0 15px 0px 15px;} /* IE7 */
 *+html .loginbox {width:188px; float:left; margin-left:0px;} /* IE7 */
-* html .loginf {width:188px;  margin:0px 0 0 15px; background: #F0F0F0; padding:0 15px 5px 15px; border:1px solid #CCCCCC; } /* IE6 */
-* html .loginbox {float:none; margin-top:200px; width:188px; height:500px; position:absolute;margin-left:0px;}
+* html .loginf {width:175px;  margin:0px 0 0 15px; float:right;background: #F0F0F0; padding:0 15px 5px 15px; border:1px solid #CCCCCC; } /* IE6 */
+* html .loginbox {float:none; margin-top:0px; width:175px; height:500px; position:absolute;margin-left:0px;}
 
 
 #passwordlogin {width:111px;}
