@@ -487,7 +487,7 @@ a, a:active, a:hover, a:visited{ outline:0; }
 #country {width:196px;}
 
 .loginbox {width:188px; float:left; margin-left:45px;}
-.error {position: absolute; margin-left:10px; display:inline; margin-top:1px; background-color:#FFFFFF; background:none;}
+.error {position: absolute; margin-left:10px; display:inline; margin-top:1px; background-color:#FFFFFF; background:none; }
 input.error {position: relative; margin-left:0px;}
 select.error {position: relative; margin-left:0px;}
 
