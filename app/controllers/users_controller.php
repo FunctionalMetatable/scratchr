@@ -211,7 +211,7 @@ class UsersController extends AppController {
 	if($_POST['username']){
 			$_POST['username']  = str_replace(" ", "", $_POST['username']);
 			if(strlen($_POST['username']) > 2){
-				if (eregi("^[a-z0-9_\-]+$", $_POST['username'])){
+				if (eregi("^[a-zA-Z0-9]+[_\-]*[a-zA-Z0-9]+$", $_POST['username'])){
 				}
 				else{
 				echo '<div class="usererr"><img src="../img/wrong.png" />&nbsp;Username cannot contain special characters or spaces except _ and - </div>';
