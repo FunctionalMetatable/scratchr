@@ -179,6 +179,7 @@ define ('TOPLEVEL_URL', 'http://scratch.mit.edu');
 define ('ABOUT_SCRATCH_URL', 'info.scratch.mit.edu/About_Scratch');
 define ('SUPPORT_URL', 'info.scratch.mit.edu/Support');
 define ('FRONPAGE_FAQ_URL', 'http://info.scratch.mit.edu/Support/FAQ/Scratch_Website_FAQ/How_the_Scratch_front_page_works');
+define ('FAQ_QUESTIONS_URL', 'http://info.scratch.mit.edu/Support/FAQ/Scratch_Website_FAQ#Questions');
 define ('TOS_URL', 'http://info.scratch.mit.edu/Terms_of_use');
 define ('RESOURCE_URL', 'static/');
 define ('HREF_RESOURCE_PROJECT', 'static/projects/');
