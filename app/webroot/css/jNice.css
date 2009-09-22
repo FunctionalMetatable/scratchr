@@ -470,7 +470,6 @@ td
 h3 {font-size:1em; margin-bottom:5px;}
 a { color:#003399; }
 a:active, a:hover {color:#C16202;}
-a:visited {color:#800080;}
 a, a:active, a:hover, a:visited{ outline:0; }
 
 .registered {margin-left:-20p3x;}
@@ -508,7 +507,7 @@ select.error {position: relative; margin-left:0px;}
 * html #UserBmonth {width:95px;}
 * html #UserM {float:left; width:95px;}
 
-#usernameResult {margin-left:202px; margin-top:1px; font-weight:bold; position:absolute;}
+#usernameResult {margin-left:10px; margin-top:1px; font-weight:bold; position:absolute;}
 
 /* IE7 */
 *+html #usernameResult {margin-left:5px; margin-top:5px; font-weight:bold; position:absolute; overflow:hidden;}
@@ -525,7 +524,7 @@ select.error {position: relative; margin-left:0px;}
 
 .policy {margin-top:10px; margin-left:180px; color:#CC0000; font-weight:bold; font-size:15px; width:300px;}
 .emailerr {margin-top:0px; margin-left:2px; color:#CC0000; font-weight:bold; font-size:1.13em; width:300px;}
-.usererr {margin-top:0px; margin-left:2px; color:#CC0000; font-weight:bold; font-size:1.13em; width:300px;}
+.usererr {margin-top:0px; margin-left:2px; color:#CC0000; font-weight:bold; font-size:15px; width:300px;}
 .usercorr {color:#009966;}
 .passerr {margin-top:0px; margin-left:2px; color:#CC0000; font-weight:bold; font-size:15px; width:300px;}
 .passcorr {color:#009966;}

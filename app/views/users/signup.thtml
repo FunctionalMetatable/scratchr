@@ -1,90 +1,85 @@
 <!-- |||||| Begin main content area ||||||| -->
 <?php echo $html->css('jNice')?>
 
-
-
 <script type="text/javascript">
  jQuery.noConflict();
 
-    function onSelectChange(){
-		var age = getAge();
-        var output = "Email Address:";
-        if(age <= 12){
-            output = "Parent Email:";
-        }
-        jQuery("#email_age").html(output);
+function onSelectChange() {
+    var age = getAge();
+    var output = "Email Address:";
+    if(age <= 12){
+        output = "Parent Email:";
     }
+    jQuery("#email_age").html(output);
+}
 
 jQuery(document).ready(function($) {
+    $('#username').keypress(function() {
+        $('#usernameResult').hide()
+    });
 
-$('#username').keypress(function(){
-		$('#usernameResult').hide()
-	});
+    $('#usernameLoading').hide();
 
-	$('#usernameLoading').hide();
-	$('#username').blur(function(){
-	  $('#usernameLoading').show();
-      $.post("<?php echo $html->url(array('controller'=>'users','action'=>'checkUserName')); ?>", {
-        username: $('#username').val()
-      }, function(response){
-        $('#usernameResult').fadeOut();
-        setTimeout("finishAjax('usernameResult', '"+escape(response)+"')", 400);
-      });
-    	return false;
+    $('#username').blur(function(){
+	  if($('#username').val().length < 4) {
+          return;
+      }
+      $('#usernameLoading').show();
+      $.post(
+            "<?php echo $html->url(array('controller'=>'users','action'=>'checkUserName')); ?>",
+            { username: $('#username').val() },
+            function(response) {
+                $('#usernameResult').fadeOut();
+                setTimeout("finishAjax('usernameResult', '"+escape(response)+"')", 400);
+            });
+            return false;
 	});
 });
 
 function finishAjax(id, response) {
   jQuery('#usernameLoading').hide();
   jQuery('#'+id).html(unescape(response));
-  jQuery('#'+id).fadeIn();
+  jQuery('#'+id).css('display', 'inline');
 } //finishAjax
 
 jQuery(document).ready(function($) {
-		$('#warning').hide();
-		$('#email_under_13').hide();
-		$('#password').keypress(function(){
-			$('#result').html(passwordStrength($('#password').val(),$('#username').val()))
-		});
+    $('#warning').hide();
+    $('#email_under_13').hide();
+    $('#password').keypress(function(){
+        $('#result').html(passwordStrength($('#password').val(),$('#username').val()))
+    });
 		
-		jQuery.validator.addMethod(
-			"selectNone",
-			function(value, element) {
-				if (element.value == "")
-				{
-					return false;
-				}
-				else return true;
-			},
-			"Please select an option."
-		);
+    jQuery.validator.addMethod(
+        "selectNone",
+        function(value, element) {
+            if (element.value == "") {
+                return false;
+            }
+            else return true;
+        },
+        "Please select an option."
+    );
 		
-		jQuery.validator.addMethod(
-			"selectDOB",
-			function(value, element) {
-				var age = getAge();
-				if (age === true)
-				{ 
-					
-						return false;
-						
-				}
-				
-				else return true;
-			},
-			"Please select an option."
-		);
-
-
-
-
+    jQuery.validator.addMethod(
+        "selectDOB",
+        function(value, element) {
+            var age = getAge();
+            if (age === true) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        },
+        "Please select an option."
+    );
 
 	// validate signup form on keyup and submit
 	jQuery("#signupForm").validate({
 		rules: {
 			"data[User][username]": {
 				required: true,
-				minlength: 3
+				minlength: 4
 			},
 			"data[User][password]": {
 				required: true,
@@ -109,11 +104,11 @@ jQuery(document).ready(function($) {
 		messages: {
 			"data[User][username]": {
 				required: "<div class='usererr'><img src='../img/wrong.png' />&nbsp;Please enter a username</div>",
-				minlength: "<div class='usererr'><img src='../img/wrong.png' />&nbsp;Too short. Minimum 3 characters</div>"
+				minlength: "<div class='usererr'><img src='../img/wrong.png' />&nbsp;Too short. Minimum 4 characters</div>"
 			},
 			"data[User][password]": {
 				required: "",
-/*<img src='../img/wrong.png' />&nbsp;<p style='margin-top:-19px; margin-left:17px; color:#CC0000; font-weight:bold;' id='pass1'>Please provide a password</p>*/
+                /*<img src='../img/wrong.png' />&nbsp;<p style='margin-top:-19px; margin-left:17px; color:#CC0000; font-weight:bold;' id='pass1'>Please provide a password</p>*/
 				minlength: ""
 			},
 			"data[User][byear]": "<div class='usererr'><img src='../img/wrong.png' />&nbsp;Please select a valid birthdate</div>",
@@ -124,7 +119,6 @@ jQuery(document).ready(function($) {
 		}
 	});
 
-
 	jQuery("#username").blur(function() {
 		jQuery("#warning1").toggle();
 	});
@@ -133,14 +127,11 @@ jQuery(document).ready(function($) {
 	});
 
 });
-
-
-
-
 </script>
+
 <div class="fullcontent" id="SignUpForm">
 <div style="margin-top:10px;">
-	<div style="width:480px; pading-bottom:0px; margin-bottom:20px; float:left; font-size:0.88em; margin-left:0px;">
+	<div style="width:480px; padding-bottom:0px; margin-bottom:20px; float:left; font-size:0.88em; margin-left:0px;">
 			<?php echo $html->image('cat2.png',array('width'=>77,'height'=>'82','align'=>'left','style'=>'margin-right:10px; margin-top:30px'))?>
 
 				<h2 style="margin-left:85px;">Welcome to Scratch!</h2>
@@ -158,9 +149,8 @@ On the Scratch website, you can share projects and ideas with other members of t
 <?php }else{?>
 <?php if($user_list):?>
 <!-- Login -->
-
-
 <div class="loginbox">
+
 <div class="loginf">
 <h3 align="center">Is this your account?</h3>
 
@@ -198,16 +188,16 @@ On the Scratch website, you can share projects and ideas with other members of t
 </div>
 
 <div class="rules">
-<a href="http://info.scratch.mit.edu/Support/FAQ/Scratch_Website_FAQ#Questions" >Rules for multiple accounts</a>
+<a href="<?= FAQ_QUESTIONS_URL ?>" >Rules for multiple accounts</a>
 </div>
 
-</div>
-</div>
-<?php endif;?>
 </div>
 <!-- Login END -->
+<?php endif;?>
+</div>
 
-<form  method="post" action="signup" class="jNice" id="signupForm" style="float:left; width:790px; margin-left:100px;">
+
+<form  method="post" action="signup" class="jNice" id="signupForm" style="float:left; width:790px; margin-left:58px;">
 <table width="410" border="0" cellpadding="3" cellspacing="0">
   <tr>
     <td width="100" align="right"><label for="username">Username:</label></td>
@@ -251,7 +241,7 @@ On the Scratch website, you can share projects and ideas with other members of t
          </dl>
 <tr id="warning2" style="height:11px; display:none;">
             <td></td>
-            <td><div style="border:1px solid #CCCCCC; background-color:F0F0F0; width:175px; margin-left:5px; padding-left:3px; padding-top:5px; color:#CC0000; height:25px; font-size:0.91em; font-weight:bold; text-align:center;">DOB will remain private</div></td>
+            <td><div style="border:1px solid #CCCCCC; background-color:#F0F0F0; width:175px; margin-left:5px; padding-left:3px; padding-top:5px; color:#CC0000; height:25px; font-size:0.91em; font-weight:bold; text-align:center;">DOB will remain private</div></td>
          </tr>
        </div>
     </td>
@@ -281,7 +271,7 @@ On the Scratch website, you can share projects and ideas with other members of t
     <td align="right"><input type="checkbox" id="agree" name="agree" validate="required:true" /></td>
     <td><label for="agree"><div style="width:310px; font-size:0.75em;">The Scratch website is a diverse community with people of different
 ages, cultures, and backgrounds. Please be respectful and follow the
-guidelines in the <a href="">Terms of Use</a>. Click checkbox to agree.</div>
+guidelines in the <a href="<?= TOS_URL ?>">Terms of Use</a>. Click checkbox to agree.</div>
     </label>
         </td>
   </tr>
