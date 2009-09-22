@@ -140,7 +140,7 @@ jQuery(document).ready(function($) {
 </script>
 <div class="fullcontent" id="SignUpForm">
 <div style="margin-top:10px;">
-	<div style="width:480px; pading-bottom:0px; margin-bottom:20px; float:left; font-size:0.88em; margin-left:10px;">
+	<div style="width:480px; pading-bottom:0px; margin-bottom:20px; float:left; font-size:0.88em; margin-left:0px;">
 			<?php echo $html->image('cat2.png',array('width'=>77,'height'=>'82','align'=>'left','style'=>'margin-right:10px; margin-top:30px'))?>
 
 				<h2 style="margin-left:85px;">Welcome to Scratch!</h2>
@@ -158,49 +158,7 @@ On the Scratch website, you can share projects and ideas with other members of t
 <?php }else{?>
 <?php if($user_list):?>
 <!-- Login -->
- <!--[if lte IE 6]>
-<div class="loginbox">
-<div class="loginf">
-<h3>Is this your account?</h3>
 
-<form action="<?php echo $html->url('/login')?>" method="post" class="jNice" id="loginbox">
-<table width="190" border="0" cellpadding="3" cellspacing="0">
-    <tr>
-    	<td><label for="usernamelogin">Username:</label></td>
-                    <td id="allusers2">
-					<?php
-						echo $form->select('User/username', $user_list, null, array('id' => 'allusers','name'=>'User'), null, false);
-					?>
-
-                    </td>
-    </tr>
-	<tr>
-    	<td><label for="passwordlogin">Password:</label></td>
-	    <td id="allpass2"><input type="password" name="Pass" id="passwordlogin" maxlength="32" /></td>
-    </tr>
-
-     <tr>
-     <td style="margin:0px 5px 0px 0; text-align:left;""><div class="forgot"><a href="" >Forgot your password?</a></div></td>
-     <td>
-                    <ul style="margin: 0px; padding: 0px; float: right;" class="NFButton">
-                    <li style="margin: 0px; left: 0px;">   	<img height="26" width="6" src="../img/button-left.gif"/></li>
-                    <li style="margin: 0px; left: 0px;">
-                    <input type="submit"  class="NFButton" name="submit2" id="submit2" value="Login"/></li>
-                    <li style="list-style-image: none; list-style-position: outside; list-style-type: none;">
-                    <img height="26" width="6" src="../img/button-right.gif"/></li>
-                    </ul>
-
-     </td>
-	</tr>
-</table>
-</form>
-</div>
-<div class="rules">
-<a href="http://info.scratch.mit.edu/Support/FAQ/Scratch_Website_FAQ#Questions" >Rules for multiple accounts</a>
-</div>
-</div>
-</div>
- <![endif]-->
 
 <div class="loginbox">
 <div class="loginf">
