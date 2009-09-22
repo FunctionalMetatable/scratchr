@@ -638,13 +638,14 @@ class ProjectsController extends AppController {
             else {
                 if($this->Project->saveField('description', $newdesc)) {
                     $this->set('linkify', true);
+					$this->set('modified',true);
                     $this->set('pdesc', $newdesc);
                     $this->render('projectdescription_ajax','ajax');
                     return;
                 }
             }
         }
-        
+        $this->set('modified',false);
         $this->set('pdesc',$project['Project']['description']);
         $this->render('projectdescription_ajax','ajax');
         return;
