@@ -729,13 +729,13 @@ Class GalleriesController extends AppController {
 			$this->hide_gcomment($comment_id, "delbyadmin");
 		}
 
-        $this->__deleteChildrenComments($gallery_id, $comment_id, true);
+        $this->__deleteChildrenComments($gallery_id, $comment_id, 'delbyparentcomment', true);
 
         $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 		exit;
 	}
 	
-	function __deleteChildrenComments($gallery_id, $comment_id, $has_children = false) {
+	function __deleteChildrenComments($gallery_id, $comment_id, $visibility = 'delbyparentcomment', $has_children = false) {
 		$children_comments = $this->Gcomment->findAll(
                 'Gcomment.gallery_id = ' . $gallery_id . ' AND Gcomment.reply_to = '. $comment_id,
                 'id, comment_visibility');
@@ -744,9 +744,9 @@ Class GalleriesController extends AppController {
                 //only if the child is not deleted before
                 if($comment['Gcomment']['comment_visibility'] == 'visible') {
                     $this->Gcomment->id = $comment['Gcomment']['id'];
-                    $this->Gcomment->saveField('comment_visibility', 'delbyparentcomment');
+                    $this->Gcomment->saveField('comment_visibility', $visibility);
                     if($has_children) {
-                        $this->__deleteChildrenComments($gallery_id, $comment['Gcomment']['id']);
+                        $this->__deleteChildrenComments($gallery_id, $comment['Gcomment']['id'], $visibility);
                     }
                     $this->Gcomment->id = false;
                 }
@@ -2187,6 +2187,7 @@ Class GalleriesController extends AppController {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->hide_gcomment($comment_id, "delbyusr");
+				$this->__deleteChildrenComments($gallery_id, $comment_id, 'parentcommentcensored', true);
                 $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 				$subject= "Comment deleted because it was flagged by creator of '$gallery_name'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $gallery_creater_url";
@@ -2200,6 +2201,7 @@ Class GalleriesController extends AppController {
                         $comment_id =$gcontent['Gcomment']['id'];
                         $content = $gcontent['Gcomment']['content'];
                         $this->hide_gcomment($comment_id, "delbyadmin");
+						$this->__deleteChildrenComments($gallery_id, $gcontent['Gcomment']['id'], 'parentcommentcensored', true);
                         $this->Gcomment->deleteCommentsFromMemcache($gcontent['Gcomment']['gallery_id']);
                         $subject= "Comment deleted because it was flagged by an admin";
                         $msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
@@ -2213,6 +2215,7 @@ Class GalleriesController extends AppController {
 				else
 				{
 					$this->hide_gcomment($comment_id, "delbyadmin");
+					$this->__deleteChildrenComments($gallery_id, $comment_id, 'parentcommentcensored', true);
                     $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 					$subject= "Comment deleted because it was flagged by an admin";
 					$msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
@@ -2236,6 +2239,7 @@ Class GalleriesController extends AppController {
 				$flaggernames = implode(', ', $flaggernames);
 				
 				$this->hide_gcomment($comment_id, "censbycomm");
+				$this->__deleteChildrenComments($gallery_id, $comment_id, 'parentcommentcensored', true);
                 $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 					
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on the gallery: '$gallery_name'";

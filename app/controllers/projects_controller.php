@@ -470,6 +470,7 @@ class ProjectsController extends AppController {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->Pcomment->saveField("comment_visibility", "delbyusr") ;
+				$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
                 $this->Pcomment->deleteCommentsFromMemcache($pid);
 				$subject= "Comment deleted because it was flagged by creator of '$pname'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $project_creater_url";
@@ -484,7 +485,8 @@ class ProjectsController extends AppController {
 						$this->Pcomment->id =$pcontent['Pcomment']['id'] ;
 						$content = $pcontent['Pcomment']['content'];
 						$this->Pcomment->query("update pcomments set comment_visibility = 'delbyadmin' where id=".$pcontent['Pcomment']['id'] );
-                        $this->Pcomment->deleteCommentsFromMemcache($pcontent['Pcomment']['project_id']);
+                        $this->__deleteChildrenComments($pid, $pcontent['Pcomment']['id'], 'parentcommentcensored', true);
+						$this->Pcomment->deleteCommentsFromMemcache($pcontent['Pcomment']['project_id']);
                         $subject= "Comment deleted because it was flagged by an admin";
                         $msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
                         $this->notify('pcomment_removed', $creator_id,
@@ -496,6 +498,7 @@ class ProjectsController extends AppController {
 				else
 				{
                     $this->Pcomment->saveField("comment_visibility", "delbyadmin") ;
+					$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
                     $this->Pcomment->deleteCommentsFromMemcache($pid);
                     $subject= "Comment deleted because it was flagged by an admin";
                     $msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
@@ -517,6 +520,7 @@ class ProjectsController extends AppController {
                 $flaggernames = implode(', ', $flaggernames);
 				
 				$this->Pcomment->saveField("comment_visibility", "censbycomm") ;
+				$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
                 $this->Pcomment->deleteCommentsFromMemcache($pid);
 				
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on '$pname'";
@@ -2768,13 +2772,13 @@ class ProjectsController extends AppController {
 		}
 		
 		if($this->Pcomment->del($comment_id)) {
-            $this->__deleteChildrenComments($project_id, $comment_id, true);
+            $this->__deleteChildrenComments($project_id, $comment_id, 'delbyparentcomment', true);
 		}
         $this->Pcomment->deleteCommentsFromMemcache($project_id);
 		exit;
 	}
 	
-	function __deleteChildrenComments($project_id, $comment_id, $has_children = false) {
+	function __deleteChildrenComments($project_id, $comment_id, $visibility = 'delbyparentcomment', $has_children = false) {
 		$children_comments = $this->Pcomment->findAll(
             'Pcomment.project_id = '. $project_id . ' AND Pcomment.reply_to = '. $comment_id,
             'id, comment_visibility');
@@ -2784,9 +2788,9 @@ class ProjectsController extends AppController {
                 //only if the child is not deleted before
                 if($comment['Pcomment']['comment_visibility'] == 'visible') {
                     $this->Pcomment->id = $comment['Pcomment']['id'];
-                    $this->Pcomment->saveField('comment_visibility','delbyparentcomment');
+                    $this->Pcomment->saveField('comment_visibility',$visibility);
                     if($has_children) {
-                        $this->__deleteChildrenComments($project_id, $comment['Pcomment']['id']);
+                        $this->__deleteChildrenComments($project_id, $comment['Pcomment']['id'], $visibility);
                     }
                     $this->Pcomment->id = false;
                 }
