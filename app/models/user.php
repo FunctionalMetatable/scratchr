@@ -106,7 +106,98 @@ Class User extends AppModel
                     'order' => $order,
 					'limit' => $limit))));
     }
+	/*Binding model for list user events*/
 	
+	function bindViewFrontPage($conditions = null, $order = null, $limit=null) {
+        $this->bindModel(array(
+        'hasOne' => array(
+            'ViewFrontpage' =>
+                array('className' => 'ViewFrontpage',
+                    'conditions' => $conditions,
+                    'order' => 'ViewFrontpage.timestamp DESC',
+					'limit' => 1))));
+    }
+	
+	function bindViewGallery($conditions = null, $order = null, $limit=null) {
+        $this->bindModel(array(
+        'hasOne' => array(
+            'ViewGallery' =>
+                array('className' => 'ViewGallery',
+                    'conditions' => $conditions,
+                    'order' => 'ViewGallery.timestamp DESC',
+					'limit' => 1))));
+    }
+	
+	function bindGalleryUserComment($conditions = null, $order = null, $limit=null) {
+        $this->bindModel(array(
+        'hasOne' => array(
+            'GalleryUserComment' =>
+                array('className' => 'GalleryUserComment',
+                    'conditions' => $conditions,
+                    'order' => 'GalleryUserComment.timestamp DESC',
+					'limit' => 1))));
+    }
+	
+	function bindViewChannel($conditions = null, $order = null, $limit=null) {
+        $this->bindModel(array(
+        'hasOne' => array(
+            'ViewChannel' =>
+                array('className' => 'ViewChannel',
+                    'conditions' => $conditions,
+                    'order' => 'ViewChannel.timestamp DESC',
+					'limit' => 1))));
+    }
+	
+	function bindViewProject($conditions = null, $order = null, $limit=null) {
+        $this->bindModel(array(
+        'hasOne' => array(
+            'ViewProject' =>
+                array('className' => 'ViewProject',
+					'conditions' => $conditions,
+                    'order' => 'ViewProject.timestamp DESC',
+					'limit' => 1))));
+    }
+	
+	function bindProjectUserComment($conditions = null, $order = null, $limit=null) {
+        $this->bindModel(array(
+        'hasOne' => array(
+            'ProjectUserComment' =>
+                array('className' => 'ProjectUserComment',
+                    'conditions' => $conditions,
+                    'order' => 'ProjectUserComment.timestamp DESC',
+					'limit' => 1))));
+    }
+	
+	function bindProjectUserTag($conditions = null, $order = null, $limit=null) {
+        $this->bindModel(array(
+        'hasOne' => array(
+            'ProjectUserTag' =>
+                array('className' => 'ProjectUserTag',
+                    'conditions' => $conditions,
+                    'order' => 'ProjectUserTag.timestamp DESC',
+					'limit' => 1))));
+    }
+	
+	function bindUploadProject($conditions = null, $order = null, $limit=null) {
+        $this->bindModel(array(
+        'hasOne' => array(
+            'UploadProject' =>
+                array('className' => 'UploadProject',
+                    'conditions' => $conditions,
+                    'order' => 'UploadProject.timestamp DESC',
+					'limit' => 1))));
+    }
+	
+	function bindUserStat($conditions = null, $order = null, $limit=null) {
+        $this->bindModel(array(
+        'hasOne' => array(
+            'UserStat' =>
+                array('className' => 'UserStat'
+                    ))));
+    }
+	
+	
+	/*END Binding model for list user events*/
 	function bindMyThemes($conditions=null) {
         $this->bindModel(array(
         'hasAndBelongsToMany' => array(
