@@ -1724,6 +1724,7 @@ class ProjectsController extends AppController {
      */
     function view($urlname=null, $pid=null) {
         if ($pid && $urlname) {
+            $pid = intval($pid);
             //TODO: make only one call to find in this clause
             //TODO: set global associations to bind model at load-time
             //TODO: get $uid from hidden field when possible / from directory lookup
