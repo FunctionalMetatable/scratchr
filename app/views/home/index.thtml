@@ -370,7 +370,7 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
 		$user_link = "/users/".$username;
 		$username = (strlen($username) > 10)? substr($username,0,10) . "&#0133;" : $username;
 		?>
-		<li><a href="<?php e($user_link)?>"><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"></a><?php echo $util->username($username, $user_role);?></li>
+		<li><a href="<?php e($user_link)?>"><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php e($username)?></a><?php if($user_role === 'admin'):?><a  class='asterisk' href="<?= INFO_URL?>/Admins">*</a><?php endif;?></li>
         <?php endforeach;?>
       </ul>
     </div>
