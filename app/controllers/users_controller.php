@@ -1195,7 +1195,7 @@ class UsersController extends AppController {
 			//$this->deleteMovedFile($buddy_icon_file_orig);
             $this->User->id = $user_id;
 			$this->User->saveField('timestamp', date( 'Y-m-d H:i:s'));
-			$this->setFlash(___("Picture uploaded.", true), FLASH_NOTICE_KEY);
+			$this->Session->setFlash(___("Picture uploaded.", true), 'success',array('action'=>'updatepic'));
 		}
 		$this->redirect('/users/'.$user['User']['urlname']);
 	}
@@ -1234,20 +1234,20 @@ class UsersController extends AppController {
 		if ($pos === false) {} 
 		else 
 		{ 
-			$this->setFlash(___("Password should not contain username.", true), FLASH_NOTICE_KEY);
+			$this->Session->setFlash(___("Password should not contain username.", true),'error',array('action'=>'updatepass'));
 			$this->redirect('/users/'.$user['User']['urlname']);
 		}
 		if ($this->isAdmin() || (!empty($user_record['User']['password']) &&  $user_record['User']['password'] == sha1($submit_pwd_old))) {
 		   if ($submit_pwd_new == $submit_pwd_confirm) {
 		      $this->User->saveField("password",sha1($submit_pwd_new));
-		      $this->setFlash(___("Updated password.", true), FLASH_NOTICE_KEY);
+		      $this->Session->setFlash(___("Password has been Updated.", true),'success',array('action'=>'updatepass'));
 		   }
 		   else {
-		   	$this->setFlash(___("New password and confirm password do not match.", true), FLASH_NOTICE_KEY);
+		   	$this->Session->setFlash(___("New password and confirm password do not match.", true),'error',array('action'=>'updatepass'));
 		   }
 		}
 		else {
-		     $this->setFlash(___("Wrong old password.", true), FLASH_NOTICE_KEY);
+		     $this->Session->setFlash(___("Wrong old password.", true),'error',array('action'=>'updatepass'));
 		}
 		
 		$this->redirect('/users/'.$user['User']['urlname']);
@@ -1283,6 +1283,19 @@ class UsersController extends AppController {
 		}
 
 		$submit_email_new = $this->params['form']['new_email'];
+		if(empty($submit_email_new)){
+			$this->Session->setFlash(___("Enter Your Email Id.", true),'error', array('action'=>'updateemail'));
+		 	$this->redirect('/users/'.$user['User']['urlname']);
+		}
+		if(!empty($submit_email_new)){
+				if (eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $submit_email_new))
+				{
+				}
+				else{
+				$this->Session->setFlash(___("Enter a valid Email Id.", true),'error', array('action'=>'updateemail'));
+				 $this->redirect('/users/'.$user['User']['urlname']);
+				}
+			}
                 $user_record = $this->User->findById($user_id);
 				 if ($this->isAdmin() || (!empty($user_record['User']['password']) &&  $user_record['User']['password'] == sha1($submit_pwd))) {
 		     	 $this->User->saveField("email",$submit_email_new);
@@ -1295,10 +1308,10 @@ class UsersController extends AppController {
 						 $this->ForumUser->saveField("email",$submit_email_new);
 					 }
 				  }	 
-	              $this->setFlash(___("Updated email.", true), FLASH_NOTICE_KEY);
+	              $this->Session->setFlash(___("Email has been Updated.", true), 'success', array('action'=>'updateemail'));
                 }
                 else { 
-                     $this->setFlash(___("Your password is incorrect.", true), FLASH_NOTICE_KEY);
+                     $this->Session->setFlash(___("Your password is incorrect.", true),'error', array('action'=>'updateemail'));
                 }
 
                 $this->redirect('/users/'.$user['User']['urlname']);
