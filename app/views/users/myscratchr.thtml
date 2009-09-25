@@ -174,20 +174,49 @@ function langList($countries) {
 		<?php if ($isMe || $isAdmin):?>
 			<p>
             <a onclick="document.getElementById('user_icon').style.display='block'; return false;" href="#"><?php ___('change picture'); ?></a>
-			<?php if($isAdmin):?>
-			<br /><a href="<?php echo $html->url('/notifications/view/')?><?php echo $user_id?>"><?php ___('Past Notiifications:');?></a>&nbsp;<?php echo $notification_count?>
-			<br /><br /><a href="<?php echo $html->url('/administration/viewuser/')?><?php echo $user_id?>"><span class='button2'><?php ___('View Details')?></span></a>
-			
-			<?php endif;?>
+			<?php 
+				if ($session->check('Message.flash')):
+						$message = $session->read('Message.flash');
+							if($message['layout'] === 'success' && $message['params']['action'] === 'updatepic'){
+							$session->flash();
+							}
+				endif;
+				?>
             <div class="std_error"><?php if(isset($upload_error)) echo '<br/>'.$upload_error; ?> </div>
             </p>
 			<form id="user_icon" style="display:none" action="<?php echo $html->url('/users/updatepic/')?><?php e($user['id'])?>" method="post" enctype='multipart/form-data'>
 			<input name='user_icon' size="10" type='file'/>
 			<input value="<?php ___('update'); ?>" type="submit" class="button">
 			</form>
-				<br />
+				
+			<?php if($isAdmin):?>
+			<a href="<?php echo $html->url('/notifications/view/')?><?php echo $user_id?>"><?php ___('Past Notiifications:');?></a>&nbsp;<?php echo $notification_count?>
+			<br /><br /><a href="<?php echo $html->url('/administration/viewuser/')?><?php echo $user_id?>"><span class='button2'><?php ___('View Details')?></span></a>
+			<br /><br />
+			<?php endif;?>
 			<a onclick="document.getElementById('user_pass').style.display='block'; return false;" href="#"><?php ___('change password'); ?></a>
+			<?php 
+				if ($session->check('Message.flash')):
+						$message = $session->read('Message.flash');
+							if($message['layout'] === 'success' && $message['params']['action'] === 'updatepass'){
+							
+							$session->flash();
+							}
+				endif;
+				?>	
 			<form id="user_pass" style="display:none" action="<?php echo $html->url('/users/updatepass/')?><?php e($user['id'])?>" method="post" enctype='multipart/form-data'>
+			<?php 
+				if ($session->check('Message.flash')):
+						$message = $session->read('Message.flash');
+						if($message['params']['action'] === 'updatepass'){
+							$session->flash();
+							if($message['layout'] === 'error'){
+							echo "<script type='text/javascript'>document.getElementById('user_pass').style.display='block'</script>";
+							}
+						}
+				endif;
+				
+				?>
 			<?php if(!$isAdmin) :?>
 			<?php ___('Old Password'); ?>: <input name='password_old' size="18" type='password'/>
 			<br>
@@ -199,14 +228,35 @@ function langList($countries) {
 			<input value="<?php ___('update'); ?>" type="submit" class="button">
 			</form>
 			
-			<br>			
+			<br>
+					
 			<a onclick="document.getElementById('user_email').style.display='block'; return false;" href="#"><?php ___('change email'); ?></a>
+			<?php 
+				if ($session->check('Message.flash')):
+						$message = $session->read('Message.flash');
+							if($message['layout'] === 'success' && $message['params']['action'] === 'updateemail'){
+							$session->flash();
+							}
+				endif;
+				?>	
 			<form id="user_email" style="display:none" action="<?php echo $html->url('/users/updateemail/')?><?php e($user['id'])?>" method="post" enctype='multipart/form-data'>
+			<?php 
+				if ($session->check('Message.flash')):
+						$message = $session->read('Message.flash');
+						//if($message['params']['action'] === 'updatepass'){
+							$session->flash();
+							if($message['layout'] === 'error'){
+							echo "<script type='text/javascript'>document.getElementById('user_email').style.display='block'</script>";
+							}
+						//}
+				endif;
+				
+				?>
 			<?php if(!$isAdmin) :?>
 			<?php ___('Your Password'); ?>: <input name='current_password' size="18" type='password'/>
 			<br>
 			<?php endif;?>
-			<?php ___('New Email'); ?>: <input name='new_email' size="18" type='email'/>
+			<?php ___('New Email'); ?>:<br /><input name='new_email' size="18" type='email'/>
 			<br>
 			<input value="<?php ___('update'); ?>" type="submit" class="button">
 			</form>

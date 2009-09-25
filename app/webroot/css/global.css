@@ -2199,6 +2199,28 @@ border:none;
 color:#FF0000;
 }
 
+.error {
+text-align:left;
+background:none!important;
+border:none;
+font-size: small;
+color: #CC3300;
+font-weight:bold;
+width:200px!important;
+padding:0px!important;
+margin-top:5px;
+}
+
+.success {
+text-align:left;
+background:none!important;
+border:none;
+color:#336633;
+width:200px!important;
+padding:0px!important;
+font-weight:bold;
+}
+
 /******Thank you mechanism *****/
 #thankDiv {
 	float: right;
