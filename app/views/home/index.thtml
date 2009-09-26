@@ -368,9 +368,9 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
 		$user_id = $visitor['User']['id'];
 		$buddy_icon = getBuddyIconBySize($user_id, 'mini', $content_status, $visitor['User']['timestamp']);
 		$user_link = "/users/".$username;
-		$username = (strlen($username) > 10)? substr($username,0,10) . "&#0133;" : $username;
+		$username = (strlen($username) > 23)? substr($username,0,23) . "&#0133;" : $username;
 		?>
-		<li><a href="<?php e($user_link)?>"><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php e($username)?></a><?php if($user_role === 'admin'):?><a  class='asterisk' href="<?= INFO_URL?>/Admins">*</a><?php endif;?></li>
+		<li><a href="<?php e($user_link)?>"><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php e($username);?></a></li>
         <?php endforeach;?>
       </ul>
     </div>
