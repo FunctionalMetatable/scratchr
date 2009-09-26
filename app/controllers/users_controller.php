@@ -1206,48 +1206,53 @@ class UsersController extends AppController {
 	function updatepass($user_id) {
 		//$this->exitOnInvalidArgCount(1);
 		$session_user_id = $this->getLoggedInUserID();
-		if (!$session_user_id)
+		if (!$session_user_id) {
 		   $this->__err();
-
-		if (empty($this->params["form"]))
-		   $this->__err();
-
-		$this->User->id=$user_id;
+        }
+        
+		if (empty($this->params["form"])) {
+            $this->__err();
+        }
+        
+		$this->User->id = $user_id;
 		$user = $this->User->read();
 
-		if (empty($user)){
-		   $this->cakeError('error404');
+		if (empty($user)) {
+            $this->cakeError('error404');
 		}
-		if (!$this->isAdmin())
-		   if ($user['User']['id'] !== $session_user_id)
-		      $this->__err;
-
-		if(!$this->isAdmin())
-		{
+		if (!$this->isAdmin() && $user['User']['id'] !== $session_user_id) {
+		    $this->__err;
+        }
+        
+		if(!$this->isAdmin()) {
 			$submit_pwd_old = $this->params['form']['password_old'];
 		}
 		$submit_pwd_new = $this->params['form']['password_new'];
 		$submit_pwd_confirm = $this->params['form']['password_confirm'];
+
+        if(strlen($submit_pwd_new) < 4) {
+            $this->Session->setFlash(___("Passwords must be minimum of 4 characters.", true), 'error', array('action'=>'updatepass'));
+            $this->redirect('/users/'.$user['User']['urlname']);
+        }
+        
 		$user_record = $this->User->findById($user_id);
 		
 		$pos = strpos(strtolower($submit_pwd_new), strtolower($user_record['User']['username'])); 
-		if ($pos === false) {} 
-		else 
-		{ 
+		if ($pos !== false) {
 			$this->Session->setFlash(___("Password should not contain username.", true),'error',array('action'=>'updatepass'));
 			$this->redirect('/users/'.$user['User']['urlname']);
 		}
 		if ($this->isAdmin() || (!empty($user_record['User']['password']) &&  $user_record['User']['password'] == sha1($submit_pwd_old))) {
 		   if ($submit_pwd_new == $submit_pwd_confirm) {
-		      $this->User->saveField("password",sha1($submit_pwd_new));
-		      $this->Session->setFlash(___("Password has been Updated.", true),'success',array('action'=>'updatepass'));
+                $this->User->saveField("password",sha1($submit_pwd_new));
+                $this->Session->setFlash(___("Password has been Updated.", true), 'success', array('action'=>'updatepass'));
 		   }
 		   else {
-		   	$this->Session->setFlash(___("New password and confirm password do not match.", true),'error',array('action'=>'updatepass'));
+                $this->Session->setFlash(___("New password and confirm password do not match.", true), 'error', array('action'=>'updatepass'));
 		   }
 		}
 		else {
-		     $this->Session->setFlash(___("Wrong old password.", true),'error',array('action'=>'updatepass'));
+		     $this->Session->setFlash(___("Wrong old password.", true), 'error', array('action'=>'updatepass'));
 		}
 		
 		$this->redirect('/users/'.$user['User']['urlname']);
