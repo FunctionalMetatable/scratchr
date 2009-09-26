@@ -1,144 +1,30 @@
+<?php $head->register_js("FormManager.js") ?>
+
+<?php $head->register_jsblock("
+  window.onload = function() {
+    setupDependencies('downform'); //name of form(s). Seperate each with a comma (ie: 'weboptions', 'myotherform' )
+	document.getElementsByTagName('input')[2].focus();
+	changeEmailVis();
+  };
+
+	function comparePassword() {
+		var password = ".'$F'."('UserPassword');
+		var password2 = ".'$F'."('UserPassword2');
+	}
+	function formAct(bool) {
+		if(bool == undefined) bool = true;
+		if(bool == true) $('signups').style.visibility='visible';
+		else $('signups').style.visibility='hidden';
+	}
+
+ ");
+?>
+
+
 <!-- |||||| Begin main content area ||||||| -->
-<?php echo $html->css('jNice')?>
-
-<script type="text/javascript">
- jQuery.noConflict();
-
-function onSelectChange() {
-    var age = getAge();
-    var output = "Email Address:";
-    if(age <= 12){
-        output = "Parent Email:";
-    }
-    jQuery("#email_age").html(output);
-}
-
-jQuery(document).ready(function($) {
-    $('#username').keypress(function() {
-        $('#usernameResult').hide()
-    });
-
-    $('#usernameLoading').hide();
-
-    $('#username').blur(function(){
-	  if($('#username').val().length < 4) {
-          return;
-      }
-      $('#usernameLoading').show();
-      $.post(
-            "<?php echo $html->url(array('controller'=>'users','action'=>'checkUserName')); ?>",
-            { username: $('#username').val() },
-            function(response) {
-                $('#usernameResult').fadeOut();
-                setTimeout("finishAjax('usernameResult', '"+escape(response)+"')", 400);
-            });
-            return false;
-	});
-});
-
-function finishAjax(id, response) {
-  jQuery('#usernameLoading').hide();
-  jQuery('#'+id).html(unescape(response));
-  jQuery('#'+id).css('display', 'inline');
-} //finishAjax
-
-jQuery(document).ready(function($) {
-    $('#warning').hide();
-    $('#email_under_13').hide();
-    $('#password').keypress(function(){
-        $('#result').html(passwordStrength($('#password').val(),$('#username').val()))
-    });
-		
-    jQuery.validator.addMethod(
-        "selectNone",
-        function(value, element) {
-            if (element.value == "") {
-                return false;
-            }
-            else return true;
-        },
-        "Please select an option."
-    );
-		
-    jQuery.validator.addMethod(
-        "selectDOB",
-        function(value, element) {
-            var age = getAge();
-            if (age === true) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        },
-        "Please select an option."
-    );
-
-	// validate signup form on keyup and submit
-	jQuery("#signupForm").validate({
-		rules: {
-			"data[User][username]": {
-				required: true,
-				minlength: 4
-			},
-			"data[User][password]": {
-				required: true,
-				minlength: 6
-			},
-			"data[User][byear]": {
-				selectDOB: true
-			},
-			
-			"data[User][country]": {
-				selectNone: true
-			},
-			"data[User][gender]": {
-				selectNone: true
-			},
-			"data[User][email]": {
-				required: true,
-				email: true
-			},
-			agree: "required"
-		},
-		messages: {
-			"data[User][username]": {
-				required: "<div class='usererr'><img src='../img/wrong.png' />&nbsp;Please enter a username</div>",
-				minlength: "<div class='usererr'><img src='../img/wrong.png' />&nbsp;Too short. Minimum 4 characters</div>"
-			},
-			"data[User][password]": {
-				required: "",
-                /*<img src='../img/wrong.png' />&nbsp;<p style='margin-top:-19px; margin-left:17px; color:#CC0000; font-weight:bold;' id='pass1'>Please provide a password</p>*/
-				minlength: ""
-			},
-			"data[User][byear]": "<div class='usererr'><img src='../img/wrong.png' />&nbsp;Please select a valid birthdate</div>",
-			"data[User][gender]": "<div class='usererr'><img src='../img/wrong.png' />&nbsp;Please select your gender</div>",
-			"data[User][country]": "<div class='usererr'><img src='../img/wrong.png' />&nbsp;Please select your country</div>",
-			"data[User][email]": "<div class='emailerr'><img src='../img/wrong.png' />&nbsp;Please enter a valid email address</div>",
-			agree: "<div class='policy'><img src='../img/wrong.png' />&nbsp;Please accept our policy</div>"
-		}
-	});
-
-	jQuery("#username").blur(function() {
-		jQuery("#warning1").toggle();
-	});
-	jQuery("#username").focus(function() {
-		jQuery("#warning1").toggle();
-	});
-
-});
-</script>
-
 <div class="fullcontent" id="SignUpForm">
-<div style="margin-top:10px;">
-	<div style="width:480px; padding-bottom:0px; margin-bottom:20px; float:left; font-size:0.88em; margin-left:0px;">
-			<?php echo $html->image('cat2.png',array('width'=>77,'height'=>'82','align'=>'left','style'=>'margin-right:10px; margin-top:30px'))?>
-
-				<h2 style="margin-left:85px;">Welcome to Scratch!</h2>
-On the Scratch website, you can share projects and ideas with other members of the Scratch community. When you sign up for an account, you can upload your projects, download and remix projects by others, and share ideas in comments and forums.
-	</div>
-	<?php if($ipNotAllowed){//if ip address is 127.0.0.1?>
-	<?php
+<?php if($ipNotAllowed){//if ip address is 127.0.0.1?>
+<?php
 			echo "<div id='error_message' >";
 				if ($session->check('Message.flash')):
 						$session->flash();
@@ -147,154 +33,196 @@ On the Scratch website, you can share projects and ideas with other members of t
 
 ?>
 <?php }else{?>
-<?php if($user_list):?>
-<!-- Login -->
-<div class="loginbox">
+  <form action="signup" method="POST" accept-charset="UTF-8" name="downform" id="downform">
+  <div class="signup_header">
+	<h3><?php ___('Create an account'); ?></h3>
 
-<div class="loginf">
-<h3 align="center">Is this your account?</h3>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][username]"><?php ___('Username'); ?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php
+				echo $form->text
+					('User/username', array('type'=>'text', 'size'=>'30',
+					'onkeyup'=> '',
+					'onblur'=> '', 'maxlength' => '20'));
+			?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "name"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "name"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][password]"><?php ___('Password'); ?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php
+				echo $form->text('User/password',
+					array('type'=>'password', 'size'=>'30',
+					'onkeyup'=>''));
+			?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "password"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "password"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][password2]"><?php ___('Confirm Password'); ?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php
+				echo $form->text('User/password2',
+					array('type'=>'password', 'size'=>'30',
+					'onkeyup'=>''));
+			?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "confirmation"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "confirmation"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][bmonth]"><?php ___('Birth date'); ?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php $currmonth = date('m') + 0; echo "<input name='currmonth' type='hidden' "  . " value='$currmonth'>"; ?>
+			<?php echo "<input name='curryear' type='hidden' "  . " value='" . date('Y') . "'>"; ?>
 
-<form action="<?php echo $html->url('/login')?>" method="post" class="jNice" id="loginbox">
-<table width="200" border="0" cellpadding="3" cellspacing="0">
-    <tr>
-    	<td><label for="usernamelogin">Username:</label></td>
-                    <td id="allusers2">
-					<?php
-						echo $form->select('User/username', $user_list, null, array('id' => 'allusers','name'=>'User'), null, false);
-					?>
-
-                    </td>
-    </tr>
-	<tr>
-    	<td><label for="passwordlogin">Password:</label></td>
-	    <td><input type="password" name="Pass" id="passwordlogin" maxlength="32" /></td>
-    </tr>
-
-     <tr>
-     <td style="margin:0px 5px 0px 0; text-align:left;"><div class="forgot"><a href="/password_recovery" >Forgot your password?</a></div></td>
-     <td>
-                    <ul style="margin: 0px; padding: 0px; float: right;" class="NFButton">
-                    <li style="margin: 0px; left: 0px;"><?php echo $html->image('button-left.gif',array('height'=>'26','width'=>'6'))?>   	</li>
-                    <li style="margin: 0px; left: 0px;">
-                    <input type="submit"  class="NFButton" name="submit2" id="submit2" value="Login"/></li>
-                    <li style="list-style-image: none; list-style-position: outside; list-style-type: none;">
-                    <?php echo $html->image('button-right.gif',array('height'=>'26','width'=>'6'))?></li>
-                    </ul>
-
-     </td>
-	</tr>
-</table>
-</form>
-</div>
-
-<div class="rules">
-<a href="<?= FAQ_QUESTIONS_URL ?>" >Rules for multiple accounts</a>
-</div>
-
-</div>
-<!-- Login END -->
-<?php endif;?>
-</div>
-
-
-<form  method="post" action="signup" class="jNice" id="signupForm" style="float:left; width:790px; margin-left:58px;">
-<table width="410" border="0" cellpadding="3" cellspacing="0">
-  <tr>
-    <td width="100" align="right"><label for="username">Username:</label></td>
-    <td><?php echo $form->input('User.username',array('label'=>'','id'=>'username','size'=>32,'maxlength'=>128))?>
-	<!--<input type="text" name="data[User][username]" id="username" size="32" maxlength="128" />-->
-    <span style="display: none; margin-left:5px; position:absolute;" id="usernameLoading">
-	<?php echo $html->image('indicator.gif', array('alt'=>'Ajax Indicator'))?>
-	</span><span id="usernameResult"></span>
-    </td>
-  </tr>
-  <tr id="warning1" style="height:11px; display:none;">
-  	<td></td>
-    <td><div style="border:1px solid #AA0000; width:175px; margin-left:5px; padding-left:3px; padding-top:5px; color:#CC0000; height:25px; font-size:0.91em; font-weight:bold; text-align:center;">Do not use your full name</div></td>
-  </tr>
-
-  <tr>
-    <td align="right"><label for="password">Password:</label></td>
-    <td><?php echo $form->input('User.password',array('label'=>'','id'=>'password','size'=>32,'maxlength'=>32))?>
-	<!--<input type="password" name="data[User][password]" id="password" size="32" maxlength="32" />--><span id='result'></span>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><label for="dob">Date of Birth:</label></td>
-    <td>
-        <div class="dobstyle">
-		<dl>
-        	<dt id="UserM">
 			<?php
 				echo $form->select('User/bmonth',
-					$months, null, array('onChange'=>'onSelectChange();', 'id'=>'UserBmonth'), null, false) ;
+					$months, null, array('onChange'=>'changeEmailVis(); return false;'), null, false) ;
 			?>
-
-            </dt>
-            <dd style="float:left;">
 			<?php
 				echo $form->select('User/byear',
-					$years, null, array('onChange' => 'onSelectChange();','id'=>'UserByear'), null, false);
+					$years, null, array('onChange' => 'changeEmailVis(); return false;'), null, false);
 			?>
-
-            </dd>
-         </dl>
-<tr id="warning2" style="height:11px; display:none;">
-            <td></td>
-            <td><div style="border:1px solid #CCCCCC; background-color:#F0F0F0; width:175px; margin-left:5px; padding-left:3px; padding-top:5px; color:#CC0000; height:25px; font-size:0.91em; font-weight:bold; text-align:center;">DOB will remain private</div></td>
-         </tr>
-       </div>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><label for="data[User][gender]"><?php ___('Gender');?></label></td>
-    <td id="gender2">
-	<?php echo $form->select('User/gender', $genders, null, null, null, false ); ?>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><label for="data[User][country]"><?php ___('Country');?></label></td>
-    <td>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "birthdate"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "birthdate"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label id="email_default" for="data[User][email]"><?php ___('Email');?>*</label>
+			<label id="email_under_13" for="data[User][email]" style='display:none'><?php ___('Email of Parent or Guardian');?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php echo $form->text('User/email', array('type'=>'text', 'size'=>'40')); ?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "email"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "email"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][gender]"><?php ___('Gender');?>*</label>
+		</div>
+		<div class="signup_input">
+			<?php echo $form->select('User/gender', $genders, null, null, null, false ); ?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "gender"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "gender"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][country]"><?php ___('Country');?>*</label>
+		</div>
+		<div class="signup_input">
 			<?php
-				echo $form->select('User/country', $countries, null, array('id' => 'country'), null, false);
+				echo $form->select('User/country', $countries, null, array('id' => 'UserCountry'), null, false);
 			?>
-
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><label for="email" id="email_age">Email Address:</label></td>
-    <td><?php echo $form->input('User.email',array('label'=>'','id'=>'email','size'=>32,'maxlength'=>128))?>
-	<!--<input type="text" name="data[User][email]" id="email" size="32" maxlength="128" />-->
-        </td>
-  </tr>
-  <tr>
-    <td align="right"><input type="checkbox" id="agree" name="agree" validate="required:true" /></td>
-    <td><label for="agree"><div style="width:310px; font-size:0.75em;">The Scratch website is a diverse community with people of different
-ages, cultures, and backgrounds. Please be respectful and follow the
-guidelines in the <a href="<?= TOS_URL ?>">Terms of Use</a>. Click checkbox to agree.</div>
-    </label>
-        </td>
-  </tr>
-
-  <tr>
-    <td align="right"></td>
-    <td>
-                    <ul style="margin: 0px; padding: 0px; float: left;" class="NFButton">
-                    <li style="margin: 0px; left: 0px;"><?php echo $html->image('button-left.gif',array('height'=>'26','width'=>'6'))?>  </li>
-                    <li style="margin: 0px; left: 0px;">
-                    <input type="submit" class="NFButton" name="submit" id="Submit" value="Submit" id="Submit"/></li>
-                    <li style="list-style-image: none; list-style-position: outside; list-style-type: none;">
-					<?php echo $html->image('button-right.gif',array('height'=>'26','width'=>'6'))?>
-                   </li>
-                    </ul>
-        </td>
-  </tr>
-  <tr>
-    <td align="right">&nbsp;</td>
-    <td>&nbsp;</td>
-  </tr>
-</table>
-</form>
-	<?php }?>
-</div><!--fullcontent-->
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_error', Array("mode" => "country"));
+	?>
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "country"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][state]"><?php ___('State/Province');?></label>
+		</div>
+		<div class="signup_input">
+			<?php
+				echo $form->select('User/state', $states, null,
+					array("class" =>"DEPENDS ON UserCountry BEING United States"), null, false);
+				echo $form->text('User/province', array('type'=>'text', "size" =>"30",
+					"class" => "CONFLICTS WITH UserCountry BEING United States"));
+			?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "state"));
+	?>
+  </div>
+  <div class="signup_row">
+		<div class="signup_label">
+			<label for="data[User][city]"><?php ___('City');?></label>
+		</div>
+		<div class="signup_input">
+			<?php
+				echo $form->text('User/city', array('type'=>'text', 'size'=>'30'));
+			?>
+		</div>
+  </div>
+  <div class="signup_error_wrapper">
+	<?php
+		echo $this->renderElement('users/signup_info', Array("mode" => "city"));
+	?>
+  </div>
+  <div class="signup_row">
+	<div class="signup_label">
+	</div>
+	<div class="signup_input">
+		<input type="submit" class="button" value="<?php ___('sign up'); ?>" id="signups">
+	</div>
+  </div>
+  </form>
+  <?php }?>
+</div>
 <!-- ////// End main content ////// -->
+<style>
+#error_message .message{
+width:100% !important;
+}
+</style>
+
