@@ -3094,10 +3094,11 @@ Class GalleriesController extends AppController {
 					$temp_project['GalleryProject']['ignored'] = false;
 				}
 			}
-			//Ribbon feature
+			//Ribbon on feature project
+			$image_name ='';
 			if(SHOW_RIBBON ==1){
 				$featured_time = $this->FeaturedProject->field('timestamp',array('project_id'=>$current_project['Project']['id']));
-				$image_name ='';
+				
 				if(!empty($featured_time)){
 					$text =$this->convertDate($featured_time);
 					$image_name =$this->ribbonImageName($featured_time );

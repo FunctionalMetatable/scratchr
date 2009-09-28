@@ -87,9 +87,18 @@ Class ChannelController extends AppController {
                 array('hasMany' => array('GalleryProject'))
             );
             $final_projects = $this->FeaturedProject->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, 2, $this->getContentStatus());
-			$final_projects = $this->set_ribbon($final_projects);
+			if(SHOW_RIBBON ==1){
+			$i = 0;
+				foreach($final_projects as $project){
+					$current_project_id = $project['Project']['id'];
+					$project['Project']['ribbon_name'] = $this->set_ribbon($current_project_id);
+					$final_projects[$i++] = $project; 
+				}
+				
+			}	
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
+		
         $this->set('data', $final_projects);
         $this->Project->mc_close();
 
@@ -99,18 +108,6 @@ Class ChannelController extends AppController {
 		$this->render('explorer');
     }
 
-	function set_ribbon($final_projects) {
-		$i =0;
-		foreach($final_projects as $final_project){
-				$text =$this->convertDate($final_project['FeaturedProject']['timestamp']);
-			 	$image_name =$this->ribbonImageName($final_project['FeaturedProject']['timestamp']);
-			 	$this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='40x30',125,125);
-				$final_project['Project']['ribbon_name'] = $image_name ;
-				$temp[$i++] = $final_project;
-				
-		}
-		return $temp;
-	}
     function topviewed() {
         $this->layout = 'scratchr_explorer';
         $this->pageTitle = ___("Scratch | Top viewed projects", true);
@@ -284,7 +281,16 @@ Class ChannelController extends AppController {
        
         $projects = $this->Project->getMyFriendsLatestProjects(
                                     $user_id, $page, $limit);
-        $this->set('data', $projects);
+        if(SHOW_RIBBON ==1){
+			$i = 0;
+				foreach($projects as $project){
+					$current_project_id = $project['Project']['id'];
+					$project['Project']['ribbon_name'] = $this->set_ribbon($current_project_id);
+					$projects[$i++] = $project; 
+				}
+				
+			}	
+		$this->set('data', $projects);
         
         $this->set('rss_link', $this->feed_links['friends_latest']);
         $this->set('heading', "friends' latest projects");
@@ -301,6 +307,7 @@ Class ChannelController extends AppController {
 		foreach ($projects as $project) {
 			$temp_project = $project;
 			$current_user_id = $temp_project['Project']['user_id'];
+			$current_project_id = $temp_project['Project']['id'];
 			$temp_project['Project']['ignored'] = false;
 			if ($isLogged) {
 				$ignore_count = $this->IgnoredUser->findCount("IgnoredUser.blocker_id = $user_id AND IgnoredUser.user_id = $current_user_id");
@@ -310,11 +317,26 @@ Class ChannelController extends AppController {
 					$temp_project['Project']['ignored'] = false;
 				}
 			}
+			if(SHOW_RIBBON ==1){
+			$temp_project['Project']['ribbon_name'] = $this->set_ribbon($current_project_id);
+			
+			}
 			array_push($return_projects, $temp_project);
 		}
 		return $return_projects;
 	}
 
+   function set_ribbon($current_project_id) {
+		$feature_projects = $this->FeaturedProject->find("FeaturedProject.project_id = $current_project_id");
+		$image_name = '';
+				if ($feature_projects) {
+					$text =$this->convertDate($feature_projects['FeaturedProject']['timestamp']);
+			 		$image_name =$this->ribbonImageName($feature_projects['FeaturedProject']['timestamp']);
+			 		$this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='40x30',125,125);
+					}
+					return $image_name;
+	}
+   
     function _getProjectsCount($condition, $key, $ttl, $recursion = -1) {
         $this->Project->mc_connect();
         $model_class = $this->modelClass;
