@@ -97,7 +97,7 @@
 				} else {
 					echo "<div id='$pid' class='gallerythumb clearme'>\n";
 					?>
-						<?php if(SHOW_RIBBON ==1 && $ribbon_name):?>
+						<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
 						<a href="<?php echo $html->url($project_url)?>">
 						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'channel_ribbon'));?>
 						</a>
