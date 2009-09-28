@@ -411,7 +411,10 @@ else {
 	  ?>
       <p id="pdesc">
 	
-      <?php echo nl2br($util->linkify($notes)); ?>
+      <?php 
+	  $notes = preg_replace('[\n\r]', '<br>', $notes);
+	  echo $util->linkify($notes); 
+	  ?>
       </p>
       <?php if ($isMine || $isAdmin) echo $ajax->editor("pdesc", "/projects/$urlname/$pid/describe", Array("callback"=>"return 'description=' + encodeURIComponent(value);", "rows" => 4, "cols" => 20)); ?>
     </div>
