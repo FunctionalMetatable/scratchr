@@ -116,13 +116,19 @@ Class HomeController extends AppController {
 		
 		if($this->isLoggedIn()) {
             $myfriendsprojects = $this->Project->getMyFriendsLatest3Projects($this->getLoggedInUserID());
-            $this->set('friendsprojects', $myfriendsprojects);
+            if(SHOW_RIBBON ==1){
+				$myfriendsprojects = $this->set_ribbon($myfriendsprojects);
+			}
+			$this->set('friendsprojects', $myfriendsprojects);
             
             $newprojects = $this->Project->mc_get("newprojects");
             if ($newprojects === false) {
                 $newprojects = $this->__getNewProjects();
                 $this->Project->mc_set("newprojects", $newprojects, false, HOMEL_NEW_PROJECTS_TTL);
             }
+			if(SHOW_RIBBON ==1){
+				$newprojects = $this->set_ribbon($newprojects);
+			}
             $this->set('newprojects', $newprojects);
         }
         
@@ -245,12 +251,15 @@ Class HomeController extends AppController {
 	return $this->BlockedUserFrontpage->findAll(null,'BlockedUserFrontpage.user_id');
 	}
 	
-	function __getFeaturedProjects($exclude_user_ids) {
+	function __getFeaturedProjects($exclude_user_ids) { 
         $condition = '`projects`.`id` = `featured_projects`.`project_id`';
         $projects = $this->Project->getTopProjects('`featured_projects`.`id` `featured`',
                     '`featured` DESC', null, null, $exclude_user_ids,
                     NUM_FEATURED_PROJECTS,
                     $condition, '`featured_projects`');
+		if(SHOW_RIBBON == 1){
+			$projects = $this->set_ribbon($projects);
+		}
         return $projects;
     }
 
@@ -260,8 +269,12 @@ Class HomeController extends AppController {
         } else {
 		    $days = TOP_VIEWED_DAY_INTERVAL;
         }
-        return $this->Project->getTopProjects('`views`', '`views` DESC', $days,
+        $topviewedProjects = $this->Project->getTopProjects('`views`', '`views` DESC', $days,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED);
+		if(SHOW_RIBBON ==1){
+			$topviewedProjects = $this->set_ribbon($topviewedProjects);
+		}
+		return $topviewedProjects;
     }
 
     function __getTopRemixedProjects($exclude_project_ids, $exclude_user_ids) {
@@ -271,14 +284,22 @@ Class HomeController extends AppController {
 		    $days = TOP_REMIXED_DAY_INTERVAL;
         }
 
-        return $this->Project->getTopProjects('`remixer`', '`remixer` DESC', $days,
+        $topRemixedProjects =  $this->Project->getTopProjects('`remixer`', '`remixer` DESC', $days,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, 'remixer > 0');
+		if(SHOW_RIBBON ==1){
+			$topRemixedProjects = $this->set_ribbon($topRemixedProjects);
+		}
+		return $topRemixedProjects;
     }
 
     function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids) {
         //return $this->Project->getTopProjects('`loveitsuniqueip`', '`loveitsuniqueip` DESC', '10',
-        return $this->Project->getTopProjects('`loveit`', '`loveit` DESC', TOP_LOVED_DAY_INTERVAL,
+        $topLovedProjects =  $this->Project->getTopProjects('`loveit`', '`loveit` DESC', TOP_LOVED_DAY_INTERVAL,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED);
+		if(SHOW_RIBBON ==1){
+			$topLovedProjects = $this->set_ribbon($topLovedProjects);
+		}
+		return $topLovedProjects;
     }
 
     function __getTopDownloadedProjects($exclude_project_ids, $exclude_user_ids) {
@@ -405,7 +426,9 @@ Class HomeController extends AppController {
                     '`recency` DESC', null, $exclude_project_ids, $exclude_user_ids,
                     NUM_CURATOR_FAV_PROJECT,
                     $condition, '`favorites`');
-
+		if(SHOW_RIBBON ==1){
+			$projects = $this->set_ribbon($projects);
+		}
 
         return $projects;
 	}
@@ -428,7 +451,32 @@ Class HomeController extends AppController {
                     $exclude_user_ids, NUM_DESIGN_STUDIO_PROJECT,
                     $condition, '`gallery_projects`');
 
-        return $projects;
+        if(SHOW_RIBBON ==1){
+			$projects = $this->set_ribbon($projects);
+		}
+		
+		return $projects;
 	}//function	
+	
+	function set_ribbon($final_projects) {
+		$i =0;
+		$temp = array();
+		foreach($final_projects as $final_project){
+				$temp_project = $final_project;
+				$current_project_id = $final_project['Project']['id'];
+				$feature_projects = $this->FeaturedProject->find("FeaturedProject.project_id = $current_project_id");
+				if ($feature_projects) {
+					$text =$this->convertDate($feature_projects['FeaturedProject']['timestamp']);
+			 		$image_name =$this->ribbonImageName($feature_projects['FeaturedProject']['timestamp']);
+			 		$this->Thumb->generateThumb($ribbon_image='ribbon.gif',$text,$dir="small_ribbon",$image_name,$dimension='40x30',125,125);
+					$temp_project['Project']['ribbon_name'] = $image_name ;
+					
+				} else {
+					$temp_project['Project']['ribbon_name'] = '' ;
+				}
+				$temp[$i++] = $temp_project;
+		}
+		return $temp;
+	}
 }
 ?>

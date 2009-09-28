@@ -20,9 +20,10 @@
  <?php if ($isLogged): ?>
     <div id="NewestProjects" class="container">
       <h3><?php ___('Newest Projects');?></h3>
-		<?php
+		<?php 
 		foreach ($newprojects as $new):
 		$pid = $new['Project']['id'];
+		$ribbon_image = (isset($new['Project']['ribbon_name'])) ? $new['Project']['ribbon_name']:null;
 		$owner = htmlspecialchars($new['User']['urlname']);
 		$owner_role = $new['User']['role'];
 		$project_link = "/projects/".$owner."/".$pid;
@@ -32,6 +33,11 @@
 		$project_name_s = (strlen($project_name) >= MAX_LENGTH_PNAME_HOME) ? substr($project_name,0,15) . "&#0133;" : $project_name;
 		?>
 		<div class="thumb">
+		<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
+						<a href="<?php echo $html->url($project_link)?>">
+						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'ribbon'));?>
+						</a>
+		<?php endif;?>
 		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
 		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 		  <p><?php ___('by'); ?>
@@ -46,9 +52,10 @@
 
     <div id="FeaturedProjects" class="container">
       <h3><?php ___('Featured Projects');?></h3>
-		<?php
+		<?php 
 		foreach ($featuredprojects as $featured):
 		$pid = $featured['Project']['id'];
+		$ribbon_image = (isset($featured['Project']['ribbon_name'])) ? $featured['Project']['ribbon_name']:null;
 		$owner = $featured['User']['urlname'];
 		$owner_role = $featured['User']['role'];
 		$project_link = "/projects/".$owner."/".$pid;
@@ -61,6 +68,11 @@
 		}
 		?>
 		<div class="thumb">
+		<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
+						<a href="<?php echo $html->url($project_link)?>">
+						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'ribbon'));?>
+						</a>
+		<?php endif;?>
 		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<? e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
 		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 		  <p><?php ___('by'); ?>
@@ -78,6 +90,7 @@
 		<?php
 		foreach ($friendsprojects as $friendsproject):
 		$pid = $friendsproject['Project']['id'];
+		$ribbon_image = (isset($friendsproject['Project']['ribbon_name'])) ? $friendsproject['Project']['ribbon_name']:null;
 		$owner = $friendsproject['User']['urlname'];
 		$owner_role = $friendsproject['User']['role'];
 		$project_link = "/projects/".$owner."/".$pid;
@@ -87,6 +100,11 @@
 		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ?  substr($project_name,0,15) . "&#0133;" : $project_name;
 		?>
 		<div class="thumb">
+		<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
+						<a href="<?php echo $html->url($project_link)?>">
+						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'ribbon'));?>
+						</a>
+		<?php endif;?>
 		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
 		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 		  <p><?php ___('by'); ?>
@@ -105,6 +123,7 @@
 		<?php
 		foreach ($favorites as $favorite):
 		$pid = $favorite['Project']['id'];
+		$ribbon_image = (isset($favorite['Project']['ribbon_name'])) ? $favorite['Project']['ribbon_name']:null;
 		$owner = $favorite['User']['urlname'];
 		$owner_role = $favorite['User']['role'];
 		$project_link = "/projects/".$owner."/".$pid;
@@ -114,6 +133,11 @@
 		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ?  substr($project_name,0,15) . "&#0133;" : $project_name;
 		?>
 		<div class="thumb">
+		<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
+						<a href="<?php echo $html->url($project_link)?>">
+						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'ribbon'));?>
+						</a>
+		<?php endif;?>
 		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
 		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 		  <p><?php ___('by'); ?>
@@ -133,6 +157,7 @@
 		<?php //print_r($clubedprojects);
 		foreach ($clubedprojects as $clubed):
 		$pid = $clubed['Project']['id'];
+		$ribbon_image = (isset($clubed['Project']['ribbon_name'])) ? $clubed['Project']['ribbon_name']:null;
 		$owner = $clubed['User']['urlname'];
 		$owner_role = $clubed['User']['role'];
 		$project_link = "/projects/".$owner."/".$pid;
@@ -145,6 +170,11 @@
 		}
 		?>
 		<div class="thumb">
+		<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
+						<a href="<?php echo $html->url($project_link)?>">
+						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'ribbon'));?>
+						</a>
+		<?php endif;?>
 		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<? e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
 		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 		  <p><?php ___('by'); ?> <?php echo $util->username($owner, $owner_role);?></p>
@@ -160,6 +190,7 @@
 		<?php
 		foreach ($topremixed as $topremix):
 		$pid = $topremix['Project']['id'];
+		$ribbon_image = (isset($topremix['Project']['ribbon_name'])) ? $topremix['Project']['ribbon_name']:null;
 		$owner = $topremix['User']['urlname'];
 		$owner_role = $topremix['User']['role'];
 		$project_link = "/projects/".$owner."/".$pid;
@@ -169,6 +200,11 @@
 		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ?  substr($project_name,0,15) . "&#0133;" : $project_name;
 		?>
 		<div class="thumb">
+		<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
+						<a href="<?php echo $html->url($project_link)?>">
+						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'ribbon'));?>
+						</a>
+		<?php endif;?>
 		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
 		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 		  <p><?php ___('by'); ?> <?php echo $util->username($owner, $owner_role);?></p>
@@ -184,6 +220,7 @@
 		<?php
 		foreach ($toprandoms as $toprandom):
 		$pid = $toprandom['Project']['id'];
+		$ribbon_image = (isset($toprandom['Project']['ribbon_name'])) ? $toprandom['Project']['ribbon_name']:null;
 		$owner = $toprandom['User']['urlname'];
 		$owner_role = $toprandom['User']['role'];
 		$project_link = "/projects/".$owner."/".$pid;
@@ -193,6 +230,11 @@
 		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ? substr($project_name,0,15) . "&#0133;" : $project_name;
 		?>
 		<div class="thumb">
+		<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
+						<a href="<?php echo $html->url($project_link)?>">
+						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'ribbon'));?>
+						</a>
+		<?php endif;?>
 		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
 		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 		  <p><?php ___('by'); ?> <?php echo $util->username($owner, $owner_role);?></p>
@@ -207,6 +249,7 @@
 		<?php
 		foreach ($toploved as $toplove):
 		$pid = $toplove['Project']['id'];
+		$ribbon_image = (isset($toplove['Project']['ribbon_name'])) ? $toplove['Project']['ribbon_name']:null;
 		$owner = $toplove['User']['urlname'];
 		$owner_role = $toplove['User']['role'];
 		$project_link = "/projects/".$owner."/".$pid;
@@ -216,6 +259,11 @@
 		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ? substr($project_name,0,15) . "&#0133;" : $project_name;
 		?>
 		<div class="thumb">
+		<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
+						<a href="<?php echo $html->url($project_link)?>">
+						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'ribbon'));?>
+						</a>
+		<?php endif;?>
 		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
 		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 		  <p><?php ___('by'); ?> <?php echo $util->username($owner, $owner_role);?></p>
@@ -230,6 +278,7 @@
 		<?php
 		foreach ($topdownloaded as $topdownload):
 			$pid = $topdownload['Project']['id'];
+			$ribbon_image = (isset($topdownload['Project']['ribbon_name'])) ? $topdownload['Project']['ribbon_name']:null;
 			$owner = $topdownload['User']['urlname'];
 			$owner_role = $topdownload['User']['role'];
 			$project_link = "/projects/".$owner."/".$pid;
@@ -239,6 +288,11 @@
 			$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ? substr($project_name,0,15) . "&#0133;" : $project_name;
 			?>
 			<div class="thumb">
+			<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
+						<a href="<?php echo $html->url($project_link)?>">
+						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'ribbon'));?>
+						</a>
+				<?php endif;?>
 			  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
 			  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 			  <p><?php ___('by'); ?> <?php echo $util->username($owner, $owner_role);?></p>
@@ -252,6 +306,7 @@
 		<?php
 		foreach ($topviewed as $topview):
 		$pid = $topview['Project']['id'];
+		$ribbon_image = (isset($topview['Project']['ribbon_name'])) ? $topview['Project']['ribbon_name']:null;
 		$owner = $topview['User']['urlname'];
 		$owner_role = $topview['User']['role'];
 		$project_link = "/projects/".$owner."/".$pid;
@@ -261,6 +316,11 @@
 		$project_name_s = (strlen($project_name) > MAX_LENGTH_PNAME_HOME) ?  substr($project_name,0,15) . "&#0133;" : $project_name;
 		?>
 		<div class="thumb">
+		<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
+						<a href="<?php echo $html->url($project_link)?>">
+						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'ribbon'));?>
+						</a>
+		<?php endif;?>
 		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<?php e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
 		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 		  <p><?php ___('by'); ?> <?php echo $util->username($owner, $owner_role);?></p>
