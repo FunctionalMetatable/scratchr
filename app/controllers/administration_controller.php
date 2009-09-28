@@ -3,7 +3,7 @@
     var $name = 'Administration';
    
     var $uses = array('AdminTag', 'KarmaSetting', 'KarmaRating', 'KarmaEvent', 'KarmaRank', 'Mgcomment', 'RemixedProject', 'GalleryMembership', 
-	'BlockedUser', 'ViewStat', 'Gcomment', 'BlockedIp', 'ProjectFlag', 'Announcement', 'AdminComment', 'Apcomment', 'Mpcomment', 'Project', 
+	'BlockedUser', 'ViewStat', 'Gcomment', 'BlockedIp', 'ProjectFlag', 'GalleryFlag', 'Announcement', 'AdminComment', 'Apcomment', 'Mpcomment', 'Project', 
 	'FeaturedGallery', 'ClubbedGallery', 'Pcomment', 'User', 'Gallery', 'Tag', 'Flagger', 'Downloader', 'Favorite', 'Lover', 'Notification',
 	'Permission','PermissionUser', 'BlockedUserFrontpage','WhitelistedIpAddress');
     var $components = array('RequestHandler','Pagination', 'Email');
@@ -1402,6 +1402,12 @@
 				$search_term = "%" . $search_term . "%";
 				list($order,$limit,$page) = $this->Pagination->init("Project.name LIKE'$search_term'", Array(), $options);
 				$results = $this->Project->findAll("Project.name LIKE '$search_term'", null, $order, $limit, $page);
+				$i =0;
+				foreach($results as $result){
+					$pid = $result['Project']['id'];
+					$result['Project']['admin_name'] = $this->get_admin_name('ProjectFlag', 'project_id', $pid);
+					$results[$i++] = $result;
+				}
 			}
 			if ($search_column == 'Creator') {
 				$user_name = $search_term;
@@ -1415,12 +1421,24 @@
 							"direction"=> "DESC", "url" => "/administration/render_results/" . $search_table . "/" . $search_column . "/" . $search_term);
 				list($order,$limit,$page) = $this->Pagination->init("user_id = $user_id", Array(), $options);
 				$results = $this->Project->findAll("user_id = $user_id", null, $order, $limit, $page);
+				$i =0;
+				foreach($results as $result){
+					$pid = $result['Project']['id'];
+					$result['Project']['admin_name'] = $this->get_admin_name($pid);
+					$results[$i++] = $result;
+				}
 			}
 			if ($search_column == 'Status') {
 				$options = Array("sortBy"=>"name", "sortByClass" => "Project", 
 							"direction"=> "DESC", "url" => "/administration/render_results/" . $search_table . "/" . $search_column . "/" . $search_term);
 				list($order,$limit,$page) = $this->Pagination->init("status = '$search_term'", Array(), $options);
 				$results = $this->Project->findAll("status = '$search_term'", null, $order, $limit, $page);
+				$i =0;
+				foreach($results as $result){
+					$pid = $result['Project']['id'];
+					$result['Project']['admin_name'] = $this->get_admin_name($pid);
+					$results[$i++] = $result;
+				}
 			}
 		} elseif ($search_table == 'galleries') {
 			$this->Pagination->show = 10;
@@ -1433,6 +1451,12 @@
 				$search_term = "%" . $search_term . "%";
 				list($order,$limit,$page) = $this->Pagination->init("Gallery.name LIKE '$search_term'", Array(), $options);
 				$results = $this->Gallery->findAll("Gallery.name LIKE '$search_term'", null, $order, $limit, $page);
+				$i =0;
+				foreach($results as $result){
+					$gid = $result['Gallery']['id'];
+					$result['Gallery']['admin_name'] = $this->get_admin_name('GalleryFlag', 'gallery_id', $gid);
+					$results[$i++] = $result;
+				}
 			}
 			if ($search_column == 'Creator') {
 				$user_name = $search_term;
@@ -1446,12 +1470,22 @@
 							"direction"=> "DESC", "url" => "/administration/render_results/" . $search_table . "/" . $search_column . "/" . $search_term);
 				list($order,$limit,$page) = $this->Pagination->init("user_id = $user_id", Array(), $options);
 				$results = $this->Gallery->findAll("user_id = $user_id");
+				foreach($results as $result){
+					$gid = $result['Gallery']['id'];
+					$result['Gallery']['admin_name'] = $this->get_admin_name('GalleryFlag', 'gallery_id', $gid);
+					$results[$i++] = $result;
+				}
 			}
 			if ($search_column == 'Status') {
 				$options = Array("sortBy"=>"name", "sortByClass" => "Gallery", 
 							"direction"=> "DESC", "url" => "/administration/render_results/" . $search_table . "/" . $search_column . "/" . $search_term);
 				list($order,$limit,$page) = $this->Pagination->init("status = '$search_term'", Array(), $options);
 				$results = $this->Gallery->findAll("status = '$search_term'", null, $order, $limit, $page);
+				foreach($results as $result){
+					$gid = $result['Gallery']['id'];
+					$result['Gallery']['admin_name'] = $this->get_admin_name('GalleryFlag', 'gallery_id', $gid);
+					$results[$i++] = $result;
+				}
 			}
 		}
 		
@@ -2704,7 +2738,26 @@
         exit;
     }*/
 
-    function send_bulk_notifications() {
+    
+	/**
+	* Helper for finding the admin name
+	**/
+	function get_admin_name($model, $field, $project_id) {
+		
+		$final_flags = $this->$model->find("$field = $project_id");
+		$flag_id = $final_flags[$model]['id'];
+		$admin_id = $final_flags[$model]['admin_id'];
+		if ($admin_id == 0) {
+			$admin_name = "None";
+		} else {
+			$admin = $this->User->find("User.id = $admin_id");
+			$admin_name = $admin['User']['username'];
+		}
+		return $admin_name;
+		
+	}
+	
+	function send_bulk_notifications() {
         if(!empty($this->data)) {
             $users = $this->Notification->addBulkNotifications($this->data['usernames'], $this->data['text']);
             $this->set('users', $users);
