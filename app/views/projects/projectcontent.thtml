@@ -412,7 +412,7 @@ else {
       <p id="pdesc">
 	
       <?php 
-	  $notes = preg_replace('[\n\r]', '<br>', $notes);
+	  $notes = preg_replace('[\n]', '<br>', $notes);
 	  echo $util->linkify($notes); 
 	  ?>
       </p>
