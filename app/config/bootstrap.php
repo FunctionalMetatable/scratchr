@@ -232,7 +232,7 @@ define('CACHE_DURATION', '1 day');
 /**
  * Memcache constants
  */
-define("MEMCACHE_SERVER", 'scratchstore'); //memcache server 
+define("MEMCACHE_SERVER", 'scratchstore'); //memcache server
 define("MEMCACHE_PORT", 11211); //memcache port
 define("HOMEL_PAGE_TTL", 60); //for home page
 define("HOMEL_NEW_PROJECTS_TTL", 60);
@@ -576,7 +576,8 @@ function friendlyDate($original) {
 	function isInappropriate($content) {
 		$whitelist = array("grape", "packing");
         $blacklist = array("pendej","chinga","chingo", "verga","cabron","pucha","ash0le", "ashole","asshole", "assface","assh0le","asswipe","azzhole","bassterds","bastard","basterd","bitch","blow job","butthole","buttwipe","c0ck", "c0k", "cockbiter", "cock-biter", "cockhead","cock-head","cocksucker",  "dild0","dild0s","dildo","dildos","dilld0","dilld0s","dyke", "f u c k","fag1t","faget","fagg1t","faggit","faggot","fagit","fuck", "fukah","fuken","fuker","fukin","fukk","fukkah","fukken","fukker","fukkin","g00k","h00r","h0ar","h0re","hoar","hoore","jackoff","jerk-off","jisim","jiss","jizm","jizz", "lezzian","massterbait","masst", "masstrbate","masterbate","masterbates","motha fuker","n1gr","nigga", "nastt","nigger","nigur","niiger","niigr","packi","packie","packy","paki","pakie","pecker","phuc","phuck","phuk","phuker","phukker","polac","polack","polak","poonani","pr1c","pr1ck","pr1k","pusse","pussee","pussy","puuke","puuker","scank","schlong","sh1t","sh1ter","sh1ts","shtter","sh1tz","shit","shyt","skanck","skank", "slut", "wh00r","wh0re","whore","rape");
-        preg_match_all('/'.implode($blacklist, '|').'/', $content, $mb);
+        $content = strtolower($content);
+		preg_match_all('/'.implode($blacklist, '|').'/', $content, $mb);
         preg_match_all('/\b('.implode($whitelist, '|').')\b/', $content, $mw);
         $is_inappropriate = (count($mb[0]) > count($mw[0]));
         //found inappropriate
