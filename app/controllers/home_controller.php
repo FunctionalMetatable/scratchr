@@ -293,8 +293,7 @@ Class HomeController extends AppController {
     }
 
     function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids) {
-        //return $this->Project->getTopProjects('`loveitsuniqueip`', '`loveitsuniqueip` DESC', '10',
-        $topLovedProjects =  $this->Project->getTopProjects('`loveit`', '`loveit` DESC', TOP_LOVED_DAY_INTERVAL,
+        $topLovedProjects =  $this->Project->getTopProjects('`loveitsuniqueip`', '`loveitsuniqueip` DESC', TOP_LOVED_DAY_INTERVAL,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED);
 		if(SHOW_RIBBON ==1){
 			$topLovedProjects = $this->set_ribbon($topLovedProjects);
