@@ -222,7 +222,7 @@ Class HomeController extends AppController {
 		
     	$this->Project->mc_close();
 		
-		$url = env('SERVER_NAME');
+        $url = env('SERVER_NAME');
 		$url = strtolower($url);
 		$newest_feed_link = "/feeds/getNewestProjects";
 		$featured_feed_link = "/feeds/getFeaturedProjects";
@@ -230,6 +230,8 @@ Class HomeController extends AppController {
 		$this->set('newest_feed_link', $newest_feed_link);
 		$this->set('featured_feed_link', $featured_feed_link);
 		$this->set('ishomepage', true);
+
+        $this->record_user_event('view_frontpage');
     }
 	
 	function __getScratchClub() {
