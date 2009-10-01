@@ -22,3 +22,16 @@ VALUES (
 NULL , 'account_temp_lock',
 'Because your project was flagged by multiple members of the Scratch community, your account has been temporarily blocked. The Scratch Team will review your project based on the <a href="/terms">Terms of Use</a> and make a final decision.', '0', '0'
 );
+
+
+INSERT INTO `notification_types` (
+`id` ,
+`type` ,
+`template` ,
+`is_admin` ,
+`inappropriate` ,
+`negative`
+)
+VALUES (
+NULL , 'project_added_to_gallery_gowner', 'The project <a href="/projects/{project_owner_name}/{project_id}">{project_name}</a> has been added to your gallery <a href="/galleries/view/{gallery_id}">{gallery_name}</a> by <a href="/users/{project_owner_name}">{project_owner_name}</a>.', '0', '0', '0'
+);
