@@ -6,7 +6,7 @@
 class AppController extends Controller {
 
     var $helpers = array("head",'Time', "Util");
-    var $uses = array('AdminTag', 'Relationship', 'Project', 'Pcomment', 'Gcomment', 'Gallery', 'GalleryProject', 'GalleryMembership', 'BlockedUser', 'Notification', 'User', 'Announcement', 'BlockedIp', 'FriendRequest');
+    var $uses = array('UserEvent', 'AdminTag', 'Relationship', 'Project', 'Pcomment', 'Gcomment', 'Gallery', 'GalleryProject', 'GalleryMembership', 'BlockedUser', 'Notification', 'User', 'Announcement', 'BlockedIp', 'FriendRequest');
 	var $components = array('RequestHandler', 'Cookie', 'Session', 'Thumb');
     var $layout = 'scratchr_default';
     var $sanitize = true;
@@ -937,7 +937,22 @@ ini_restore ("memory_limit");
             ? (int) $id
             : 0;
     }
-	
+
+    /*
+     * records user event in database
+     * event can be one of the followings -
+     * 'view_frontpage', 'view_channel', 'view_gallery', 'view_project',
+     * 'do_gallery_comment', 'do_project_comment', 'do_project_tag',
+     * 'do_project_upload', 'do_project_update', 'do_login'
+     */
+    function record_user_event($event) {
+        $this->UserEvent->record(
+            $this->getLoggedInUserID(),
+            $this->RequestHandler->getClientIP(),
+            $event
+        );
+    }
+    
 	function checkLockedUser($ip = null)
 	{
 		if(!$ip){
