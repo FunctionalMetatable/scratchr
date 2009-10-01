@@ -522,8 +522,7 @@ Class ServicesController extends AppController {
 
 			if ($new_project)
 				$project_id = $this->Project->getLastInsertID();
-			//add user event
-			$this->User->addUserEvent('upload_projects', $user_id, $IP, null, null, null, null, null, $project_id, 'upload');
+			
 			//Save allScripts content to table project_scripts.
 			$project_text_info = array('project_id' => $project_id, 'text_scripts' => $project_text_Scripts);
 			$this->ProjectScript->save($project_text_info);
@@ -550,9 +549,6 @@ Class ServicesController extends AppController {
 				// rename old version
 				$new_file = WWW_ROOT . getBinary($urlname, $project_id . "." . $project_version, false, DS);
 				rename($bin_file, $new_file);
-				
-				//add user event
-			$this->User->addUserEvent('upload_projects', $user_id, $IP, null, null, null, null, null, $project_id, 'update');
 			}
 			if (!move_uploaded_file($binary_file['tmp_name'], $bin_file)) {
 				$this->__failed(BINARY_UPLOAD_ERROR);

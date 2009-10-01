@@ -10,16 +10,12 @@ Class ChannelController extends AppController {
 	 * Overrides AppController::beforeFilter()
      */
     function beforeFilter() {
-		$action = $this->params['action'];
-		$user_id = $this->getLoggedInUserID();
-		$client_ip = $this->RequestHandler->getClientIP();
-		$this->User->addUserEvent('view_channels', $user_id, $client_ip, $action);
 		$limit = 10;
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
 		
 		$this->Pagination->show = $limit;
-        $obscured_uid = $this->encode($user_id);
+        $obscured_uid = $this->encode($this->getLoggedInUserID());
         $this->feed_links = array (
             'recent' => "/feeds/getNewestProjects",
             'featured' => "/feeds/getFeaturedProjects",

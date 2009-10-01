@@ -16,10 +16,7 @@ Class HomeController extends AppController {
     }
 	
     function index() { 
-		$user_id = $this->getLoggedInUserID();
-		$client_ip = $this->RequestHandler->getClientIP();
-		$this->User->addUserEvent('view_frontpages', $user_id, $client_ip);
-        $this->Project->mc_connect();
+		$this->Project->mc_connect();
         $project_ids = array();
        	$user_ids =array();
         $this->set('client_ip', $this->RequestHandler->getClientIP());

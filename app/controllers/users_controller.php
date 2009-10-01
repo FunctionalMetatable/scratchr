@@ -447,11 +447,6 @@ class UsersController extends AppController {
 	}
 	
 	function logout() {
-		$userID = $this->getLoggedInUserID();
-		$statID = $this->UserStat->field("id", "user_id = $userID");
-		$time = date("Y-m-d G:i:s");
-		$this->UserStat->id = $statID;
-		$this->UserStat->saveField("lastout",$time);
 	  $this->Session->delete('User'); //kill session info
 	  $this->Session->delete('UsersPermission'); //kill users permission
 	  $this->redirect('/');
@@ -463,7 +458,7 @@ class UsersController extends AppController {
 	 
 	  $this->pageTitle = "Scratch | Login";
 	  $errors = Array();
-	  $client_ip = $this->RequestHandler->getClientIP();
+	
 		if (!empty($this->params['form']['User'])) {
 			$submit_username = $this->params['form']['User'];
 			$submit_pwd = $this->params['form']['Pass'];
@@ -494,16 +489,11 @@ class UsersController extends AppController {
 				$statID = $this->UserStat->field("id", "user_id = $userID");
 				$time = date("Y-m-d G:i:s");
 				if ($statID) {
-				
-				$update = "UPDATE user_stats SET `lastin` = '$time', `ipaddress` = INET_ATON('$client_ip'),`lastout` = '' WHERE `user_stats`.`id` = $statID";
-				$this->UserStat->query($update);
-					
+						$this->UserStat->id = $statID; 
+	                    $this->UserStat->saveField("lastin",$time); 
 				}
 				else {
-				 $sql = "INSERT INTO `user_stats` (`id`,`user_id`,`lastin`,`ipaddress`) VALUES"
-                        ." (NULL, $userID, '$time', INET_ATON('$client_ip'))";
-                $this->UserStat->query($sql);
-					
+						$this->UserStat->save(array('UserStat'=>array("user_id"=>$userID, "lastin"=>$time))); 
 				}
 				
 				    $user_blocked = $this->checkLockedUser();

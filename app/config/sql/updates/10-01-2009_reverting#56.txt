@@ -1,0 +1,12 @@
+DROP TABLE `view_frontpages`;
+DROP TABLE `view_galleries`;
+DROP TABLE `gallery_user_comments`;
+DROP TABLE `view_channels`;
+DROP TABLE `view_projects`;
+DROP TABLE `project_user_comments`;
+DROP TABLE `project_user_tags`;
+DROP TABLE `upload_projects`;
+
+ALTER TABLE `user_stats`
+  DROP `ipaddress`,
+  DROP `lastout`;
