@@ -1489,6 +1489,7 @@ Class GalleriesController extends AppController {
 		$this->Project->id = $project_id;
 		$project = $this->Project->read();
 		$project_name = $project['Project']['name'];
+		$project_owner_name = $project['User']['username'];
 		$projects = $this->GalleryProject->findAll("gallery_id = $gallery_id AND project_id = $project_id");
 
 		$this->Gallery->id = $gallery_id;
@@ -1510,9 +1511,17 @@ Class GalleriesController extends AppController {
 			$this->updateGallery($gallery_id);
 			$this->Gallery->saveField("total_projects", $project_count + 1);
 			//$this->setFlash("$project_name " . ___('successful added to', true) . " $gallery_name", FLASH_NOTICE_KEY);
+			
+			//Notification for gallery owner					
+			$this->notify('project_added_to_gallery_gowner', $gallery['Gallery']['user_id'],
+							array('project_id' => $project_id,
+									'project_owner_name' => $project_owner_name,
+								'gallery_id' => $gallery_id));	
+			//Notification for project owner
 			$this->notify('project_added_to_gallery', $project['Project']['user_id'],
 							array('project_id' => $project_id,
 								'gallery_id' => $gallery_id));
+							
 			$this->redirect('/galleries/'.'addprojectmember'.'/'.$gallery_id . '/' . $current_page);
 		} else {
 			$duplicate = $this->GalleryProject->find("gallery_id = $gallery_id AND project_id = $project_id");
@@ -1565,6 +1574,7 @@ Class GalleriesController extends AppController {
 		$this->Project->id = $project_id;
 		$project = $this->Project->read();
 		$project_name = $project['Project']['name'];
+		$project_owner_name = $project['User']['username'];
 		$projects = $this->GalleryProject->find("gallery_id = $gallery_id AND project_id = $project_id");
 		$user_id = $project['Project']['user_id'];
 
@@ -1586,6 +1596,12 @@ Class GalleriesController extends AppController {
 			$this->updateGallery($gallery_id);
 			$this->Gallery->saveField("total_projects", $project_count + 1);
 			//$this->setFlash(___("Project successful added to", true) . " $gallery_name", FLASH_NOTICE_KEY);
+			//Notification for gallery owner					
+			$this->notify('project_added_to_gallery_gowner', $gallery['Gallery']['user_id'],
+							array('project_id' => $project_id,
+									'project_owner_name' => $project_owner_name,
+								'gallery_id' => $gallery_id));	
+			//Notification for project owner
 			$this->notify('project_added_to_gallery', $project['Project']['user_id'],
 							array('project_id' => $project_id,
 								'gallery_id' => $gallery_id));
