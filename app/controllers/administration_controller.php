@@ -2378,29 +2378,6 @@
 		$this->render('expand_flaggers');
 	}
 	
-	/**
-	* List User's all events
-	**/
-	function users_event($user_id){
-		$this->User->recursive = 2;
-		
-		$this->User->bindViewFrontPage();
-		$this->User->bindViewGallery();
-		$this->User->bindGalleryUserComment();
-		$this->User->bindViewChannel();
-		$this->User->bindViewProject();
-		$this->User->bindProjectUserComment();
-		$this->User->bindProjectUserTag();
-		$this->User->bindUploadProject();
-		$this->User->bindUserStat();
-		
-		$this->User->id = $user_id;
-		$users = $this->User->read();
-		$this->set('userEvents', $users);
-		$this->set('username', $users['User']['username']);
-	}//function
-	
-	
 	/**********************************ADMIN DEFINED TAGS***************************************/
 	function predefined_tags($mode = "active") {
 		$this->autoRender = false;

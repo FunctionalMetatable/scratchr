@@ -514,7 +514,6 @@ Class GalleriesController extends AppController {
 		$gallery_owner_id = $gallery['User']['id'];
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
-		
 		$this->PaginationSecondary->show = 60;
 		$errors = Array();
 
@@ -604,13 +603,9 @@ Class GalleriesController extends AppController {
 						$new_tcomment = array('Gcomment'=>array('id' => null, 'gallery_id'=>$gallery_id, 'user_id'=>$commenter_id, 'content'=>$comment, 'comment_visibility'=>$vis));
 						$this->Gcomment->id=null;
 						$this->Gcomment->save($new_tcomment);
-						$gcomment_id = $this->Gcomment->getInsertID();
-                        $new_tcomment['Gcomment']['id'] = $gcomment_id;
+						$new_tcomment['Gcomment']['id'] = $this->Gcomment->getInsertID();
                         $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 						$this->updateGallery($gallery_id);
-						//add user event
-						$client_ip = $this->RequestHandler->getClientIP();
-						$this->User->addUserEvent('gallery_user_comments', $user_id, $client_ip, null, null, $gallery_id, $gcomment_id);
 					}
 				}
             }
@@ -958,9 +953,7 @@ Class GalleriesController extends AppController {
 		$isLogged = $this->isLoggedIn();
         $isAdmin = $this->isAdmin();
 		$user_id = $this->getLoggedInUserID();
-		$client_ip = $this->RequestHandler->getClientIP();
-		$this->User->addUserEvent('view_galleries', $user_id, $client_ip, null, null, $gallery_id);
-		
+				
 		$this->Gallery->id = $gallery_id;
 		$gallery = $this->Gallery->find("Gallery.id = $gallery_id", null, null, null, null, null, "overload");
         $content_status = $this->getContentStatus();
