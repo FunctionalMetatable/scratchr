@@ -1785,13 +1785,17 @@ class ProjectsController extends AppController {
 			$owner_id = $project['User']['id'];
 			$isMine = $logged_id == $owner_id;
 			$client_ip = $this->RequestHandler->getClientIP(); 
-            $this->ViewStat->recursive = -1;
+            /*$this->ViewStat->recursive = -1;
             $visits_from_this_ip =
             $this->ViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid")
-            + $this->AnonViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid");
+            + $this->AnonViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid");*/
 
 			if ($isLogged) {
                 $this->ViewStat->recursive = -1;
+                $visits_from_this_ip =
+                $this->ViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid")
+                + $this->AnonViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid");
+
                 //first visit to this project from this ip
                 if($visits_from_this_ip == 0) {
                     $project['Project']['views']++;
@@ -1806,7 +1810,7 @@ class ProjectsController extends AppController {
                         ." (NULL, $logged_id, $project_id, INET_ATON('$client_ip'))";
                 $this->ViewStat->query($sql);
             }
-			else {
+			/*else {
                 //first visit to this project from this ip
                 if($visits_from_this_ip == 0) {
 				 	$project['Project']['anonviews']++;
@@ -1818,13 +1822,10 @@ class ProjectsController extends AppController {
 				$sql = "INSERT INTO `anon_view_stats` (`id`,`project_id`,`ipaddress`) VALUES"
                         ." (NULL, $project_id, INET_ATON('$client_ip'))";
                 $this->AnonViewStat->query($sql);
-			}
+			}*/
 
-            //do we need this? it's already implement in line #759-761 in services_controller
-            /*$remix_count = count($this->ProjectShare->findAll("related_project_id = $pid group by project_id, user_id")) - 1;
-			$this->Project->saveField("remixes", $remix_count);*/
 
-			//fetch out comment data
+            //fetch out comment data
             $comment_id = null;
             if(isset($this->params['url']['comment'])) {
                 $comment_id = $this->params['url']['comment'];
