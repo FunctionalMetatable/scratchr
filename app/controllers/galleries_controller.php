@@ -1506,7 +1506,7 @@ Class GalleriesController extends AppController {
 			//$this->setFlash("$project_name " . ___('successful added to', true) . " $gallery_name", FLASH_NOTICE_KEY);
 			
 			//Notification for gallery owner					
-			$this->notify('project_added_to_gallery_gowner', $gallery['Gallery']['user_id'],
+			$this->notify('project_added_to_gallery', $gallery['Gallery']['user_id'],
 							array('project_id' => $project_id,
 									'project_owner_name' => $project_owner_name,
 								'gallery_id' => $gallery_id));	
@@ -1590,7 +1590,7 @@ Class GalleriesController extends AppController {
 			$this->Gallery->saveField("total_projects", $project_count + 1);
 			//$this->setFlash(___("Project successful added to", true) . " $gallery_name", FLASH_NOTICE_KEY);
 			//Notification for gallery owner					
-			$this->notify('project_added_to_gallery_gowner', $gallery['Gallery']['user_id'],
+			$this->notify('project_added_to_gallery', $gallery['Gallery']['user_id'],
 							array('project_id' => $project_id,
 									'project_owner_name' => $project_owner_name,
 								'gallery_id' => $gallery_id));	
