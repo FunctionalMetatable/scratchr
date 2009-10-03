@@ -230,8 +230,6 @@ Class HomeController extends AppController {
 		$this->set('newest_feed_link', $newest_feed_link);
 		$this->set('featured_feed_link', $featured_feed_link);
 		$this->set('ishomepage', true);
-
-        $this->record_user_event('view_frontpage');
     }
 	
 	function __getScratchClub() {
