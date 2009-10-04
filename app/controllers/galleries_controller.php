@@ -1509,7 +1509,15 @@ Class GalleriesController extends AppController {
 			$this->notify('project_added_to_gallery_gowner', $gallery['Gallery']['user_id'],
 							array('project_id' => $project_id,
 									'project_owner_name' => $project_owner_name,
-								'gallery_id' => $gallery_id));	
+								'gallery_id' => $gallery_id));
+            //Notification for gallery owner
+            if( $gallery['Gallery']['user_id'] != $this->getLoggedInUserID()
+                && $gallery['Gallery']['user_id'] != $project['Project']['user_id']) {
+                $this->notify('project_added_to_gallery_gowner', $gallery['Gallery']['user_id'],
+							array('project_id' => $project_id,
+									'project_owner_name' => $project_owner_name,
+								'gallery_id' => $gallery_id));
+            }
 			//Notification for project owner
 			$this->notify('project_added_to_gallery', $project['Project']['user_id'],
 							array('project_id' => $project_id,
