@@ -2467,6 +2467,24 @@
 		$this->set('mode', $mode);
 		$this->render('admin_tags_list_ajax', 'ajax');
 	}
+
+    /*
+     * lists all user events
+     */
+    function users_event($user_id) {
+        App::import('Model', 'UserEvent');
+        $UserEvent =& ClassRegistry::init('UserEvent');
+        $xml = $UserEvent->find($user_id);
+        //TODO: temp code. move'em to view
+        foreach($xml->body->SelectResult->Item as $Item) {
+            foreach($Item->Attribute as $Attribute){
+                echo $Attribute->Name . ": " . $Attribute->Value .'<br/>';
+            }
+            echo '<hr />';
+        }
+        exit;
+    }
+
 	/**********************************ADMIN KARMA INTERFACE************************************/
 	/**
 	* Karma Admin Interface

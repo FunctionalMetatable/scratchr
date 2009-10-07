@@ -15,8 +15,8 @@ Class HomeController extends AppController {
 		$this->set('content_status', $this->getContentStatus());
     }
 	
-    function index() { 
-		$this->Project->mc_connect();
+    function index() {
+        $this->Project->mc_connect();
         $project_ids = array();
        	$user_ids =array();
         $this->set('client_ip', $this->RequestHandler->getClientIP());
@@ -126,7 +126,9 @@ Class HomeController extends AppController {
 			if(SHOW_RIBBON ==1){
 				$newprojects = $this->set_ribbon($newprojects);
 			}
+            
             $this->set('newprojects', $newprojects);
+            //$this->record_user_event('view_frontpage');
         }
         
 /*

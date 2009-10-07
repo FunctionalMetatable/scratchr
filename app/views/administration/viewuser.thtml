@@ -63,8 +63,9 @@
 			?>
 			<a href="<?php echo $html->url('/administration/ip_info/'.$user_id)?>">IP Info</a> |
 			<?php if($has_ips):?>
-			<a href="<?php echo $html->url('/administration/connected_ip/'.$user_id)?>">Connected IP(s) blocked</a>
+			<a href="<?php echo $html->url('/administration/connected_ip/'.$user_id)?>">Connected IP(s) blocked</a> |
 			<?php endif;?>
+             <!--<a href="<?php echo $html->url('/administration/users_event/'.$user_id)?>">List Events</a>-->
     		<?php
 			echo "\t</div>\n";
 			echo "</div>\n";
