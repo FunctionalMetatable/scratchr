@@ -1,5 +1,5 @@
 <?php
-
+require_once('aws.php');
 require_once('recaptchalib.php');
 define("CAPTCHA_PUBLICKEY", "6LfkVAIAAAAAABlcomxpr4KzuPR0VBcG8eLGnsli"); // from http://recaptcha.net/
 define("CAPTCHA_PRIVATEKEY", "6LfkVAIAAAAAAEUSKkasdLGfAGSczVHj4IvWbWGp");
