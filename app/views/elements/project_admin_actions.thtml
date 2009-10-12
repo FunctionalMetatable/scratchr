@@ -32,13 +32,18 @@
 <?php if (!$isCensored): ?>
 	<input type="button" class="button" onclick="if (confirm('are you sure?')) 
 		{ this.form.action='/projects/censor'; this.form.submit(); return true; } return false;" 
-			value="censor"/>&nbsp; 
+			value="censor"/> 
 <?php endif; ?>
 <?php if ($isCensored): ?>
 	<input type="button" class="button" onclick="if (confirm('are you sure?')) 
 		{ this.form.action='/projects/uncensor'; this.form.submit(); return true; } return false;" 
-			value="uncensor"/>&nbsp;
+			value="uncensor"/>
 <?php endif; ?>
+<?php if( $proj_visibility === 'censbycomm' ):?>
+<input type="button" class="button" onclick="if (confirm('are you sure?')) 
+		{ this.form.action='/projects/confirm_censorship'; this.form.submit(); return true; } return false;" 
+			value="confirm censorship"/>&nbsp;
+<?php endif;?>			
   </form>
 </div>
  <div id="project_admin_bottom">
@@ -279,13 +284,18 @@ else
 				<?php if (!$isCensored): ?>
                 <input type="button" class="button" onclick="if (confirm('are you sure?')) 
                     { this.form.action='/projects/censor'; this.form.submit(); return true; } return false;" 
-                        value="censor"/>&nbsp; 
+                        value="censor"/> 
                 <?php endif; ?>
                 <?php if ($isCensored): ?>
                     <input type="button" class="button" onclick="if (confirm('are you sure?')) 
                         { this.form.action='/projects/uncensor'; this.form.submit(); return true; } return false;" 
-                            value="uncensor"/>&nbsp;
+                            value="uncensor"/>
                 <?php endif; ?>
+				<?php if( $proj_visibility === 'censbycomm' ):?>
+				<input type="button" class="button" onclick="if (confirm('are you sure?')) 
+		{ this.form.action='/projects/confirm_censorship'; this.form.submit(); return true; } return false;" 
+			value="confirm censorship"/>&nbsp;
+<?php endif;?>	
             <?php endif; ?>    
 
   </form>
