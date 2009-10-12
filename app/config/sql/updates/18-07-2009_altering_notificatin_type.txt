@@ -35,7 +35,7 @@ VALUES (
 NULL , 'project_added_to_gallery_gowner', 'The project <a href="/projects/{project_owner_name}/{project_id}">{project_name}</a> has been added to your gallery <a href="/galleries/view/{gallery_id}">{gallery_name}</a> by <a href="/users/{project_owner_name}">{project_owner_name}</a>.', '0', '0'
 );
 
-INSERT INTO `scratchr`.`notification_types` (
+INSERT INTO `notification_types` (
 `id` ,
 `type` ,
 `template` ,
