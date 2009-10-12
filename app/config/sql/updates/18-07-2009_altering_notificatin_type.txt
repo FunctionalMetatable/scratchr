@@ -34,3 +34,14 @@ INSERT INTO `notification_types` (
 VALUES (
 NULL , 'project_added_to_gallery_gowner', 'The project <a href="/projects/{project_owner_name}/{project_id}">{project_name}</a> has been added to your gallery <a href="/galleries/view/{gallery_id}">{gallery_name}</a> by <a href="/users/{project_owner_name}">{project_owner_name}</a>.', '0', '0'
 );
+
+INSERT INTO `scratchr`.`notification_types` (
+`id` ,
+`type` ,
+`template` ,
+`is_admin` ,
+`negative`
+)
+VALUES (
+NULL , 'confirm_project_censorship', 'The Scratch Team reviewed your project <a href="/projects/{to_user_name}/{project_id}">{project_name}</a> and confirmed that it was inappropriate for the Scratch community.', '0', '1'
+);

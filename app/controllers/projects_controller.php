@@ -1637,6 +1637,60 @@ class ProjectsController extends AppController {
 		$this->set('isCensored', $isCensored);
 		$this->redirect('/projects/'. $username. '/' . $pid);
 	 }
+	 
+	 /**
+	 * confirm censorship of project
+	 */
+	 function confirm_censorship() {
+		$this->autoRender = false;
+		$this->checkPermission('censor_projects');
+		$users_permission =$this->isAnyPermission();
+		$user_id = $this->getLoggedInUserID();
+		if (!$user_id)
+			$this->cakeError('error404');
+
+		if (!isset($this->params['form']['urlname']) ||
+			!isset($this->params['form']['pid']))
+			exit;
+
+		$pid = $this->params['form']['pid'];
+		$urlname = $this->params['form']['urlname'];
+
+		$this->Project->bindUser();
+		$this->Project->id = intval($pid);
+		$project = $this->Project->read("user_id");
+		if (empty($project['Project']['user_id']))
+			$this->cakeError('error404');
+		
+		$project_record = $this->Project->read();
+		$puser_id = $project_record['Project']['user_id'];
+		$username = $project_record['User']['username'];
+		$project_id = $project_record['Project']['id'];
+		$this->check_project_flag($user_id, $project_id);
+		$this->set_project_flag_timestamp($project_id);
+		
+		$this->Project->saveField("status", "censored");
+		$this->Project->saveField("proj_visibility", "censbyadmin");
+		$final_flags = $this->ProjectFlag->find("ProjectFlag.project_id = $project_id");
+		$flag_id = $final_flags['ProjectFlag']['id'];
+		$this->ProjectFlag->set_admin($flag_id, $user_id);
+
+		$user_record = $this->User->find("User.id = $puser_id");
+
+		$username = $user_record['User']['username'];
+		$project_title = htmlspecialchars($project_record['Project']['name']);
+
+		if($this->isAdmin())
+		{
+			$this->notify('confirm_project_censorship', $user_record['User']['id'],
+									array('project_id' => $pid));
+		}
+	
+		$this->set_admin_name($pid);
+		$this->set_admin_time($pid);
+		
+		$this->redirect('/projects/'. $username. '/' . $pid);
+	 }
 
 	/**
 	 * Deletes a project
