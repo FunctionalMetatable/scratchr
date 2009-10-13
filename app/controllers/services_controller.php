@@ -222,7 +222,7 @@ Class ServicesController extends AppController {
 				$inappropriates[] = 'inappropriate_pdesc_upload';
 			}
 
-			$project = $this->Project->find("Project.name = "."'".$project_name."' AND user_id = ". $user_id);
+			$project = $this->Project->find(array('Project.name'=>$project_name, 'Project.user_id'=>$user_id));
 			$project_id = null;
 			$new_project = null;
 			$project_version = null;
@@ -462,7 +462,7 @@ Class ServicesController extends AppController {
 
 
 
-			$project = $this->Project->find("Project.name = "."'".$project_name."' AND user_id = ". $user_id);
+			$project = $this->Project->find(array('Project.name'=>$project_name, 'Project.user_id'=>$user_id));
 			$project_id = null;
 			$new_project = null;
 			$project_version = null;
