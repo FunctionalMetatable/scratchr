@@ -1,26 +1,21 @@
 <div>
 <?php
-	foreach ($data as $ip) {
-		$user_id = $ip['ViewStat']['user_id'];
-		$user_ip = 	$ip[0]['ipaddress'];
+    foreach ($data as $ip):
+        $user_ip = 	$ip[0]['ipaddress'];
 		$expand_address = "/administration/expand_ip/$user_ip";
-		$ban_address = "/administration/ban_ip/$user_id/$user_ip";
-		
-		echo "<div class='gallerythumb clearme'>\n";
-		echo "\t<div class='admin_leftcolumn'>\n";
-		echo "<span>IP: $user_ip</span>\n";
-		echo "\t</div>";
-		echo "\t<div class='admin_rightcolumn'>\n";
-		echo "<span>"; 
-		
-		echo "<a href='$ban_address'> Ban IP </a>";
-		echo " | ";
-		?>
-		<a href="<?php echo $html->url($expand_address)?>"> Show All Users From This IP </a>
-		<?php
-		echo "</span>\n";
-    	echo "\t</div>\n";
-		echo "</div>\n";
-	}
+		$ban_address = '/administration/ban_ip/'.$user['User']['id'].'/'.$user_ip;
 ?>
+    <div class="gallerythumb clearme">
+		<div class="admin_leftcolumn">
+            <span>IP: <?= $user_ip ?></span>
+		</div>
+		<div class='admin_rightcolumn'>
+            <span>
+            <a href="<?= $ban_address ?>"> Ban IP </a>
+            &nbsp;|&nbsp;
+            <a href="<?php echo $html->url($expand_address)?>"> Show All Users From This IP </a>
+            </span>
+        </div>
+    </div>
+<?php endforeach; ?>
 </div>

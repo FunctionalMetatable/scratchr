@@ -2293,13 +2293,19 @@
 		$user = $this->User->read();
 
         $this->ViewStat->recursion = -1;
-		$stats = $this->ViewStat->findAll("ViewStat.user_id = $user_id", "DISTINCT user_id, INET_NTOA(ipaddress) ipaddress",'ViewStat.timestamp DESC');
+		$sql = 'SELECT INET_NTOA(vs1.ipaddress) ipaddress, vs1.timestamp timestamp'
+            . ' FROM view_stats vs1 LEFT JOIN view_stats vs2'
+            . ' ON vs1.ipaddress = vs2.ipaddress AND vs1.timestamp < vs2.timestamp'
+            . ' WHERE vs1.user_id = '.$user_id.' AND vs2.ipaddress IS NULL';
+
+        $stats = $this->ViewStat->query($sql);
+        
 		$status = $user['User']['status'];
 		
-		$this->set('user_name', $user['User']['username']);
+		$this->set('user', $user);
 		$this->set('status', $status);
-		$this->set('data', $stats);
-		$this->render('ip_info');
+        $this->set('data', $stats);
+        $this->render('ip_info');
 	}
 	
 	/**
