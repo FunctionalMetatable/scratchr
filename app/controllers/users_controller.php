@@ -60,19 +60,16 @@ class UsersController extends AppController {
 	function multiaccountwarn() {
 		$this->pageTitle = ___("Scratch | Signup", true);
         $client_ip = $this->RequestHandler->getClientIP();
-		$client_ip_long = ip2long($this->RequestHandler->getClientIP());
-
-        $ip_whitelisted = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = $client_ip_long");
+		
+        $ip_whitelisted = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = INET_ATON('$client_ip')");
 		$ip_blocked = false;
 		$user_blcoked = false;
 
 		if(!$ip_whitelisted){
-			//find if there's any blocked user from this ip
-			$ip_blocked = $this->User->find("User.ipaddress = $client_ip_long and User.status = 'locked'",
-												array(), 'User.timestamp DESC');
-	
+			//find if the ip is blocked
+            $ip_blocked = $this->BlockedIp->findCount("ip = INET_ATON('$client_ip')");
 			//check if any blocked user used this ip in last one month
-			$user_blocked = $this->checkLockedUser();
+			$user_blocked = $this->checkLockedUser('17.0.0.8');
 		}
         
         if(!$ip_whitelisted && ($ip_blocked || $user_blocked)) {
@@ -87,7 +84,7 @@ class UsersController extends AppController {
         }
         
 		/* First we find if the IP has been used before or not, if not then simply redirect him to sign up page */
-		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = $client_ip_long");
+		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = INET_ATON('$client_ip')");
 		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = INET_ATON('$client_ip')");
 		
 		/* Some Activity from Same IP in past */
@@ -103,10 +100,10 @@ class UsersController extends AppController {
             $user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
             
 			if(!empty($user_ids_accessing_same_ip)) {
-                $user_records = $this->User->findAll("User.ipaddress = $client_ip_long or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
+                $user_records = $this->User->findAll("User.ipaddress = INET_ATON('$client_ip') or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
             }
 			else {
-                $user_records = $this->User->findAll("User.ipaddress = $client_ip_long ",'urlname','created DESC');
+                $user_records = $this->User->findAll("User.ipaddress = INET_ATON('$client_ip') ",'urlname','created DESC');
             }
             
 			/* Some activity in past from same IP so we need to show the message with user records and ipaddress (send them to view) */
