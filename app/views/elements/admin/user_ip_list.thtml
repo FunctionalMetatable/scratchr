@@ -1,7 +1,7 @@
 <div>
 <?php
     foreach ($data as $ip):
-        $user_ip = 	$ip[0]['ipaddress'];
+        $user_ip = 	$ip[0]['ip'];
 		$expand_address = "/administration/expand_ip/$user_ip";
 		$ban_address = '/administration/ban_ip/'.$user['User']['id'].'/'.$user_ip;
 ?>
