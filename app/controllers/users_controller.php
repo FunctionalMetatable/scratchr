@@ -69,7 +69,7 @@ class UsersController extends AppController {
 			//find if the ip is blocked
             $ip_blocked = $this->BlockedIp->findCount("ip = INET_ATON('$client_ip')");
 			//check if any blocked user used this ip in last one month
-			$user_blocked = $this->checkLockedUser('17.0.0.8');
+			$user_blocked = $this->checkLockedUser();
 		}
         
         if(!$ip_whitelisted && ($ip_blocked || $user_blocked)) {

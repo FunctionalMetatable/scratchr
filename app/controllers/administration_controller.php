@@ -2295,7 +2295,7 @@
         $this->ViewStat->recursion = -1;
 		$sql = 'SELECT INET_NTOA(vs1.ipaddress) ipaddress, vs1.timestamp timestamp'
             . ' FROM view_stats vs1 LEFT JOIN view_stats vs2'
-            . ' ON vs1.ipaddress = vs2.ipaddress AND vs1.timestamp < vs2.timestamp'
+            . ' ON vs1.ipaddress = vs2.ipaddress AND vs1.timestamp > vs2.timestamp'
             . ' WHERE vs1.user_id = '.$user_id.' AND vs2.ipaddress IS NULL';
 
         $stats = $this->ViewStat->query($sql);
