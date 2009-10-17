@@ -13,8 +13,8 @@ class UserEvent extends AppModel {
     var $handles;
 
     function __construct() {
-        App::import('Vendor', 'Tarzan', array('file' => 'tarzan'.DS.'tarzan.class.php'));
-        $this->sdb = new AmazonSDB();
+        /*App::import('Vendor', 'Tarzan', array('file' => 'tarzan'.DS.'tarzan.class.php'));
+        $this->sdb = new AmazonSDB();*/
         $this->handles = array();
     }
     /*
@@ -47,7 +47,7 @@ class UserEvent extends AppModel {
         return $this->sdb->select($expression);
     }
 
-
+    
     function sendMultiRequest() {
         @ob_flush();
         $request = new TarzanHTTPRequest(null);
