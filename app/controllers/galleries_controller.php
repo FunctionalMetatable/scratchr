@@ -731,9 +731,19 @@ Class GalleriesController extends AppController {
 	}
 	
 	function __deleteChildrenComments($gallery_id, $comment_id, $visibility = 'delbyparentcomment', $has_children = false) {
-		$children_comments = $this->Gcomment->findAll(
-                'Gcomment.gallery_id = ' . $gallery_id . ' AND Gcomment.reply_to = '. $comment_id,
-                'id, comment_visibility');
+		$comment_id = intval($comment_id);
+        if($comment_id <= 0) {
+            return false; //invalid parent comment id
+        }
+        $conditions = '';
+        if($gallery_id !== false) {
+            $conditions .= 'Gcomment.gallery_id = ' . intval($gallery_id) . ' AND ';
+        }
+        $conditions .= 'Gcomment.reply_to = '. $comment_id;
+
+        $children_comments = $this->Gcomment->findAll($conditions,
+                                                       'id, comment_visibility');
+
         if($children_comments) {
             foreach($children_comments as $comment) {
                 //only if the child is not deleted before
@@ -2216,7 +2226,7 @@ Class GalleriesController extends AppController {
                         $comment_id =$gcontent['Gcomment']['id'];
                         $content = $gcontent['Gcomment']['content'];
                         $this->hide_gcomment($comment_id, "delbyadmin");
-						$this->__deleteChildrenComments($gallery_id, $gcontent['Gcomment']['id'], 'parentcommentcensored', true);
+						$this->__deleteChildrenComments(false, $comment_id, 'parentcommentcensored', true);
                         $this->Gcomment->deleteCommentsFromMemcache($gcontent['Gcomment']['gallery_id']);
                         $subject= "Comment deleted because it was flagged by an admin";
                         $msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";

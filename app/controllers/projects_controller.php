@@ -481,7 +481,7 @@ class ProjectsController extends AppController {
 						$this->Pcomment->id =$pcontent['Pcomment']['id'] ;
 						$content = $pcontent['Pcomment']['content'];
 						$this->Pcomment->query("update pcomments set comment_visibility = 'delbyadmin' where id=".$pcontent['Pcomment']['id'] );
-                        $this->__deleteChildrenComments($pid, $pcontent['Pcomment']['id'], 'parentcommentcensored', true);
+                        $this->__deleteChildrenComments(false, $pcontent['Pcomment']['id'], 'parentcommentcensored', true);
 						$this->Pcomment->deleteCommentsFromMemcache($pcontent['Pcomment']['project_id']);
                         $subject= "Comment deleted because it was flagged by an admin";
                         $msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
@@ -2782,9 +2782,17 @@ class ProjectsController extends AppController {
 	}
 	
 	function __deleteChildrenComments($project_id, $comment_id, $visibility = 'delbyparentcomment', $has_children = false) {
-		$children_comments = $this->Pcomment->findAll(
-            'Pcomment.project_id = '. $project_id . ' AND Pcomment.reply_to = '. $comment_id,
-            'id, comment_visibility');
+		$comment_id = intval($comment_id);
+        if($comment_id <= 0) {
+            return false; //invalid parent comment id
+        }
+        $conditions = '';
+        if($project_id !== false) {
+            $conditions .= 'Pcomment.project_id = '. intval($project_id) . ' AND ';
+        }
+        $conditions .= 'Pcomment.reply_to = '. $comment_id;
+        $children_comments = $this->Pcomment->findAll($conditions,
+                                                        'id, comment_visibility');
         
         if($children_comments) {
             foreach($children_comments as $comment) {
