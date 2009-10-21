@@ -95,7 +95,6 @@ Router::connect('/projects/feature/*', array('controller' => 'projects', 'action
 Router::connect('/projects/defeature/*', array('controller' => 'projects', 'action' => 'defeature'));
 Router::connect('/projects/censor', array('controller' => 'projects', 'action' => 'censor'));
 Router::connect('/projects/uncensor', array('controller' => 'projects', 'action' => 'uncensor'));
-Router::connect('/projects/confirm_censorship', array('controller' => 'projects', 'action' => 'confirm_censorship'));
 Router::connect('/projects/lock/*', array('controller' => 'projects', 'action' => 'lock'));
 Router::connect('/projects/markcomment/*', array('controller' => 'projects', 'action' => 'markcomment'));
 Router::connect('/projects/comment_reply/*', array('controller' => 'projects', 'action' => 'comment_reply'));

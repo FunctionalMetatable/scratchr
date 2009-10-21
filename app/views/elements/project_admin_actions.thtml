@@ -40,9 +40,9 @@
 			value="uncensor"/>
 <?php endif; ?>
 <?php if( $proj_visibility === 'censbycomm' ):?>
-<input type="button" class="button" onclick="if (confirm('are you sure?')) 
-		{ this.form.action='/projects/confirm_censorship'; this.form.submit(); return true; } return false;" 
-			value="confirm censorship"/>&nbsp;
+<input type="button" class="button" onclick="if (confirm('are you sure?'))
+		{ this.form.action='/projects/censor'; this.form.submit(); return true; } return false;"
+			value="confirm censorship"/> &nbsp;
 <?php endif;?>			
   </form>
 </div>
@@ -292,9 +292,9 @@ else
                             value="uncensor"/>
                 <?php endif; ?>
 				<?php if( $proj_visibility === 'censbycomm' ):?>
-				<input type="button" class="button" onclick="if (confirm('are you sure?')) 
-		{ this.form.action='/projects/confirm_censorship'; this.form.submit(); return true; } return false;" 
-			value="confirm censorship"/>&nbsp;
+				<input type="button" class="button" onclick="if (confirm('are you sure?'))
+                    { this.form.action='/projects/censor'; this.form.submit(); return true; } return false;"
+                        value="confirm censorship"/> &nbsp;
 <?php endif;?>	
             <?php endif; ?>    
 
