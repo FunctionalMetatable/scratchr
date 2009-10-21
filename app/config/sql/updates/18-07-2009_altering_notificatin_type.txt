@@ -35,6 +35,7 @@ VALUES (
 NULL , 'project_added_to_gallery_gowner', 'The project <a href="/projects/{project_owner_name}/{project_id}">{project_name}</a> has been added to your gallery <a href="/galleries/view/{gallery_id}">{gallery_name}</a> by <a href="/users/{project_owner_name}">{project_owner_name}</a>.', '0', '0'
 );
 
+
 INSERT INTO `notification_types` (
 `id` ,
 `type` ,
@@ -43,5 +44,8 @@ INSERT INTO `notification_types` (
 `negative`
 )
 VALUES (
-NULL , 'confirm_project_censorship', 'The Scratch Team reviewed your project <a href="/projects/{to_user_name}/{project_id}">{project_name}</a> and confirmed that it was inappropriate for the Scratch community.', '0', '1'
+NULL , 'project_removed_admin_confirm', 'The Scratch Team has reviewed your project <a href="/projects/{to_user_name}/{project_id}">{project_name}</a> and has decided to remove it because it was considered inappropriate for the Scratch community. Please read the <a href="/terms">Terms of Use</a> or contact us for more info. Thank you and Scratch on!', '0', '1'
 );
+
+
+UPDATE `notification_types` SET `template` = 'The Scratch Team removed your project <a href="/projects/{to_user_name}/{project_id}">{project_name}</a> because it was considered inappropriate for the Scratch community. Please read the <a href="/terms">Terms of Use</a> or contact us for more info. <br/> Thank you and Scratch on!' WHERE `notification_types`.`type` = 'project_removed_admin' LIMIT 1 ;
