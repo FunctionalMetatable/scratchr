@@ -1,9 +1,16 @@
-<?php if(isset($isFeatured )&& isset($image_name )):?>
+<!-- ClickTale Top part -->
+<script type="text/javascript">
+var WRInitTime=(new Date()).getTime();
+</script>
+<!-- ClickTale end of Top part -->
+
+<?php if(isset($isFeatured ) && isset($image_name )):?>
 <?php if($isFeatured ):?>
 <?php echo $html->image('large_ribbon/'.$image_name,array('class'=>'project_ribbon'));?>
-	
-<?php endif;endif;?>
-  <div id="header" class="clearme">
+<?php endif; ?>
+<?php endif; ?>
+
+<div id="header" class="clearme">
     <div id="logo">
 <?php
 if(isset($ishomepage) && $ishomepage) {
@@ -204,9 +211,3 @@ for ($d = 0; $d < 4; $d++) { // 4 columns loop
 				
 ?>
 </div>
-<!-- ClickTale Top part -->
-<script type="text/javascript">
-var WRInitTime=(new Date()).getTime();
-</script>
-<!-- ClickTale end of Top part -->
- 

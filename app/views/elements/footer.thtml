@@ -24,9 +24,12 @@
 
 <!-- ClickTale Bottom part -->
 <div id="ClickTaleDiv" style="display: none;"></div>
-<script src="/WRb.js" type="text/javascript"></script>
 <script type="text/javascript">
-if(typeof ClickTale=='function') ClickTale(22427,0.00012);
+if(document.location.protocol!='https:')
+  document.write(unescape("%3Cscript src='http://s.clicktale.net/WRb.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+if(typeof ClickTale=='function') ClickTale(22427,0.00036,"www");
 </script>
 <!-- ClickTale end of Bottom part -->
 
