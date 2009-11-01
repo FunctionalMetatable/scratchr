@@ -1,5 +1,3 @@
-jQuery.noConflict();
-
 Ajax.Responders.register({
   onCreate: function() {
     $('ajax_indicator').setStyle({'visibility': 'visible'});
