@@ -15,12 +15,14 @@ echo $javascript->link('prototype.js');
 echo $javascript->link('scriptaculous.js');
 echo $javascript->link('scratchr.js?v=1.2');
 echo $javascript->link('gallery.js');
-echo $javascript->link('jquery.js');
 echo $javascript->link('ajax.js');
-echo $javascript->link('signup.js');
+echo $javascript->link('jquery.js?v=1.3.2');
+echo $javascript->link('thickbox.js');
+//echo $javascript->link('interface.js');
+echo $html->css('thickbox');
+//echo $javascript->link('signup.js');
 echo $html->css('global');
 echo $html->css('languagemenu');
-
 ?>
 
 
