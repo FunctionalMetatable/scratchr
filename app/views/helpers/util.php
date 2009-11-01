@@ -32,7 +32,7 @@ class UtilHelper extends Helper {
         $url_texts = array(
             TOPLEVEL_URL.'/projects' => ___('link to project', true),
             TOPLEVEL_URL.'/galleries' => ___('link to gallery', true),
-            TOPLEVEL_URL.'/forums' => ___('link to forum', true),
+            TOPLEVEL_URL.'/forums' => ___('link to forums', true),
         );
         foreach($url_texts as $u => $t) {
             if(strpos($url, $u) !== false) {
