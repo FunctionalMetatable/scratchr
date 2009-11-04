@@ -11,4 +11,5 @@ function showLogin() {
                 function() { $('#UserInput').focus() } );
         toggled = true;
     }
+    return false;
 }
