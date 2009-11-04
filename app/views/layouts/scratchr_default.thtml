@@ -11,20 +11,22 @@
 
 <title><?php e($title_for_layout)?></title>
 <?php
-echo $javascript->link('prototype.js');
-echo $javascript->link('scriptaculous.js');
-echo $javascript->link('scratchr.js?v=1.2');
-echo $javascript->link('gallery.js');
-echo $javascript->link('ajax.js');
-echo $javascript->link('jquery.js?v=1.3.2');
-echo $javascript->link('thickbox.js');
-//echo $javascript->link('interface.js');
-echo $html->css('thickbox');
-//echo $javascript->link('signup.js');
+//for home page only
+if(Router::url('') == '/'):
+    echo $javascript->link('jquery.js?v=1.3.2');
+    echo $javascript->link('thickbox.js');
+    echo $javascript->link('scratchr.jquery.js');
+    echo $html->css('thickbox');
+else:
+    echo $javascript->link('prototype.js');
+    echo $javascript->link('scriptaculous.js');
+    echo $javascript->link('scratchr.js?v=1.2');
+    echo $javascript->link('ajax.js');
+    echo $javascript->link('gallery.js');
+endif;
 echo $html->css('global');
 echo $html->css('languagemenu');
 ?>
-
 
 
 <!-- |||||| IE- only stylesheet in conditional comment ||||||| -->
