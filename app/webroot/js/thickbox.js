@@ -96,7 +96,7 @@ function TB_ShowObj(ThickObj) {
 		}
 
 		//$("#TB_overlay").show();
-		$("body").append("<div id='TB_load'><div id='TB_loadContent'><img src='images/circle_animation.gif' /></div></div>");
+		$("body").append("<div id='TB_load'><div id='TB_loadContent'><img src='img/indicator.gif' /></div></div>");
 		var urlString = /\.jpg|\.jpeg|\.png|\.gif|\.mpg|\.mpeg|\.avi|\.html|\.htm|\.php|\.cfm|\.asp|\.aspx|\.jsp|\.jst|\.rb|\.txt/g;
 		var urlType = url.toLowerCase().match(urlString) + '';
 		switch (urlType) {
@@ -216,7 +216,7 @@ function TB_ShowBox(Direction) {
 	$("#TB_overlay").show();
 	TB_VisibleSelects = $("select:visible");
 	TB_VisibleSelects.toggle();
-	if ($().DropInLeft != undefined) {
+	/*if ($().DropInLeft != undefined) {
 		// Interface Elements for JQuery are included
 		if (Direction == undefined) {
 			if (TB_NextDirection == undefined) {
@@ -235,12 +235,12 @@ function TB_ShowBox(Direction) {
 			$("#TB_window").Grow(150);
 			TB_WasOpen = true;
 		}
-	} else {
+	} else {*/
 		// Interface Elements for JQuery are not included
 		$("#TB_overlay").show();
 		$("#TB_window").slideDown("normal");
 		TB_WasOpen = true;
-	}
+	//}
 }
 
 function TB_AnimationComplete() {
@@ -250,7 +250,7 @@ function TB_AnimationComplete() {
 
 function TB_HideBox(Direction, LocalNextObjToShow) {
 	TB_NextObjToShow = LocalNextObjToShow;
-	if ($().DropOutRight != undefined) {
+	/*if ($().DropOutRight != undefined) {
 		// Interface Elements for JQuery are included
 		if (Direction == undefined) {
 			Direction = "l";
@@ -265,11 +265,11 @@ function TB_HideBox(Direction, LocalNextObjToShow) {
 				TB_HideBox_Part2();
 			});
 		}
-	} else {
+	} else {*/
 		// Interface Elements for JQuery are not included
 		$("#TB_window").slideUp("slow");
 		TB_HideBox_Part2();
-	}
+	//}
 }
 
 function TB_HideBox_Part2() {
