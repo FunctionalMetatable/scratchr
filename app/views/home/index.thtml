@@ -13,7 +13,7 @@ width:245px;
 </style>
 <?php if(!$isLogged): ?>
 <div class="bannerbg" style="margin-top:15px">
-<div class="balloontext"><a href="channel/recent">Check out 358,133 projects</a> <br/>from around the world! <p style="margin-top: 6px;">To create your own projects:</p></div>
+<div class="balloontext"><a href="channel/recent">Check out <?= $totalprojects ?> projects</a> <br/>from around the world! <p style="margin-top: 6px;">To create your own projects:</p></div>
 <div style="margin-top: 180px; margin-left: -250px; float: left;">
 <a href="download"><img width="194" height="44" src="img/download2.png"/></a>
 </div>
