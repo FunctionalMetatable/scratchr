@@ -13,7 +13,7 @@
 <?php
 //for home page only
 if(Router::url('') == '/'):
-    echo $javascript->link('jquery.js?v=1.3.2');
+    echo $javascript->link('jquery.latest.js');
     echo $javascript->link('interface.js');
     echo $javascript->link('thickbox.js');
     echo $javascript->link('scratchr.jquery.js');
