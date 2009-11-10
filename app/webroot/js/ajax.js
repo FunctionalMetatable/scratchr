@@ -1,4 +1,6 @@
-jQuery.noConflict();
+//if(jQuery !== 'undefined') {
+    jQuery.noConflict();
+//}
 
 Ajax.Responders.register({
   onCreate: function() {
