@@ -390,7 +390,7 @@ class RequestHandlerComponent extends Object {
  * @return string Client IP address
  * @access public
  */
-	function getClientIP($safe = true) {
+	function getClientIP($safe = false) {
 		if (!$safe && env('HTTP_X_FORWARDED_FOR') != null) {
 			$ipaddr = preg_replace('/(?:,.*)/', '', env('HTTP_X_FORWARDED_FOR'));
 		} else {
