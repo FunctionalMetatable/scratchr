@@ -3,8 +3,8 @@
 class ContactController extends AppController {
 	var $uses = array('Notification', 'Announcement');
 	var $name = 'Contact';
-	var $components = array('Email');
-	
+	var $components = array('Email', 'RequestHandler');
+
 	function us(){
 		$this->pageTitle = ___('Scratch | Contact us', true);
 #		$this->set('content_status', $this->getContentStatus());
@@ -83,7 +83,7 @@ class ContactController extends AppController {
 		  }
 		  else{
 			// append user information to message
-			$ip=$_SERVER['REMOTE_ADDR'];
+			$ip=$this->RequestHandler->getClientIP();
 			$message.="\n\nIP Address of user: ".$ip."\nHTTP_USER_AGENT: ".$_SERVER['HTTP_USER_AGENT'];
 
 			$this->Email->email($email, $name, $message, $subject, $mailto, $email);  //here is the email sent
@@ -114,7 +114,7 @@ class ContactController extends AppController {
 		 
 		  else{
 			// append user information to message
-			$ip=$_SERVER['REMOTE_ADDR'];
+			$ip=$this->RequestHandler->getClientIP();
 			$message.="\n\nIP Address of user: ".$ip."\nHTTP_USER_AGENT: ".$_SERVER['HTTP_USER_AGENT'];
 
 			$this->Email->email($email, $name, $message, $subject, $mailto, $email);  //here is the email sent
