@@ -785,6 +785,8 @@ Class ServicesController extends AppController {
         $jar = APP."misc/historyextraction/analyzer.jar";
         $arg = '"' . $db['host'] . ':' . $db['port'] . '/' . $db['database']
                 . '?user=' . $db['login'] . '&password=' . $db['password'].'"';
+        $arg .= ' -f -r "' . $db['host'] . ':' . $db['port'] . '/' .  'beta' 
+                . '?user=' . $db['login'] . '&password=' . $db['password'].'"';
         return $this->__run_analyzer($jar, $sbfilepath, $arg);
     }
     
