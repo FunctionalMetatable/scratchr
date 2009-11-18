@@ -13,7 +13,7 @@ width:245px;
 </style>
 <?php if(!$isLogged): ?>
 <div class="bannerbg" style="margin-top:15px">
-<div class="balloontext"><a href="channel/recent">Check out <?= $totalprojects ?> projects</a> <br/>from around the world! <p style="margin-top: 6px;">To create your own projects:</p></div>
+<div class="balloontext"><a href="channel/featured">Check out <?= $totalprojects ?> projects</a> <br/>from around the world! <p style="margin-top: 6px;">To create your own projects:</p></div>
 <div style="margin-top: 180px; margin-left: -250px; float: left;">
 <a href="download"><img width="194" height="44" src="img/download2.png"/></a>
 </div>
@@ -466,7 +466,7 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
     <div id="stats" class="sidecontainer">
       <h4>Scratch <?php ___('Stats');?></h4>
       <ul class="sidelist">
-	<li><?php printf(___("There are %s projects%s with a total of %s scripts and %s sprites created by %s contributors of our %s registered members. That's a lot of Scratch-ing!", true), "<a href='/channel/recent'>" . $totalprojects, "</a>", $totalscripts, $totalsprites, $totalcreators, $totalusers); ?></li>
+	<li><?php printf(___("%s projects%s uploaded with a total of %s scripts and %s sprites created by %s contributors of our %s registered members. That's a lot of Scratch-ing!", true), "<a href='/channel/featured'>" . $totalprojects, "</a>", $totalscripts, $totalsprites, $totalcreators, $totalusers); ?></li>
       </ul>
     </div>
 

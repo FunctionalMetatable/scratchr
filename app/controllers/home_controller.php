@@ -364,11 +364,12 @@ Class HomeController extends AppController {
     function __getTotalProjects() {
         $onlysafesql = '';
         if ($this->getContentStatus() == 'safe') {
-            $onlysafesql =  "Project.status = 'safe'";
+            $onlysafesql =  "WHERE Project.status = 'safe'";
 	    }
         $this->Project->recursive = -1;
-        $resultset =  $this->Project->findCount($onlysafesql);
-        return number_format(0.0 + $resultset);
+        //$resultset =  $this->Project->findCount($onlysafesql);
+		$resultset =  $this->Project->query("SELECT COUNT(*) AS `count` FROM `projects` AS `Project` LEFT JOIN `users` AS `User` ON (`Project`.`user_id` = `User`.`id`)$onlysafesql");
+        return number_format(0.0 + $resultset['0']['0']['count']);
     }
 
     function __getTotalProjects7days() {
