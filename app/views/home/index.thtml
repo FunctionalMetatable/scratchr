@@ -344,6 +344,11 @@ width:245px;
   <div id="sidebar">
 
 <div id="somewhere_else"></div>
+<?php if ($isLogged): ?>
+ <div id="download">
+      <h2><?php ___('Download Scratch'); ?> 1.4</h2> <p><a href="/download"><img src="/img/download_scratch.gif" alt="Download Scratch 1.4" width="74" height="32"></a><?php printf(___('Get the %slatest version of Scratch%s for<br /> Windows, Mac.', true), '<a href="/download">', '</a>');?></p>
+    </div>
+<?php endif;?>	
     <?php if(!empty($scratch_club['name'])): ?>
     <?php
 		$club_name = htmlspecialchars($scratch_club['name']);
