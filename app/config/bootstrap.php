@@ -232,7 +232,7 @@ define('CACHE_DURATION', '1 day');
 /**
  * Memcache constants
  */
-define("MEMCACHE_SERVER", 'scratchstore'); //memcache server
+define("MEMCACHE_SERVER", 'scratchstore'); //memcache server 
 define("MEMCACHE_PORT", 11211); //memcache port
 define("HOMEL_PAGE_TTL", 60); //for home page
 define("HOMEL_NEW_PROJECTS_TTL", 60);
@@ -241,6 +241,7 @@ define("HOME_FEATURED_THEMES_TTL", 60);
 define("HOME_FRIENDS_PROJECTS_TTL", 60);
 define("HOME_RECENT_VISITORS_TTL", 10);
 define("HOME_NEW_MEMBERS_TTL", 10);
+define("HOME_TOTAL_VISIBLE_PROJECTS_TTL", 60);
 define("HOME_TOTAL_PROJECTS_TTL", 60);
 define("HOME_TOTAL_SCRIPTS_TTL", 60);
 define("HOME_TOTAL_SPRITES_TTL", 60);
