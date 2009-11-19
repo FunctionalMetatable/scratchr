@@ -171,7 +171,15 @@ Class HomeController extends AppController {
         }
         $this->set('newmembers', $newmembers);
         
-        $totalprojects = $this->Project->mc_get("totalprojects");
+        
+		$totalVisibleProjects = $this->Project->mc_get("totalVisibleProjects");
+        if ($totalVisibleProjects === false) {
+       	    $totalVisibleProjects = $this->__getTotalVisibleProjects();
+            $this->Project->mc_set("totalVisibleProjects", $totalVisibleProjects, false, HOME_TOTAL_VISIBLE_PROJECTS_TTL);
+        }
+        $this->set('totalVisibleProjects', $totalVisibleProjects);
+		
+		$totalprojects = $this->Project->mc_get("totalprojects");
         if ($totalprojects === false) {
        	    $totalprojects = $this->__getTotalProjects();
             $this->Project->mc_set("totalprojects", $totalprojects, false, HOME_TOTAL_PROJECTS_TTL);
@@ -361,7 +369,17 @@ Class HomeController extends AppController {
         return $this->Tag->getProjectTagCloud(TAG_CLOUD_HOME);
     }
 
-    function __getTotalProjects() {
+    function __getTotalVisibleProjects() {
+        $onlysafesql = '';
+        if ($this->getContentStatus() == 'safe') {
+            $onlysafesql =  "Project.status = 'safe'";
+	    }
+        $this->Project->recursive = -1;
+        $resultset =  $this->Project->findCount($onlysafesql); 
+	 	return number_format(0.0 + $resultset);
+    }
+	
+	function __getTotalProjects() {
         $onlysafesql = '';
         if ($this->getContentStatus() == 'safe') {
             $onlysafesql =  "WHERE Project.status = 'safe'";
