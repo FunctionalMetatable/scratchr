@@ -18,7 +18,7 @@ width:245px;
 <a href="download"><img width="194" height="44" src="img/download2.png"/></a>
 </div>
     <div style="margin: 25px 20px 0px 0px; float: right;">
-        <a href="video.html?width=775&height=575" class="thickbox" rel="AjaxGroup" title="Scratch Video" target="_blank"><img width="251" height="188" src="img/video.png"/></a>
+        <a href="video.html?width=780&height=585" class="thickbox" rel="AjaxGroup" title="Scratch Video" target="_blank"><img width="251" height="188" src="img/video.png"/></a>
     </div>
 </div>
 <?php endif; ?>

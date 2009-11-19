@@ -161,7 +161,7 @@ function TB_ShowObj(ThickObj) {
 				TB_HEIGHT = (params['height']*1); // +80
 				ajaxContentW = TB_WIDTH - 30;
 				ajaxContentH = TB_HEIGHT - 45;
-				$("#TB_window").append("<div id='TB_caption'>"+caption+"</div><div id='TB_closeWindow'><a href='#' id='TB_closeWindowButton'>Close window123</a></div><div id='TB_SecondLine'>" + TB_PrevHTML + TB_NextHTML + "</div><div id='TB_ImageDIV' style='width:"+ajaxContentW+"px;height:"+ajaxContentH+"px;'><a href='' id='TB_ImageOff' title='Close'><embed id='TB_Movie' src='" + url + "' autostart='true'></embed></div>");
+				$("#TB_window").append("<div id='TB_caption'>"+caption+"</div><div id='TB_closeWindow'><a href='#' id='TB_closeWindowButton'>Close window</a></div><div id='TB_SecondLine'>" + TB_PrevHTML + TB_NextHTML + "</div><div id='TB_ImageDIV' style='width:"+ajaxContentW+"px;height:"+ajaxContentH+"px;'><a href='' id='TB_ImageOff' title='Close'><embed id='TB_Movie' src='" + url + "' autostart='true'></embed></div>");
 
 				$("#TB_closeWindowButton").click(TB_remove);
 				if (!(TB_PrevHTML == "")) {
@@ -187,7 +187,7 @@ function TB_ShowObj(ThickObj) {
 				TB_HEIGHT = (params['height']*1) + 40; // +80
 				ajaxContentW = TB_WIDTH - 30;
 				ajaxContentH = TB_HEIGHT - 45;
-				$("#TB_window").append(TB_PrevHTML + TB_NextHTML + "<div id='TB_closeAjaxWindow'><a href='#' id='TB_closeWindowButton'>Close window</a></div><div id='TB_SecondLine'>"+"</div><div id='TB_ajaxContent' style='width:"+ajaxContentW+"px;height:"+ajaxContentH+"px;'></div>");
+				$("#TB_window").append(TB_PrevHTML + TB_NextHTML + "</div><div id='TB_ajaxContent' style='width:"+ajaxContentW+"px;height:"+ajaxContentH+"px;'></div>" + "<div id='TB_closeAjaxWindow'><a href='#' id='TB_closeWindowButton'>Close window</a></div><div id='TB_SecondLine'>");
 				$("#TB_closeWindowButton").click(TB_remove);
 				$("#TB_ajaxContent").load(url, function(){
 					TB_position();
