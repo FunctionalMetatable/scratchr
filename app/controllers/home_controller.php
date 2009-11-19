@@ -368,7 +368,7 @@ Class HomeController extends AppController {
 	    }
         $this->Project->recursive = -1;
         //$resultset =  $this->Project->findCount($onlysafesql);
-		$resultset =  $this->Project->query("SELECT COUNT(*) AS `count` FROM `projects` AS `Project` LEFT JOIN `users` AS `User` ON (`Project`.`user_id` = `User`.`id`)$onlysafesql");
+		$resultset =  $this->Project->query("SELECT COUNT(*) AS `count` FROM `projects` $onlysafesql");
         return number_format(0.0 + $resultset['0']['0']['count']);
     }
 
