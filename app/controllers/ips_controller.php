@@ -9,8 +9,11 @@ class IpsController extends AppController {
 		echo "getClientIP: '$client_ip'";
 		$long = ip2long($client_ip);
 		echo "<br>ip2long('$client_ip')='$long'";
-		exit;
-
+		echo "<br>HTTP_X_FORWARDED_FOR:" . env('HTTP_X_FORWARDED_FOR');
+		echo "<br>HTTP_CLIENT_IP:" .  env('HTTP_CLIENT_IP');
+		echo "<br>REMOTE_ADDR:" . env('REMOTE_ADDR');
+		echo "<br>HTTP_CLIENTADDRESS:" . env('HTTP_CLIENTADDRESS');
+		exit();
 	}
 }
 
