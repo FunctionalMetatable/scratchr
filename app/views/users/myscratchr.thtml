@@ -161,7 +161,10 @@ function langList($countries) {
         
 		<b><?php ___('Featured Projects:')?></b>
         <?php echo $featured_count?><br />
-        
+			<?php if($last_featured_project_date):?>
+				<b><?php ___('Last Featured:')?></b>
+				<small><?php echo $last_featured_project_date;___(' ago')?></small><br />
+			<?php endif;?>
 		<?php endif;?>
 	  </p>
 
