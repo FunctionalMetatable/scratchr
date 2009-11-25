@@ -917,6 +917,15 @@ class UsersController extends AppController {
 		$this->set('featureProlectList',$featureProlectList);
 		
 		$this->set('featured_count', $featured_count);
+		//get last featured project details
+		if($this->isAdmin())
+		{
+			$fprojects = $this->FeaturedProject->find(array('Project.user_id'=>$user_id), 'FeaturedProject.*','FeaturedProject.timestamp DESC');
+			if($fprojects)
+			$this->set('last_featured_project_date', friendlyDate($fprojects['FeaturedProject']['timestamp']));
+			else
+			$this->set('last_featured_project_date', false);
+		}
 		$this->Pagination->show = 15;
 		$this->Pagination->url = "/users/renderProjects/".$username . "/" . "projects";
 		// get all projects from user
