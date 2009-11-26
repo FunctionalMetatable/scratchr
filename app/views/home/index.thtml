@@ -13,12 +13,12 @@ width:245px;
 </style>
 <?php if(!$isLogged): ?>
 <div class="bannerbg" style="margin-top:15px">
-<div class="balloontext"><a href="channel/featured">Check out <?= $totalVisibleProjects ?> projects</a> <br/>from around the world! <p style="margin-top: 6px;">To create your own projects:</p></div>
+<div class="balloontext"><a href="channel/featured">Check out</a> the <?= $totalVisibleProjects ?> projects</a> from around the world! <p style="margin-top: 6px;">To create your own projects:</p></div>
 <div style="margin-top: 180px; margin-left: -250px; float: left;">
 <a href="download"><img width="194" height="44" src="img/download2.png"/></a>
 </div>
     <div style="margin: 25px 20px 0px 0px; float: right;">
-        <a href="video.html?width=780&height=585" class="thickbox" rel="AjaxGroup" title="Scratch Video" target="_blank"><img width="251" height="188" src="img/video.png"/></a>
+        <a href="video.html?width=780&height=585" class="thickbox" rel="AjaxGroup" title="Video showing what people can do in Scratch" target="_blank"><img width="244" height="182" src="/img/video.png"/></a>
     </div>
 </div>
 <?php endif; ?>
@@ -253,7 +253,7 @@ width:245px;
 //-->
 
     <div id="TopLovedLately" class="container">
-      <h3><?php ___('Top Loved Lately');?></h3>
+      <h3><?php ___('What the Community is Loving');?></h3>
 		<?php
 		foreach ($toploved as $toplove):
 		$pid = $toplove['Project']['id'];
@@ -310,7 +310,7 @@ width:245px;
 //-->
 
     <div id="TopViewedLately" class="container">
-      <h3><?php ___('Top Viewed Lately')?></h3>
+      <h3><?php ___('What the Community is Viewing')?></h3>
 		<?php
 		foreach ($topviewed as $topview):
 		$pid = $topview['Project']['id'];
@@ -344,11 +344,6 @@ width:245px;
   <div id="sidebar">
 
 <div id="somewhere_else"></div>
-<?php if ($isLogged): ?>
- <div id="download">
-      <h2><?php ___('Download Scratch'); ?> 1.4</h2> <p><a href="/download"><img src="/img/download_scratch.gif" alt="Download Scratch 1.4" width="74" height="32"></a><?php printf(___('Get the %slatest version of Scratch%s for<br /> Windows, Mac.', true), '<a href="/download">', '</a>');?></p>
-    </div>
-<?php endif;?>	
     <?php if(!empty($scratch_club['name'])): ?>
     <?php
 		$club_name = htmlspecialchars($scratch_club['name']);
@@ -362,6 +357,12 @@ width:245px;
 		 	$gallery_desc = $desc_array['0'];
 		}
 	?>
+
+     <div id="club" class="sidecontainer">
+      <h4><?php ___('Programming for All'); ?></h4>
+        <p><a href="http://cacm.acm.org/magazines/2009/11/48421-scratch-programming-for-all/fulltext"><img src="/img/cacm.png" alt="Programming for All" width="77" height="73"></a><?php ___('Read a recent article about Scratch, from a popular computer science journal.'); ?></p>
+      <p class="more"><a href="http://cacm.acm.org/magazines/2009/11/48421-scratch-programming-for-all/fulltext"><?php ___('Read the article');?></a> </p>
+     </div>
 
      <div id="club" class="sidecontainer">
       <h4><?php ___('ScratchEd'); ?></h4>
@@ -406,7 +407,7 @@ width:245px;
 
           <p class="tags" align="justify">
 <?php 
-e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null, 2, 6)); 
+e($tagcloud->getTagCloud($tags, '/tags/view', null, 3, 'scratch_tag',', ', null, 2, 6)); 
 ?>
 </p>
 
@@ -414,14 +415,10 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
     </div>
 
 
-
-	<div id="socialmedia" class="sidecontainer">
-      <h4><?php ___('Blog and more'); ?></h4>
-      <ul class="sidelist">
-				<li><?php ___('Check out our <a href="http://blog.scratch.mit.edu">blog</a>, <a href="http://twitter.com/scratchteam">Twitter page</a>, <a href="http://www.youtube.com/group/scratchprogramming">YouTube group</a>, <a href="http://www.facebook.com/scratchteam/">Facebook page</a> and <a href="http://www.flickr.com/groups/scratchmit/pool/">Flickr pool</a>.'); ?>
-      <p class="more"><a href="http://blog.scratch.mit.edu/"><?php ___('Take a look');?></a> </p>
-				</li>
-      </ul>
+     <div id="socmed" class="sidecontainer">
+      <h4><?php ___('Social Media'); ?></h4>
+        <p><a href="http://blog.scratch.mit.edu/"><img src="/img/blogicon.png" alt="Social Media" width="35"></a><?php printf(___('Read our %sblog%s and %s follow us %sTwitter%s', true), "<a href='http://blog.scratch.mit.edu'>", "</a>", "<br>", "<a href='http://twitter.com/scratchteam'>", "</a>"); ?></p>
+      <!--- <p class="more"><a href="http://scratched.media.mit.edu/"><?php ___('Find out more');?></a> </p> //-->
      </div>
 
     <div id="RecentVisitors" class="sidecontainer">
@@ -439,11 +436,12 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
 		$user_link = "/users/".$username;
 		$username = (strlen($username) > 23)? substr($username,0,23) . "&#0133;" : $username;
 		?>
-		<li><a href="<?php e($user_link)?>"><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php e($username);?></a></li>
+		<li><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><a href="<?php e($user_link)?>"><?php e($username);?></a></li>
         <?php endforeach;?>
       </ul>
     </div>
 
+<?php if ($isLogged): ?>
     <div id="NewestMembers" class="sidecontainer">
       <h4><?php ___('Newest Members');?> </h4>
       <ul class="sidelist">
@@ -458,15 +456,16 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 7, 'scratch_tag',', ', null,
 		$user_link = "/users/".$username;
 		$username = (strlen($username) > 23)? substr($username,0,23) . "&#0133;" : $username;
 		?>
-		<li><a href="<?php e($user_link)?>"><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php e($username)?></a></li>
+		<li><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><a href="<?php e($user_link)?>"><?php e($username)?></a></li>
 		<?php endforeach;?>
       </ul>
     </div>
+<?php endif;?>	
 
     <div id="stats" class="sidecontainer">
-      <h4>Scratch <?php ___('Stats');?></h4>
+      <h4><?php ___('Community Stats');?></h4>
       <ul class="sidelist">
-	<li><?php printf(___("Our community of %s contributors and %s registered members has shared a total of %s scripts and %s sprites in %s projects%s. That's a lot of Scratch-ing!", true), $totalcreators, $totalusers, $totalscripts, $totalsprites, "<a href='/channel/featured'>" . $totalprojects, "</a>"); ?></li>
+	<li><?php printf(___("%s registered members,%s%s project creators,%s%s projects uploaded,%s%s scripts%sand %s sprites.%sThat's a lot of Scratch-ing!", true), $totalusers, '<br />', $totalcreators, '<br />',  $totalprojects, '<br />',  $totalscripts, '<br />', $totalsprites, '<br />'); ?></li>
       </ul>
 	  <p class="more"><a href="http://stats.scratch.mit.edu/"><?php ___('Learn more');?></a> </p>
     </div>
