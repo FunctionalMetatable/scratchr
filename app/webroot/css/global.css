@@ -665,6 +665,17 @@ legend{
 	margin-right: 10px;
 }
 
+#socmed {
+        overflow: hidden;
+}
+#socmed img{
+        border: 0px solid #ffffff;
+        float: left;
+        margin-right: 10px;
+}
+
+
+
 .tags a, .tags a:visited{
 	color: #666666;
 	text-decoration: none;
