@@ -16,6 +16,19 @@ class ApiController extends AppController {
         $this->redirect("/projects/" . $project['User']['urlname'] . "/" . $project['Project']['id']);                      
     }
 
+    /**
+     * Prints the path of a project based on the id
+     * @parm int $pid => project id
+     */
+    function getprojectpath($pid=null) {
+        $this->autoRender=false;
+        $this->Project->bindUser();
+        $this->Project->id=$pid;
+        $project = $this->Project->read();
+        die("/projects/" . $project['User']['urlname'] . "/" . $project['Project']['id'] . ".sb");                      
+	exit(1);
+    }
+
     /** 
      * Redirects to user page based on a user id
      * @parm int $uid => project id
@@ -27,6 +40,8 @@ class ApiController extends AppController {
         $user = $this->User->read();
         $this->redirect("/users/" . $user['User']['username'] . "/");     
     } 
+
+
 
 }
 ?>
