@@ -259,6 +259,11 @@ define("REMIXES_CACHE_TTL", 30); //0.5 hour
 define('PCOMMENT_CACHE_NUMPAGE', 3); //cache first 3 project comment pages
 define('GCOMMENT_CACHE_NUMPAGE', 3); //cache first 3 gallery comment pages
 
+//Latest channel constant
+define("LATEST_SHARED_CACHE_TTL", 30); //0.5 hour
+define("LATEST_TOPVIEWED_CACHE_TTL", 30); //0.5 hour
+define("LATEST_TOPLOVED_CACHE_TTL", 30); //0.5 hour
+define("LATEST_REMIXED_CACHE_TTL", 30); //0.5 hour
 //Allow people to give thank you after n hours.
 define("THANKS_INTERVAL",5);
 
