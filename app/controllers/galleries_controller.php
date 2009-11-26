@@ -615,7 +615,7 @@ Class GalleriesController extends AppController {
 		$this->Gcomment->bindUser();
 		$commenter_userrecord = $this->User->find("id = $commenter_id");
 		$commenter_username = $commenter_userrecord['User']['username'];
-		$user_id = $gallery['Gallery']['user_id'];
+		$gowner_id = $gallery['Gallery']['user_id'];
 		$user_record = $this->User->find("id = $user_id");
 		$notify_gcomment = $user_record['User']['notify_gcomment'];
 		$commenter_id = $this->getLoggedInUserID();
@@ -647,7 +647,7 @@ Class GalleriesController extends AppController {
         if(!empty($new_tcomment)) {
           $new_tcomment['User'] =  $commenter_userrecord['User'];
           $this->set('comment', $new_tcomment);
-          $this->set('isThemeOwner', $user_id == $user_id);
+          $this->set('isThemeOwner', $user_id == $gowner_id);
           $this->set('gallery_id', $gallery_id);
         }
 		$this->render('themecomments_ajax', 'ajax');
