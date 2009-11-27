@@ -417,7 +417,7 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 3, 'scratch_tag',', ', null,
 
      <div id="socmed" class="sidecontainer">
       <h4><?php ___('Social Media'); ?></h4>
-        <p><a href="http://blog.scratch.mit.edu/"><img src="/img/blogicon.png" alt="Social Media" width="35"></a><?php printf(___('Read our %sblog%s and %s follow us %sTwitter%s', true), "<a href='http://blog.scratch.mit.edu'>", "</a>", "<br>", "<a href='http://twitter.com/scratchteam'>", "</a>"); ?></p>
+        <p><a href="http://blog.scratch.mit.edu/"><img src="/img/blogicon.png" alt="Social Media" width="35"></a><?php printf(___('Read our %sblog%s and %s follow us on %sTwitter%s', true), "<a href='http://blog.scratch.mit.edu'>", "</a>", "<br>", "<a href='http://twitter.com/scratchteam'>", "</a>"); ?></p>
       <!--- <p class="more"><a href="http://scratched.media.mit.edu/"><?php ___('Find out more');?></a> </p> //-->
      </div>
 
