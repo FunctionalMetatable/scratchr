@@ -157,7 +157,7 @@ class Sitemap extends AppModel
 		//list any static page here
 		$pages = array('download', 'research', 'credits', 'news',
 					   'howto', 'about', 'share', 'login', 'signup',
-					   'privacy', 'terms', 'contact/us', 'quotes', 'educators');
+					   'privacy', 'terms', 'contact', 'quotes', 'educators');
 		
 		//dynamically collect static pages from /views/pages directory
 		$pages_dir = VIEWS.'pages'.DS;
