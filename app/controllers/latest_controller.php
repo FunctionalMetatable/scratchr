@@ -48,7 +48,7 @@ Class LatestController extends AppController {
         $this->set('data', $final_projects);
         $this->Project->mc_close();
 
-        $this->set('heading', "latest shared projects");
+        $this->set('heading', ___("Recently shared projects", true));
         $this->set('option', 'shared');
         $this->set('rss_link', $this->feed_links['shared']);
         $this->render('explorer');
@@ -81,7 +81,7 @@ Class LatestController extends AppController {
         $this->set('data', $final_projects);
         $this->Project->mc_close();
 	
-        $this->set('heading', ___("top viewed", true));
+        $this->set('heading', ___("What the community has been viewing", true));
 		$this->set('option', 'topviewed');
 		$this->set('rss_link', $this->feed_links['topviewed']);
         $this->render('explorer');
@@ -110,7 +110,7 @@ Class LatestController extends AppController {
         $this->set('data', $final_projects);
         $this->Project->mc_close();
 
-        $this->set('heading', ___("top loved", true));
+        $this->set('heading', ___("What the community has been loving", true));
         $this->set('option', 'toploved');
         $this->set('rss_link', $this->feed_links['toploved']);
         $this->render('explorer');
@@ -145,7 +145,7 @@ Class LatestController extends AppController {
         $this->Project->mc_close();
 
         $this->set('data', $final_projects);
-        $this->set('heading', ___("top remixed", true));
+        $this->set('heading', ___("What the community has been remixing", true));
 		$this->set('option', 'remixed');
 		$this->set('rss_link', $this->feed_links['remixed']);
         $this->render('explorer');
