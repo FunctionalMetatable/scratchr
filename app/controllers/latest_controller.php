@@ -16,9 +16,9 @@ Class LatestController extends AppController {
 		$obscured_uid = $this->encode($this->getLoggedInUserID());
         $this->feed_links = array (
             'shared' => "/feeds/getNewestProjects",
-            'topviewed' => "/feeds/getTopViewedProjects",
-            'toploved' => "/feeds/getTopLovedProjects",
-            'remixed' => "/feeds/getTopRemixedProjects",
+            'topviewed' => "/feeds/getLatestTopViewedProjects",
+            'toploved' => "/feeds/getLatestTopLovedProjects",
+            'remixed' => "/feeds/getLatestTopRemixedProjects",
             'activemembers' => "/feeds/getActiveMembersProject/".$obscured_uid
         );
 		$this->set('feed_links', $this->feed_links);
