@@ -216,6 +216,35 @@ class FeedsController extends AppController {
         $this->render('get_friends_latest_feeds');
 	}
 	
+	 function getActiveMembersProject($encoded_user_id){
+		$this->autoRender = false;
+		$this->layout = 'xml';
+		$user_id = $this->decode($encoded_user_id);
+		$user_record = $this->User->find("id = $user_id");
+		if(empty($user_record)) {
+			$this->cakeError('error404');
+		}
+		$days = ACTIVEMEMBER_PROJECT_MAX_DAYS;
+		$username = $user_record['User']['username'];
+		$this->Project->bindPcomment();
+			$this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+        $projects = $this->Project->findAll("Project.user_id = $user_id AND `Project`.`created` > now( ) - INTERVAL $days DAY AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", null, "Project.created DESC",10);
+		$total_comment = 0;
+		foreach($projects as $p){
+		$total_comment += count($p['Pcomment']);
+		}
+        $url = env('SERVER_NAME');
+		$url = strtolower($url);
+		$rss_link = "http://" . $url . "/feeds/getActiveMembersProject/".$encoded_user_id;
+		$this->set('comment_count', $total_comment );
+		$this->set('username', $username);
+        $this->set('projects', $this->__feedize_projects($projects));
+		$this->set('rss_link', $rss_link);
+        $this->render('get_active_members_feeds');
+	}
+	
 	/*
      * makes $projects array feed ready
      */

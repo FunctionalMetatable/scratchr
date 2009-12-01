@@ -2,7 +2,7 @@
 Class LatestController extends AppController {
     var $helpers = array('Pagination');
     var $components = array('Pagination');
-    var $uses = array("IgnoredUser", "Project", "FeaturedProject", "Gallery", "Notification");
+    var $uses = array("IgnoredUser", "Project", "FeaturedProject", "Gallery", "Notification", "Pcomment");
 	var $feed_links = array ();
 	
 	 /**
@@ -10,17 +10,16 @@ Class LatestController extends AppController {
 	 * Overrides AppController::beforeFilter()
      */
     function beforeFilter() {
+		
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
-
-        $obscured_uid = $this->encode($this->getLoggedInUserID());
+		$obscured_uid = $this->encode($this->getLoggedInUserID());
         $this->feed_links = array (
             'shared' => "/feeds/getNewestProjects",
-            'featured' => "/feeds/getFeaturedProjects",
             'topviewed' => "/feeds/getTopViewedProjects",
             'toploved' => "/feeds/getTopLovedProjects",
             'remixed' => "/feeds/getTopRemixedProjects",
-            'friends_latest' => "/feeds/getFriendsLatestProjects/".$obscured_uid
+            'activemembers' => "/feeds/getActiveMembersProject/".$obscured_uid
         );
 		$this->set('feed_links', $this->feed_links);
 		$this->set('content_status', $this->getContentStatus());
@@ -151,6 +150,47 @@ Class LatestController extends AppController {
         $this->render('explorer');
     }
 	
+	
+	
+	function activemembers() {
+        $this->layout = 'scratchr_explorer';
+        $this->pageTitle = ___("Scratch | Active member's projects", true);
+        $isLogged = $this->isLoggedIn();
+		$user_id = $this->getLoggedInUserID();
+		$key = 'latest-activemember-';
+        $ttl = LATEST_ACTIVEMEMBER_CACHE_TTL;
+		$days = ACTIVEMEMBER_PROJECT_MAX_DAYS;
+		
+		$this->Pagination->show = 10;
+		$this->modelClass = "Project";
+        $options = array("sortBy"=>"created", "direction" => "DESC");
+		list($order,$limit,$page) = $this->Pagination->init("Project.user_id = $user_id AND `Project`.`created` > now( ) - INTERVAL $days DAY AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", Array(), $options);
+        
+        $this->Project->mc_connect();
+        $mc_key = $key.$limit.'-'.$page;
+        $final_projects = $this->Project->mc_get($mc_key);
+        if ($final_projects === false) {
+           $this->Project->bindPcomment();
+			$this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+			
+            $final_projects = $this->Project->findAll("Project.user_id = $user_id AND `Project`.`created` > now( ) - INTERVAL $days DAY AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+           
+            $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
+        }
+       
+		$this->set('data', $final_projects);
+        $this->Project->mc_close();
+		$total_comment = $this->_getCommentsCount($key, $ttl);
+		
+        $this->set('comment_count', $total_comment);
+		$this->set('heading', ___("active members", true));
+		$this->set('option', 'activemembers');
+		$this->set('rss_link', $this->feed_links['topviewed']);
+        $this->render('activemembers');
+    }
+	
     
 	function set_projects($projects) {
 		$isLogged = $this->isLoggedIn();
@@ -189,6 +229,21 @@ Class LatestController extends AppController {
 					}
 					return $image_name;
 	}
+	
+	
+	 function _getCommentsCount($key, $ttl) {
+        $this->Pcomment->mc_connect();
+        $user_id = $this->getLoggedInUserID();
+		$days = ACTIVEMEMBER_PROJECT_MAX_DAYS;
+        $mc_key = $key.'comment-count';
+        $comments_count = $this->Pcomment->mc_get($mc_key);
+        if($comments_count === false) {
+            $comments_count = $this->Pcomment->findCount("Project.user_id = $user_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND `Project`.`created` > now( ) - INTERVAL $days  DAY");
+            $this->Pcomment->mc_set($mc_key, $comments_count, false, $ttl);
+        }
+        $this->Project->mc_close();
+        return $comments_count;
+    }
    
 }
 ?>
