@@ -216,6 +216,68 @@ class FeedsController extends AppController {
         $this->render('get_friends_latest_feeds');
 	}
 	
+	 function getLatestTopViewedProjects() {
+		$this->autoRender = false;
+		$this->layout = 'xml'; 
+		$this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+		if ($this->getContentStatus() == 'safe') {
+		    $days = TOP_VIEWED_DAY_INTERVAL_SAFE;
+        	} else {
+		    $days = TOP_VIEWED_DAY_INTERVAL;
+        	}
+		$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND  `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe'";
+		$projects = $this->Project->findAll($condition, null, "Project.views DESC", 15);
+		$final_projects = Array();
+		$url = env('SERVER_NAME');
+		$url = strtolower($url);
+		$rss_link = "http://" . $url . "/feeds/getLatestTopViewedProjects";
+		$this->set('rss_link', $rss_link);
+		$this->set('projects', $this->__feedize_projects($projects));
+		$this->render('latest_topviewed_project_feed');
+	}
+	
+	function getLatestTopLovedProjects() {
+		$this->autoRender = false;
+		$this->layout = 'xml'; 
+		 $this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+			$days = TOP_LOVED_DAY_INTERVAL;
+			$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND Project.loveitsuniqueip > 0 AND `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe'";
+		$projects = $this->Project->findAll($condition, null, "Project.loveitsuniqueip DESC", 15);
+		$final_projects = Array();
+		$url = env('SERVER_NAME');
+		$url = strtolower($url);
+		$rss_link = "http://" . $url . "/feeds/getLatestTopLovedProjects";
+        $this->set('rss_link', $rss_link);
+		$this->set('projects', $this->__feedize_projects($projects));
+		$this->render('latest_toploved_project_feed');
+	}
+	 
+	 function getLatestTopRemixedProjects() {
+		$this->autoRender = false;
+		$this->layout = 'xml'; 
+		$this->Project->unbindModel(
+                array('hasMany' => array('GalleryProject'))
+            );
+            if ($this->getContentStatus() =='safe') {
+		    $days = TOP_REMIXED_DAY_INTERVAL_SAFE;
+			} else {
+				$days = TOP_REMIXED_DAY_INTERVAL;
+			}
+			$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND remixer > 0 AND  `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe'";
+		$projects = $this->Project->findAll($condition, null, "Project.remixes DESC", 15);
+		$final_projects = Array();
+		$url = env('SERVER_NAME');
+		$url = strtolower($url);
+		$rss_link = "http://" . $url . "/feeds/getTopRemixedProjects";
+		$this->set('rss_link', $rss_link);
+		$this->set('projects', $this->__feedize_projects($projects));
+		$this->render('latest_topremixed_project_feed');
+	}
+	
 	 function getActiveMembersProject($encoded_user_id){
 		$this->autoRender = false;
 		$this->layout = 'xml';
