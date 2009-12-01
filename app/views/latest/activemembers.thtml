@@ -1,0 +1,114 @@
+
+<div id="ajax_pagination">
+<?php if($comment_count < NUM_LATEST_COMMENT):?>
+<div class="fullcontent">
+    <div class="mystuff_project_action">
+        <a href="<?php echo $html->url($feed_links[$option])?>" title="Subscribe to my feed">
+            <?php echo $html->image('/img/feed-icon.gif',array('border'=>'0'))?><?php ___('Subscribe');?>
+        </a>
+	</div>
+
+    <div class="top_header">
+        <h2><?php echo ___('Explore Projects', true) . " " . ___($heading, true);?></h2>
+        <h3>
+            <?php printf(___('Do you want to know how to %supload your project%s?', true), '<a href="/share">', '</a>'); ?>
+        </h3>
+	</div>
+	
+    <?php echo $this->element('latest_channel_menu'); ?>
+	
+	<?php	
+			foreach ($data as $project) {
+				$views = $project['Project']['views'];
+				$pid = $project['Project']['id'];
+				$ribbon_image = (isset($project['Project']['ribbon_name'])) ? $project['Project']['ribbon_name']:null;
+				$urlname = $project['User']['urlname'];
+				$username = htmlspecialchars($project['User']['username']);
+				$user_role = $project['User']['role'];
+				$project_url = "/projects/$urlname/$pid";
+				$project_desc = htmlspecialchars($project['Project']['description']);
+				$project_desc = wordwrap($project_desc, 88, "\n",true);
+				$lovers = $project['Project']['loveit'];
+				$mini_img_src = getThumbnailImg($urlname,$pid);
+				$project_name = htmlspecialchars($project['Project']['name']);
+				$expand = false;
+                
+				if (strlen($project_desc) >= 300) {
+					$project_desc = substr($project_desc,0,300) . " ... ";
+					$expand = true;
+				}
+
+				
+					echo "<div id='$pid' class='gallerythumb clearme'>\n";
+					?>
+						<?php if(SHOW_RIBBON ==1 && $ribbon_image):?>
+						<a href="<?php echo $html->url($project_url)?>">
+						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'channel_ribbon'));?>
+						</a>
+						<?php endif;?>
+						<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
+				<h3><a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></h3>
+				<p><strong><?php ___('By');?>: </strong>
+				<?php echo $util->username($username, $user_role);?>
+				</p>
+								
+					<?php			
+								echo "<p>\n"; 
+								if ($views == 0) {
+									echo "<strong>"; 
+										___('Views');
+									echo ":</strong> 0";
+								} else { 
+									echo "<strong>"; 
+										___('Views');
+									echo ":</strong> $views";
+								}
+								
+								if ($lovers == 0) {
+								} else {
+									echo "<strong>"; 
+									echo " | "; ___("LoveIt's");
+									echo "</strong>: $lovers";
+								}
+								echo "</p>";
+								
+								if ($project_desc == "") {
+								
+								} else {
+									echo "<p><strong>"; 
+									___('Description');
+									echo "</strong>: $project_desc";
+								}
+							
+								if ($expand) {
+									e($ajax->link(___("show more", true), '#', 
+										array("url"=>"/projects/expandDescription/$pid/0",
+											"update"=>"$pid"), NULL, false));
+								}
+							echo "</p>";
+					echo "</div>\n";
+				}
+			
+		
+	?>
+</div>
+   	<?php
+		$pagination->setPaging($paging);
+		echo $this->renderElement('pagination');
+else:
+?>
+<div class="fullcontent">
+ <div class="top_header">
+        <h2><?php echo ___('Explore Projects', true) . " " . ___($heading, true);?></h2>
+        <h3>
+            <?php printf(___('Do you want to know how to %supload your project%s?', true), '<a href="/share">', '</a>'); ?>
+        </h3>
+	</div>
+ <?php echo $this->element('latest_channel_menu'); ?>
+</div>
+<?php
+
+endif;
+?>
+	
+</div>
