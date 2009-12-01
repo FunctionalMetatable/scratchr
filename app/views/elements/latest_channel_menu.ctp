@@ -23,5 +23,13 @@
     <?php ___("top remixed");?>
     </span>
     </a>
+	&nbsp;
+    <?php if($isLoggedIn): ?>
+    <a href="<?php echo $html->url('/latest/activemembers')?>">
+    <span class="button2<?php if($option == 'activemembers'): ?>_selected<?php endif ?>">
+    <?php ___("active members");?>
+    </span>
+    </a>
+    <?php endif; ?>
     
 </div>
