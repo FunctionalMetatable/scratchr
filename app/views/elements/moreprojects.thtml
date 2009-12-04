@@ -3,7 +3,7 @@
 		foreach ($user_projects as $user_project):
 		$user_project_name = htmlspecialchars($user_project['Project']['name']);
 		$user_project_fullname = htmlspecialchars($user_project['Project']['name']);
-		$views = $user_project['Project']['views'];
+		$views = $user_project['Project']['views'] + $user_project['Project']['anonviews'];
 		$user_project_id = $user_project['Project']['id'];
 		$user_project_url = "/projects/".$urlname."/".$user_project_id;
 		$mini_project_thumb = getThumbnailImg($urlname, $user_project_id, 'mini');
