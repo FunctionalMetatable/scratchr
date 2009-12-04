@@ -957,8 +957,8 @@ class UsersController extends AppController {
 		$this->modelClass = "Favorite";
 		$options = Array("sortBy"=>"timestamp", "sortByClass" => "Favorite", "direction"=> "DESC", "url"=>"/users/renderProjects/".$username . "/" . "favorites");	
 
-		list($order,$limit,$page) = $this->PaginationSecondary->init("Favorite.user_id = $user_id AND Project.proj_visibility = 'visible'", Array(), $options);
-		$favorites = $this->Favorite->findAll("Favorite.user_id= $user_id AND Project.proj_visibility = 'visible'", null, $order, $limit, $page, 2 );
+		list($order,$limit,$page) = $this->PaginationSecondary->init("Favorite.user_id = $user_id", Array(), $options);
+		$favorites = $this->Favorite->findAll("Favorite.user_id= $user_id", null, $order, $limit, $page, 2 );
 		
 		$final_favorites = Array();
 		$counter = 0;

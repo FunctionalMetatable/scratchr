@@ -14,23 +14,33 @@
 		$favorite_id = $favorite['Favorite']['id'];
 		$project = $favorite['Project'];
 		$project_name = htmlspecialchars($project['name']);
+		$visibility = $project['proj_visibility'];
 		$pid = $project['id'];
 		$owner = $project['User'];
 		$owner_urlname = $owner['urlname'];
 		$owner_username = $owner['username'];
-		$project_thumbnail = getThumbnailImg($owner_urlname, $pid, 'mini', true);
+		$owner_role = $owner['role'];
+		$project_thumbnail = getThumbnailImg($owner_urlname, $pid, 'mini', true, '/', $visibility);
 		$project_url = "/projects/".$owner_urlname."/".$pid;
 		$project_owner_url = "/users/".$owner_urlname;
 		if (strlen($project_name) >= 17) {
 			$project_name = substr($project_name,0,17) . "&#0133;";
 		}
 	?>
-	<div class="mystuff_thumb"> <a href="<?php echo $html->url($project_url)?>">
+	<div class="mystuff_thumb"> 
+	<?php 
+		if(SHOW_RIBBON ==1):
+		if(array_key_exists($pid,$featureProlectList)):?>
+		<a href="<?php echo $html->url($project_url)?>">
+		<?php echo $html->image('small_ribbon/'.$featureProlectList[$pid],array('class'=>'ribbon'));?>
+		</a>
+		<?php endif;endif;?>
+	<a href="<?php echo $html->url($project_url)?>">
 	<?php echo $html->image($project_thumbnail,array('title'=>htmlspecialchars($project['name']),'alt'=>htmlspecialchars($project['name']),'width'=>'148','height'=>'111'))?>
 	
 	</a>
 		<h6><a href="<?php echo $html->url($project_url)?>"><?php e($project_name)?></a></h6>
-		<p><?php ___('by'); ?><a href="<?php echo $html->url($project_owner_url)?>"> <?php e($owner_username)?></a></p>
+		<p><?php ___('by'); ?>&nbsp;<?php echo $util->username($owner_username, $owner_role);?></p>
 	
 		<?php if ($isMe || $isAdmin):?>
 			<input type="checkbox" onclick="toggleActive(<?php echo "'" . $pid . '_' . $favorite_id . "'"; ?>, 'removeFavorites');"/>

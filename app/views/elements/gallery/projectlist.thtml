@@ -4,13 +4,16 @@
 	<?php
 	foreach ($gallery_projects as $project):
 		$pid = $project['Project']['id'];
+		$visibility = $project['Project']['proj_visibility'];
 		$urlname = $project['Project']['User']['urlname'];
+		$ribbon_name = $project['Project']['ribbon_name'];
 		$owner_url = "/users/".$urlname;
 		$owner_username = htmlspecialchars($project['Project']['User']['username']);
+		$owner_role = $project['Project']['User']['role'];
 		$project_name = htmlspecialchars($project['Project']['name']);
 		$project_id = $project['Project']['id'];
 		$project_url = "/projects/$urlname/$pid";
-		$thumbnail_src = getThumbnailImg($urlname, $pid);
+		$thumbnail_src = getThumbnailImg($urlname, $pid, 'mini', true, '/', $visibility);
 		if ($session_username == $owner_username) {
 		$isProjectOwner = true;
 	} else {
@@ -21,10 +24,23 @@
 	}
 	?>
 	<div class="thumb">
+		<?php
+		if(SHOW_RIBBON ==1 && $ribbon_name):?>
+		
+		<a href="<?php echo $html->url($project_url)?>">
+		<?php echo $html->image('small_ribbon/'.$ribbon_name,array('class'=>'ribbon'));?>
+		</a>
+		<?php endif;?>
 	<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($thumbnail_src,array('alt'=>$project_name,'width'=>'148','148'=>'111'))?></a>
 	  
 	  <h6><a href="<?php echo $html->url($project_url)?>"><?php e($project_name)?></a></h6>
-	  <p><?php ___('by'); ?><a href="<?php echo $html->url($owner_url)?>"> <?php e($owner_username)?></a>
+	  <p><?php ___('by'); ?>
+	  <?php
+		if (isset($owner_username{16})){
+			$owner_username = substr($owner_username, 0, 13)."&#0133;";
+		}; 
+ 		?>
+		 <?php echo $util->username($owner_username, $owner_role);?>
 	  <?php if ($isThemeOwner || $isProjectOwner || $isAdmin): ?>
 	 	| <a href="<?php echo $html->url('/galleries/removeproject/')?><?php e($theme_id) ?>/<?php e($project_id)?>">[x]</a></p>
 	  <?php endif; ?>
