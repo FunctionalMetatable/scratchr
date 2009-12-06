@@ -21,3 +21,20 @@ NULL , 'project_remixed_neutral', 'Your project "<a href="/projects/{to_user_nam
 
 
 UPDATE `notification_types` SET `template` = 'Congratulations, your project "<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>" has been remixed as "<a href="/projects/{from_user_name}/%s">%s</a>"! <img src="img/pages/credits/cat-face-bullet.gif" />' WHERE `notification_types`.`type` ='project_remixed_positive' LIMIT 1 ;
+
+ALTER TABLE `remix_notifications` CHANGE `ntype` `ntype` ENUM( 'positive', 'neutral', 'generosity', 'conformity', 'reputation' ) NOT NULL DEFAULT 'neutral';
+
+INSERT INTO `notification_types` (
+`id` ,
+`type` ,
+`template` ,
+`is_admin` ,
+`negative`
+)
+VALUES (
+NULL , 'project_remixed_generosity', 'Your project "<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>" has been remixed. Thanks for being generous in sharing your work and inspiring other members in the community', '0', '0'
+), (
+NULL , 'project_remixed_conformity', 'Your project "<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>" has been remixed. A lot of people get happy when their project gets remixed', '0', '0'
+), (
+NULL , 'project_remixed_reputation', 'Your project "<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>" has been remixed. People often remix when they get inspired and respect your work!', '0', '0'
+);
