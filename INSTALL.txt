@@ -2,6 +2,19 @@
 READ THE LICENSE.TXT FIRST
 ***************************
 
+REQUIREMENTS
+
+Apache 
+MySQL 
+PHP 
+memcached
+JRE 
+php-gd
+php-pecl-memcache
+php-eaccelerator
+
+STEPS
+
 1. Install the latest stable versions of Apache, MySQL and PHP and Memcache
 (XAMP or WAMP are good options for Windows that come with all of them).
 Apache needs mod-rewrite enabled and PHP needs php5-mysql
