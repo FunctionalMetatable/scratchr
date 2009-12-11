@@ -1,13 +1,13 @@
 <rss version="2.0">
   <channel>
-    <title><?php echo $username?>'s Latest Projects</title>
+    <title>Latest Projects</title>
     <link><?php echo $rss_link; ?></link>
-    <description><?php echo $username;?>'s Latest 10 Projects</description>
+    <description>Latest 10 Projects</description>
     <language>en-us</language>
     <pubDate><?php echo date("D, j M Y H:i:s", gmmktime()) . ' GMT';?></pubDate>
     <docs></docs>
     <generator>ScratchR</generator>
-	<?php if($comment_count < NUM_LATEST_COMMENT):?>
+	
    <?php foreach ($projects as $project): ?>
     <item>
       <title><?php echo htmlspecialchars($project['Project']['name']); ?></title>
@@ -17,6 +17,6 @@
 	  <imagelink><?php echo $project['Project']['image_link']; ?></imagelink>
     </item> 
     <?php endforeach; ?>
-	<?php endif;?>
+	
   </channel>
 </rss>
