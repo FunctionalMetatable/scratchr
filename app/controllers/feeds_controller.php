@@ -278,30 +278,41 @@ class FeedsController extends AppController {
 		$this->render('latest_topremixed_project_feed');
 	}
 	
-	 function getActiveMembersProject($encoded_user_id){
+	 function getActiveMembersProject(){
 		$this->autoRender = false;
 		$this->layout = 'xml';
-		$user_id = $this->decode($encoded_user_id);
-		$user_record = $this->User->find("id = $user_id");
-		if(empty($user_record)) {
-			$this->cakeError('error404');
-		}
+		
 		$days = ACTIVEMEMBER_PROJECT_MAX_DAYS;
-		$username = $user_record['User']['username'];
+		$tcomment = NUM_LATEST_COMMENT;
+		
 		$this->Project->bindPcomment();
 			$this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-        $projects = $this->Project->findAll("Project.user_id = $user_id AND `Project`.`created` > now( ) - INTERVAL $days DAY AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", null, "Project.created DESC",10);
-		$total_comment = 0;
-		foreach($projects as $p){
-		$total_comment += count($p['Pcomment']);
-		}
+        $condition = 								"SELECT *
+													FROM projects Project
+													LEFT JOIN `users` AS `User` ON ( `Project`.`user_id` = `User`.`id` )
+													WHERE DATEDIFF( CURRENT_DATE( ) , Project.created )
+													BETWEEN 0
+													AND $days
+													AND  `Project`.`proj_visibility` = 'visible' 
+													AND `Project`.`status` <> 'notsafe'
+													AND (
+													SELECT COUNT( * )
+													FROM pcomments pc, projects b
+													WHERE pc.project_id = Project.id
+													AND b.user_id = Project.user_id
+													) < $tcomment
+													GROUP BY Project.user_id
+													HAVING MAX(numberOfSprites*totalScripts)
+													ORDER BY Project.created DESC LIMIT 0,10";
+		$projects = $this->Project->query($condition);
+		
         $url = env('SERVER_NAME');
 		$url = strtolower($url);
-		$rss_link = "http://" . $url . "/feeds/getActiveMembersProject/".$encoded_user_id;
-		$this->set('comment_count', $total_comment );
-		$this->set('username', $username);
+		$rss_link = "http://" . $url . "/feeds/getActiveMembersProject";
+		
+		
         $this->set('projects', $this->__feedize_projects($projects));
 		$this->set('rss_link', $rss_link);
         $this->render('get_active_members_feeds');

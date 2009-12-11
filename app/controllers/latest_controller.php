@@ -10,7 +10,8 @@ Class LatestController extends AppController {
 	 * Overrides AppController::beforeFilter()
      */
     function beforeFilter() {
-		
+		$limit = 10;
+		$this->Pagination->show = $limit;
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
 		$obscured_uid = $this->encode($this->getLoggedInUserID());
@@ -19,7 +20,7 @@ Class LatestController extends AppController {
             'topviewed' => "/feeds/getLatestTopViewedProjects",
             'toploved' => "/feeds/getLatestTopLovedProjects",
             'remixed' => "/feeds/getLatestTopRemixedProjects",
-            'activemembers' => "/feeds/getActiveMembersProject/".$obscured_uid
+            'activemembers' => "/feeds/getActiveMembersProject"
         );
 		$this->set('feed_links', $this->feed_links);
 		$this->set('content_status', $this->getContentStatus());
@@ -157,16 +158,34 @@ Class LatestController extends AppController {
         $this->pageTitle = ___("Scratch | Active member's projects", true);
         $isLogged = $this->isLoggedIn();
 		$user_id = $this->getLoggedInUserID();
+		$options = array("sortBy"=>"created", "direction" => "DESC");
 		$key = 'latest-activemember-';
         $ttl = LATEST_ACTIVEMEMBER_CACHE_TTL;
 		$days = ACTIVEMEMBER_PROJECT_MAX_DAYS;
+		$tcomment = NUM_LATEST_COMMENT;
+		$condition = 								"SELECT *
+													FROM projects Project
+													LEFT JOIN `users` AS `User` ON ( `Project`.`user_id` = `User`.`id` )
+													WHERE DATEDIFF( CURRENT_DATE( ) , Project.created )
+													BETWEEN 0
+													AND $days
+													AND  `Project`.`proj_visibility` = 'visible' 
+													AND `Project`.`status` <> 'notsafe'
+													AND (
+													
+													SELECT COUNT( * )
+													FROM pcomments pc, projects b
+													WHERE pc.project_id = Project.id
+													AND b.user_id = Project.user_id
+													) < $tcomment
+													GROUP BY Project.user_id
+													HAVING MAX(numberOfSprites*totalScripts)
+													ORDER BY Project.created DESC";
 		
-		$this->Pagination->show = 10;
-		$this->modelClass = "Project";
-        $options = array("sortBy"=>"created", "direction" => "DESC");
-		list($order,$limit,$page) = $this->Pagination->init("Project.user_id = $user_id AND `Project`.`created` > now( ) - INTERVAL $days DAY AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", Array(), $options);
-        
-        $this->Project->mc_connect();
+		$projects_count = $this->_getProjectsCount($condition, $key, $ttl);
+        list($order, $limit, $page) = $this->Pagination->init(null, array(),
+                                            $options, $projects_count);
+		$this->Project->mc_connect();
         $mc_key = $key.$limit.'-'.$page;
         $final_projects = $this->Project->mc_get($mc_key);
         if ($final_projects === false) {
@@ -175,16 +194,14 @@ Class LatestController extends AppController {
                 array('hasMany' => array('GalleryProject'))
             );
 			
-            $final_projects = $this->Project->findAll("Project.user_id = $user_id AND `Project`.`created` > now( ) - INTERVAL $days DAY AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+            $final_projects = $this->Project->query($condition);
            
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
        
 		$this->set('data', $final_projects);
         $this->Project->mc_close();
-		$total_comment = $this->_getCommentsCount($key, $ttl);
 		
-        $this->set('comment_count', $total_comment);
 		$this->set('heading', ___("active members", true));
 		$this->set('option', 'activemembers');
 		$this->set('rss_link', $this->feed_links['topviewed']);
@@ -231,18 +248,18 @@ Class LatestController extends AppController {
 	}
 	
 	
-	 function _getCommentsCount($key, $ttl) {
-        $this->Pcomment->mc_connect();
-        $user_id = $this->getLoggedInUserID();
-		$days = ACTIVEMEMBER_PROJECT_MAX_DAYS;
-        $mc_key = $key.'comment-count';
-        $comments_count = $this->Pcomment->mc_get($mc_key);
-        if($comments_count === false) {
-            $comments_count = $this->Pcomment->findCount("Project.user_id = $user_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND `Project`.`created` > now( ) - INTERVAL $days  DAY");
-            $this->Pcomment->mc_set($mc_key, $comments_count, false, $ttl);
+function _getProjectsCount($condition, $key, $ttl, $recursion = -1) {
+        $this->Project->mc_connect();
+        $model_class = $this->modelClass;
+        $mc_key = $key.'count';
+		$projects_count = $this->Project->mc_get($mc_key);
+        if($projects_count === false) {
+		$projects = $this->$model_class->query($condition, $recursion);
+			$projects_count =  count($projects);
+            $this->Project->mc_set($mc_key, $projects_count, false, $ttl);
         }
         $this->Project->mc_close();
-        return $comments_count;
+        return $projects_count;
     }
    
 }

@@ -1,6 +1,5 @@
 
 <div id="ajax_pagination">
-<?php if($comment_count < NUM_LATEST_COMMENT):?>
 <div class="fullcontent">
     <div class="mystuff_project_action">
         <a href="<?php echo $html->url($feed_links[$option])?>" title="Subscribe to my feed">
@@ -95,20 +94,7 @@
    	<?php
 		$pagination->setPaging($paging);
 		echo $this->renderElement('pagination');
-else:
-?>
-<div class="fullcontent">
- <div class="top_header">
-        <h2><?php echo ___('Explore Projects', true) . " " . ___($heading, true);?></h2>
-        <h3>
-            <?php printf(___('Do you want to know how to %supload your project%s?', true), '<a href="/share">', '</a>'); ?>
-        </h3>
-	</div>
- <?php echo $this->element('latest_channel_menu'); ?>
-</div>
-<?php
 
-endif;
 ?>
-	
+
 </div>
