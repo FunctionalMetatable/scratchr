@@ -1,16 +1,19 @@
 <div id="gallery_menu">
+<!--
     <a href="<?php echo $html->url('/channel/recent')?>">
     <span class="button2<?php if($option == 'recent'): ?>_selected<?php endif ?>">
     <?php ___("newest");?>
     </span>
     </a>
     &nbsp;
+//-->
     <a href="<?php echo $html->url('/channel/featured')?>">
     <span class="button2<?php if($option == 'featured'): ?>_selected<?php endif ?>">
     <?php ___("featured");?>
     </span>
     </a>
     &nbsp;
+<!--
     <a href="<?php echo $html->url('/channel/topviewed')?>">
     <span class="button2<?php if($option == 'topviewed'): ?>_selected<?php endif ?>">
     <?php ___("top viewed");?>
@@ -28,6 +31,7 @@
     <?php ___("top remixed");?>
     </span>
     </a>
+//-->
     &nbsp;
     <a href="<?php echo $html->url('/channel/surprise')?>">
     <span class="button2<?php if($option == 'surprise'): ?>_selected<?php endif ?>">
