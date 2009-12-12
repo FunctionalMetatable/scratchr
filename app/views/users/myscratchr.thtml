@@ -263,8 +263,10 @@ function langList($countries) {
 			<br>
 			<input value="<?php ___('update'); ?>" type="submit" class="button">
 			</form>
+			<!--- 
 			<br />
-			<?php echo $html->link(___('Close account',true),'/users/close_account/'.$user['id'])?>
+			<?php echo $html->link(___('Close account',true),'/users/close_account/'.$user['id'])?> 
+			//--->
 		<?php endif;?>
         
         
