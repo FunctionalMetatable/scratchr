@@ -13,7 +13,7 @@ width:245px;
 </style>
 <?php if(!$isLogged): ?>
 <div class="bannerbg" style="margin-top:15px">
-<div class="balloontext"><a href="channel/featured">Check out</a> the <?= $totalVisibleProjects ?> projects</a> from around the world! <p style="margin-top: 6px;">To create your own projects:</p></div>
+<div class="balloontext"><a href="/channel/featured">Check out</a> the <?= $totalVisibleProjects ?> projects</a> from around the world! <p style="margin-top: 6px;">To create your own projects:</p></div>
 <div style="margin-top: 180px; margin-left: -250px; float: left;">
 <a href="download"><img width="194" height="44" src="img/download2.png"/></a>
 </div>
@@ -53,7 +53,7 @@ width:245px;
 		  </p>
 		</div>
 		<?php endforeach; ?>
-      <p class="more"><a href="/channel/recent"><?php ___('See more');?></a> </p>
+      <p class="more"><a href="/latest/shared"><?php ___('See more');?></a> </p>
     </div>
 <?php endif;?>
 
@@ -218,7 +218,7 @@ width:245px;
 		  <p><?php ___('by'); ?> <?php echo $util->username($owner, $owner_role);?></p>
 		</div>
 		<?php endforeach; ?>
-      <p class="more"><a href="/channel/remixed"><?php ___('See more');?></a> </p>
+      <p class="more"><a href="/latest/remixed"><?php ___('See more');?></a> </p>
     </div>
 
 
@@ -277,7 +277,7 @@ width:245px;
 		  <p><?php ___('by'); ?> <?php echo $util->username($owner, $owner_role);?></p>
 		</div>
 		<?php endforeach; ?>
-      <p class="more"><a href="/channel/toploved"><?php ___('See more');?></a> </p>
+      <p class="more"><a href="/latest/toploved"><?php ___('See more');?></a> </p>
     </div>
 
 <!--
@@ -334,7 +334,7 @@ width:245px;
 		  <p><?php ___('by'); ?> <?php echo $util->username($owner, $owner_role);?></p>
 		</div>
 		<?php endforeach; ?>
-      <p class="more"><a href="/channel/topviewed"><?php ___('See more');?></a> </p>
+      <p class="more"><a href="/latest/topviewed"><?php ___('See more');?></a> </p>
     </div>
   </div>
 <!-- ////// End main content ////// -->
@@ -358,12 +358,13 @@ width:245px;
 		}
 	?>
 
+<!--
      <div id="club" class="sidecontainer">
       <h4><?php ___('Programming for All'); ?></h4>
         <p><a href="http://cacm.acm.org/magazines/2009/11/48421-scratch-programming-for-all/fulltext"><img src="/img/cacm.png" alt="Programming for All" width="77" height="73"></a><?php ___('Read a recent article about Scratch, from a popular computer science journal.'); ?></p>
       <p class="more"><a href="http://cacm.acm.org/magazines/2009/11/48421-scratch-programming-for-all/fulltext"><?php ___('Read the article');?></a> </p>
      </div>
-
+//-->
      <div id="club" class="sidecontainer">
       <h4><?php ___('ScratchEd'); ?></h4>
         <p><a href="http://scratched.media.mit.edu/"><img src="http://info.scratch.mit.edu/@api/deki/files/1255/=scratched2.png?size=webview" alt="ScratchEd" width="77"></a><?php ___('Do you help people learn Scratch? Join ScratchEd, our new online community for educators.'); ?></p>
