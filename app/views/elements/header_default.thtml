@@ -114,7 +114,7 @@ for ($z = 0; $z < $langnum; $z++) {
 	  
 	  <a href=<?php echo $html->url('/')?>><?php ___('home'); ?></a>
 	  </li>
-      <li <?php if ($active_tab == "projects"):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'channel','action'=>'recent'))?>"><?php ___('projects'); ?></a></li>
+      <li <?php if ($active_tab == "projects"):?> id="active" <?php endif;?>><a href="<?php echo $html->url(array('controller'=>'channel','action'=>'featured'))?>"><?php ___('projects'); ?></a></li>
       <li <?php if ($active_tab == "galleries"):?> id="active" <?php endif;?>><a href="<?php echo $html->url('/galleries/')?>"><?php ___('galleries'); ?></a></li>
 	 
       <li <?php if ($this_controller_here === "/support"):?> id="active" <?php endif;?>><a href="/redirect/support"><?php ___('support'); ?></a></li> 
