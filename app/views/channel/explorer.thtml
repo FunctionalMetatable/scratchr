@@ -20,7 +20,7 @@
 	
 			foreach ($data as $featured) {
 				$project = $featured['Project'];
-				$views = $project['views'];
+				$views = $project['views'] + $project['anonviews'];
 				$pid = $project['id'];
 				$ribbon_image = (isset($project['ribbon_name'])) ? $project['ribbon_name']:null;
 				$urlname = $project['User']['urlname'];
@@ -70,7 +70,7 @@
 			}
 		} elseif ($option == "remixed") {
 			foreach ($data as $project) {
-				$views = $project['Project']['views'];
+				$views = $project['Project']['views'] + $project['Project']['anonviews'];
 				$pid = $project['Project']['id'];
 				$ribbon_image = (isset($project['Project']['ribbon_name'])) ? $project['Project']['ribbon_name']:null;
 				$urlname = $project['User']['urlname'];
@@ -158,7 +158,7 @@
 			}
 		} else {
 			foreach ($data as $project) {
-				$views = $project['Project']['views'];
+				$views = $project['Project']['views'] + $project['Project']['anonviews'];
 				$pid = $project['Project']['id'];
 				$ribbon_image = (isset($project['Project']['ribbon_name'])) ? $project['Project']['ribbon_name']:null;
 				$urlname = $project['User']['urlname'];
