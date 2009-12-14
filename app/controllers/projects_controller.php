@@ -2493,10 +2493,22 @@ class ProjectsController extends AppController {
 	**/
 	function expandDescription($project_id, $secondary = null) {
 		$this->autoRender = false;
+		Configure::write('debug',0);
 		$this->Project->id=$project_id;
         $project = $this->Project->read();
 		$user_id = $this->getLoggedInUserID();	
 		$isLogged = $this->isLoggedIn();
+		$users_permission =$this->isAnyPermission();
+		//if project is not visible redirect the non-admin user to 404
+            $project_visibility = $project['Project']['proj_visibility'];
+            if($project_visibility == "delbyusr" || $project_visibility ==  "delbyadmin") {
+                if( !($this->isAdmin() || isset($users_permission['censor_projects'])
+                || isset($users_permission['project_view_permission'])) ) {
+                    $this->cakeError('error',
+                        array('code'=>'404', 'message'=>'project_'.$project_visibility,
+                              'name' => __('Not Found', true)));
+                }
+            }
 		
 		$this->set('project', $project);
 		$this->render('expand_description_ajax', 'ajax');
