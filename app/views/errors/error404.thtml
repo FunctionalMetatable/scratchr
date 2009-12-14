@@ -21,6 +21,7 @@ font-weight:bold;
 	
 <?php
 $messages = array(
+			"account_disabled" => ___('This account has been disabled by the Scratch Team.', true),
             "project_delbyusr" => ___('This project has been deleted by its author.', true),
             "project_delbyadmin" => ___('This project has been deleted by an administrator.', true),
             "project_not_found" => ___('Project Not Found.', true),
