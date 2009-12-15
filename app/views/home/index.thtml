@@ -194,7 +194,7 @@ width:245px;
 
 	
     <div id="TopRemixedLately" class="container">
-      <h3><?php ___('Top Remixed Lately')?></h3>
+      <h3><?php ___('What the Community is Remixing')?></h3>
 		<?php
 		foreach ($topremixed as $topremix):
 		$pid = $topremix['Project']['id'];
