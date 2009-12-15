@@ -158,7 +158,7 @@ Class LatestController extends AppController {
         $this->pageTitle = ___("Scratch | Active member's projects", true);
         $isLogged = $this->isLoggedIn();
 		$user_id = $this->getLoggedInUserID();
-		$options = array("sortBy"=>"created", "direction" => "DESC");
+		
 		$key = 'latest-activemember-';
         $ttl = LATEST_ACTIVEMEMBER_CACHE_TTL;
 		$days = ACTIVEMEMBER_PROJECT_MAX_DAYS;
@@ -180,13 +180,11 @@ Class LatestController extends AppController {
 													) < $tcomment
 													GROUP BY Project.user_id
 													HAVING MAX(numberOfSprites*totalScripts)
-													ORDER BY Project.created DESC";
+													ORDER BY Project.created ASC LIMIT 100";
 		
-		$projects_count = $this->_getProjectsCount($condition, $key, $ttl);
-        list($order, $limit, $page) = $this->Pagination->init(null, array(),
-                                            $options, $projects_count);
+		
 		$this->Project->mc_connect();
-        $mc_key = $key.$limit.'-'.$page;
+        $mc_key = $key.$days;
         $final_projects = $this->Project->mc_get($mc_key);
         if ($final_projects === false) {
            $this->Project->bindPcomment();

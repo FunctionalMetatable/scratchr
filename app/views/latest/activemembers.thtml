@@ -91,10 +91,4 @@
 		
 	?>
 </div>
-   	<?php
-		$pagination->setPaging($paging);
-		echo $this->renderElement('pagination');
-
-?>
-
 </div>
