@@ -20,7 +20,7 @@ Class LatestController extends AppController {
             'topviewed' => "/feeds/getLatestTopViewedProjects",
             'toploved' => "/feeds/getLatestTopLovedProjects",
             'remixed' => "/feeds/getLatestTopRemixedProjects",
-            'activemembers' => "/feeds/getActiveMembersProject"
+            'givefeedback' => "/feeds/getGiveFeedback"
         );
 		$this->set('feed_links', $this->feed_links);
 		$this->set('content_status', $this->getContentStatus());
@@ -41,7 +41,7 @@ Class LatestController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, 'Project.created DESC', 100, 1, NULL, $this->getContentStatus());
+            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, 'Project.created DESC', NUM_LATEST_SHARED, 1, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -74,7 +74,7 @@ Class LatestController extends AppController {
 		    $days = TOP_VIEWED_DAY_INTERVAL;
         	}
 			$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND  `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe'";
-            $final_projects = $this->Project->findAll($condition, NULL, 'Project.views DESC', 100, 1, NULL, $this->getContentStatus());
+            $final_projects = $this->Project->findAll($condition, NULL, 'Project.views DESC', NUM_LATEST_TOPVIWED, 1, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -103,7 +103,7 @@ Class LatestController extends AppController {
             );
 			$days = TOP_LOVED_DAY_INTERVAL;
 			$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND Project.loveitsuniqueip > 0 AND `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe'";
-            $final_projects = $this->Project->findAll($condition, NULL, 'Project.loveitsuniqueip DESC', 100, 1, NULL, $this->getContentStatus());
+            $final_projects = $this->Project->findAll($condition, NULL, 'Project.loveitsuniqueip DESC', NUM_LATEST_TOPLOVED, 1, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -137,7 +137,7 @@ Class LatestController extends AppController {
 				$days = TOP_REMIXED_DAY_INTERVAL;
 			}
 			$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND remixer > 0 AND  `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe'";
-			$final_projects = $this->Project->findAll($condition, NULL, 'Project.remixer DESC', 100, 1, NULL);
+			$final_projects = $this->Project->findAll($condition, NULL, 'Project.remixer DESC', NUM_LATEST_REMIXED, 1, NULL);
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -153,7 +153,7 @@ Class LatestController extends AppController {
 	
 	
 	
-	function activemembers() {
+	function givefeedback() {
         $this->layout = 'scratchr_explorer';
         $this->pageTitle = ___("Scratch | Active member's projects", true);
         $isLogged = $this->isLoggedIn();
@@ -163,6 +163,7 @@ Class LatestController extends AppController {
         $ttl = LATEST_ACTIVEMEMBER_CACHE_TTL;
 		$days = ACTIVEMEMBER_PROJECT_MAX_DAYS;
 		$tcomment = NUM_LATEST_COMMENT;
+		$num_result = NUM_LATEST_GETFEEDBACK;
 		$condition = 								"SELECT *
 													FROM projects Project
 													LEFT JOIN `users` AS `User` ON ( `Project`.`user_id` = `User`.`id` )
@@ -180,7 +181,7 @@ Class LatestController extends AppController {
 													) < $tcomment
 													GROUP BY Project.user_id
 													HAVING MAX(numberOfSprites*totalScripts)
-													ORDER BY Project.created ASC LIMIT 100";
+													ORDER BY Project.created ASC LIMIT $num_result";
 		
 		
 		$this->Project->mc_connect();
@@ -200,10 +201,10 @@ Class LatestController extends AppController {
 		$this->set('data', $final_projects);
         $this->Project->mc_close();
 		
-		$this->set('heading', ___("active members", true));
-		$this->set('option', 'activemembers');
+		$this->set('heading', ___("givefeedback", true));
+		$this->set('option', 'givefeedback');
 		$this->set('rss_link', $this->feed_links['topviewed']);
-        $this->render('activemembers');
+        $this->render('givefeedback');
     }
 	
     

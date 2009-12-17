@@ -278,7 +278,7 @@ class FeedsController extends AppController {
 		$this->render('latest_topremixed_project_feed');
 	}
 	
-	 function getActiveMembersProject(){
+	 function getGiveFeedback(){
 		$this->autoRender = false;
 		$this->layout = 'xml';
 		
@@ -310,12 +310,12 @@ class FeedsController extends AppController {
 		
         $url = env('SERVER_NAME');
 		$url = strtolower($url);
-		$rss_link = "http://" . $url . "/feeds/getActiveMembersProject";
+		$rss_link = "http://" . $url . "/feeds/getGiveFeedback";
 		
 		
         $this->set('projects', $this->__feedize_projects($projects));
 		$this->set('rss_link', $rss_link);
-        $this->render('get_active_members_feeds');
+        $this->render('get_give_feedback_feeds');
 	}
 	
 	/*
