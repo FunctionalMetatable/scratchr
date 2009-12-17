@@ -1770,15 +1770,16 @@ class ProjectsController extends AppController {
 				$this->cakeError('error404');
             }
 
-            //if project visibility is censbycommunity and project created before the new code change date
+            $owner_id = $project['User']['id'];
+			//if project visibility is censbycommunity and project created before the new code change date
             if($project['Project']['proj_visibility'] == 'censbycomm'
                 && $project['Project']['created'] < CENSBYCOMM_ACTIVE_FROM) {
                 //make visiblity = censbyadmin
                 $project['Project']['proj_visibility'] = 'censbyadmin';
             }
  
-			//if project is not visible redirect the non-admin user to 404
-            $project_visibility = $project['Project']['proj_visibility'];
+			$project_visibility = $project['Project']['proj_visibility'];
+			//if project is deleted by author or admin redirect the non-admin user to 404
             if($project_visibility == "delbyusr" || $project_visibility ==  "delbyadmin") {
                 if( !($this->isAdmin() || isset($users_permission['censor_projects'])
                 || isset($users_permission['project_view_permission'])) ) {
@@ -1787,9 +1788,23 @@ class ProjectsController extends AppController {
                               'name' => __('Not Found', true)));
                 }
             }
-            
+            //if project is censored  by community or admin redirect the non-admin user to 404
+			if($project_visibility == "censbyadmin" || $project_visibility ==  "censbycomm") {
+				if (!$isLogged) {
+				 $this->cakeError('error',
+                        array('code'=>'404', 'message'=>'project_'.$project_visibility,
+                              'name' => __('Not Found', true)));
+				}else{
+					if($logged_id != $owner_id && $project_visibility == "censbyadmin"){
+					$this->cakeError('error',
+                        array('code'=>'404', 'message'=>'project_'.$project_visibility.'_logged_in',
+                              'name' => __('Not Found', true)));
+					}
+				}
+			}
+			
+			
 			$project_id = $project['Project']['id'];
-			$owner_id = $project['User']['id'];
 			$isMine = $logged_id == $owner_id;
 			$client_ip = $this->RequestHandler->getClientIP(); 
             /*$this->ViewStat->recursive = -1;
