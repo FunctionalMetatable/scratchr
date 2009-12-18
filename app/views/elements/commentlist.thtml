@@ -1,4 +1,6 @@
 <?php
+	//print_r($blocked_commenters);
+	//print_r($deleted_commenters);
     $ignored_commenter_text = 'Comment not displayed. Posted by a muted account.';
     $ignored_commment_text = 'You have flagged this comment';
     $reply_link = '(<a onclick="showReplyBox(%1$s, 0); addProjectCharCounter(%1$s); return false;" id="reply_hide_link_%1$s" href="#">reply</a>)';
@@ -23,14 +25,19 @@ $is_comment_owner = ($comment['User']['id'] == $loggedInUID);
 
 $is_commenter_ignored = (in_array($comment['User']['id'], $ignored_commenters)
                         && !$is_comment_owner);
+$is_blocked_commenter_ignored = (in_array($comment['User']['id'], $blocked_commenters));
+$is_deleted_commenter_ignored = (in_array($comment['User']['id'], $deleted_commenters));						
 $is_comment_ignored = in_array($comment['Pcomment']['id'], $ignored_comments);
-$is_comment_ok = (!$is_commenter_ignored && !$is_comment_ignored);
+$is_comment_ok = (!$is_commenter_ignored && !$is_comment_ignored && !$is_blocked_commenter_ignored 
+																 && !$is_deleted_commenter_ignored);
 $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
 ?>
+ <?php if ($is_comment_ok):?>
 <div class="comment" id="<?php echo $comment_id ?>">
 
     <div <?php if($single_thread): ?>style="background:#ffffcc"<?php endif; ?>>
-    <h5>
+  
+	<h5>
         <?php echo $html->image($commenter_icon,
                 array('alt' => $comment['User']['username'], 'width'=>'28', 'height'=>'28')); ?>
        
@@ -122,6 +129,7 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
     </div>
     <?php endif; ?>
     </div>
+	
     <div class="comment_reply_main_visible" id="reply_list_<?php echo $comment_id; ?>">
         <?php if(!empty($comment['Pcomment']['replylist'])): ?>
             <?php echo $this->renderElement('projects/reply_list',
@@ -132,6 +140,7 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
         <?php endif;  ?>
      </div>
 </div>
+<?php endif;?>
 <?php endforeach; ?>
 
 <?php if(!$single_thread): ?>
