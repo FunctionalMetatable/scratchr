@@ -292,7 +292,7 @@ Class HomeController extends AppController {
         }
 
         $topRemixedProjects =  $this->Project->getTopProjects('`remixer`', '`remixer` DESC', $days,
-            $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, 'remixer > 0');
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, 'remixer > 0 AND totalScripts >= 1');
 		if(SHOW_RIBBON ==1){
 			$topRemixedProjects = $this->set_ribbon($topRemixedProjects);
 		}
