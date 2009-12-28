@@ -94,12 +94,12 @@ $lang = array( array("العربية", "/lang/ara", "اللغة"),
 $langnum = count($lang)-1;			 
 $langi=0;		
 $langselect = ___('Language', true);
-for ($z = 0; $z < $langnum; $z++) { 
-	if ($lang[$z][2]==$langselect){
-	$stop=$lang[$z][0];
-	} 
+//for ($z = 0; $z < $langnum; $z++) { 
+//	if ($lang[$z][2]==$langselect){
+//	$stop=$lang[$z][0];
+//	} 
 	//else {next;} //??
-}			 
+//}			 
 ?>
 
     <span onClick="javascript:langm('langbg')"><a class="drop"><?php echo $langselect; ?><img src="/img/drop-down.gif" height="11" width="11" align="top"/></a></span>
