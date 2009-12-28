@@ -290,9 +290,9 @@ Class HomeController extends AppController {
         } else {
 		    $days = TOP_REMIXED_DAY_INTERVAL;
         }
-
+		$num_script = NUM_MIN_SCRIPT_FOR_REMIX;
         $topRemixedProjects =  $this->Project->getTopProjects('`remixer`', '`remixer` DESC', $days,
-            $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, 'remixer > 0 AND totalScripts >= 1');
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, "remixer > 0 AND totalScripts >= $num_script");
 		if(SHOW_RIBBON ==1){
 			$topRemixedProjects = $this->set_ribbon($topRemixedProjects);
 		}
