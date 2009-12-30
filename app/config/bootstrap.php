@@ -57,7 +57,9 @@ $this->params['webservices']
  //day interval to calculate top download project on home controller
  define("TOP_DOWNLOAD_DAY_INTERVAL", 10);
  define("NUM_TOP_DOWNLOAD", 3);
- define("NUM_MIN_SCRIPT_FOR_REMIX", 1);
+ define("NUM_MIN_SCRIPT_FOR_TOP_VIWED", 1);
+ define("NUM_MIN_SCRIPT_FOR_TOP_REMIX", 1);
+ define("NUM_MIN_SCRIPT_FOR_TOP_LOVED", 1);
 /**
  * Email Address Related to Flagging
  */

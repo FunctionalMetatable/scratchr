@@ -276,8 +276,9 @@ Class HomeController extends AppController {
         } else {
 		    $days = TOP_VIEWED_DAY_INTERVAL;
         }
-        $topviewedProjects = $this->Project->getTopProjects('`views`', '`views` DESC', $days,
-            $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED);
+        $num_script = NUM_MIN_SCRIPT_FOR_TOP_VIWED;
+		$topviewedProjects = $this->Project->getTopProjects('`views`', '`views` DESC', $days,
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED, "totalScripts >= $num_script");
 		if(SHOW_RIBBON ==1){
 			$topviewedProjects = $this->set_ribbon($topviewedProjects);
 		}
@@ -290,7 +291,7 @@ Class HomeController extends AppController {
         } else {
 		    $days = TOP_REMIXED_DAY_INTERVAL;
         }
-		$num_script = NUM_MIN_SCRIPT_FOR_REMIX;
+		$num_script = NUM_MIN_SCRIPT_FOR_TOP_REMIX;
         $topRemixedProjects =  $this->Project->getTopProjects('`remixer`', '`remixer` DESC', $days,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, "remixer > 0 AND totalScripts >= $num_script");
 		if(SHOW_RIBBON ==1){
@@ -300,8 +301,9 @@ Class HomeController extends AppController {
     }
 
     function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids) {
-        $topLovedProjects =  $this->Project->getTopProjects('`loveitsuniqueip`', '`loveitsuniqueip` DESC', TOP_LOVED_DAY_INTERVAL,
-            $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED);
+        $num_script = NUM_MIN_SCRIPT_FOR_TOP_LOVED;
+		$topLovedProjects =  $this->Project->getTopProjects('`loveitsuniqueip`', '`loveitsuniqueip` DESC', TOP_LOVED_DAY_INTERVAL,
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED, "totalScripts >= $num_script");
 		if(SHOW_RIBBON ==1){
 			$topLovedProjects = $this->set_ribbon($topLovedProjects);
 		}
