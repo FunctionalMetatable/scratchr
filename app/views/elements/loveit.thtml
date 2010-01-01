@@ -1,13 +1,13 @@
 <?php if ($isLoggedIn && (!empty($already_loved) || !empty($just_loved))):?>
 
 <h5 id="lovelink" class="loveyes">
-<?php echo $ajax->link(___("I love it!", true), '#', array("url"=>"/projects/".$urlname."/".$pid."/unloveit", "complete"=>"changeLoversCount(false);", "update"=>"loveitDiv", "onmouseover"=>"changeLoveItImage1(false);","onmouseout"=>"changeLoveItImage1(true);", "condition"=>"checkLogin()"), NULL, false); ?>
+<?php echo $ajax->link(___("I love it!", true), '#', array("id"=>"loveitLink", "url"=>"/projects/".$urlname."/".$pid."/unloveit", "complete"=>"changeLoversCount(false);", "update"=>"loveitDiv",  "loading" => "document.getElementById('loveitLink').disabled = true;","onmouseover"=>"changeLoveItImage1(false);","onmouseout"=>"changeLoveItImage1(true);", "condition"=>"checkLogin()"), NULL, false); ?>
 </h5>
 
 <?php else:?>
 
 <h5 id="lovelink" class="love">
-<?php echo $ajax->link(___("Love it?", true), '#', array("url"=>"/projects/".$urlname."/".$pid."/loveit", "complete"=>"changeLoversCount(true);", "update"=>"loveitDiv", "onmouseover"=>"changeLoveItImage1(true);","onmouseout"=>"changeLoveItImage1(false);", "condition"=>"checkLogin()"), NULL, false); ?>
+<?php echo $ajax->link(___("Love it?", true), '#', array("id"=>"loveitLink","url"=>"/projects/".$urlname."/".$pid."/loveit", "complete"=>"changeLoversCount(true);", "update"=>"loveitDiv",  "loading" => "document.getElementById('loveitLink').disabled = true;","onmouseover"=>"changeLoveItImage1(true);","onmouseout"=>"changeLoveItImage1(false);", "condition"=>"checkLogin()"), NULL, false); ?>
 </h5>
 
 <?php endif;?>

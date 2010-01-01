@@ -758,7 +758,8 @@ class ProjectsController extends AppController {
                 $this->set('urlname', $urlname);
             }
 		}
-        
+        $this->set('pid', $pid);
+		$this->set('urlname', $urlname);
         $this->render("projectloving_ajax", "ajax");
     }
 
@@ -796,6 +797,8 @@ class ProjectsController extends AppController {
 				$this->set('urlname', $urlname);
 			}
 		}
+		$this->set('pid', $pid);
+		$this->set('urlname', $urlname);
         $this->render("projectloving_ajax", "ajax");
     }
 
