@@ -1394,21 +1394,22 @@ class ProjectsController extends AppController {
     function tag($urlname=null, $pid=null) {
 		$this->exitOnInvalidArgCount(2);
         $this->autoRender=false;
+		Configure::write('debug', 0);
         $this->Project->bindUser();
         $this->Project->id=$pid;
         $project = $this->Project->read();
 		$project_id = $pid;
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
-	
+		$project_owner_id = $project['Project']['user_id'];
 		$isLocked = $this->check_locked($pid);
 		
         if (empty($project) || $project['User']['urlname'] !== $urlname) exit();
 		
 		$tagger = $this->getLoggedInUserID();
         if (!$tagger) exit;
-		
-		if ($isLocked) {
+		$isIgnoredUser = $this->IgnoredUser->find("IgnoredUser.user_id = $tagger AND IgnoredUser.blocker_id = $project_owner_id");
+		if ($isLocked || $isIgnoredUser) {
 			exit;
 		} else {
 			if (!empty($this->params['form']['tag_textarea']))
@@ -1445,18 +1446,18 @@ class ProjectsController extends AppController {
 							$this->ProjectTag->id=null;
 						}
 					}
-				else
-				{
-						// create tag record
-						$this->Tag->save(array('Tag'=>array('name'=>$ntag)));
-						$this->Tag->id=null; // otherwise things will be overridden
-						$tag_id = $this->Tag->getLastInsertID();
-						$this->ProjectTag->save(array('ProjectTag'=>array('id' => null, 'project_id'=>$pid, 'tag_id'=>$tag_id, 'user_id' => $tagger)));
-						$this->ProjectTag->id=null;
-					}
-				}
-			}
-		}
+					else
+					{
+							// create tag record
+							$this->Tag->save(array('Tag'=>array('name'=>$ntag)));
+							$this->Tag->id=null; // otherwise things will be overridden
+							$tag_id = $this->Tag->getLastInsertID();
+							$this->ProjectTag->save(array('ProjectTag'=>array('id' => null, 'project_id'=>$pid, 'tag_id'=>$tag_id, 'user_id' => $tagger)));
+							$this->ProjectTag->id=null;
+					}//else
+				}//foreach
+			}//!empty($this->params['form']['tag_textarea'])
+		}//isLocked else
 
 		$project_tags = $this->ProjectTag->findAll("project_id = $project_id");
 		$final_tags = Array();
