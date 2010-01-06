@@ -1821,18 +1821,23 @@ class UsersController extends AppController {
 			$new_reason = htmlspecialchars($this->params['form']['blacklist_reason']);
 			$user_record = $this->User->find("username = '$new_username'");
 			if (empty($user_record)) {
-				$this->cakeError('error404');
+				array_push($errors, "Incorrect username.");
 			} else {
 				if ($new_reason == "") {
 					array_push($errors, "You must provide a valid reason for ignoring this user.");
 				} else {
 					$ignore_id = $user_record['User']['id'];
-					$record = $this->IgnoredUser->find("IgnoredUser.user_id = $ignore_id AND IgnoredUser.blocker_id = $logged_id");
-					if (empty($record)) {
-						$info = Array('IgnoredUser' => Array('id' => null, 'user_id' => $ignore_id, 'blocker_id'=>$user_id, 'reason' => $new_reason));
-						$this->IgnoredUser->save($info);
-					} else {
-						array_push($errors, "That user is already on your ignore list.");
+					//prevent people from ignoring themsleves
+					if($logged_id != $ignore_id){
+						$record = $this->IgnoredUser->find("IgnoredUser.user_id = $ignore_id AND IgnoredUser.blocker_id = $logged_id");
+						if (empty($record)) {
+							$info = Array('IgnoredUser' => Array('id' => null, 'user_id' => $ignore_id, 'blocker_id'=>$user_id, 'reason' => $new_reason));
+							$this->IgnoredUser->save($info);
+						} else {
+							array_push($errors, "That user is already on your ignore list.");
+						}
+					}else{
+						array_push($errors, "You cannot ignore yourself...");
 					}
 				}
 			}	
