@@ -51,7 +51,7 @@
 			}
 			if ($user_status == "locked") {
 			?>
-			<a href="<?php echo $html->url('/administration/ban_user/')?>">Unban</a> |
+			<a href="<?php echo $html->url('/administration/unban_user/'.$user_id)?>">Unban</a> |
 			<?php
 				
 			} else {
