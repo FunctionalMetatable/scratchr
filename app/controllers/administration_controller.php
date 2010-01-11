@@ -2117,6 +2117,24 @@
 	}
 	
 	/**
+	* Handles remove banned user
+	**/
+	function unban_user($banned_id = "") {	
+		$this->autoRender = false;
+		$this->checkPermission('block_account');
+		$this->User->id = $banned_id;
+		$banned_user = $this->User->read();
+		if(empty($banned_user))
+			$this->cakeError('error404');
+		
+		$this->User->saveField("status", 'normal');
+		$ban_record = $this->BlockedUser->find("BlockedUser.user_id = $banned_id");
+		$ban_id = $ban_record['BlockedUser']['id'];
+		$this->BlockedUser->del($ban_id);
+		$this->redirect('/administration/viewuser/'.$banned_id);
+	}
+	
+	/**
 	* Handles username banning from front page
 	**/
 	function ban_user_frontpage($user_id = "", $overload = "") {	
