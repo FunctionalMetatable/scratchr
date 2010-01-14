@@ -1,0 +1,1 @@
+ALTER TABLE `projects` ADD `country` CHAR( 2 ) NULL AFTER `upload_ip` ;

@@ -31,7 +31,7 @@ Class ServicesController extends AppController {
 
     var $uses = array("Project", "User", "ProjectTag", "Tag", "Notification", 'ProjectShare', 'ProjectSave','ProjectScript','BlockedIp', 'RemixNotification');
 	var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination');
-	var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
+	var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb','GeoIp');
     var $doc = null;
     var $service = null;
     var $debug = null;
@@ -281,6 +281,9 @@ Class ServicesController extends AppController {
 				$project_text_info = array('project_id' => $project_id, 'text_scripts' => $project_text_Scripts);
 				$this->ProjectScript->save($project_text_info);
 
+				//set Country name based on ip
+				$this->setCountryName(ip2long($client_ip),$project_id);
+				
 				// upload binary file
 				$bin_file = WWW_ROOT . getBinary($urlname, $project_id, false, DS);
 				mkdirR(dirname($bin_file) . DS);
@@ -527,6 +530,9 @@ Class ServicesController extends AppController {
 			//Save allScripts content to table project_scripts.
 			$project_text_info = array('project_id' => $project_id, 'text_scripts' => $project_text_Scripts);
 			$this->ProjectScript->save($project_text_info);
+			
+			//set Country name based on ip
+			$this->setCountryName($client_ip,$project_id);
 
 			// upload binary file
 			$bin_file = WWW_ROOT . getBinary($urlname, $project_id, false, DS);
@@ -946,6 +952,15 @@ Class ServicesController extends AppController {
 	function __is_empty($var) {
 		return ( ((is_null($var) || rtrim($var) == "") && $var !== false)
                 || (is_array($var) && empty($var)) );
+	}
+	
+	/*
+	function to set country name based on ip and project id
+	*/
+	function setCountryName($ip, $pid){
+		$this->Project->id = $pid;
+		$country = $this->GeoIp->lookupCountryCode(long2ip($ip));
+		$this->Project->saveField('country', $country);
 	}
 }
 ?>
