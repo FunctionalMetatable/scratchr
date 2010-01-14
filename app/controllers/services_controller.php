@@ -264,9 +264,9 @@ Class ServicesController extends AppController {
 		4 byte int (long). To view in sql do
 		USE mysql;
 		SELECT INET_NTOA(longintval); */
-		$client_ip = ip2long($this->RequestHandler->getClientIP());
+		$client_ip = $this->RequestHandler->getClientIP();
 		if ($client_ip)
-			$data['Project']['uploader_ip'] = ip2long($client_ip);
+			$data['Project']['upload_ip'] = ip2long($client_ip);
 
 			if (!$this->Project->save($data['Project'])) {
 				$this->setFlash(___("Error with project saving", true));
@@ -514,7 +514,7 @@ Class ServicesController extends AppController {
 		USE mysql;
 		SELECT INET_NTOA(longintval); */
 		if ($client_ip)
-			$this->data['Project']['uploader_ip'] = ip2long($client_ip);
+			$this->data['Project']['upload_ip'] = $client_ip;
 
 			if (!$this->Project->save($this->data['Project'])) {
 				$this->__failed(DB_SAVE_ERROR);
