@@ -752,14 +752,15 @@ Class ServicesController extends AppController {
             $this->log("\nDBG: SUCCESSFULLY STORED: $project_shared_id "
                     ."is based on $based_on_pid and root is $root_based_on_pid\n");
 
-            if(REMIX_NOTIFICATION_TO_ROOT_BASED) {
+			if(REMIX_NOTIFICATION_TO_ROOT_BASED) {
                 $this->__notify_remix($root_based_on_pid, $project_shared_id);
             }
             $this->__update_remixes_remixer($root_based_on_pid);
             if($based_on_pid != $root_based_on_pid)  {
-                if(REMIX_NOTIFICATION_TO_LAST_BASED) {
-                    $this->__notify_remix($based_on_pid, $project_shared_id);
-                }
+				//we should send remix notification to only root based
+                //if(REMIX_NOTIFICATION_TO_LAST_BASED) {
+                 //   $this->__notify_remix($based_on_pid, $project_shared_id);
+                //}
                 $this->__update_remixes_remixer($based_on_pid);
             }
         }
@@ -839,7 +840,23 @@ Class ServicesController extends AppController {
             . $project[0]['remixer'] . " remixer \n");
     }
 
-    function __notify_remix($base_project_id, $remixed_project_id) {
+	function __set_remix_notification_type($user_id) {
+		$notification_types = array('positive', 'neutral', 'generosity', 'conformity', 'reputation', 'nonotification');
+		$this->RemixNotification->mc_connect();
+
+		$counter = $this->RemixNotification->mc_get('remix_notification_counter');
+		$index = $counter % count($notification_types);
+		$counter++;
+		$this->RemixNotification->mc_set('remix_notification_counter', $counter);
+		
+		$this->RemixNotification->save(array('user_id' => $user_id, 'ntype' => $notification_types[$index]));
+
+		$this->RemixNotification->mc_close();
+
+		return $notification_types[$index];
+	}
+
+	function __notify_remix($base_project_id, $remixed_project_id) {
         $this->Project->recursive = 0;
         //find out the users
         $base = $this->Project->find('Project.id = '.$base_project_id,
@@ -848,14 +865,23 @@ Class ServicesController extends AppController {
                                     'Project.id, Project.name, User.id, User.username');
         
         //find out if the base user is different than remix user
-        if($base['User']['id']==$remixed['User']['id']) {
+        if(empty($base['User']['id']) || $base['User']['id']==$remixed['User']['id']) {
             return false;
         }
 
-        //find out if the base user wants remix notification
+        //find out if the base user has remix notification type set up
         $notify = $this->RemixNotification->find('user_id = '.$base['User']['id']);
-        if(!empty($notify)) {
-            $this->__notify('project_remixed_'.$notify['RemixNotification']['ntype'],
+
+		if(empty($notify)) {
+			//set a notification type for him
+			$ntype = $this->__set_remix_notification_type($base['User']['id']);
+		}
+		else {
+			$ntype = $notify['RemixNotification']['ntype'];
+		}
+
+	    if(!empty($ntype) && $ntype != 'nonotification') {
+            $this->__notify('project_remixed_'.$ntype,
                             $base['User']['id'],
                             array('project_id' => $base['Project']['id'],
                              'from_user_name' => $remixed['User']['username']),
