@@ -38,3 +38,5 @@ NULL , 'project_remixed_conformity', 'Your project "<a href="/projects/{to_user_
 ), (
 NULL , 'project_remixed_reputation', 'Your project "<a href="/projects/{to_user_name}/{project_id}">{project_name}</a>" has been remixed. People often remix when they get inspired and respect your work!', '0', '0'
 );
+
+ALTER TABLE `remix_notifications` CHANGE `ntype` `ntype` ENUM( 'positive', 'neutral', 'generosity', 'conformity', 'reputation', 'nonotification' ) NOT NULL DEFAULT 'neutral';
