@@ -1,5 +1,8 @@
 <div id="footer" class="clearme">
-
+<?php if($customizableCountry):?>
+<?php ___('Your location: ')?><span id="countryName"><?php echo $countryName?></span> 
+ <span id="countryChangeDiv" ><a href="<?php echo $html->url('/country/'.$selectCountryName)?>"><?php echo $selectCountryName;?>&nbsp;<?php  ___('instead?')?></a></span> |
+<?php endif;?>
 <a href="/download"><?php ___('Download')?></a> | 
 <a href="/donate"><?php ___('Donate')?></a> | 
 <a href="/privacy"><?php ___('Privacy Policy')?></a> | 

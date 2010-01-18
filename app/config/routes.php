@@ -56,6 +56,9 @@ Router::connect('/robots.txt', array('controller' => 'sitemaps', 'action' => 'ro
 // Routes the language controller
 Router::connect('/lang/*', array('controller' => 'p28n', 'action' => 'change'));
 
+// Routes the language controller
+Router::connect('/country/*', array('controller' => 'home', 'action' => 'country'));
+
 // User pages
 Router::connect('/users/flag_list', array('controller' => 'users', 'action' => 'flag_list'));
 Router::connect('/users/update', array('controller' => 'users', 'action' => 'update'));

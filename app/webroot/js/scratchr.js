@@ -313,6 +313,11 @@ else{
 return false;
 }
 
+function hideUserCountryDiv() {
+	var userCountryDiv = document.getElementById("userCountryDiv");
+	Effect.Fade('userCountryDiv',{duration:.4,from: 0.9999,to: 0});
+}
+
 
 function hideAnnouncement(){
 	//For some reason, Effect.toggle doesn't work when opacity is not 1

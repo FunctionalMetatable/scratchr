@@ -11,11 +11,37 @@ Class HomeController extends AppController {
      * Called before every controller action
 	 * Overrides AppController::beforeFilter()
      */
-    function beforeFilter() {
+    function beforeFilter() { 
 		$this->set('content_status', $this->getContentStatus());
+		
+		
     }
+	/*
+	function to set users country location
 	
-    function index() {
+	*/
+	function country($selectCountryName = null){ 
+		$client_ip = ip2long($this->RequestHandler->getClientIP());
+		$countryName = $this->GeoIp->lookupCountryCode($client_ip);
+		if($this->isCustomizableCountry($countryName)){
+			$cookie_country = $this->Cookie->read('country');
+			if(!empty($selectCountryName)){
+			$this->Cookie->delete('country');
+				$this->Cookie->write('country', $selectCountryName, null, '+350 day');
+			}
+		}	
+		$this->redirect('/');
+	}
+	
+    function index() {  
+		//set users country
+		$cookie_country = $this->Cookie->read('country');
+		if(empty($cookie_country)){
+			$client_ip = ip2long($this->RequestHandler->getClientIP());
+			$countryName = $this->GeoIp->lookupCountryCode($client_ip);
+			$this->Cookie->write('country', $countryName, null, '+350 day');
+		}	
+		
         $this->Project->mc_connect();
         $project_ids = array();
        	$user_ids =array();
