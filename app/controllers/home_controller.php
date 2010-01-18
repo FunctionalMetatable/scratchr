@@ -21,7 +21,7 @@ Class HomeController extends AppController {
 	
 	*/
 	function country($selectCountryName = null){ 
-		$client_ip = ip2long($this->RequestHandler->getClientIP());
+		$client_ip = $this->RequestHandler->getClientIP();
 		$countryName = $this->GeoIp->lookupCountryCode($client_ip);
 		if($this->isCustomizableCountry($countryName)){
 			$cookie_country = $this->Cookie->read('country');
@@ -37,7 +37,7 @@ Class HomeController extends AppController {
 		//set users country
 		$cookie_country = $this->Cookie->read('country');
 		if(empty($cookie_country)){
-			$client_ip = ip2long($this->RequestHandler->getClientIP());
+			$client_ip = $this->RequestHandler->getClientIP();
 			$countryName = $this->GeoIp->lookupCountryCode($client_ip);
 			$this->Cookie->write('country', $countryName, null, '+350 day');
 		}	

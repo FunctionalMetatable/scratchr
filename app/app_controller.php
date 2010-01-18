@@ -46,8 +46,8 @@ class AppController extends Controller {
 		
 		/*set name of country depends on cookie set from home/country and home/index*/
 		
-		$client_ip = ip2long($this->RequestHandler->getClientIP());
-		echo $countryName = $this->GeoIp->lookupCountryCode($client_ip);
+		$client_ip = $this->RequestHandler->getClientIP();
+		$countryName = $this->GeoIp->lookupCountryCode($client_ip);
 		$customizable = false;
 		if($this->isCustomizableCountry($countryName)){
 			$cookieCountryName = $this->Cookie->read('country');
