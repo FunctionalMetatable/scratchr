@@ -52,7 +52,7 @@ class AppController extends Controller {
 		$selectCountryName = DEFAULT_COUNTRY;
 		if($this->isCustomizableCountry($countryName)){
 			$cookieCountryName = $this->Cookie->read('country');
-			if(!cookieCountryName){
+			if(!$cookieCountryName){
 				$cookieCountryName = $countryName;
 			}
 			$customizable = true;
