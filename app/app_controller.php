@@ -7,7 +7,7 @@ class AppController extends Controller {
 
     var $helpers = array("head",'Time', "Util");
     var $uses = array('UserEvent', 'AdminTag', 'Relationship', 'Project', 'Pcomment', 'Gcomment', 'Gallery', 'GalleryProject', 'GalleryMembership', 'BlockedUser', 'Notification', 'User', 'Announcement', 'BlockedIp', 'FriendRequest');
-	var $components = array('RequestHandler', 'Cookie', 'Session', 'Thumb');
+	var $components = array('RequestHandler', 'Cookie', 'Session', 'Thumb', 'GeoIp');
     var $layout = 'scratchr_default';
     var $sanitize = true;
 
@@ -43,6 +43,31 @@ class AppController extends Controller {
 		$this->set('users_permission',$users_permission);
 		$this->set('content_status', $this->getContentStatus());
 		$this->set('client_ip', $this->RequestHandler->getClientIP());
+		
+		/*set name of country depends on cookie set from home/country and home/index*/
+		
+		$client_ip = ip2long($this->RequestHandler->getClientIP());
+		echo $countryName = $this->GeoIp->lookupCountryCode($client_ip);
+		$customizable = false;
+		if($this->isCustomizableCountry($countryName)){
+			$cookieCountryName = $this->Cookie->read('country');
+			$customizable = true;
+			if($cookieCountryName === DEFAULT_COUNTRY){
+			$selectCountryName = $countryName;
+			}
+			if($cookieCountryName === $countryName){
+			$selectCountryName = DEFAULT_COUNTRY;
+			}
+			$this->set('countryName', $cookieCountryName);
+			$this->set('selectCountryName',$selectCountryName);
+			$this->set('userCountryName',$countryName);
+		}
+		
+		
+		$this->set('customizableCountry', $customizable);
+		
+		/**/
+		
 		$blocked = $this->checkIP();
 		$isBanned = false;
 		$annoucements = $this->Announcement->findAll("content != ''");
@@ -302,6 +327,15 @@ class AppController extends Controller {
 				$this->redirect('/');	
 			}
 		}
+	}
+	
+	function isCustomizableCountry($countryName){
+		
+		$customizableCountryList = CUSTOMIZABLE_COUNTRIES;
+		$customizableCountryArray =explode(',', trim($customizableCountryList)); 
+		$customizableCountryArray = array_flip($customizableCountryArray);
+		$this->set('cookieCountryName','worldwide');
+		return array_key_exists($countryName, $customizableCountryArray);
 	}
 
     /**
