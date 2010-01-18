@@ -49,13 +49,17 @@ class AppController extends Controller {
 		$client_ip = $this->RequestHandler->getClientIP();
 		$countryName = $this->GeoIp->lookupCountryCode($client_ip);
 		$customizable = false;
+		$selectCountryName = DEFAULT_COUNTRY;
 		if($this->isCustomizableCountry($countryName)){
 			$cookieCountryName = $this->Cookie->read('country');
+			if(!cookieCountryName){
+				$cookieCountryName = $countryName;
+			}
 			$customizable = true;
-			if($cookieCountryName === DEFAULT_COUNTRY){
+			if(strcmp($cookieCountryName, DEFAULT_COUNTRY) ==0){
 			$selectCountryName = $countryName;
 			}
-			if($cookieCountryName === $countryName){
+			if(strcmp($cookieCountryName, $countryName) == 0){
 			$selectCountryName = DEFAULT_COUNTRY;
 			}
 			$this->set('countryName', $cookieCountryName);
