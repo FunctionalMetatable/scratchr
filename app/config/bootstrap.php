@@ -271,6 +271,7 @@ define("LATEST_TOPVIEWED_CACHE_TTL", 30); //0.5 hour
 define("LATEST_TOPLOVED_CACHE_TTL", 30); //0.5 hour
 define("LATEST_REMIXED_CACHE_TTL", 30); //0.5 hour
 define("LATEST_ACTIVEMEMBER_CACHE_TTL", 30); //0.5 hour
+define("LATEST_TAGED_PROJECT_CACHE_TTL", 30); //0.5 hour
 define("NUM_LATEST_COMMENT", 1);
 define("ACTIVEMEMBER_PROJECT_MAX_DAYS", 15);
 define("NUM_LATEST_SHARED", 100);
@@ -278,6 +279,8 @@ define("NUM_LATEST_TOPVIWED", 100);
 define("NUM_LATEST_TOPLOVED", 100);
 define("NUM_LATEST_REMIXED", 100);
 define("NUM_LATEST_GETFEEDBACK", 100);
+define("NUM_LATEST_TAGED_PROJECT", 100);
+
 //Allow people to give thank you after n hours.
 define("THANKS_INTERVAL",5);
 
