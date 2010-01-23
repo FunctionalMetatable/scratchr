@@ -2,7 +2,7 @@
 Class LatestController extends AppController {
     var $helpers = array('Pagination');
     var $components = array('Pagination');
-    var $uses = array("IgnoredUser", "Project", "FeaturedProject", "Gallery", "Notification", "Pcomment");
+    var $uses = array("IgnoredUser", "Project" ,'ProjectTag', 'Tag' ,"FeaturedProject", "Gallery", "Notification", "Pcomment");
 	var $feed_links = array ();
 	
 	 /**
@@ -207,6 +207,55 @@ Class LatestController extends AppController {
         $this->render('givefeedback');
     }
 	
+	  function tag($tag_name, $option = "views"){
+   		$this->pageTitle = ___("Scratch | Projects tagged with", true) . " '" . htmlspecialchars($tag_name) . "'";
+        $tag =  $this->Tag->find("name = '$tag_name'");
+        if (empty($tag))
+            $this->cakeError('error404');
+		$content_status = $this->getContentStatus();
+		
+		$tag_id = $tag['Tag']['id'];
+		$final_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
+
+        if ($content_status == "safe") {
+			$final_criteria = "Project.status = 'safe' AND " . $final_criteria; 
+			$count_criteria = "Project.status = 'safe' AND " . $count_criteria; 
+		}
+		
+		if ($option == "views") {
+			$order = 'Project.views DESC';
+		}
+		
+		if ($option == "loveits") {
+			$order = 'Project.loveitsuniqueip DESC';
+		}
+		
+		$this->Project->bindUser();
+        $this->ProjectTag->bindProject(); 
+        $this->ProjectTag->unbindTag();
+		
+		$limit = NUM_LATEST_TAGED_PROJECT;
+		$mc_key = 'project_tag_'.$tag_id.'_'.$content_status.'_'. $order.'_'. $limit;
+		$ttl = LATEST_TAGED_PROJECT_CACHE_TTL; 
+        $this->ProjectTag->mc_connect();
+        $tag_projects = $this->ProjectTag->mc_get($mc_key);
+        if($tag_projects === false) {
+			$this->Project->unbindModel(array('hasMany' => array('GalleryProject')));
+			$this->ProjectTag->unbindModel(array('belongsTo' => array('User')));
+			$this->ProjectTag->recursive = 2;	
+			$tag_projects = $this->ProjectTag->findAll($final_criteria, NULL , $order, NUM_LATEST_TAGED_PROJECT);
+			$tag_projects = $this->set_projects($tag_projects);
+			$this->ProjectTag->mc_set($mc_key, $tag_projects, false, $ttl);
+		}
+		$this->ProjectTag->mc_close();
+		$this->set('option', $option);
+        $this->set('tag_projects', $tag_projects);
+		$this->set('tag_name', $tag_name);
+        $this->set('tag', $tag);
+        $this->render('projects');
+   
+   }//function
+	
     
 	function set_projects($projects) {
 		$isLogged = $this->isLoggedIn();
@@ -260,6 +309,5 @@ function _getProjectsCount($condition, $key, $ttl, $recursion = -1) {
         $this->Project->mc_close();
         return $projects_count;
     }
-   
 }
 ?>
