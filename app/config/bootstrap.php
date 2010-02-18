@@ -234,7 +234,7 @@ define("SUBTOPIC3", "help@scratch.mit.edu");
  * Sitemap constants
  */
 define('MAX_LINKS_PER_SITEMAP', 5000);
-define('CACHE_DURATION', '1 day');
+define('CACHE_DURATION', '3 days');
 
 /**
  * Memcache constants
@@ -266,14 +266,14 @@ define('PCOMMENT_CACHE_NUMPAGE', 3); //cache first 3 project comment pages
 define('GCOMMENT_CACHE_NUMPAGE', 3); //cache first 3 gallery comment pages
 
 //Latest channel constant
-define("LATEST_SHARED_CACHE_TTL", 30); //0.5 hour
+define("LATEST_SHARED_CACHE_TTL", 6); // 0.1 hrs
 define("LATEST_TOPVIEWED_CACHE_TTL", 30); //0.5 hour
 define("LATEST_TOPLOVED_CACHE_TTL", 30); //0.5 hour
 define("LATEST_REMIXED_CACHE_TTL", 30); //0.5 hour
-define("LATEST_ACTIVEMEMBER_CACHE_TTL", 30); //0.5 hour
+define("LATEST_ACTIVEMEMBER_CACHE_TTL", 3); //0.5 hour
 define("LATEST_TAGED_PROJECT_CACHE_TTL", 30); //0.5 hour
 define("NUM_LATEST_COMMENT", 1);
-define("ACTIVEMEMBER_PROJECT_MAX_DAYS", 15);
+define("ACTIVEMEMBER_PROJECT_MAX_DAYS", 1);
 define("NUM_LATEST_SHARED", 100);
 define("NUM_LATEST_TOPVIWED", 100);
 define("NUM_LATEST_TOPLOVED", 100);
