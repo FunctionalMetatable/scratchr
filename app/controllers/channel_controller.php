@@ -115,8 +115,10 @@ Class ChannelController extends AppController {
 
         $key = 'channel-topviewed-';
         $ttl = CHANNEL_TOPVIEWED_CACHE_TTL;
-        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"  AND status != "notsafe"',
-                                                $key, $ttl);
+#        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"  AND status != "notsafe"',
+#                                                $key, $ttl);
+
+	$projects_count = 200;
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
                                             
