@@ -203,7 +203,7 @@ Class ChannelController extends AppController {
         $this->render('explorer');
     }
 
-	 function remixed() {
+    function remixed() {
 		$this->layout = 'scratchr_explorer'; 
 		$this->pageTitle = ___("Scratch | Most Remixed projects", true);
         $this->modelClass = "Project";
@@ -211,8 +211,9 @@ Class ChannelController extends AppController {
 
         $key = 'channel-remixed-';
         $ttl = CHANNEL_REMIXED_CACHE_TTL;        
-        $projects_count = $this->_getProjectsCount('remixer > 0 AND proj_visibility = "visible"  AND status != "notsafe"',
-                                                $key, $ttl);
+#        $projects_count = $this->_getProjectsCount('remixer > 0 AND proj_visibility = "visible"  AND status != "notsafe"',
+#                                                $key, $ttl);
+	$projects_count = 200;
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
 
