@@ -30,6 +30,9 @@ Class ChannelController extends AppController {
     }
 	
     function recent() {
+        if (! $this->isAdmin()) { 
+           $this->cakeError('error404');
+        }
         $this->layout = 'scratchr_explorer';
         $this->pageTitle = "Scratch | Newest projects";
         $this->modelClass = "Project";
@@ -146,9 +149,11 @@ Class ChannelController extends AppController {
 
         $key = 'channel-toploved-';
         $ttl = CHANNEL_TOPLOVED_CACHE_TTL;
-        $projects_count = $this->_getProjectsCount(
-                    'loveitsuniqueip > 0 AND proj_visibility = "visible" AND status != "notsafe"',
-                    $key, $ttl);
+#        $projects_count = $this->_getProjectsCount(
+#                    'loveitsuniqueip > 0 AND proj_visibility = "visible" AND status != "notsafe"',
+#                    $key, $ttl);
+	# Limit to 200 top loved projects to eliminate a nasty query
+	$projects_count = 200;
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
 
