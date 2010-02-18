@@ -88,27 +88,30 @@ Class TagsController extends AppController {
 
 		 # This is an expensive query and it's done a lot therefore we ought to
 		 # memcache it
-		 $count_sql = "SELECT COUNT(DISTINCT(project_id)) AS `count` FROM `project_tags` AS `ProjectTag` LEFT JOIN `users` AS `User` ON (`ProjectTag`.`user_id` = `User`.`id`) LEFT JOIN `projects` AS `Project` ON (`ProjectTag`.`project_id` = `Project`.`id`) WHERE ".$count_criteria;
+#		 $count_sql = "SELECT COUNT(DISTINCT(project_id)) AS `count` FROM `project_tags` AS `ProjectTag` LEFT JOIN `users` AS `User` ON (`ProjectTag`.`user_id` = `User`.`id`) LEFT JOIN `projects` AS `Project` ON (`ProjectTag`.`project_id` = `Project`.`id`) WHERE ".$count_criteria;
 
-		 $mc_key = md5($count_sql);
+#		 $mc_key = md5($count_sql);
 
-		 $this->ProjectTag->mc_connect();
+#		 $this->ProjectTag->mc_connect();
 
-		 $final_count = $this->ProjectTag->mc_get($mc_key);
+#		 $final_count = $this->ProjectTag->mc_get($mc_key);
 
-		 if($final_count === false) {
+#		 if($final_count === false) {
 
-		    $final_count_result = $this->Tag->query($count_sql);
+#		    $final_count_result = $this->Tag->query($count_sql);
 		
-		    $final_count = $final_count_result[0][0]['count'];
+#		    $final_count = $final_count_result[0][0]['count'];
 
-		    $ttl = TAG_PAGINATION_CACHE_TTL;
+#		    $ttl = TAG_PAGINATION_CACHE_TTL;
 
-		    $this->ProjectTag->mc_set($mc_key, $final_count, false, $ttl);
+#		    $this->ProjectTag->mc_set($mc_key, $final_count, false, $ttl);
 			
-		 }
+#		 }
 
-		 $this->ProjectTag->mc_close();
+#		 $this->ProjectTag->mc_close();
+
+		# Set the number of projects to view to 200
+		$final_count = 200;
 
 		list($order,$limit,$page) = $this->Pagination->init($this->Project->addVisCheck($final_criteria), Array(), $options, $final_count);
 		
@@ -132,9 +135,9 @@ Class TagsController extends AppController {
         }
         $this->ProjectTag->mc_close();
 
-		$this->set('option', $option);
+	$this->set('option', $option);
         $this->set('tag_projects', $tag_projects);
-		$this->set('tag_name', $tag_name);
+	$this->set('tag_name', $tag_name);
         $this->set('tag', $tag);
         $this->render('projects');
     }
