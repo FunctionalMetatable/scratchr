@@ -18,22 +18,22 @@ Class TagsController extends AppController {
         $this->__setProjectTagCloud();
     }
 	
-	function browse_projects() {
+    function browse_projects() {
 		$this->__setProjectTagCloud();
-	}
+    }
 	
-	function browse_galleries() {
+    function browse_galleries() {
 		$this->__setGalleryTagCloud();
 		
 		$this->render('browse_galleries');
-	}
+    }
 	
     function __setProjectTagCloud() {
         $resultset = $this->Tag->getProjectTagCloud(TAG_CLOUD_BIG);
         $this->set('tags', $resultset);
     }
 	
-	function __setGalleryTagCloud() {
+    function __setGalleryTagCloud() {
         $resultset = $this->Tag->query("
             SELECT Tag.name, COUNT(Gallery.id) as tagcounter FROM galleries Gallery
             JOIN gallery_tags tt ON Gallery.id = tt.gallery_id
@@ -45,17 +45,17 @@ Class TagsController extends AppController {
     }
 	
     function view($tag_name, $option = "views") {
-		$this->autoRender = true;
-		$this->pageTitle = ___("Scratch | Projects tagged with", true) . " '" . htmlspecialchars($tag_name) . "'";
+	$this->autoRender = true;
+	$this->pageTitle = ___("Scratch | Projects tagged with", true) . " '" . htmlspecialchars($tag_name) . "'";
         $tag =  $this->Tag->find("name = '$tag_name'");
         if (empty($tag))
-            $this->cakeError('error404');
+		$this->cakeError('error404');
 		$content_status = $this->getContentStatus();
 		
 		$this->Pagination->show = 10;
 		$tag_id = $tag['Tag']['id'];
 		$final_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
-        $count_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id";
+		$count_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id";
 
         if ($content_status == "safe") {
 			$final_criteria = "Project.status = 'safe' AND " . $final_criteria; 
@@ -63,8 +63,8 @@ Class TagsController extends AppController {
 		}
 		
 		$this->Project->bindUser();
-        $this->ProjectTag->bindProject(); 
-        $this->ProjectTag->unbindTag();
+		$this->ProjectTag->bindProject(); 
+		$this->ProjectTag->unbindTag();
 		
 		$this->modelClass = "ProjectTag";
 
