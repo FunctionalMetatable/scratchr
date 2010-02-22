@@ -37,8 +37,20 @@ class FeedsController extends AppController {
 	function getNewestProjects() {
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
+
+		# Check memcache first
+		$this->Project->mc_connect();
+		$mc_key = 'feeds_newest_projects';
 		
-		$projects = $this->Project->findAll("", null, "Project.created DESC", 15);
+		$projects = $this->Project->mc_get($mc_key);
+
+		if($projects === false) {
+		    $projects = $this->Project->findAll("", null, "Project.created DESC", 15);
+		    $this->Project->mc_set($mc_key, $projects, false, FEEDS_TTL);
+		}
+
+		$this->Project->mc_close();
+
 		$final_projects = Array();
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
@@ -46,13 +58,26 @@ class FeedsController extends AppController {
 		$this->set('rss_link', $rss_link);
 		$this->set('projects', $this->__feedize_projects($projects));
 		$this->render('newest_project_feed');
+
 	}
 	
 	function getFeaturedProjects() {
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
+
+		# Check memcache first
+		$this->Project->mc_connect();
+		$mc_key = 'feeds_featured_projects';
 		
-		$projects = $this->FeaturedProject->findAll("", null, "FeaturedProject.timestamp DESC", 15);
+		$projects = $this->Project->mc_get($mc_key);
+
+		if($projects === false) {
+		    $projects = $this->FeaturedProject->findAll("", null, "FeaturedProject.timestamp DESC", 15);
+		    $this->Project->mc_set($mc_key, $projects, false, FEEDS_TTL);
+		}
+
+		$this->Project->mc_close();
+		
 		$final_projects = Array();
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
@@ -65,8 +90,20 @@ class FeedsController extends AppController {
 	function getTopViewedProjects() {
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
+
+		# Check memcache first
+		$this->Project->mc_connect();
+		$mc_key = 'feeds_top_viewed_projects';
 		
-		$projects = $this->Project->findAll("Project.proj_visibility = 'visible'", null, "Project.views DESC", 15);
+		$projects = $this->Project->mc_get($mc_key);
+
+		if($projects === false) {
+		    $projects = $this->Project->findAll("Project.proj_visibility = 'visible'", null, "Project.views DESC", 15);
+		    $this->Project->mc_set($mc_key, $projects, false, FEEDS_TTL);
+		}
+
+		$this->Project->mc_close();
+
 		$final_projects = Array();
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
@@ -80,12 +117,24 @@ class FeedsController extends AppController {
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
 		
-		$projects = $this->Project->findAll("Project.loveit > 0", null, "Project.loveit DESC", 15);
+		# Check memcache first
+		$this->Project->mc_connect();
+		$mc_key = 'feeds_top_loved_projects';
+		
+		$projects = $this->Project->mc_get($mc_key);
+
+		if($projects === false) {
+		    $projects = $this->Project->findAll("Project.loveit > 0", null, "Project.loveit DESC", 15);
+		    $this->Project->mc_set($mc_key, $projects, false, FEEDS_TTL);
+		}
+
+		$this->Project->mc_close();
+
 		$final_projects = Array();
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
-		$rss_link = "http://" . $url . "/feeds/getUnreviewedProjects";
-        $this->set('rss_link', $rss_link);
+		$rss_link = "http://" . $url . "/feeds/getTopLovedProjects";
+		$this->set('rss_link', $rss_link);
 		$this->set('projects', $this->__feedize_projects($projects));
 		$this->render('toploved_project_feed');
 	}
@@ -93,8 +142,20 @@ class FeedsController extends AppController {
 	function getTopFlaggedProjects() {
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
+
+		# Check memcache first
+		$this->Project->mc_connect();
+		$mc_key = 'feeds_top_flagged_projects';
 		
-		$projects = $this->Flagger->findAll("", null, "Flagger.timestamp DESC", 100);
+		$projects = $this->Project->mc_get($mc_key);
+
+		if($projects === false) {
+		    $projects = $this->Flagger->findAll("", null, "Flagger.timestamp DESC", 100);
+		    $this->Project->mc_set($mc_key, $projects, false, FEEDS_TTL);
+		}
+
+		$this->Project->mc_close();
+		
 		$final_projects = Array();
 		$flagged_projects = Array();
 		$url = env('SERVER_NAME');
@@ -138,8 +199,20 @@ class FeedsController extends AppController {
 	function getTopRemixedProjects() {
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
+
+		# Check memcache first
+		$this->Project->mc_connect();
+		$mc_key = 'feeds_top_remixed_projects';
 		
-		$projects = $this->Project->findAll("Project.remixes > 0", null, "Project.remixes DESC", 15);
+		$projects = $this->Project->mc_get($mc_key);
+
+		if($projects === false) {
+		    $projects = $this->Project->findAll("Project.remixes > 0", null, "Project.remixes DESC", 15);
+		    $this->Project->mc_set($mc_key, $projects, false, FEEDS_TTL);
+		}
+
+		$this->Project->mc_close();
+
 		$final_projects = Array();
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
@@ -158,8 +231,20 @@ class FeedsController extends AppController {
 		$this->User->id = $user_id;
 		$user = $this->User->read();
 		$user_name = $user['User']['username'];
+
+		# Check memcache first
+		$this->Project->mc_connect();
+		$mc_key = 'feeds_recent_user_projects_' . $user_id;
 		
-		$projects = $this->Project->findAll("user_id = $user_id AND proj_visibility = 'visible'", null, "Project.created DESC", 15);
+		$projects = $this->Project->mc_get($mc_key);
+
+		if($projects === false) {
+		    $projects = $this->Project->findAll("user_id = $user_id AND proj_visibility = 'visible'", null, "Project.created DESC", 15);
+		    $this->Project->mc_set($mc_key, $projects, false, FEEDS_TTL);
+		}
+
+		$this->Project->mc_close();
+		
 		$final_projects = Array();
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
@@ -167,7 +252,7 @@ class FeedsController extends AppController {
 
 		$this->set('user_name', $user_name);
 		$this->set('rss_link', $rss_link);
-        $this->set('projects', $this->__feedize_projects($projects, $user_name));
+		$this->set('projects', $this->__feedize_projects($projects, $user_name));
 		$this->render('User_project_feed');
 	}
 	
@@ -193,7 +278,7 @@ class FeedsController extends AppController {
 		$this->render('gallery_project_feed');
 	}
     
-    function getFriendsLatestProjects($encoded_user_id){
+	function getFriendsLatestProjects($encoded_user_id){
 		$this->autoRender = false;
 		$this->layout = 'xml';
 		$user_id = $this->decode($encoded_user_id);
@@ -203,32 +288,44 @@ class FeedsController extends AppController {
 		}
 
 		$username = $user_record['User']['username'];
-        $projects = $this->Project->getMyFriendsLatestProjects(
-                                    $user_id, 0, 10);
+		$projects = $this->Project->getMyFriendsLatestProjects($user_id, 0, 10);
 
-        $url = env('SERVER_NAME');
+		$url = env('SERVER_NAME');
 		$url = strtolower($url);
 		$rss_link = "http://" . $url . "/feeds/getFriendsLatestProjects/".$encoded_user_id;
 
 		$this->set('username', $username);
-        $this->set('projects', $this->__feedize_projects($projects));
+		$this->set('projects', $this->__feedize_projects($projects));
 		$this->set('rss_link', $rss_link);
-        $this->render('get_friends_latest_feeds');
+		$this->render('get_friends_latest_feeds');
 	}
 	
 	 function getLatestTopViewedProjects() {
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
 		$this->Project->unbindModel(
-                array('hasMany' => array('GalleryProject'))
-            );
+		    array('hasMany' => array('GalleryProject'))
+		    );
 		if ($this->getContentStatus() == 'safe') {
 		    $days = TOP_VIEWED_DAY_INTERVAL_SAFE;
         	} else {
 		    $days = TOP_VIEWED_DAY_INTERVAL;
         	}
 		$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND  `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe'";
-		$projects = $this->Project->findAll($condition, null, "Project.views DESC", 15);
+
+		# Check memcache first
+		$this->Project->mc_connect();
+		$mc_key = 'feeds_latest_top_viewed_projects';
+		
+		$projects = $this->Project->mc_get($mc_key);
+
+		if($projects === false) {
+		    $projects = $this->Project->findAll($condition, null, "Project.views DESC", 15);
+		    $this->Project->mc_set($mc_key, $projects, false, FEEDS_TTL);
+		}
+
+		$this->Project->mc_close();
+
 		$final_projects = Array();
 		$url = env('SERVER_NAME');
 		$url = strtolower($url);
