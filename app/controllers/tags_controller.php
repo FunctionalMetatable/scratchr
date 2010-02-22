@@ -34,13 +34,27 @@ Class TagsController extends AppController {
     }
 	
     function __setGalleryTagCloud() {
-        $resultset = $this->Tag->query("
+
+	# Check memcache first
+        $mc_key = 'gallery_tag_cloud';
+        $this->Tag->mc_connect();
+        $resultset = $this->Tag->mc_get($mc_key);
+
+        if($resultset === false) {
+
+	  $resultset = $this->Tag->query("
             SELECT Tag.name, COUNT(Gallery.id) as tagcounter FROM galleries Gallery
             JOIN gallery_tags tt ON Gallery.id = tt.gallery_id
             JOIN tags Tag ON tt.tag_id = Tag.id
             GROUP BY Tag.id
             ORDER BY tagcounter DESC
             LIMIT " . TAG_CLOUD_BIG);
+
+           $this->Tag->mc_set($mc_key, $resultset, false, TAG_CLOUD_TTL);
+
+        }
+        $this->Tag->mc_close();
+
         $this->set('gallery_tags', $resultset);
     }
 	

@@ -87,7 +87,7 @@ class ContactController extends AppController {
 			$message.="\n\nIP Address of user: ".$ip."\nHTTP_USER_AGENT: ".$_SERVER['HTTP_USER_AGENT'];
 
 			$this->Email->email($email, $name, $message, $subject, $mailto, $email);  //here is the email sent
-			$this->Email->email($email, $name, $message, $subject, $cc_topic, $email);  //copy of the email sent to the person in charge of the topic selected
+			// $this->Email->email($email, $name, $message, $subject, $cc_topic, $email);  //copy of the email sent to the person in charge of the topic selected
 			$this->set('succes', ___('The message was sent', true) . " <br />" . ___('Thank you!', true));
 	      }
 	}
