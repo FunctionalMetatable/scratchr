@@ -266,7 +266,7 @@ define('PCOMMENT_CACHE_NUMPAGE', 3); //cache first 3 project comment pages
 define('GCOMMENT_CACHE_NUMPAGE', 3); //cache first 3 gallery comment pages
 
 //Latest channel constant
-define("LATEST_SHARED_CACHE_TTL", 6); // 0.1 hrs
+define("LATEST_SHARED_CACHE_TTL", 60); // 1 hr
 define("LATEST_TOPVIEWED_CACHE_TTL", 30); //0.5 hour
 define("LATEST_TOPLOVED_CACHE_TTL", 30); //0.5 hour
 define("LATEST_REMIXED_CACHE_TTL", 30); //0.5 hour
@@ -280,6 +280,9 @@ define("NUM_LATEST_TOPLOVED", 100);
 define("NUM_LATEST_REMIXED", 100);
 define("NUM_LATEST_GETFEEDBACK", 100);
 define("NUM_LATEST_TAGED_PROJECT", 100);
+
+//Feeds memcache constants
+define("FEEDS_TTL", 300); // 5 hrs
 
 //Allow people to give thank you after n hours.
 define("THANKS_INTERVAL",5);
