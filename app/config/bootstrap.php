@@ -146,12 +146,13 @@ $this->params['webservices']
  define("SCRATCH_KEY", "ch4ng3me");
 
  /**
-  * Tag clound consts
+  * Tag cloud consts
   */
  define("TAG_CLOUD_HOME", 30);
  define("TAG_PAGINATION_CACHE_TTL", 720); //12 hours
  define("TAG_PAGINATION_CACHE_TTL_CREATION", 360); //6 hours
  define("TAG_CLOUD_BIG", 500);
+ define("TAG_CLOUD_TTL", 1440); // 24 hrs
 
  /**
   * IMAGE EXTENSIONS
@@ -283,6 +284,7 @@ define("NUM_LATEST_TAGED_PROJECT", 100);
 
 //Feeds memcache constants
 define("FEEDS_TTL", 300); // 5 hrs
+
 
 //Allow people to give thank you after n hours.
 define("THANKS_INTERVAL",5);
