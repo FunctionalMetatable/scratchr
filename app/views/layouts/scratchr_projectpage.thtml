@@ -40,7 +40,18 @@ if ($isLoggedIn) {
  $pleaseexplain = ___("Please explain more about why you think it\'s inapprorpiate.", true);
      $have2desc = ___("You have to describe why you\'re reporting a project before you can report it!", true);
     e($javascript->codeBlock("
-			
+	
+	var loveit_loading = false;
+	function checkLoading() {
+		if(!loveit_loading && checkLogin())	{
+			loveit_loading = true;
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
     function checkLogin(elid) {
 		if(elid) {
 			if (document.getElementById(elid).value)
@@ -71,6 +82,7 @@ if ($isLoggedIn) {
 	}
 	
 	function changeLoversCount(loveit) {
+		loveit_loading = false;
 		var loversCountHidden = document.getElementById('lovers-count-hidden');
 		var loversCount = document.getElementById('lovers-count');
 		var loversMsg = document.getElementById('lovers-msg');
