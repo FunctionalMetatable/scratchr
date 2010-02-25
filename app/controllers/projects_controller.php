@@ -1799,7 +1799,9 @@ class ProjectsController extends AppController {
                         array('code'=>'404', 'message'=>'project_'.$project_visibility,
                               'name' => __('Not Found', true)));
 				}else{
-					if($logged_id != $owner_id && $project_visibility == "censbyadmin"){
+					if($logged_id != $owner_id && $project_visibility == "censbyadmin" && !($this->isAdmin() 
+																		|| isset($users_permission['censor_projects'])
+                														|| isset($users_permission['project_view_permission']))){
 					$this->cakeError('error',
                         array('code'=>'404', 'message'=>'project_'.$project_visibility.'_logged_in',
                               'name' => __('Not Found', true)));
