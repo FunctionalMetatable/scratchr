@@ -46,7 +46,17 @@ Class HomeController extends AppController {
         $project_ids = array();
        	$user_ids =array();
         $this->set('client_ip', $this->RequestHandler->getClientIP());
-        $home_projects = $this->Project->mc_get('home_projects_data');
+		
+		$key = 'home_projects_data';
+		$client_ip = $this->RequestHandler->getClientIP();
+		$countryName = $this->GeoIp->lookupCountryCode($client_ip);
+		if($this->isCustomizableCountry($countryName)){
+			$cookieCountryName = $this->Cookie->read('country');
+			if(strcmp($cookieCountryName, DEFAULT_COUNTRY) != 0){
+				$key = 'home_projects_data_'.$countryName;
+			}
+		}
+        $home_projects = $this->Project->mc_get($key);
         if($home_projects === false) {
 			$curator_name = $this->___getCuratorName();
 			
@@ -72,6 +82,10 @@ Class HomeController extends AppController {
             $user_ids       = array_merge($user_ids, $favorites_user_ids);
 			//3.Top Loved
 			$toploved = $this->__getTopLovedProjects($project_ids, $user_ids);
+			/*Fetch conutry based project*/
+			if($key !== 'home_projects_data'){
+				$toploved = $this->__getTopLovedProjects($project_ids, $user_ids, $cookieCountryName);
+			}
             $toploved_ids   = Set::extract('/Project/id', $toploved);
 			$toploved_user_ids   = Set::extract('/User/id', $toploved);
             $this->Project->register_frontpage($toploved_ids, 'top_loved');
@@ -79,6 +93,10 @@ Class HomeController extends AppController {
 			$user_ids       = array_merge($user_ids, $toploved_user_ids);
 			//4.Top Remixed
 			$topremixed     = $this->__getTopRemixedProjects($project_ids, $user_ids);
+			/*Fetch conutry based project*/
+			if($key !== 'home_projects_data'){
+				$topremixed     = $this->__getTopRemixedProjects($project_ids, $user_ids, $cookieCountryName);
+			}
             $topremixed_ids = Set::extract('/Project/id', $topremixed);
 			$topremixed_user_ids = Set::extract('/User/id', $topremixed);
             $this->Project->register_frontpage($topremixed_ids, 'top_remixed');
@@ -86,6 +104,10 @@ Class HomeController extends AppController {
 			$user_ids       = array_merge($user_ids, $topremixed_user_ids);
 			//5.Top Viwed
 			$topviewed      = $this->__getTopViewedProjects($project_ids, $user_ids);
+			/*Fetch conutry based project*/
+			if($key !== 'home_projects_data'){
+				$topviewed      = $this->__getTopViewedProjects($project_ids, $user_ids, $cookieCountryName);
+			}
             $topviewed_ids  = Set::extract('/Project/id', $topviewed);
 			$topviewed_user_ids  = Set::extract('/User/id', $topviewed);
             $this->Project->register_frontpage($topviewed_ids, 'top_viewed');
@@ -113,7 +135,7 @@ Class HomeController extends AppController {
 								    'clubedprojects' => $clubedprojects
                                 );
                                 
-            $this->Project->mc_set('home_projects_data', $home_projects,
+            $this->Project->mc_set($key, $home_projects,
                                     false, HOMEL_PAGE_TTL);
         }
         else {
@@ -296,40 +318,52 @@ Class HomeController extends AppController {
         return $projects;
     }
 
-    function __getTopViewedProjects($exclude_project_ids, $exclude_user_ids) {
+    function __getTopViewedProjects($exclude_project_ids, $exclude_user_ids, $countryName = null) {
         if ($this->getContentStatus() == 'safe') {
 		    $days = TOP_VIEWED_DAY_INTERVAL_SAFE;
         } else {
 		    $days = TOP_VIEWED_DAY_INTERVAL;
         }
         $num_script = NUM_MIN_SCRIPT_FOR_TOP_VIWED;
+		$condition = "totalScripts >= $num_script";
+		if($countryName){
+			$condition = "totalScripts >= $num_script AND `projects`.`country`= '$countryName'";
+		}
 		$topviewedProjects = $this->Project->getTopProjects('`views`', '`views` DESC', $days,
-            $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED, "totalScripts >= $num_script");
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED, $condition);
 		if(SHOW_RIBBON ==1){
 			$topviewedProjects = $this->set_ribbon($topviewedProjects);
 		}
 		return $topviewedProjects;
     }
 
-    function __getTopRemixedProjects($exclude_project_ids, $exclude_user_ids) {
+    function __getTopRemixedProjects($exclude_project_ids, $exclude_user_ids, $countryName = null) {
         if ($this->getContentStatus() =='safe') {
 		    $days = TOP_REMIXED_DAY_INTERVAL_SAFE;
         } else {
 		    $days = TOP_REMIXED_DAY_INTERVAL;
         }
 		$num_script = NUM_MIN_SCRIPT_FOR_TOP_REMIX;
+		$condition = "remixer > 0 AND totalScripts >= $num_script";
+		if($countryName){
+			$condition = "remixer > 0 AND totalScripts >= $num_script AND `projects`.`country`= '$countryName'";
+		}
         $topRemixedProjects =  $this->Project->getTopProjects('`remixer`', '`remixer` DESC', $days,
-            $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, "remixer > 0 AND totalScripts >= $num_script");
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, $condition);
 		if(SHOW_RIBBON ==1){
 			$topRemixedProjects = $this->set_ribbon($topRemixedProjects);
 		}
 		return $topRemixedProjects;
     }
 
-    function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids) {
+    function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids, $countryName = null) {
         $num_script = NUM_MIN_SCRIPT_FOR_TOP_LOVED;
+		$condition = "totalScripts >= $num_script";
+		if($countryName){
+			$condition = "totalScripts >= $num_script AND `projects`.`country`= '$countryName'";
+		}
 		$topLovedProjects =  $this->Project->getTopProjects('`loveitsuniqueip`', '`loveitsuniqueip` DESC', TOP_LOVED_DAY_INTERVAL,
-            $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED, "totalScripts >= $num_script");
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED, $condition);
 		if(SHOW_RIBBON ==1){
 			$topLovedProjects = $this->set_ribbon($topLovedProjects);
 		}
