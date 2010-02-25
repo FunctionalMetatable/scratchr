@@ -845,6 +845,7 @@ Class ServicesController extends AppController {
 		$this->RemixNotification->mc_connect();
 
 		$counter = $this->RemixNotification->mc_get('remix_notification_counter');
+		$counter = (int) $counter;
 		$index = $counter % count($notification_types);
 		$counter++;
 		$this->RemixNotification->mc_set('remix_notification_counter', $counter);
