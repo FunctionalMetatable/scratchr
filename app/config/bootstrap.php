@@ -153,6 +153,8 @@ $this->params['webservices']
  define("TAG_PAGINATION_CACHE_TTL_CREATION", 360); //6 hours
  define("TAG_CLOUD_BIG", 500);
  define("TAG_CLOUD_TTL", 1440); // 24 hrs
+ define("NUM_TAGED_PROJECT", 200); // 24 hrs
+ define("TAGED_PROJECT_CACHE_TTL", 720); // 12 hrs
 
  /**
   * IMAGE EXTENSIONS
