@@ -108,6 +108,9 @@ Class ChannelController extends AppController {
     }
 
     function topviewed() {
+		if (! $this->isLoggedIn()) { 
+           $this->cakeError('error404');
+        }
         $this->layout = 'scratchr_explorer';
         $this->pageTitle = ___("Scratch | Top viewed projects", true);
         $this->modelClass = "Project";
@@ -143,6 +146,9 @@ Class ChannelController extends AppController {
     }
 
     function toploved() {
+		if (! $this->isLoggedIn()) { 
+           $this->cakeError('error404');
+        }
         $this->layout = 'scratchr_explorer';
         $this->pageTitle = ___("Scratch | Top loved projects", true);
         $this->modelClass = "Project";
@@ -204,6 +210,9 @@ Class ChannelController extends AppController {
     }
 
     function remixed() {
+		if (! $this->isLoggedIn()) { 
+           $this->cakeError('error404');
+        }
 		$this->layout = 'scratchr_explorer'; 
 		$this->pageTitle = ___("Scratch | Most Remixed projects", true);
         $this->modelClass = "Project";
