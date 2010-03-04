@@ -14,18 +14,6 @@
 			
 		<?php
 		}
-		if ($option == "title") {
-		?>
-			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/title"><span class="button2_selected"><?php ___('title')?></span></a>
-			
-		<?php
-		} else {
-		?>
-			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/title"><span class="button2"><?php ___('title')?></span></a>
-			
-		<?php
-		}
-		
 		if ($option == "loveits") {
 		?>
 			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/loveits"><span class="button2_selected"><?php ___('loveits')?></span></a>
@@ -109,9 +97,6 @@
 			</div>
 		<?php endif; ?>
    	<?php endforeach;?>	
-    <?php 
-		$pagination->setPaging($paging);
-		echo $this->renderElement('pagination'); 
-	?>
+
 </div>
 </div>
