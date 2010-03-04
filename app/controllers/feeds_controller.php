@@ -35,6 +35,9 @@ class FeedsController extends AppController {
 	}
 	
 	function getNewestProjects() {
+		if (! $this->isLoggedIn()) { 
+           $this->cakeError('error404');
+        }
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
 
@@ -88,6 +91,9 @@ class FeedsController extends AppController {
 	}
 	
 	function getTopViewedProjects() {
+		if (! $this->isLoggedIn()) { 
+           $this->cakeError('error404');
+        }
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
 
@@ -114,6 +120,9 @@ class FeedsController extends AppController {
 	}
 	
 	function getTopLovedProjects() {
+		if (! $this->isLoggedIn()) { 
+           $this->cakeError('error404');
+        }
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
 		
@@ -197,6 +206,9 @@ class FeedsController extends AppController {
 	}
 	
 	function getTopRemixedProjects() {
+		if (! $this->isLoggedIn()) { 
+           $this->cakeError('error404');
+        }
 		$this->autoRender = false;
 		$this->layout = 'xml'; 
 
