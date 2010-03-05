@@ -325,9 +325,9 @@ Class HomeController extends AppController {
 		    $days = TOP_VIEWED_DAY_INTERVAL;
         }
         $num_script = NUM_MIN_SCRIPT_FOR_TOP_VIWED;
-		$condition = "totalScripts >= $num_script";
+		$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL";
 		if($countryName){
-			$condition = "totalScripts >= $num_script AND `projects`.`country`= '$countryName'";
+			$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$countryName'";
 		}
 		$topviewedProjects = $this->Project->getTopProjects('`views`', '`views` DESC', $days,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED, $condition);
@@ -344,9 +344,9 @@ Class HomeController extends AppController {
 		    $days = TOP_REMIXED_DAY_INTERVAL;
         }
 		$num_script = NUM_MIN_SCRIPT_FOR_TOP_REMIX;
-		$condition = "remixer > 0 AND totalScripts >= $num_script";
+		$condition = "remixer > 0 AND totalScripts >= $num_script AND totalScripts IS NOT NULL";
 		if($countryName){
-			$condition = "remixer > 0 AND totalScripts >= $num_script AND `projects`.`country`= '$countryName'";
+			$condition = "remixer > 0 AND totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$countryName'";
 		}
         $topRemixedProjects =  $this->Project->getTopProjects('`remixer`', '`remixer` DESC', $days,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, $condition);
@@ -358,9 +358,9 @@ Class HomeController extends AppController {
 
     function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids, $countryName = null) {
         $num_script = NUM_MIN_SCRIPT_FOR_TOP_LOVED;
-		$condition = "totalScripts >= $num_script";
+		$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL";
 		if($countryName){
-			$condition = "totalScripts >= $num_script AND `projects`.`country`= '$countryName'";
+			$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$countryName'";
 		}
 		$topLovedProjects =  $this->Project->getTopProjects('`loveitsuniqueip`', '`loveitsuniqueip` DESC', TOP_LOVED_DAY_INTERVAL,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED, $condition);
