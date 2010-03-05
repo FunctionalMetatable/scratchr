@@ -478,7 +478,7 @@ Class ServicesController extends AppController {
 				$project_version = ((int)$project['Project']['version']); // + 1;
 				$this->Project->id = $project_id;
 				$this->data['Project']['version'] = $project_version + 1;
-				if($project['Project']['proj_visibility']=='delbyadmin' || $project['Project']['proj_visibility']=='censbyadmin' ||$project['Project']['proj_visibility']=='censbycomm')
+				if($project['Project']['proj_visibility']=='delbyusr' || $project['Project']['proj_visibility']=='delbyadmin' || $project['Project']['proj_visibility']=='censbyadmin' ||$project['Project']['proj_visibility']=='censbycomm')
 				{
 					$this->__failed(INVALID_PROJECT);
 				return;
