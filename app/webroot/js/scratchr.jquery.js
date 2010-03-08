@@ -13,7 +13,3 @@ function showLogin() {
     }
     return false;
 }
-
-function hideUserCountryDiv() {
-$('#userCountryDiv').fadeOut('medium', null);
-}
