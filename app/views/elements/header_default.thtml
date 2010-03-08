@@ -202,16 +202,7 @@ for ($d = 0; $d < 4; $d++) { // 4 columns loop
 ?>
 
 <?php
-	if($customizableCountry) {
-		echo "<div id='userCountryDiv'>";
-		echo "<div id='announcement'>";
-		echo "<b style='font-size:11px'>";
-		printf(___('Welcome visitor from %s! We\'ll try to show you some projects from %s.You can always change this location at the bottom of any page %s(hide)%s', true),  $userCountryName, $userCountryName, '<a  href="javascript:void(0)" onclick="hideUserCountryDiv()">', '</a>'); 
-
-		echo "</b>";
-		echo "</div>";
-		echo "</div>";
-	}
+	echo $this->element('country_welcome', compact(array('customizableCountry', 'userCountryName')));
 ?>
 <?php
 				

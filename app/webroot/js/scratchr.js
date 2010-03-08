@@ -313,9 +313,16 @@ else{
 return false;
 }
 
-function hideUserCountryDiv() {
+function hideUserCountryDiv(fast) {
 	var userCountryDiv = document.getElementById("userCountryDiv");
-	Effect.Fade('userCountryDiv',{duration:.4,from: 0.9999,to: 0});
+	if(typeof fast !== 'undefined') {
+		hide(userCountryDiv);
+	}
+	else {
+		Effect.Fade('userCountryDiv',{duration:.4,from: 0.9999,to: 0});
+	}
+	setCookie('country_welcomed','1', 365);
+	return false;
 }
 
 
