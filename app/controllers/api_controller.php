@@ -51,9 +51,9 @@ class ApiController extends AppController {
         if ($registeredusers === false) {
        	    $registeredusers = $this->__getTotalUsers();
             $this->Project->mc_set("get-registered-users", $registeredusers, false, API_REGISTERED_USERS_TTL);
-			$this->Project->mc_close();
         }
 		echo $registeredusers;
+		$this->Project->mc_close();
 		exit;
 	}
 	/** 
@@ -76,9 +76,9 @@ class ApiController extends AppController {
 			$tot_creators = $resultset['0']['0']['project_creators'];
 			$tot_creators = number_format(0.0 + $tot_creators);
 			$this->Project->mc_set("get-project-creators", $tot_creators, false, API_PROJECT_CREATORS_TTL);
-			$this->Project->mc_close();
 		}
 		echo $tot_creators;
+		$this->Project->mc_close();
 		exit;
 	}
 	
@@ -94,9 +94,9 @@ class ApiController extends AppController {
 			$tot_projects = $resultset['0']['0']['tot_projects'];
 			$tot_projects = number_format(0.0 + $tot_projects);
 			$this->Project->mc_set("get-total-projects", $tot_projects, false, API_TOTAL_PROJECT_TTL);
-			$this->Project->mc_close();
 		}
 		echo $tot_projects;
+		$this->Project->mc_close();
 		exit;
 	}
 	
@@ -112,9 +112,9 @@ class ApiController extends AppController {
 			$tot_scripts = $resultset['0']['0']['totalscripts'];
 			$tot_scripts = number_format(0.0 + $tot_scripts);
 			$this->Project->mc_set("get-total-scripts", $tot_scripts, false, API_TOTAL_SCRIPTS_TTL);
-			$this->Project->mc_close();
 		}
 		echo $tot_scripts;
+		$this->Project->mc_close();
 		exit;
 	}
 	
@@ -130,9 +130,9 @@ class ApiController extends AppController {
 			$tot_sprites = $resultset['0']['0']['totalsprites'];
 			$tot_sprites = number_format(0.0 + $tot_sprites);
 			$this->Project->mc_set("get-total-sprites", $tot_sprites, false, API_TOTAL_SPRITES_TTL);
-			$this->Project->mc_close();
 		}
 		echo $tot_sprites;
+		$this->Project->mc_close();
 		exit;
 	}
 }
