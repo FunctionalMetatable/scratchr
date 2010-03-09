@@ -168,6 +168,15 @@ $this->params['webservices']
  define("NUM_TOPLOVED_TAGED_PROJECT", 100); // 
  define("TAGED_TOPLOVED_PROJECT_CACHE_TTL", 30); 
   define("LATEST_TOPLOVED_DAY_INTERVAL", 30);
+  
+  /**
+  *Api constant
+  */
+  define("API_REGISTERED_USERS_TTL", 60); //1 hours
+  define("API_PROJECT_CREATORS_TTL", 60); //1 hours
+  define("API_TOTAL_PROJECT_TTL", 60); //1 hours
+  define("API_TOTAL_SCRIPTS_TTL", 60); //1 hour
+  define("API_TOTAL_SPRITES_TTL", 60); //1 hours
 
  /**
   * IMAGE EXTENSIONS
