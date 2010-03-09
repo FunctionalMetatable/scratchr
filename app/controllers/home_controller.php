@@ -81,10 +81,12 @@ Class HomeController extends AppController {
 			$project_ids    = array_merge($project_ids, $favorites_id);
             $user_ids       = array_merge($user_ids, $favorites_user_ids);
 			//3.Top Loved
-			$toploved = $this->__getTopLovedProjects($project_ids, $user_ids);
 			/*Fetch conutry based project*/
 			if($key !== 'home_projects_data'){
 				$toploved = $this->__getTopLovedProjects($project_ids, $user_ids, $cookieCountryName);
+			}
+			if(empty($toploved)) {
+				$toploved = $this->__getTopLovedProjects($project_ids, $user_ids);
 			}
             $toploved_ids   = Set::extract('/Project/id', $toploved);
 			$toploved_user_ids   = Set::extract('/User/id', $toploved);
@@ -92,10 +94,12 @@ Class HomeController extends AppController {
             $project_ids    = array_merge($project_ids, $toploved_ids);
 			$user_ids       = array_merge($user_ids, $toploved_user_ids);
 			//4.Top Remixed
-			$topremixed     = $this->__getTopRemixedProjects($project_ids, $user_ids);
 			/*Fetch conutry based project*/
 			if($key !== 'home_projects_data'){
-				$topremixed     = $this->__getTopRemixedProjects($project_ids, $user_ids, $cookieCountryName);
+				$topremixed = $this->__getTopRemixedProjects($project_ids, $user_ids, $cookieCountryName);
+			}
+			if(empty($topremixed)) {
+				$topremixed = $this->__getTopRemixedProjects($project_ids, $user_ids);
 			}
             $topremixed_ids = Set::extract('/Project/id', $topremixed);
 			$topremixed_user_ids = Set::extract('/User/id', $topremixed);
@@ -103,10 +107,12 @@ Class HomeController extends AppController {
             $project_ids    = array_merge($project_ids, $topremixed_ids);
 			$user_ids       = array_merge($user_ids, $topremixed_user_ids);
 			//5.Top Viwed
-			$topviewed      = $this->__getTopViewedProjects($project_ids, $user_ids);
 			/*Fetch conutry based project*/
 			if($key !== 'home_projects_data'){
-				$topviewed      = $this->__getTopViewedProjects($project_ids, $user_ids, $cookieCountryName);
+				$topviewed = $this->__getTopViewedProjects($project_ids, $user_ids, $cookieCountryName);
+			}
+			if(empty($topviewed)) {
+				$topviewed = $this->__getTopViewedProjects($project_ids, $user_ids);
 			}
             $topviewed_ids  = Set::extract('/Project/id', $topviewed);
 			$topviewed_user_ids  = Set::extract('/User/id', $topviewed);
