@@ -892,8 +892,8 @@ class UsersController extends AppController {
 		
 		$user_status = $user_record['User']['status'];
 		if ($user_status == 'delbyadmin' || $user_status == 'delbyusr' || $user_status == 'locked') {
-		if( !$this->isAdmin()){
-            $this->cakeError('error',array('code'=>'404', 'message'=>'account_disabled', 'name' => __('Not Found', true)));
+			if( !$this->isLoggedIn() ) {
+				$this->cakeError('error',array('code'=>'404', 'message'=>'account_disabled', 'name' => __('Not Found', true)));
 			}
         }
 		//Find number of featured project for a particular user
