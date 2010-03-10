@@ -62,7 +62,7 @@ Class TagsController extends AppController {
 		$this->autoRender = true;
 		$this->pageTitle = ___("Scratch | Projects tagged with", true) . " '" . htmlspecialchars($tag_name) . "'";
         $tag =  $this->Tag->find("name = '$tag_name'");
-        if (empty($tag))
+        if (empty($tag) || $option ==='title')
 		$this->cakeError('error404');
 		$content_status = $this->getContentStatus();
 		
