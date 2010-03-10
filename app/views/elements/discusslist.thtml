@@ -24,12 +24,10 @@ $is_comment_owner = ($comment['User']['id'] == $loggedInUID);
 
 $is_commenter_ignored = (in_array($comment['User']['id'], $ignored_commenters)
                         && !$is_comment_owner);
-$is_blocked_commenter_ignored = (in_array($comment['User']['id'], $blocked_commenters));
 $is_deleted_commenter_ignored = (in_array($comment['User']['id'], $deleted_commenters));
 $is_comment_ignored = in_array($comment['Gcomment']['id'], $ignored_comments);
 
-$is_comment_ok = (!$is_commenter_ignored && !$is_comment_ignored && !$is_blocked_commenter_ignored 
-																 && !$is_deleted_commenter_ignored);
+$is_comment_ok = (!$is_commenter_ignored && !$is_comment_ignored && !$is_deleted_commenter_ignored);
 $markcomment_url = '/galleries/markcomment/' . $theme_id . '/' . $comment_id . '/0';
 ?>
 
