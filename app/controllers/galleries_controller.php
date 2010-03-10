@@ -1052,7 +1052,6 @@ Class GalleriesController extends AppController {
         $this->set_comment_errors(array());
         $this->set('comments', $comment_data['comments']);
         $this->set('ignored_commenters', $comment_data['ignored_commenters']);
-		$this->set('blocked_commenters', $comment_data['blocked_commenters']);
 		$this->set('deleted_commenters', $comment_data['deleted_commenters']);
         $this->set('ignored_comments', $comment_data['ignored_comments']);
         $this->set('single_thread', $comment_data['single_thread']);
@@ -2835,13 +2834,8 @@ Class GalleriesController extends AppController {
                 array('conditions' =>
                 'blocker_id = '. $owner_id . ' AND user_id IN ' . $commenter_ids,
                 'fields' => 'user_id'));
-			//Listing blocked user	
-			$blocked_commenters = $this->BlockedUser->find('list',
-                array('conditions' =>
-                'user_id IN ' . $commenter_ids,
-                'fields' => 'user_id'));
-				
-			//Listing deleted user	
+
+			//Listing deleted user
 			$deleted_commenters = $this->User->find('list',
                 array('conditions' =>
                 'User.id IN ' . $commenter_ids. ' AND '. "(User.status = 'delbyadmin' OR User.status = 'delbyusr')",
@@ -2850,8 +2844,7 @@ Class GalleriesController extends AppController {
             $comment_data = array();
             $comment_data['comments'] = $comments;
             $comment_data['ignored_commenters'] = $ignored_commenters;
-			$comment_data['blocked_commenters'] = $blocked_commenters; 
- 			$comment_data['deleted_commenters'] = $deleted_commenters; 
+			$comment_data['deleted_commenters'] = $deleted_commenters; 
             $comment_data['ignored_comments'] = array();
             $comment_data['commenter_ids'] = $commenter_ids;
             $comment_data['comment_ids'] = $comment_ids;
@@ -2987,19 +2980,13 @@ Class GalleriesController extends AppController {
                             array('conditions' =>
                             'blocker_id = '. $owner_id . ' AND user_id IN ' . $commenter_ids,
                             'fields' => 'user_id'));
-			//Listing blocked user	
-			$blocked_commenters = $this->BlockedUser->find('list',
-                array('conditions' =>
-                'user_id IN ' . $commenter_ids,
-                'fields' => 'user_id'));
-				
-			//Listing blocked user	
+			
+			//Listing deleted user
 			$deleted_commenters = $this->User->find('list',
                 array('conditions' =>
                 'User.id IN ' . $commenter_ids. ' AND '. "(User.status = 'delbyadmin' OR User.status = 'delbyusr')",
                 'fields' => 'id'));
 			
-			$comment_data['blocked_commenters'] = $blocked_commenters;
 			$comment_data['deleted_commenters'] = $deleted_commenters;
             $comment_data['ignored_commenters'] = $ignored_commenters;
             $comment_data['ignored_comments'] = array();
