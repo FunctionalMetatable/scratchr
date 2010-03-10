@@ -25,11 +25,9 @@ $is_comment_owner = ($comment['User']['id'] == $loggedInUID);
 
 $is_commenter_ignored = (in_array($comment['User']['id'], $ignored_commenters)
                         && !$is_comment_owner);
-$is_blocked_commenter_ignored = (in_array($comment['User']['id'], $blocked_commenters));
 $is_deleted_commenter_ignored = (in_array($comment['User']['id'], $deleted_commenters));						
 $is_comment_ignored = in_array($comment['Pcomment']['id'], $ignored_comments);
-$is_comment_ok = (!$is_commenter_ignored && !$is_comment_ignored && !$is_blocked_commenter_ignored 
-																 && !$is_deleted_commenter_ignored);
+$is_comment_ok = (!$is_commenter_ignored && !$is_comment_ignored && !$is_deleted_commenter_ignored);
 $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
 ?>
  <?php if ($is_comment_ok):?>
