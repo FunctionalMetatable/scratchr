@@ -367,7 +367,7 @@ width:245px;
 //-->
      <div id="club" class="sidecontainer">
       <h4><?php ___('ScratchEd'); ?></h4>
-        <p><a href="http://scratched.media.mit.edu/"><img src="http://info.scratch.mit.edu/@api/deki/files/1255/=scratched2.png?size=webview" alt="ScratchEd" width="77"></a><?php ___('Do you help people learn Scratch? Join ScratchEd, our new online community for educators.'); ?></p>
+        <p><a href="http://scratched.media.mit.edu/"><img src="/img/scratched.png" alt="ScratchEd" width="77"></a><?php ___('Do you help people learn Scratch? Join ScratchEd, our new online community for educators.'); ?></p>
       <p class="more"><a href="http://scratched.media.mit.edu/"><?php ___('Find out more');?></a> </p>
      </div>
 
