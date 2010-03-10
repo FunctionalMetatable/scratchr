@@ -3,7 +3,6 @@
             array('comments' => $replies['comments'],
                 'ignored_commenters' => $replies['ignored_commenters'],
                 'ignored_comments' => $replies['ignored_comments'],
-				'blocked_commenters' => $replies['blocked_commenters'],
-                'deleted_commenters' => $replies['deleted_commenters'],
+				'deleted_commenters' => $replies['deleted_commenters'],
                 'comment_level' => $comment_level, 'isLocked' => $isLocked)); ?>
 <?php endif;  ?>
