@@ -28,12 +28,12 @@
 		
 		if ($option == "creation") {
 		?>
-			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/creation"><span class="button2_selected"><?php ___('creation date')?></span></a>
+			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/creation"><span class="button2_selected"><?php ___('most recent')?></span></a>
 			
 		<?php
 		} else {
 		?>
-			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/creation"><span class="button2"><?php ___('creation date')?></span></a>
+			<a href="<?php echo $html->url('/tags/view/')?><?php echo $tag_name?>/creation"><span class="button2"><?php ___('most recent')?></span></a>
 			
 		<?php
 		}
