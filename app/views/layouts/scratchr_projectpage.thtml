@@ -125,6 +125,17 @@ if ($isLoggedIn) {
     e($javascript->codeBlock("
 
 
+	var loveit_loading = false;
+	function checkLoading() {
+		if(!loveit_loading && checkLogin())	{
+			loveit_loading = true;
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	function confirmFlagging(){
 		if (checkLogin()) {
 			if(confirm(\"$want2report\")) {
