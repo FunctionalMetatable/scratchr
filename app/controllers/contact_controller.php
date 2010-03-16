@@ -51,7 +51,7 @@ class ContactController extends AppController {
 		  $name = $this->data['Page']['name'];
 		  $message = $this->data['Page']['message'];
 		  $cc_topic = $this->data['Page']['cc_topic'];
-
+		  $username = isset($this->data['Page']['username'])?$this->data['Page']['username']:null;
 		  $this->set('selected_topic', $cc_topic);
 
 		  $resp = recaptcha_check_answer (CAPTCHA_PRIVATEKEY,
@@ -84,8 +84,16 @@ class ContactController extends AppController {
 		  else{
 			// append user information to message
 			$ip=$this->RequestHandler->getClientIP();
-			$message.="\n\nIP Address of user: ".$ip."\nHTTP_USER_AGENT: ".$_SERVER['HTTP_USER_AGENT'];
-
+			$message.="<BR>IP Address of user: ".$ip."\nHTTP_USER_AGENT: ".$_SERVER['HTTP_USER_AGENT'];
+			if($this->isLoggedIn()){
+				$username = $this->getLoggedInUsername();
+			}
+			if($username){
+				$server = 'http://'.$_SERVER['HTTP_HOST'];
+				$userlink = $server."/users/$username";
+				$message .='<BR><a href ='.$userlink.'>'.$username.'</a>';
+			}
+			
 			$this->Email->email($email, $name, $message, $subject, $mailto, $email);  //here is the email sent
 			// $this->Email->email($email, $name, $message, $subject, $cc_topic, $email);  //copy of the email sent to the person in charge of the topic selected
 			$this->set('succes', ___('The message was sent', true) . " <br />" . ___('Thank you!', true));

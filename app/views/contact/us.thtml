@@ -114,6 +114,17 @@ document.getElementById('subtopicsdiv').style.display="block";
 <p>
 	<?php ___('Name'); ?>:	<input type="text" name="data[Page][name]" size="25" /> 
 </p>
+
+<?php 
+if (!$isLogged) {
+echo '<p>';	___('Username')
+?>
+	:  <input type="text" name="data[Page][username]" size="25" /> 
+<?php
+echo '</p>';	
+}
+?>
+
 <p>
 	<?php ___('Email'); ?>:	 <input type="text" name="data[Page][email]" size="25" />
 </p>
