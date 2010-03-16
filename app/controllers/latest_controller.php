@@ -176,7 +176,7 @@ Class LatestController extends AppController {
 													
 													SELECT COUNT( * )
 													FROM pcomments pc, projects b
-													WHERE pc.project_id = Project.id
+													WHERE pc.project_id = b.id
 													AND b.user_id = Project.user_id
 													) < $tcomment
 													GROUP BY Project.user_id
