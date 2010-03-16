@@ -121,7 +121,7 @@ if ($isLoggedIn) {
 } else {
 
     $want2report = ___('Do you want to report this project as not appropriate for the Scratch community?', true);
-    $pleaselogin = ___('Please login.', true);
+    $pleaselogin = ___('You need an account to do this. Please login. It\'s totally worth it!', true);
     e($javascript->codeBlock("
 
 
