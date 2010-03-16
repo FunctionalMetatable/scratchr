@@ -1408,11 +1408,11 @@ class ProjectsController extends AppController {
 		
 		$tagger = $this->getLoggedInUserID();
         if (!$tagger) exit;
-		$isIgnoredUser = $this->IgnoredUser->find("IgnoredUser.user_id = $tagger AND IgnoredUser.blocker_id = $project_owner_id");
-		if ($isLocked || $isIgnoredUser) {
+		$isIgnoredUser = $this->IgnoredUser->hasAny("IgnoredUser.user_id = $tagger AND IgnoredUser.blocker_id = $project_owner_id");
+		if ($isLocked) {
 			exit;
 		} else {
-			if (!empty($this->params['form']['tag_textarea']))
+			if (!empty($this->params['form']['tag_textarea']) && !$isIgnoredUser)
 			{
 
 				$tagsstring = substr($this->params['form']['tag_textarea'], 0, 30);
