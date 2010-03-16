@@ -48,7 +48,7 @@ else {
 		<?php  if ($isMine || $isAdmin) echo $ajax->editor("project_title", "/projects/$urlname/$pid/name", Array("callback"=>"return 'name=' + encodeURIComponent(value)")); ?>
 		<div id="projectwrapper">
 			<div id="projectload" style="display:block;" align="center">
-				<applet id="ProjectApplet" style="display:block" code="ScratchApplet" codebase="/static/misc/" archive="ScratchApplet.jar" height="387" width="482"><param name="project" value="<?php echo $embed_project;?>"><h3>Your browser needs java to view projects. Click <a href="http://java.com/getjava/index.jsp">here</a> to install Java.</h3></applet>
+				<applet id="ProjectApplet" style="display:block" code="ScratchApplet" codebase="/static/misc/" archive="ScratchApplet.jar" height="387" width="482"><param name="project" value="<?php echo $embed_project;?>"><h3><a href="http://www.java.com/getjava/"><? ___('Install Java'); ?></a> <? ___('to view this project right on your browser!'); ?><a href="/projects/<? echo "$urlname/$pid"; ?>/download"><img src="/static/projects/<?php echo "$urlname/${pid}_med.png"; ?>"></a></h3></applet>
 			</div>
 			
 		</div>
