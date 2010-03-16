@@ -61,7 +61,7 @@ $this->params['webservices']
  define("NUM_MIN_SCRIPT_FOR_TOP_REMIX", 1);
  define("NUM_MIN_SCRIPT_FOR_TOP_LOVED", 1);
  //List of country for custumizable for home page.
- define("CUSTOMIZABLE_COUNTRIES", "IN,UK");
+ define("CUSTOMIZABLE_COUNTRIES", "");
  define("DEFAULT_COUNTRY", "worldwide");
 /**
  * Email Address Related to Flagging
@@ -264,7 +264,7 @@ define('CACHE_DURATION', '3 days');
 /**
  * Memcache constants
  */
-define("MEMCACHE_SERVER", 'scratchstore'); //memcache server
+define("MEMCACHE_SERVER", 'scratchdb'); //memcache server
 define("MEMCACHE_PORT", 11211); //memcache port
 define("HOMEL_PAGE_TTL", 60); //for home page
 define("HOMEL_NEW_PROJECTS_TTL", 5);
@@ -628,7 +628,7 @@ function friendlyDate($original) {
 
 function isInappropriate($content) {
     $whitelist = array("grape", "packing", "skyscraper");
-    $blacklist = array("pendej","chinga","chingo", "verga","cabron","pucha","ash0le", "ashole","asshole", "assface","assh0le","asswipe","azzhole","bassterds","bastard","basterd","bitch","blow job","butthole","buttwipe","c0ck", "c0k", "cockbiter", "cock-biter", "cockhead","cock-head","cocksucker",  "dild0","dild0s","dildo","dildos","dilld0","dilld0s","dyke", "f u c k","fag1t","faget","fagg1t","faggit","faggot","fagit","fuck", "fukah","fuken","fuker","fukin","fukk","fukkah","fukken","fukker","fukkin","g00k","h00r","h0ar","h0re","hoar","hoore","jackoff","jerk-off","jisim","jiss","jizm","jizz", "lezzian","massterbait","masst", "masstrbate","masterbate","masterbates","motha fuker","n1gr","nigga", "nastt","nigger","nigur","niiger","niigr","packi","packie","packy","paki","pakie","pecker","phuc","phuck","phuk","phuker","phukker","polac","polack","polak","poonani","pr1c","pr1ck","pr1k","pusse","pussee","pussy","puuke","puuker","scank","schlong","sh1t","sh1ter","sh1ts","shtter","sh1tz","shit","shyt","skanck","skank", "slut", "wh00r","wh0re","whore","rape","gay", "g4y", "it sux", "it sucks");
+    $blacklist = array("pendej","chinga","chingo", "verga","cabron","pucha","ash0le", "ashole","asshole", "assface","assh0le","asswipe","azzhole","bassterds","bastard","basterd","bitch","blow job","butthole","buttwipe","c0ck", "c0k", "cockbiter", "cock-biter", "cockhead","cock-head","cocksucker",  "dild0","dild0s","dildo","dildos","dilld0","dilld0s","dyke", "f u c k","fag1t","faget","fagg1t","faggit","faggot","fagit","fuck", "ƒuck", "fukah","fuken","fuker","fukin","fukk","fukkah","fukken","fukker","fukkin","g00k","h00r","h0ar","h0re","hoar","hoore","jackoff","jerk-off","jisim","jiss","jizm","jizz", "lezzian","massterbait","masst", "masstrbate","masterbate","masterbates","motha fuker","n1gr","nigga", "nastt","nigger","nigur","niiger","niigr","packi","packie","packy","paki","pakie","pecker","phuc","phuck","phuk","phuker","phukker","polac","polack","polak","poonani","pr1c","pr1ck","pr1k","pusse","pussee","pussy","puuke","puuker","scank","schlong","sh1t","sh1ter","sh1ts","shtter","sh1tz","shit","shyt","skanck","skank", "slut", "wh00r","wh0re","whore","rape","gay", "g4y", "it sux", "it sucks");
 // while the word gay is not inappropriate, our analysis show that it is almost always used as a derogatory term and given our resources moderating the website we decided to add it to this list
 
     $content = strtolower($content);
