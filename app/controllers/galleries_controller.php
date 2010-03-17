@@ -819,28 +819,36 @@ Class GalleriesController extends AppController {
 
 		$limit = 10;
 		$this->Pagination->show = $limit;
+		
+		  //Listing deleted user   
+ 		   $deleted_users = $this->User->find('list', 
+ 		                array('conditions' =>  "User.status = 'delbyadmin' OR User.status = 'delbyusr'", 
+ 		                'fields' => 'id'));
+		   $deleted_users_id = implode(',' ,$deleted_users);			
+		  $moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')";				 
 		if ($option == "newest") {
 			$options = Array("sortBy"=>"changed", "direction"=> "DESC", "url"=>"/galleries/browse/newest");
 			$order = "Gallery.changed DESC";
 			$page = null;
-			list($order,$limit,$page) = $this->Pagination->init("total_projects > 0 AND Gallery.visibility = 'visible'", Array(), $options);
+			list($order,$limit,$page) = $this->Pagination->init("total_projects > 0 AND Gallery.visibility = 'visible' AND $moreconditions", Array(), $options);
 		} elseif ($option == "largest") {
 			$options = Array("sortBy"=>"total_projects", "direction"=> "DESC", "url"=>"/galleries/browse/largest");
 			$order = "Gallery.total_projects DESC";
 			$page = null;
-			list($order,$limit,$page) = $this->Pagination->init("total_projects > 0", Array(), $options);
+			list($order,$limit,$page) = $this->Pagination->init("total_projects > 0 AND $moreconditions", Array(), $options);
 		} elseif ($option == "feature") {
 			$this->modelClass="FeaturedGallery";
 			$options = Array("sortBy"=>"timestamp", "direction"=> "DESC", "url"=>"/galleries/browse/feature");
-			list($order,$limit,$page) = $this->Pagination->init("", Array(), $options);
+			list($order,$limit,$page) = $this->Pagination->init("Gallery.user_id NOT IN(".$deleted_users_id.")", Array(), $options);
 			$this->FeaturedGallery->bindGallery();
-			$featured_record = $this->FeaturedGallery->findAll("", NULL, $order, $limit, $page);
+			$featured_record = $this->FeaturedGallery->findAll("Gallery.user_id NOT IN(".$deleted_users_id.")", NULL, $order, $limit, $page);
 		} elseif ($option == "clubbed") {
+			
 			$this->modelClass="ClubbedGallery";
 			$options = Array("sortBy"=>"created_at", "direction"=> "DESC", "url"=>"/galleries/browse/clubbed");
-			list($order,$limit,$page) = $this->Pagination->init("", Array(), $options);
+			list($order,$limit,$page) = $this->Pagination->init("Gallery.user_id NOT IN(".$deleted_users_id.")", Array(), $options);
 			$this->ClubbedGallery->bindGallery();
-			$clubbed_record = $this->ClubbedGallery->findAll("", NULL, $order, $limit, $page);
+			$clubbed_record = $this->ClubbedGallery->findAll("Gallery.user_id NOT IN(".$deleted_users_id.")", NULL, $order, $limit, $page);
 		}
 
 		if ($option == "feature") {
@@ -850,7 +858,7 @@ Class GalleriesController extends AppController {
 			$clubbed_record = $this->finalize_galleries($clubbed_record);
 			$this->set('data', $clubbed_record);
 		} else {
-			$data = $this->Gallery->findAll("total_projects > 0 AND Gallery.visibility = 'visible'", NULL, $order, $limit, $page);// display only galleries which have atleast 1 project
+			$data = $this->Gallery->findAll("total_projects > 0 AND Gallery.visibility = 'visible' AND $moreconditions", NULL, $order, $limit, $page);// display only galleries which have atleast 1 project
 			$data = $this->set_galleries($data);
 			$data = $this->finalize_galleries($data);
 			

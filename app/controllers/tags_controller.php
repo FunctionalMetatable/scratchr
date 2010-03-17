@@ -67,7 +67,14 @@ Class TagsController extends AppController {
 		$content_status = $this->getContentStatus();
 		
 		$tag_id = $tag['Tag']['id'];
-		$final_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
+		//Listing deleted user 
+		  $this->loadModel('User');  
+ 		  $deleted_users = $this->User->find('list', 
+ 		                array('conditions' =>  "User.status = 'delbyadmin' OR User.status = 'delbyusr'", 
+ 		                'fields' => 'id'));
+		  $deleted_users_id = implode(',' ,$deleted_users);
+		
+		$final_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id AND Project.user_id NOT IN (".$deleted_users_id.") GROUP BY project_id";
 
         if ($content_status == "safe") {
 			$final_criteria = "Project.status = 'safe' AND " . $final_criteria; 
