@@ -37,10 +37,10 @@ Class ChannelController extends AppController {
         $this->pageTitle = "Scratch | Newest projects";
         $this->modelClass = "Project";
         $options = array("sortBy"=>"created", "direction" => "DESC");
-        
+        $moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')";
         $key = 'channel-recent-';
         $ttl = CHANNEL_RECENT_CACHE_TTL;
-        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"  AND status != "notsafe"',
+        $projects_count = $this->_getProjectsCount("proj_visibility = 'visible'  AND status != 'notsafe' AND $moreconditions",
                                                 $key, $ttl);
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
@@ -52,7 +52,7 @@ Class ChannelController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND $moreconditions", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -70,11 +70,16 @@ Class ChannelController extends AppController {
 		$this->pageTitle = ___("Scratch | Featured projects", true);
         $this->modelClass = "FeaturedProject";
 		$options = array("sortByClass" => "FeaturedProject", "sortBy"=>"timestamp", "direction" => "DESC");
-
+		
+		//Listing deleted user   
+ 		   $deleted_users = $this->User->find('list', 
+ 		                array('conditions' =>  "User.status = 'delbyadmin' OR User.status = 'delbyusr'", 
+ 		                'fields' => 'id'));
+		   $deleted_users_id = implode(',' ,$deleted_users);
+		   
         $key = 'channel-featured-';
         $ttl = CHANNEL_FEATURED_CACHE_TTL;
-        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"  AND status != "notsafe"',
-                                                $key, $ttl, 0);
+        $projects_count = $this->_getProjectsCount("proj_visibility = 'visible'  AND status != 'notsafe' AND Project.user_id NOT IN (".$deleted_users_id.")",$key, $ttl, 0);
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
                                         
@@ -85,7 +90,7 @@ Class ChannelController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->FeaturedProject->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, 2, $this->getContentStatus());
+            $final_projects = $this->FeaturedProject->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.user_id NOT IN (".$deleted_users_id.")", NULL, $order, $limit, $page, 2, $this->getContentStatus());
 			if(SHOW_RIBBON ==1){
 			$i = 0;
 				foreach($final_projects as $project){
@@ -115,6 +120,7 @@ Class ChannelController extends AppController {
         $this->pageTitle = ___("Scratch | Top viewed projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"views", "direction" => "DESC");
+		$moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')";
 
         $key = 'channel-topviewed-';
         $ttl = CHANNEL_TOPVIEWED_CACHE_TTL;
@@ -132,7 +138,7 @@ Class ChannelController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND $moreconditions", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -153,7 +159,7 @@ Class ChannelController extends AppController {
         $this->pageTitle = ___("Scratch | Top loved projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"loveit", "direction" => "DESC");
-
+		$moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')";
 
         $key = 'channel-toploved-';
         $ttl = CHANNEL_TOPLOVED_CACHE_TTL;
@@ -172,7 +178,7 @@ Class ChannelController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->Project->findAll("Project.loveitsuniqueip > 0 AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
+            $final_projects = $this->Project->findAll("Project.loveitsuniqueip > 0 AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND $moreconditions", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -217,6 +223,7 @@ Class ChannelController extends AppController {
 		$this->pageTitle = ___("Scratch | Most Remixed projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"remixer", "direction" => "DESC");
+		$moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')";
 
         $key = 'channel-remixed-';
         $ttl = CHANNEL_REMIXED_CACHE_TTL;        
@@ -233,7 +240,7 @@ Class ChannelController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-            $final_projects = $this->Project->findAll("remixer > 0 AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'", NULL, $order, $limit, $page, NULL);
+            $final_projects = $this->Project->findAll("remixer > 0 AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND $moreconditions", NULL, $order, $limit, $page, NULL);
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
         }
@@ -256,12 +263,13 @@ Class ChannelController extends AppController {
 		$this->layout = 'scratchr_explorer'; 
 		$this->pageTitle = ___("Scratch | Surprise projects", true);
         $this->modelClass = "Project";
-       
+       	$moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')"; 
+		
 		$result = $this->Project->query("SELECT MAX(projects.id) AS maxid FROM projects");
         $random = rand(1, $result[0][0]['maxid']);
-        $query = "Project.id >= $random AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible'";
+        $query = "Project.id >= $random AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible' AND $moreconditions";
         $count = $this->Project->findCount($query);
-        if ($count < 10) $query = "Project.id <= ".($random+$count)." AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible'";
+        if ($count < 10) $query = "Project.id <= ".($random+$count)." AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible' AND $moreconditions";
 
         $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
