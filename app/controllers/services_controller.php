@@ -873,7 +873,7 @@ Class ServicesController extends AppController {
         //find out if the base user has remix notification type set up
         $notify = $this->RemixNotification->find('user_id = '.$base['User']['id']);
 
-		if(empty($notify)) {
+		if(ASSIGN_REMIX_NOTIFICATION && empty($notify)) {
 			//set a notification type for him
 			$ntype = $this->__set_remix_notification_type($base['User']['id']);
 		}
@@ -881,12 +881,18 @@ Class ServicesController extends AppController {
 			$ntype = $notify['RemixNotification']['ntype'];
 		}
 
-	    if(!empty($ntype) && $ntype != 'nonotification') {
-            $this->__notify('project_remixed_'.$ntype,
+	    
+		if(SEND_REMIX_NOTIFICATION && !empty($ntype) && $ntype != 'nonotification') {
+			//time duration calculation
+			$duration = strtotime('-'.REMIX_NOTIFICATION_DAYS_SPAN.' day') - strtotime($notify['RemixNotification']['timestamp']);
+			//within the timespan
+			if($duration <= 0) {
+				$this->__notify('project_remixed_'.$ntype,
                             $base['User']['id'],
                             array('project_id' => $base['Project']['id'],
                              'from_user_name' => $remixed['User']['username']),
                             array($remixed['Project']['id'], $remixed['Project']['name']));
+			}
         }
     }
     

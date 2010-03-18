@@ -235,9 +235,11 @@ define('CONTENT_STATUS', "all");
 //list of url patterns that will be converted to hyperlinks, separated by |
 define('WHITELISTED_URL_PATTERN', 'wikipedia.org|\.ac.uk|flickr.com|\.edu');
 
-//send remix notification to whom
-define('REMIX_NOTIFICATION_TO_LAST_BASED', true);
-define('REMIX_NOTIFICATION_TO_ROOT_BASED', true);
+//remix notification related constants
+define('SEND_REMIX_NOTIFICATION', false);
+define('ASSIGN_REMIX_NOTIFICATION', false);
+define('REMIX_NOTIFICATION_DAYS_SPAN', 7);
+
 
 /**
  * Email addresses for contact page
