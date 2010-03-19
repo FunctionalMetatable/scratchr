@@ -981,7 +981,9 @@ Class GalleriesController extends AppController {
         
         $isFeatured = false;
         $isClubbed  = false;
-        
+		if(! $isLogged && $gallery['Gallery']['total_projects'] == 0){
+			$this->cakeError('error404');
+		}
 		if (empty($gallery)) {
 			$this->cakeError('error404');
 		}

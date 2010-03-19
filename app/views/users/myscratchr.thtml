@@ -536,10 +536,13 @@ function langList($countries) {
 			}
 
 			?>
+			<?php if(!$isLogged && $theme['Gallery']['total_projects'] == 0):?>
+			<?php else:?>
 			<li id="gallery-<?php e($theme_id)?>">
 			<a href="<?php echo $html->url($theme_url)?>"><?php echo $html->image($theme_icon,array('alt'=>$theme_name,'width'=>'43','height'=>'32'))?><?php e($theme_name_s)?></a>
 			
 			</li>
+			<?php endif;?>
 			<?php endforeach;?>
 		</ul>
 		<?php endif;?>

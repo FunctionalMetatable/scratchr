@@ -88,6 +88,14 @@
 				$gallery_name = "...";
 			}
 		?>
+		<?php 
+		//if user is not logged in don't show gallery which have 0 project
+		if(!$isLogged && $gallery['total_projects'] == 0)
+		{
+		}
+		else
+		{
+		?>
 		
 		<div class="mystuff_gallery_thumb">
 			<a href="<?php echo $html->url($gallery_url)?>"><?php echo $html->image($gallery_icon,array('title'=>$gallery_name,'alt'=>$gallery_name,'width'=>'60','height'=>'40'))?></a>
@@ -119,6 +127,7 @@
 		
 		<?php
 		}
+	}//foreach
 	?>
     <?php 
 		$pagination->setPaging($paging);
