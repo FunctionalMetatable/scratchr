@@ -2810,6 +2810,7 @@ class ProjectsController extends AppController {
 		//if the user is not an admin, or not the project owner or not the comment owner, check if s/he has special permission
 		if (!($this->isAdmin() || $isProjectOwner || $isCommentOwner)) {
 			$this->checkPermission('delete_project_comments');
+			$this->cakeError('error404');
 		}
 		
 		if($this->Pcomment->del($comment_id)) {
