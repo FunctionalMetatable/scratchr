@@ -2541,8 +2541,14 @@ class ProjectsController extends AppController {
 	**/
 	function lock($pid, $option = null) {
 		$this->autoRender = false;
+			
 		$this->Project->id=$pid;
-        $project = $this->Project->read();
+        	$project = $this->Project->read();
+		$this->set('isMine', $this->activeSession($project['User']['id']));
+		$this->set('pid', $pid);
+		if (!$this->isAdmin())
+			if (!$this->activeSession($project['User']['id']))
+				$this->cakeError('error404');
 		if ($option == 'lock') {
 			$this->Project->saveField('locked', 1);
 			$isLocked = true;
@@ -2551,10 +2557,8 @@ class ProjectsController extends AppController {
 			$isLocked = false;
 		}
 		
-		
 		$this->set('isLocked', $isLocked);
-		$this->set('isMine', $this->activeSession($project['User']['id']));
-		$this->set('pid', $pid);
+		
 		$this->render('project_lock_ajax', 'ajax');
 		return;
 	}
