@@ -366,6 +366,12 @@ width:245px;
      </div>
 //-->
      <div id="club" class="sidecontainer">
+      <h4><?php ___('Scratch Day'); ?></h4>
+        <p><a href="http://day.scratch.mit.edu/"><img src="/img/scratchday2010.png" alt="Scratch Day 2010" width="77"></a><?php ___('Be a part of Scratch Day - a worldwide network of gatherings, where Scratchers come together to meet, share, and learn.'); ?></p>
+      <p class="more"><a href="http://day.scratch.mit.edu/"><?php ___('Find out more');?></a> </p>
+     </div>
+
+     <div id="club" class="sidecontainer">
       <h4><?php ___('ScratchEd'); ?></h4>
         <p><a href="http://scratched.media.mit.edu/"><img src="/img/scratched.png" alt="ScratchEd" width="77"></a><?php ___('Do you help people learn Scratch? Join ScratchEd, our new online community for educators.'); ?></p>
       <p class="more"><a href="http://scratched.media.mit.edu/"><?php ___('Find out more');?></a> </p>
