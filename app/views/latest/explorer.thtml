@@ -51,7 +51,7 @@
 						<?php endif;?>
 						<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
 				<h3><a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></h3>
-				<p><strong><?php ___('By');?>: 
+				<p><strong><?php ___('By');?>: </strong>
 				<?php echo $util->username($username, $user_role);?>
 				</p>
 						
