@@ -1598,7 +1598,6 @@ hr{
 	background-color: #333;
 	background-color: transparent;
 	background-image: url(../img/blank.gif);
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../img/overlay.png", sizingMethod="scale");
 	}
 	
 
