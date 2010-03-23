@@ -1,7 +1,8 @@
 <?php
 Class TaggedController  extends AppController {
 
-    var $uses = array('IgnoredUser', 'Project','ProjectTag', 'Tag', 'Gallery', 'GalleryTag', 'Notification', 'FeaturedProject');
+     var $uses = array('IgnoredUser', 'Project','ProjectTag', 'Tag', 'Gallery', 'GalleryTag', 'Notification', 'FeaturedProject');
+    var $helpers = array('Pagination');
     var $layout = 'scratchr_default';
 
  function shared($tag_name, $option = "recent") {
