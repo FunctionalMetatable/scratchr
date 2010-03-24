@@ -417,12 +417,19 @@ Class HomeController extends AppController {
 	function __getTopRandomProjects() {
         $this->Project->bindUser();
         $result = $this->Project->query("SELECT MAX(projects.id) AS maxid FROM projects");
+	# To avoid full table scans which can occur due to Project.id being anywhere between 1 and MAX
+	# we'll use a range ie. random to random + 500. 
         $random = rand(1, $result[0][0]['maxid']);
-        $query = "Project.id >= $random AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible'";
+	$randomplus = $random + 500;
+        $query = "Project.id BETWEEN $random AND $randomplus AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible'";
 
         $count = $this->Project->findCount($query);
-        if ($count < NUM_TOP_RATED) $query = "Project.id <= ".($random+$count);
-            return $this->Project->findAll($query, NULL, "Project.id", NUM_TOP_RATED, 1, NULL, $this->getContentStatus());
+        if ($count < NUM_TOP_RATED) { 
+		$randomminus = $random - 500;
+		$query = "Project.id BETWEEN $randomminus AND " . ($random+$count);
+	}
+
+        return $this->Project->findAll($query, NULL, "Project.id", NUM_TOP_RATED, 1, NULL, $this->getContentStatus());
     }
 
     function __getNewMembers() {
