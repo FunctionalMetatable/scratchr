@@ -160,12 +160,12 @@ Class HomeController extends AppController {
         $this->set('toploved', $toploved);
         $this->set('topviewed', $topviewed);
         //$this->set('topdownloaded', $topdownloaded);
-		$this->set('favorites', $favorites);
-		$this->set('username',$curator_name);
-		$this->set('clubedprojects',$clubedprojects);
+	$this->set('favorites', $favorites);
+	$this->set('username',$curator_name);
+	$this->set('clubedprojects',$clubedprojects);
 		
 		
-		if($this->isLoggedIn()) {
+	if ($this->isLoggedIn()) {
             $myfriendsprojects = $this->Project->getMyFriendsLatest3Projects($this->getLoggedInUserID());
             if(SHOW_RIBBON ==1){
 				$myfriendsprojects = $this->set_ribbon($myfriendsprojects);
@@ -174,12 +174,14 @@ Class HomeController extends AppController {
             
             $newprojects = $this->Project->mc_get("newprojects");
             if ($newprojects === false) {
+		//
 		//limit the search to only recent projects to improve performance
+		// Otherwise we are forced to do a full table scan 1M+ rows which is expensive
 		$lowerlimitforid = $this->Project->mc_get("totalprojects");
-		if($lowerlimitforid == false) 
+		if($lowerlimitforid === false) 
 			$lowerlimitforid = 940000; // if there is no value in memcached this is a safe be as of 2010-03-24
-		$newprojects = $this->__getNewProjects($lowerlimitforid - 100);
-                 $this->Project->mc_set("newprojects", $newprojects, false, HOMEL_NEW_PROJECTS_TTL);
+		$newprojects = $this->__getNewProjects(intval(str_replace(",","", $lowerlimitforid)) - 100);
+                $this->Project->mc_set("newprojects", $newprojects, false, HOMEL_NEW_PROJECTS_TTL);
 	    }
 			if(SHOW_RIBBON ==1){
 				$newprojects = $this->set_ribbon($newprojects);
