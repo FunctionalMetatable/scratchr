@@ -174,9 +174,13 @@ Class HomeController extends AppController {
             
             $newprojects = $this->Project->mc_get("newprojects");
             if ($newprojects === false) {
-                $newprojects = $this->__getNewProjects();
-                $this->Project->mc_set("newprojects", $newprojects, false, HOMEL_NEW_PROJECTS_TTL);
-            }
+		//limit the search to only recent projects to improve performance
+		$lowerlimitforid = $this->Project->mc_get("totalprojects");
+		if($lowerlimitforid == false) 
+			$lowerlimitforid = 940000; // if there is no value in memcached this is a safe be as of 2010-03-24
+		$newprojects = $this->__getNewProjects($lowerlimitforid - 100);
+                 $this->Project->mc_set("newprojects", $newprojects, false, HOMEL_NEW_PROJECTS_TTL);
+	    }
 			if(SHOW_RIBBON ==1){
 				$newprojects = $this->set_ribbon($newprojects);
 			}
@@ -303,10 +307,9 @@ Class HomeController extends AppController {
         return  $club['Gallery']; 
 	}
 	
-    function __getNewProjects() {
-        return $this->Project->getTopProjects('`created`', '`created` DESC', null,
-            null, null, NUM_NEW_PROJECTS);
-    }
+	function __getNewProjects($lowerlimitforid) {
+		return $this->Project->getTopProjects('`created`', '`created` DESC', null, null, null, NUM_NEW_PROJECTS,  "projects.id > $lowerlimitforid");
+	}
 
     function __getBlockedUserFrontpage(){
 	return $this->BlockedUserFrontpage->findAll(null,'BlockedUserFrontpage.user_id');
