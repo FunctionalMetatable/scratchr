@@ -17,13 +17,11 @@ function about(){
 	 	$lang = $lang_array['0'];
 	
 	}
-/*
-	if($lang=='de')
-	$this->redirect($about_scratch_url.'/'.$lang);
+	if($lang =='de' || $lang == 'es' || $lang == "it" || $lang == "fr")
+		$this->redirect("$about_scratch_url/$lang/About_Scratch");
 	else
-*/
-	$this->redirect($about_scratch_url);
-}//about fun
+		$this->redirect("$about_scratch_url/About_Scratch");
+}
 
 
 function support(){
@@ -40,10 +38,10 @@ function support(){
 	 	$lang = $lang_array['0'];
 	
 	}
-	if($lang =='de')
-		$this->redirect($support_url.'/'.$lang);
+	if($lang =='de' || $lang == 'es' || $lang == "it" || $lang == "fr")
+		$this->redirect("$support_url/$lang/Support");
 	else
-		$this->redirect($support_url);
+		$this->redirect("$support_url/Support");
 }//about support
 
 
