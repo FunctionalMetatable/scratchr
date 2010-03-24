@@ -16,36 +16,36 @@
 		}
 		if ($option == "remixed") {
 		?>
-			<a href="<?php echo $html->url('/tagged/remixed/')?><?php echo $tag_name?>"><span class="button2_selected"><?php ___('top remixed')?></span></a>
+			<a href="<?php echo $html->url('/tagged/remixed/')?><?php echo $tag_name?>"><span class="button2_selected"><?php ___('most remixed')?></span></a>
 			
 		<?php
 		} else {
 		?>
-			<a href="<?php echo $html->url('/tagged/remixed/')?><?php echo $tag_name?>"><span class="button2"><?php ___('top remixed')?></span></a>
+			<a href="<?php echo $html->url('/tagged/remixed/')?><?php echo $tag_name?>"><span class="button2"><?php ___('most remixed')?></span></a>
 			
 		<?php
 		}
 		
 		if ($option == "topviewed") {
 		?>
-			<a href="<?php echo $html->url('/tagged/topviewed/')?><?php echo $tag_name?>"><span class="button2_selected"><?php ___('top viewed')?></span></a>
+			<a href="<?php echo $html->url('/tagged/topviewed/')?><?php echo $tag_name?>"><span class="button2_selected"><?php ___('most viewed')?></span></a>
 			
 		<?php
 		} else {
 		?>
-			<a href="<?php echo $html->url('/tagged/topviewed/')?><?php echo $tag_name?>"><span class="button2"><?php ___('top viewed')?></span></a>
+			<a href="<?php echo $html->url('/tagged/topviewed/')?><?php echo $tag_name?>"><span class="button2"><?php ___('most viewed')?></span></a>
 			
 		<?php
 		}
 		
 		if ($option == "toploved") {
 		?>
-			<a href="<?php echo $html->url('/tagged/toploved/')?><?php echo $tag_name?>"><span class="button2_selected"><?php ___('top loved')?></span></a>
+			<a href="<?php echo $html->url('/tagged/toploved/')?><?php echo $tag_name?>"><span class="button2_selected"><?php ___('most loved')?></span></a>
 			
 		<?php
 		} else {
 		?>
-			<a href="<?php echo $html->url('/tagged/toploved/')?><?php echo $tag_name?>"><span class="button2"><?php ___('top loved')?></span></a>
+			<a href="<?php echo $html->url('/tagged/toploved/')?><?php echo $tag_name?>"><span class="button2"><?php ___('most loved')?></span></a>
 			
 		<?php
 		}
