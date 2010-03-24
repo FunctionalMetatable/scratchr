@@ -37,10 +37,10 @@ Class ServicesController extends AppController {
     var $debug = null;
 
     var $err_codes = array(
-        INVALID_REQUEST => "invalid request, file might be too big",
+        INVALID_REQUEST => "invalid request - project might be larger than 10MB",
         INVALID_USER => "invalid user",
 		UNSUPPORTED_SERVICE => "service not yet available",
-		INVALID_PROJECT => "project might have been censored or deleted."
+		INVALID_PROJECT => "project cannot be uploaded again"
     );
 
     function beforeFilter() {
