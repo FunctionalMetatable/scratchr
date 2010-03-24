@@ -50,7 +50,6 @@ echo $message;
 ?>
 
 
-
 <style type="text/css">
 #goog-wm { }
 #goog-wm h3.closest-match { }
@@ -63,5 +62,12 @@ echo $message;
 var GOOG_FIXURL_LANG = 'en';
 var GOOG_FIXURL_SITE = 'http://scratch.mit.edu/';
 </script>
-<script type="text/javascript"
-src="http://linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js"></script>
+<script type="text/javascript" src="http://linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js"></script>
+
+<p align="center">
+<img src="/img/404.png" alt="Page not found by DavidTy">
+<br />
+image by DavidTy
+</p>
+<br />
+<br />
