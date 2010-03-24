@@ -29,11 +29,30 @@ Class TagsController extends AppController {
     }
 	
     function __setProjectTagCloud() {
-        $resultset = $this->Tag->getProjectTagCloud(TAG_CLOUD_BIG);
+
+	# Check memcache first
+        $mc_key = 'project_tag_cloud';
+        $this->Tag->mc_connect();
+        $resultset = $this->Tag->mc_get($mc_key);
+
+        if($resultset === false) {
+
+	    $resultset = $this->Tag->query("
+	      SELECT Tag.name, COUNT( tt.project_id ) AS tagcounter 
+	      FROM project_tags tt, tags Tag  
+	      WHERE Tag.id = tt.tag_id  GROUP BY Tag.id  
+	      ORDER BY tagcounter DESC LIMIT " . TAG_CLOUD_BIG);
+
+	      $this->Tag->mc_set($mc_key, $resultset, false, TAG_CLOUD_TTL);
+
+        }
+        $this->Tag->mc_close();
+
         $this->set('tags', $resultset);
-    }
+
+      }
 	
-    function __setGalleryTagCloud() {
+     function __setGalleryTagCloud() {
 
 	# Check memcache first
         $mc_key = 'gallery_tag_cloud';
