@@ -975,10 +975,10 @@ Class GalleriesController extends AppController {
 		$this->Gallery->id = $gallery_id;
 		$gallery = $this->Gallery->find("Gallery.id = $gallery_id", null, null, null, null, null, "overload");
         $content_status = $this->getContentStatus();
-
         $timestamp = $gallery['Gallery']['timestamp'];
 		$actual_creation_date = friendlyDate($timestamp);
-        
+        $is_deleted_author =($gallery['User']['status'] == 'delbyadmin' || $gallery['User']['status'] == 'delbyusr');
+		
         $isFeatured = false;
         $isClubbed  = false;
 		if(! $isLogged && $gallery['Gallery']['total_projects'] == 0){
@@ -988,7 +988,7 @@ Class GalleriesController extends AppController {
 			$this->cakeError('error404');
 		}
         else {
-			if ($gallery['Gallery']['visibility'] != 'visible' && !$isAdmin) {
+			if (($gallery['Gallery']['visibility'] != 'visible' && !$isAdmin) || ($is_deleted_author && !$isAdmin)) {
 				$this->cakeError('error404');
 			}
 			
