@@ -5,12 +5,12 @@
 	<?php
 		if ($option == "recent") {
 		?>
-			<a href="<?php echo $html->url('/tagged/shared/')?><?php echo $tag_name?>"><span class="button2_selected"><?php ___('newest')?></span></a>
+			<a href="<?php echo $html->url('/tagged/shared/')?><?php echo $tag_name?>"><span class="button2_selected"><?php ___('most recent')?></span></a>
 			
 		<?php
 		} else {
 		?>
-			<a href="<?php echo $html->url('/tagged/shared/')?><?php echo $tag_name?>"><span class="button2"><?php ___('newest')?></span></a>
+			<a href="<?php echo $html->url('/tagged/shared/')?><?php echo $tag_name?>"><span class="button2"><?php ___('most recent')?></span></a>
 			
 		<?php
 		}
