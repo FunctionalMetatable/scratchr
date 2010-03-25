@@ -208,8 +208,8 @@ $this->params['webservices']
 define ('INFO_URL', 'http://info.scratch.mit.edu'); 
 define ('INFO_ABOUT_ADMINS_URL', 'http://info.scratch.mit.edu/Scratch_Team'); 
 define ('TOPLEVEL_URL', 'http://scratch.mit.edu');
-define ('ABOUT_SCRATCH_URL', 'info.scratch.mit.edu/About_Scratch');
-define ('SUPPORT_URL', 'info.scratch.mit.edu/Support');
+define ('ABOUT_SCRATCH_URL', 'info.scratch.mit.edu');
+define ('SUPPORT_URL', 'info.scratch.mit.edu');
 define ('FRONPAGE_FAQ_URL', 'http://info.scratch.mit.edu/Support/FAQ/Scratch_Website_FAQ/How_the_Scratch_front_page_works');
 define ('FAQ_QUESTIONS_URL', 'http://info.scratch.mit.edu/Support/FAQ/Scratch_Website_FAQ#Questions');
 define ('TOS_URL', 'http://info.scratch.mit.edu/Terms_of_use');
@@ -236,9 +236,9 @@ define('CONTENT_STATUS', "all");
 define('WHITELISTED_URL_PATTERN', 'wikipedia.org|\.ac.uk|flickr.com|\.edu');
 
 //remix notification related constants
-define('SEND_REMIX_NOTIFICATION', false);
+define('SEND_REMIX_NOTIFICATION', true);
 define('ASSIGN_REMIX_NOTIFICATION', false);
-define('REMIX_NOTIFICATION_DAYS_SPAN', 7);
+define('REMIX_NOTIFICATION_DAYS_SPAN', 10);
 
 
 /**
@@ -261,7 +261,7 @@ define("SUBTOPIC3", "help@scratch.mit.edu");
  * Sitemap constants
  */
 define('MAX_LINKS_PER_SITEMAP', 5000);
-define('CACHE_DURATION', '3 days');
+define('CACHE_DURATION', '4 days');
 
 /**
  * Memcache constants
