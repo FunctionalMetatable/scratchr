@@ -79,7 +79,11 @@ Class ChannelController extends AppController {
 		   
         $key = 'channel-featured-';
         $ttl = CHANNEL_FEATURED_CACHE_TTL;
-        $projects_count = $this->_getProjectsCount("proj_visibility = 'visible'  AND status != 'notsafe' AND Project.user_id NOT IN (".$deleted_users_id.")",$key, $ttl, 0);
+//        $projects_count = $this->_getProjectsCount('proj_visibility = "visible"  AND status != "notsafe"',
+//                                               $key, $ttl, 0);
+
+	// Limit to 200 projects
+	$projects_count = 200;
         list($order, $limit, $page) = $this->Pagination->init(null, array(),
                                             $options, $projects_count);
                                         
@@ -259,29 +263,35 @@ Class ChannelController extends AppController {
  *
  * @author	Ashok gond
  */
-	function surprise() {
-		$this->layout = 'scratchr_explorer'; 
-		$this->pageTitle = ___("Scratch | Surprise projects", true);
+    function surprise() {
+	$this->layout = 'scratchr_explorer'; 
+	$this->pageTitle = ___("Scratch | Surprise projects", true);
         $this->modelClass = "Project";
        	$moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')"; 
 		
-		$result = $this->Project->query("SELECT MAX(projects.id) AS maxid FROM projects");
+	$result = $this->Project->query("SELECT MAX(projects.id) AS maxid FROM projects");
+	# To avoid full table scans which can occur due to Project.id being anywhere between 1 and MAX 
+	# we'll use a range ie. random to random +/- 500.  
         $random = rand(1, $result[0][0]['maxid']);
-        $query = "Project.id >= $random AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible' AND $moreconditions";
+	$randomplus = $random + 500;
+        $query = "Project.id BETWEEN $random AND $randomplus AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible' AND $moreconditions";
         $count = $this->Project->findCount($query);
-        if ($count < 10) $query = "Project.id <= ".($random+$count)." AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible' AND $moreconditions";
+        if ($count < 10) {
+	  $randomminus = $random - 500; 
+	  $query = "Project.id BETWEEN $randomminus AND " .($random+$count)." AND Project.status <> 'notsafe' AND Project.proj_visibility = 'visible' AND $moreconditions";
+	}
 
         $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
         );
         $final_projects = $this->Project->findAll($query, NULL, "Project.id", 10, 1, NULL);
 		
-		$final_projects = $this->set_projects($final_projects);
+	$final_projects = $this->set_projects($final_projects);
 		
-		$this->set('data', $final_projects);
+	$this->set('data', $final_projects);
         $this->set('heading', ___("surprise", true));
-		$this->set('option', 'surprise');
-		$this->render('surprise');
+	$this->set('option', 'surprise');
+	$this->render('surprise');
     }
 	
     
