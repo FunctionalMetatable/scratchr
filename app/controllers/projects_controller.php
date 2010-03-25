@@ -2085,10 +2085,13 @@ class ProjectsController extends AppController {
             //$tag_data = $this->Project->mc_get('project_tag', $project_id);
             //if($tag_data === false) {
                 $tag_data = array();
-
+				$moreconditions = "AND (User.`status` <> 'delbyadmin' OR User.`status` <> 'delbyusr')";	
+				if($this->isAdmin()){
+				$moreconditions ='';
+				}
                 //find all project tags
-                $temp_tags = $this->ProjectTag->findAll("project_id = $project_id GROUP BY tag_id",
-                        'ProjectTag.id, ProjectTag.tag_id, Tag.id, Tag.name, User.id');
+                $temp_tags = $this->ProjectTag->findAll("project_id = $project_id GROUP BY tag_id $moreconditions",
+                        'ProjectTag.id, ProjectTag.tag_id, Tag.id, Tag.name, User.id, User.status');print_r($temp_tags);
                 $project_tags = array();
                 $counter = 0;
                 foreach ($temp_tags as $current_tag) {
