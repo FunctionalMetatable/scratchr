@@ -87,8 +87,24 @@ Class TagsController extends AppController {
 		$this->cakeError('error404');
 		$content_status = $this->getContentStatus();
 		
+                //Listing deleted user
+                $this->loadModel('User'); 
+		
+		$this->User->mc_connect();
+		$mc_key = "deleted_users";
+		$deleted_users_id = $this->User->mc_get($mc_key);
+		if($deleted_users_id === false){
+
+		    $deleted_users = $this->User->find('list',  
+			array('conditions' =>  "User.status = 'delbyadmin' OR User.status = 'delbyusr'", 'fields' => 'id')); 
+			$deleted_users_id = implode(',' ,$deleted_users); 
+
+		    $this->User->mc_set($mc_key, $deleted_users_id, false, DELETED_USERS_TTL);
+		    $this->User->mc_close();
+		}
+
 		$tag_id = $tag['Tag']['id'];
-		$final_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
+		$final_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id AND Project.user_id NOT IN (".$deleted_users_id.") GROUP BY project_id";
 
         if ($content_status == "safe") {
 

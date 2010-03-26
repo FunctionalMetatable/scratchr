@@ -308,6 +308,9 @@ define("NUM_LATEST_REMIXED", 100);
 define("NUM_LATEST_GETFEEDBACK", 100);
 define("NUM_LATEST_TAGED_PROJECT", 100);
 
+// Tags 
+define("DELETED_USERS_TTL", 15); // deleted users
+
 //Feeds memcache constants
 define("FEEDS_TTL", 300); // 5 hrs
 
