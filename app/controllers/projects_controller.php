@@ -2905,7 +2905,7 @@ class ProjectsController extends AppController {
                 $commenter_ids[] = $comment['Pcomment']['user_id'];
                 $comment_ids[]   = $comment['Pcomment']['id'];
 
-                $comment['Pcomment']['replies'] = $this->Pcomment->findCount('project_id = '
+                $comment['Pcomment']['replies'] = $this->Pcomment->findCount('comment_visibility = "visible" AND '.'project_id = '
                     . $project_id . ' AND reply_to = '. $comment['Pcomment']['id']);
 
                 $comment['Pcomment']['replylist'] = array();
@@ -2996,7 +2996,7 @@ class ProjectsController extends AppController {
             $commenter_ids[] = $comment['Pcomment']['user_id'];
             $comment_ids[]   = $comment['Pcomment']['id'];
 
-            $comment['Pcomment']['replies'] = $this->Pcomment->findCount('project_id = '
+            $comment['Pcomment']['replies'] = $this->Pcomment->findCount('comment_visibility = "visible" AND '.'project_id = '
                 . $project_id . ' AND reply_to = '. $comment['Pcomment']['id']);
 
             //replace the comment in $comments list
