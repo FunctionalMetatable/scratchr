@@ -117,6 +117,7 @@ Class TagsController extends AppController {
 		
 		if ($option == "loveits") {
 			$order = 'Project.loveitsuniqueip DESC';
+			$final_criteria = "Project.loveitsuniqueip > 0 AND " . $final_criteria;
 		}
 
 		##############################################################################################
