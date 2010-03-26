@@ -2091,7 +2091,7 @@ class ProjectsController extends AppController {
 				}
                 //find all project tags
                 $temp_tags = $this->ProjectTag->findAll("project_id = $project_id GROUP BY tag_id $moreconditions",
-                        'ProjectTag.id, ProjectTag.tag_id, Tag.id, Tag.name, User.id, User.status');print_r($temp_tags);
+                        'ProjectTag.id, ProjectTag.tag_id, Tag.id, Tag.name, User.id, User.status');
                 $project_tags = array();
                 $counter = 0;
                 foreach ($temp_tags as $current_tag) {
