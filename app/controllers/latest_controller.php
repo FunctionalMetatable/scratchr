@@ -41,7 +41,7 @@ Class LatestController extends AppController {
             $this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
-		$moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')";	
+		$moreconditions = "(User.status != 'delbyadmin' AND User.status != 'delbyusr')";	
             $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND $moreconditions", NULL, 'Project.created DESC', NUM_LATEST_SHARED, 1, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
@@ -74,7 +74,7 @@ Class LatestController extends AppController {
         	} else {
 		    $days = TOP_VIEWED_DAY_INTERVAL;
         	}
-			$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND  `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe' AND (User.status != 'delbyadmin' OR User.status != 'delbyusr')";
+			$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND  `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe' AND (User.status != 'delbyadmin' AND User.status != 'delbyusr')";
             $final_projects = $this->Project->findAll($condition, NULL, 'Project.views DESC', NUM_LATEST_TOPVIWED, 1, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
@@ -103,7 +103,7 @@ Class LatestController extends AppController {
                 array('hasMany' => array('GalleryProject'))
             );
 			$days = TOP_LOVED_DAY_INTERVAL;
-			$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND Project.loveitsuniqueip > 0 AND `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe' AND (User.status != 'delbyadmin' OR User.status != 'delbyusr')";
+			$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND Project.loveitsuniqueip > 0 AND `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe' AND (User.status != 'delbyadmin' AND User.status != 'delbyusr')";
             $final_projects = $this->Project->findAll($condition, NULL, 'Project.loveitsuniqueip DESC', NUM_LATEST_TOPLOVED, 1, NULL, $this->getContentStatus());
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
@@ -137,7 +137,7 @@ Class LatestController extends AppController {
 			} else {
 				$days = TOP_REMIXED_DAY_INTERVAL;
 			}
-			$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND remixer > 0 AND  `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe' AND (User.status != 'delbyadmin' OR User.status != 'delbyusr')";
+			$condition = "`Project`.`user_id` > 0 AND `Project`.`created` > now( ) - INTERVAL $days  DAY AND remixer > 0 AND  `Project`.`proj_visibility` = 'visible' AND `Project`.`status` <> 'notsafe' AND (User.status != 'delbyadmin' AND User.status != 'delbyusr')";
 			$final_projects = $this->Project->findAll($condition, NULL, 'Project.remixer DESC', NUM_LATEST_REMIXED, 1, NULL);
             $final_projects = $this->set_projects($final_projects);
             $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
@@ -173,7 +173,7 @@ Class LatestController extends AppController {
 													AND $days
 													AND  `Project`.`proj_visibility` = 'visible' 
 													AND `Project`.`status` <> 'notsafe'
-													AND (`User`.`status` <> 'delbyadmin' OR `User`.`status` <> 'delbyusr')
+													AND (`User`.`status` <> 'delbyadmin' AND `User`.`status` <> 'delbyusr')
 													AND (
 													
 													SELECT COUNT( * )
