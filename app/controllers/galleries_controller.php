@@ -825,7 +825,7 @@ Class GalleriesController extends AppController {
  		                array('conditions' =>  "User.status = 'delbyadmin' OR User.status = 'delbyusr'", 
  		                'fields' => 'id'));
 		   $deleted_users_id = implode(',' ,$deleted_users);			
-		  $moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')";				 
+		  $moreconditions = "(User.status != 'delbyadmin' AND User.status != 'delbyusr')";				 
 		if ($option == "newest") {
 			$options = Array("sortBy"=>"changed", "direction"=> "DESC", "url"=>"/galleries/browse/newest");
 			$order = "Gallery.changed DESC";

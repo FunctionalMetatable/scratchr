@@ -37,7 +37,7 @@ Class ChannelController extends AppController {
         $this->pageTitle = "Scratch | Newest projects";
         $this->modelClass = "Project";
         $options = array("sortBy"=>"created", "direction" => "DESC");
-        $moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')";
+        $moreconditions = "(User.status != 'delbyadmin' AND User.status != 'delbyusr')";
         $key = 'channel-recent-';
         $ttl = CHANNEL_RECENT_CACHE_TTL;
         $projects_count = $this->_getProjectsCount("proj_visibility = 'visible'  AND status != 'notsafe' AND $moreconditions",
@@ -124,7 +124,7 @@ Class ChannelController extends AppController {
         $this->pageTitle = ___("Scratch | Top viewed projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"views", "direction" => "DESC");
-		$moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')";
+		$moreconditions = "(User.status != 'delbyadmin' AND User.status != 'delbyusr')";
 
         $key = 'channel-topviewed-';
         $ttl = CHANNEL_TOPVIEWED_CACHE_TTL;
@@ -163,7 +163,7 @@ Class ChannelController extends AppController {
         $this->pageTitle = ___("Scratch | Top loved projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"loveit", "direction" => "DESC");
-		$moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')";
+		$moreconditions = "(User.status != 'delbyadmin' AND User.status != 'delbyusr')";
 
         $key = 'channel-toploved-';
         $ttl = CHANNEL_TOPLOVED_CACHE_TTL;
@@ -227,7 +227,7 @@ Class ChannelController extends AppController {
 		$this->pageTitle = ___("Scratch | Most Remixed projects", true);
         $this->modelClass = "Project";
         $options = array("sortBy"=>"remixer", "direction" => "DESC");
-		$moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')";
+		$moreconditions = "(User.status != 'delbyadmin' AND User.status != 'delbyusr')";
 
         $key = 'channel-remixed-';
         $ttl = CHANNEL_REMIXED_CACHE_TTL;        
@@ -267,7 +267,7 @@ Class ChannelController extends AppController {
 	$this->layout = 'scratchr_explorer'; 
 	$this->pageTitle = ___("Scratch | Surprise projects", true);
         $this->modelClass = "Project";
-       	$moreconditions = "(User.status != 'delbyadmin' OR User.status != 'delbyusr')"; 
+       	$moreconditions = "(User.status != 'delbyadmin' AND User.status != 'delbyusr')"; 
 		
 	$result = $this->Project->query("SELECT MAX(projects.id) AS maxid FROM projects");
 	# To avoid full table scans which can occur due to Project.id being anywhere between 1 and MAX 
