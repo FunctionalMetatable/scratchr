@@ -1,4 +1,4 @@
-
+﻿
 <!-- ClickTale Top part -->
 <script type="text/javascript">
 var WRInitTime=(new Date()).getTime();
@@ -47,7 +47,6 @@ else { document.getElementById(d).style.display = "none"; }
 <div id="langmenu">
 <?php
 $lang = array( array("العربية", "/lang/ara", "اللغة"),
-			   array("Basque", "/lang/baq", "Language"),
 			   array("Bulgarian", "/lang/bul", "Language"),
 			   array("Catalan", "/lang/cat", "Language"),
 			   array("Croatian", "/lang/scr", "Language"),
@@ -88,6 +87,7 @@ $lang = array( array("العربية", "/lang/ara", "اللغة"),
 			   array("Thai", "/lang/tha", "Language"),
 			   array("Türkçe", "/lang/tur", "Dil"),
 			   array("Ukrainian", "/lang/ukr", "Language"),
+			   array("Vietnamese", "/lang/vie", "Language"),
 			   array("简体中文", "/lang/zh-cn", "Language"),
 			   array("正體中文", "/lang/zh-tw", "語言")
              );
