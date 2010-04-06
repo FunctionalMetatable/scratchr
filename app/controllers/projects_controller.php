@@ -486,14 +486,14 @@ class ProjectsController extends AppController {
 						$this->Pcomment->deleteCommentsFromMemcache($pcontent['Pcomment']['project_id']);
 						
                         //send mail
-						$creator_id = $comment['Pcomment']['user_id'];
+						$creator_id = $pcontent['Pcomment']['user_id'];
 						$creatorname = $pcontent['User']['username'];
 						$content = $pcontent['Pcomment']['content'];
-						$pid = $project['Project']['id'];
+						$pid = $pcontent['Project']['id'];
 
-						$this->Project->id = $pid;
-						$project = $this->Project->read();
-						$project_creator = $project['User']['username'];
+						$this->User->id = $pcontent['Project']['user_id'];
+						$user = $this->User->read();
+						$project_creator = $user['User']['username'];
 						$project_creater_url = TOPLEVEL_URL.'/projects/'.$project_creator.'/'.$pid;
 
 						$subject= "Comment deleted because it was flagged by an admin";
