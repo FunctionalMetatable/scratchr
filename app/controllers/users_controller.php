@@ -811,7 +811,7 @@ class UsersController extends AppController {
 			foreach($myProjects as &$project)
 			{
 				$pid = $project['Project']['id'];
-				$comment_query = $this->Pcomment->query("SELECT COUNT(*) AS `count` FROM `pcomments` AS `Pcomment` WHERE project_id = $pid AND visibility = 1");
+				$comment_query = $this->Pcomment->query("SELECT COUNT(*) AS `count` FROM `pcomments` AS `Pcomment` WHERE project_id = $pid AND comment_visibility = 'visible'");
 				$project['Project']['totalComments'] = $comment_query['0']['0']['count'];
 			
 			}
@@ -948,7 +948,9 @@ class UsersController extends AppController {
 		foreach($myProjects as $project)
 		{
 			$pid = $project['Project']['id'];
-			$total_comments = $this->Pcomment->findCount(array('Pcomment.project_id'=>$pid,'Pcomment.comment_visibility'=>'visible'));
+			
+			$comment_query = $this->Pcomment->query("SELECT COUNT(*) AS `count` FROM `pcomments` AS `Pcomment` WHERE project_id = $pid AND comment_visibility = 'visible'");
+			$total_comments = $comment_query['0']['0']['count'];
 			$temp_project = $project;
 			$temp_project['Project']['totalComments'] = $total_comments;
 			$final_projects[$counter] = $temp_project;
