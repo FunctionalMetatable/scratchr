@@ -2520,7 +2520,9 @@ class ProjectsController extends AppController {
 
         $this->set('comments', $comment_data['comments']);
         $this->set('ignored_commenters', $comment_data['ignored_commenters']);
+		$this->set('deleted_commenters', $comment_data['deleted_commenters']);
         $this->set('ignored_comments', $comment_data['ignored_comments']);
+		$this->set('single_thread', $comment_data['single_thread']);
         $this->set('isLogged', $isLogged);
         $this->set('isLocked', $project['Project']['locked']);
         $this->set('project_id', $project_id);
@@ -2881,10 +2883,11 @@ class ProjectsController extends AppController {
             $this->modelClass = 'Pcomment';
             $options = array('sortBy' => 'created', 'sortByClass' => 'Pcomment',
                         'direction' => 'DESC', 'url' => 'renderComments/' . $project_id . '/0');
-            list($order, $limit, $page) = $this->PaginationSecondary->init(
-                                            'project_id = ' . $project_id
-                                           .' AND Pcomment.comment_visibility = "visible"'
-                                           .' AND reply_to = -100', array(), $options);
+           
+		   $comment_query = $this->Pcomment->query("SELECT COUNT(*) AS `count` FROM `pcomments` AS `Pcomment` WHERE project_id = $project_id AND comment_visibility = 'visible' AND reply_to = -100");
+			$comment_count = $comment_query['0']['0']['count'];
+			
+		    list($order, $limit, $page) = $this->PaginationSecondary->init(null, array(), $options, $comment_count);
 
             //check memcache
             $this->Pcomment->mc_connect();
@@ -2921,8 +2924,8 @@ class ProjectsController extends AppController {
                 $commenter_ids[] = $comment['Pcomment']['user_id'];
                 $comment_ids[]   = $comment['Pcomment']['id'];
 
-                $comment['Pcomment']['replies'] = $this->Pcomment->findCount('comment_visibility = "visible" AND '.'project_id = '
-                    . $project_id . ' AND reply_to = '. $comment['Pcomment']['id']);
+                $comment_query = $this->Pcomment->query("SELECT COUNT(*) AS `count` FROM `pcomments` AS `Pcomment` WHERE project_id = $project_id AND comment_visibility = 'visible' AND reply_to =". $comment['Pcomment']['id']);
+				$comment['Pcomment']['replies'] = $comment_query['0']['0']['count'];
 
                 $comment['Pcomment']['replylist'] = array();
                 if($comment['Pcomment']['replies'] > 0) {
@@ -3012,9 +3015,9 @@ class ProjectsController extends AppController {
             $commenter_ids[] = $comment['Pcomment']['user_id'];
             $comment_ids[]   = $comment['Pcomment']['id'];
 
-            $comment['Pcomment']['replies'] = $this->Pcomment->findCount('comment_visibility = "visible" AND '.'project_id = '
-                . $project_id . ' AND reply_to = '. $comment['Pcomment']['id']);
-
+             $comment_query = $this->Pcomment->query("SELECT COUNT(*) AS `count` FROM `pcomments` AS `Pcomment` WHERE project_id = $project_id AND comment_visibility = 'visible' AND reply_to =". $comment['Pcomment']['id']);
+				$comment['Pcomment']['replies'] = $comment_query['0']['0']['count'];
+			
             //replace the comment in $comments list
             $comments[$key] = $comment;
         }
