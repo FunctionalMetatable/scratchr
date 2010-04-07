@@ -951,7 +951,9 @@ Class GalleriesController extends AppController {
 
         $this->set('comments', $comment_data['comments']);
 		$this->set('ignored_commenters', $comment_data['ignored_commenters']);
+		$this->set('deleted_commenters', $comment_data['deleted_commenters']);
         $this->set('ignored_comments', $comment_data['ignored_comments']);
+		$this->set('single_thread', $comment_data['single_thread']);
         $this->set('isLogged', $isLogged);
         $this->set('isThemeOwner', $this->getLoggedInUserID() == $owner_id);
 		$this->set('theme_id', $gallery_id);
@@ -2783,9 +2785,11 @@ Class GalleriesController extends AppController {
             $this->modelClass = 'Gcomment';
             $options = array('sortBy' => 'timestamp', 'sortByClass' => 'Gcomment',
 						'direction' => 'DESC', 'url' => '/galleries/renderComments/' . $gallery_id);
-            list($order, $limit, $page) = $this->PaginationSecondary->init( 'gallery_id = '
-                . $gallery_id . ' AND comment_visibility = "visible" AND reply_to = -100',
-                array(), $options);
+            $this->Gcomment->recursive = -1;
+			$comment_query = $this->Gcomment->query("SELECT COUNT(*) AS `count` FROM `gcomments` AS `Gcomment` WHERE gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to = -100");
+			$comment_count = $comment_query['0']['0']['count'];
+			list($order, $limit, $page) = $this->PaginationSecondary->init( null,
+                array(), $options, $comment_count);
 
             //check memcache
             $this->Gcomment->mc_connect();
@@ -2820,8 +2824,8 @@ Class GalleriesController extends AppController {
                 $commenter_ids[] = $comment['Gcomment']['user_id'];
                 $comment_ids[]   = $comment['Gcomment']['id'];
 
-                $comment['Gcomment']['replies'] = $this->Gcomment->findCount('gallery_id = '
-                    . $gallery_id . ' AND reply_to = '. $comment['Gcomment']['id']);
+                $comment_query = $this->Gcomment->query("SELECT COUNT(*) AS `count` FROM `gcomments` AS `Gcomment` WHERE gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to =". $comment['Gcomment']['id']);
+				$comment['Gcomment']['replies'] = $comment_query['0']['0']['count'];
 
                 $comment['Gcomment']['replylist'] = array();
                 if($comment['Gcomment']['replies'] > 0) {
@@ -2967,9 +2971,9 @@ Class GalleriesController extends AppController {
         foreach ($comments as $key => $comment) {
             $commenter_ids[] = $comment['Gcomment']['user_id'];
             $comment_ids[]   = $comment['Gcomment']['id'];
-
-            $comment['Gcomment']['replies'] = $this->Gcomment->findCount('gallery_id = '
-                . $gallery_id . ' AND reply_to = '. $comment['Gcomment']['id']);
+			
+			$comment_query = $this->Gcomment->query("SELECT COUNT(*) AS `count` FROM `gcomments` AS `Gcomment` WHERE gallery_id = $gallery_id AND comment_visibility = 'visible' AND reply_to =". $comment['Gcomment']['id']);
+			$comment['Gcomment']['replies'] = $comment_query['0']['0']['count'];
 
             //replace the comment in $comments list
             $comments[$key] = $comment;
