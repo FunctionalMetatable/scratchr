@@ -104,7 +104,7 @@ Class TagsController extends AppController {
 		}
 
 		$tag_id = $tag['Tag']['id'];
-		$final_criteria = "(Project.proj_visibility = 'visible' OR Project.proj_visibility = 'censbycomm' OR Project.proj_visibility = 'censbyadmin') AND ProjectTag.tag_id = $tag_id AND Project.user_id NOT IN (".$deleted_users_id.") GROUP BY project_id";
+		$final_criteria = "Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND ProjectTag.tag_id = $tag_id AND Project.user_id NOT IN (".$deleted_users_id.") GROUP BY project_id";
 
         if ($content_status == "safe") {
 
