@@ -935,12 +935,19 @@ class UsersController extends AppController {
 		// get all projects from user
 		$options = Array("sortBy"=>"created", "sortByClass" => "Project", "direction"=> "DESC");		
 		$this->modelClass = "Project";
-		if ($content_status == 'all') {
-			list($order,$limit,$page) = $this->Pagination->init("Project.user_id = $user_id", Array(), $options);
-		} else {
-			list($order,$limit,$page) = $this->Pagination->init("Project.user_id = $user_id AND Project.status = 'safe'", Array(), $options);
+		//showing only visible project if user is not logged in.
+		$morecondition = '';
+		if(!$isLoggedIn){
+			$morecondition = " AND Project.proj_visibility = 'visible' ";
 		}
-		$myProjects = $this->Project->findAll("Project.user_id = $user_id", NULL, $order, $limit, $page, NULL, ($isMe ? 'all' : $content_status));
+		
+		if ($content_status == 'all') {
+			list($order,$limit,$page) = $this->Pagination->init("Project.user_id = $user_id $morecondition", Array(), $options);
+		} else {
+			list($order,$limit,$page) = $this->Pagination->init("Project.user_id = $user_id AND Project.status = 'safe' $morecondition", Array(), $options);
+		}
+		
+		$myProjects = $this->Project->findAll("Project.user_id = $user_id $morecondition", NULL, $order, $limit, $page, NULL, ($isMe ? 'all' : $content_status));
 		
 		//count the number of visible comments on each project
 		$final_projects = Array();
