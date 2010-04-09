@@ -106,6 +106,7 @@ class ContactController extends AppController {
 		  $name = $this->data['Page']['name'];
 		  $subject = $this->data['Page']['subject'];
 		  $message = $this->data['Page']['message'];
+		  $username = isset($this->data['Page']['username'])?$this->data['Page']['username']:null;
 		
 		  if ($this->Email->validMail($email) == 0 )
 		  {
@@ -123,8 +124,16 @@ class ContactController extends AppController {
 		  else{
 			// append user information to message
 			$ip=$this->RequestHandler->getClientIP();
-			$message.="\n\nIP Address of user: ".$ip."\nHTTP_USER_AGENT: ".$_SERVER['HTTP_USER_AGENT'];
+			$message.="<BR>IP Address of user: ".$ip."\nHTTP_USER_AGENT: ".$_SERVER['HTTP_USER_AGENT'];
 
+			if($this->isLoggedIn()){
+				$username = $this->getLoggedInUsername();
+			}
+			if($username){
+				$server = 'http://'.$_SERVER['HTTP_HOST'];
+				$userlink = $server."/users/$username";
+				$message .='<BR><a href ='.$userlink.'>'.$username.'</a>';
+			}
 			$this->Email->email($email, $name, $message, $subject, $mailto, $email);  //here is the email sent
 			
 			$this->set('succes', ___('The message was sent', true) . " <br />" . ___('Thank you!', true));
