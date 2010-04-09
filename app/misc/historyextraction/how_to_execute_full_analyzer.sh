@@ -1,0 +1,1 @@
+java -Xms1000M -Xmx1000M -jar analyzer.jar "host:port/ANALYSIS_DB?user=USER&password=PASSWORD" "/PATH/TO/PROJECTS"  -b "YYYY-MM-DD HH:MM:SS" -r "host:port/prod-database?user=USER&password=PASSWORD" -l -p  &>  error.log
