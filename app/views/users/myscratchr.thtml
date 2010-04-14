@@ -77,7 +77,7 @@
 	  <?php echo $html->image(getBuddyIconBySize($user['id'],'med', $content_status, $user['timestamp']),array('height'=>'90','width'=>'90','alt'=>'scratch code'))?>
 	  
 		
-		<?php if ((!empty($user['city']) && $age >= 13) || ($isMe || $isAdmin)): ?>
+		<?php if ((!empty($user['city']) && $age >= 18) || ($isMe || $isAdmin)): ?>
 		<b><?php ___('Location'); ?>:</b>
 		<div id="user_city"><?php e($user['city']); ?></div>
 		<?php if ($isMe || $isAdmin)
@@ -88,7 +88,7 @@
 		<?php endif;?>
 
 
-		<?php if ((!empty($user['state']) && $age >= 13) || ($isMe || $isAdmin)): ?>
+		<?php if ((!empty($user['state']) && $age >= 18) || ($isMe || $isAdmin)): ?>
 		<div id="user_state"><?php e($user['state']);?></div>
 		<?php if ($isMe || $isAdmin)
 			echo $javascript->codeBlock("
