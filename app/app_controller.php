@@ -65,7 +65,7 @@ class AppController extends Controller {
 		$this->set('isCustomizableCountry', $isCustomizableCountry);
 		$this->set('ipCountry', $ipCountry); //country from ip
 		$this->set('cookieCountry', $cookieCountry); //country from cookie
-		$this->set('selectCountry', $alterCountry); //country can be selected
+		$this->set('alterCountry', $alterCountry); //country can be selected
 		
 		$blocked = $this->checkIP();
 		$isBanned = false;
