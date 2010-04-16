@@ -201,15 +201,13 @@ for ($d = 0; $d < 4; $d++) { // 4 columns loop
 	}
 ?>
 <?php
-	echo $this->element('country_welcome', compact(array('customizableCountry', 'userCountryName')));
+	echo $this->element('country_welcome', compact(array('isCustomizableCountry', 'ipCountry')));
 ?>
-<?php
-				
-				if ($session->check('Message.flash')):
-				echo "<div id='flash_error'>";
-						$session->flash();
-				echo "</div>";		
-				endif;
-				
+<?php			
+if ($session->check('Message.flash')):
+	echo "<div id='flash_error'>";
+	$session->flash();
+	echo "</div>";
+endif;			
 ?>
 </div>

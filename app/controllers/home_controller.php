@@ -16,31 +16,46 @@ Class HomeController extends AppController {
 		
 		
     }
-	/*
-	function to set users country location
 	
+	/*
+	function to set users country location to cookie
 	*/
-	function country($selectCountryName = null){ 
-		$client_ip = $this->RequestHandler->getClientIP();
-		$countryName = $this->GeoIp->lookupCountryCode($client_ip);
-		if($this->isCustomizableCountry($countryName)){
-			$cookie_country = $this->Cookie->read('country');
-			if(!empty($selectCountryName)){
+	function country($newCountry = null){
+		if($this->isCustomizableCountry($newCountry)) {
 			$this->Cookie->delete('country');
-				$this->Cookie->write('country', $selectCountryName, null, '+350 day');
-			}
-		}	
+			$this->Cookie->write('country', $newCountry, null, '+350 day');
+		}
+		else if(empty($newCountry)) {
+			$this->Cookie->delete('country');
+		}
+		
+		$this->redirect('/');
+	}
+
+	/*
+	overrides user's ip country
+	*/
+	function set_country($newCountry = null) {
+		$this->Cookie->delete('ip_country');
+		if(!empty($newCountry)) {
+			$this->Cookie->delete('ip_country');
+			$this->Cookie->write('ip_country', $newCountry, null, '+350 day');
+		} 
+
 		$this->redirect('/');
 	}
 	
     function index() {  
 		//set users country
-		$cookie_country = $this->Cookie->read('country');
-		if(empty($cookie_country)){
-			$client_ip = $this->RequestHandler->getClientIP();
-			$countryName = $this->GeoIp->lookupCountryCode($client_ip);
-			$this->Cookie->write('country', $countryName, null, '+350 day');
-		}	
+		$cookieCountry = $this->Cookie->read('country');
+		//set cookie country, if cookie country is not set
+		if(empty($cookieCountry)) {
+			$ipCountryName = $this->getUserCountryFromIP();
+			if($this->isCustomizableCountry($cookieCountry)) {
+				$this->Cookie->write('country', $ipCountryName, null, '+350 day');
+				$cookieCountry = $ipCountryName;
+			}
+		}
 		
         $this->Project->mc_connect();
         $project_ids = array();
@@ -48,14 +63,10 @@ Class HomeController extends AppController {
         $this->set('client_ip', $this->RequestHandler->getClientIP());
 		
 		$key = 'home_projects_data';
-		$client_ip = $this->RequestHandler->getClientIP();
-		$countryName = $this->GeoIp->lookupCountryCode($client_ip);
-		if($this->isCustomizableCountry($countryName)){
-			$cookieCountryName = $this->Cookie->read('country');
-			if(strcmp($cookieCountryName, DEFAULT_COUNTRY) != 0){
-				$key = 'home_projects_data_'.$countryName;
-			}
+		if($cookieCountry && strcmp($cookieCountry, DEFAULT_COUNTRY) != 0){
+			$key = 'home_projects_data_'.$cookieCountry;
 		}
+		
         $home_projects = $this->Project->mc_get($key);
         if($home_projects === false) {
 			$curator_name = $this->___getCuratorName();
@@ -83,7 +94,7 @@ Class HomeController extends AppController {
 			//3.Top Loved
 			/*Fetch conutry based project*/
 			if($key !== 'home_projects_data'){
-				$toploved = $this->__getTopLovedProjects($project_ids, $user_ids, $cookieCountryName);
+				$toploved = $this->__getTopLovedProjects($project_ids, $user_ids, $cookieCountry);
 			}
 			if(empty($toploved)) {
 				$toploved = $this->__getTopLovedProjects($project_ids, $user_ids);
@@ -96,7 +107,7 @@ Class HomeController extends AppController {
 			//4.Top Remixed
 			/*Fetch conutry based project*/
 			if($key !== 'home_projects_data'){
-				$topremixed = $this->__getTopRemixedProjects($project_ids, $user_ids, $cookieCountryName);
+				$topremixed = $this->__getTopRemixedProjects($project_ids, $user_ids, $cookieCountry);
 			}
 			if(empty($topremixed)) {
 				$topremixed = $this->__getTopRemixedProjects($project_ids, $user_ids);
@@ -109,7 +120,7 @@ Class HomeController extends AppController {
 			//5.Top Viwed
 			/*Fetch conutry based project*/
 			if($key !== 'home_projects_data'){
-				$topviewed = $this->__getTopViewedProjects($project_ids, $user_ids, $cookieCountryName);
+				$topviewed = $this->__getTopViewedProjects($project_ids, $user_ids, $cookieCountry);
 			}
 			if(empty($topviewed)) {
 				$topviewed = $this->__getTopViewedProjects($project_ids, $user_ids);
@@ -160,12 +171,12 @@ Class HomeController extends AppController {
         $this->set('toploved', $toploved);
         $this->set('topviewed', $topviewed);
         //$this->set('topdownloaded', $topdownloaded);
-	$this->set('favorites', $favorites);
-	$this->set('username',$curator_name);
-	$this->set('clubedprojects',$clubedprojects);
+		$this->set('favorites', $favorites);
+		$this->set('username',$curator_name);
+		$this->set('clubedprojects',$clubedprojects);
 		
 		
-	if ($this->isLoggedIn()) {
+		if ($this->isLoggedIn()) {
             $myfriendsprojects = $this->Project->getMyFriendsLatest3Projects($this->getLoggedInUserID());
             if(SHOW_RIBBON ==1){
 				$myfriendsprojects = $this->set_ribbon($myfriendsprojects);
@@ -174,15 +185,15 @@ Class HomeController extends AppController {
             
             $newprojects = $this->Project->mc_get("newprojects");
             if ($newprojects === false) {
-		//
-		//limit the search to only recent projects to improve performance
-		// Otherwise we are forced to do a full table scan 1M+ rows which is expensive
-		$lowerlimitforid = $this->Project->mc_get("totalprojects");
-		if($lowerlimitforid === false) 
-			$lowerlimitforid = 940000; // if there is no value in memcached this is a safe be as of 2010-03-24
-		$newprojects = $this->__getNewProjects(intval(str_replace(",","", $lowerlimitforid)) - 100);
+				//limit the search to only recent projects to improve performance
+				// Otherwise we are forced to do a full table scan 1M+ rows which is expensive
+				$lowerlimitforid = $this->Project->mc_get("totalprojects");
+				if($lowerlimitforid === false) {
+					$lowerlimitforid = 940000; // if there is no value in memcached this is a safe be as of 2010-03-24
+				}
+				$newprojects = $this->__getNewProjects(intval(str_replace(",","", $lowerlimitforid)) - 100);
                 $this->Project->mc_set("newprojects", $newprojects, false, HOMEL_NEW_PROJECTS_TTL);
-	    }
+			}
 			if(SHOW_RIBBON ==1){
 				$newprojects = $this->set_ribbon($newprojects);
 			}
@@ -329,7 +340,7 @@ Class HomeController extends AppController {
         return $projects;
     }
 
-    function __getTopViewedProjects($exclude_project_ids, $exclude_user_ids, $countryName = null) {
+    function __getTopViewedProjects($exclude_project_ids, $exclude_user_ids, $country = null) {
         if ($this->getContentStatus() == 'safe') {
 		    $days = TOP_VIEWED_DAY_INTERVAL_SAFE;
         } else {
@@ -337,8 +348,8 @@ Class HomeController extends AppController {
         }
         $num_script = NUM_MIN_SCRIPT_FOR_TOP_VIWED;
 		$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL";
-		if($countryName){
-			$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$countryName'";
+		if($country){
+			$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$country'";
 		}
 		$topviewedProjects = $this->Project->getTopProjects('`views`', '`views` DESC', $days,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED, $condition);
@@ -348,7 +359,7 @@ Class HomeController extends AppController {
 		return $topviewedProjects;
     }
 
-    function __getTopRemixedProjects($exclude_project_ids, $exclude_user_ids, $countryName = null) {
+    function __getTopRemixedProjects($exclude_project_ids, $exclude_user_ids, $country = null) {
         if ($this->getContentStatus() =='safe') {
 		    $days = TOP_REMIXED_DAY_INTERVAL_SAFE;
         } else {
@@ -356,8 +367,8 @@ Class HomeController extends AppController {
         }
 		$num_script = NUM_MIN_SCRIPT_FOR_TOP_REMIX;
 		$condition = "remixer > 0 AND totalScripts >= $num_script AND totalScripts IS NOT NULL";
-		if($countryName){
-			$condition = "remixer > 0 AND totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$countryName'";
+		if($country){
+			$condition = "remixer > 0 AND totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$country'";
 		}
         $topRemixedProjects =  $this->Project->getTopProjects('`remixer`', '`remixer` DESC', $days,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, $condition);
@@ -367,11 +378,11 @@ Class HomeController extends AppController {
 		return $topRemixedProjects;
     }
 
-    function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids, $countryName = null) {
+    function __getTopLovedProjects($exclude_project_ids, $exclude_user_ids, $country = null) {
         $num_script = NUM_MIN_SCRIPT_FOR_TOP_LOVED;
 		$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL";
-		if($countryName){
-			$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$countryName'";
+		if($country){
+			$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$country'";
 		}
 		$topLovedProjects =  $this->Project->getTopProjects('`loveitsuniqueip`', '`loveitsuniqueip` DESC', TOP_LOVED_DAY_INTERVAL,
             $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED, $condition);
