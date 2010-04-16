@@ -45,32 +45,27 @@ class AppController extends Controller {
 		$this->set('client_ip', $this->RequestHandler->getClientIP());
 		
 		/*set name of country depends on cookie set from home/country and home/index*/
-		
-		$client_ip = $this->RequestHandler->getClientIP();
-		$countryName = $this->GeoIp->lookupCountryCode($client_ip);
-		$customizable = false;
-		$selectCountryName = DEFAULT_COUNTRY;
-		if($this->isCustomizableCountry($countryName)){
-			$cookieCountryName = $this->Cookie->read('country');
-			if(!$cookieCountryName){
-				$cookieCountryName = $countryName;
+		$ipCountry = $this->getUserCountryFromIP();
+		$isCustomizableCountry = false;
+		$cookieCountry = '';
+		$alterCountry = DEFAULT_COUNTRY;
+
+		if($this->isCustomizableCountry($ipCountry)) {
+			$isCustomizableCountry = true;
+			
+			$cookieCountry = $this->Cookie->read('country');
+			if(!$cookieCountry) {
+				$cookieCountry = $ipCountry;
 			}
-			$customizable = true;
-			if(strcmp($cookieCountryName, DEFAULT_COUNTRY) ==0){
-			$selectCountryName = $countryName;
+			if(strcmp($cookieCountry, DEFAULT_COUNTRY) ==0 ){
+				$alterCountry = $ipCountry;
 			}
-			if(strcmp($cookieCountryName, $countryName) == 0){
-			$selectCountryName = DEFAULT_COUNTRY;
-			}
-			$this->set('countryName', $cookieCountryName);
-			$this->set('selectCountryName',$selectCountryName);
-			$this->set('userCountryName',$countryName);
 		}
 		
-		
-		$this->set('customizableCountry', $customizable);
-		
-		/**/
+		$this->set('isCustomizableCountry', $isCustomizableCountry);
+		$this->set('ipCountry', $ipCountry); //country from ip
+		$this->set('cookieCountry', $cookieCountry); //country from cookie
+		$this->set('selectCountry', $alterCountry); //country can be selected
 		
 		$blocked = $this->checkIP();
 		$isBanned = false;
@@ -353,7 +348,7 @@ class AppController extends Controller {
      * Verifies active session
      */
     function activeSession($uid=null) {
-        if (!$uid)
+		if (!$uid)
             return $this->Session->check('User');
         return ($this->Session->read('User.id') == $uid);
     }
@@ -1020,6 +1015,14 @@ ini_restore ("memory_limit");
             }
         }
         return $locked_user_id;
+	}
+
+	function getUserCountryFromIP() {
+		$ipCountry = $this->Cookie->read('ip_country');
+		if(empty($ipCountry)) {
+			$ipCountry = $this->GeoIp->lookupCountryCode($this->RequestHandler->getClientIP());
+		}
+		return $ipCountry;
 	}
 }
 ?>
