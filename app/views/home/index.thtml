@@ -11,17 +11,10 @@ margin-top:100px;
 width:245px;
 }
 </style>
-<?php if(!$isLogged): ?>
-<div class="bannerbg" style="margin-top:15px">
-<div class="balloontext"><a href="/channel/featured">Check out</a> the <?= $totalprojects ?> projects</a> from around the world! <p style="margin-top: 6px;">To create your own projects:</p></div>
-<div style="margin-top: 180px; margin-left: -250px; float: left;">
-<a href="download"><img width="194" height="44" src="img/download2.png"/></a>
-</div>
-    <div style="margin: 25px 20px 0px 0px; float: right;">
-        <a href="video.html?width=647&height=485" class="thickbox" rel="AjaxGroup" title="Video showing what people can do in Scratch" target="_blank"><img width="244" height="182" src="/img/video.png"/></a>
-    </div>
-</div>
-<?php endif; ?>
+
+<?php
+	echo $this->element('banner');
+?>
 
 <!-- |||||| Begin content area ||||||| -->
   <div id="main">
