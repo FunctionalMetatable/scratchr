@@ -59,7 +59,7 @@ Class TaggedController  extends AppController {
 		
 		$tag_id = $tag['Tag']['id'];
 		$days = LATEST_RAMIXED_DAY_INTERVAL;
-		$final_criteria = "Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.created > now()  - interval $days day AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
+		$final_criteria = "Project.remixer > 0 AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.created > now()  - interval $days day AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
         if ($content_status == "safe") {
 			$final_criteria = "Project.status = 'safe' AND " . $final_criteria; 
 		}
@@ -102,7 +102,7 @@ Class TaggedController  extends AppController {
 		
 		$tag_id = $tag['Tag']['id'];
 		$days = LATEST_TOPVIEWED_DAY_INTERVAL;
-		$final_criteria = "Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.created > now()  - interval $days day AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
+		$final_criteria = "Project.views > 0 AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.created > now()  - interval $days day AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
 
         if ($content_status == "safe") {
 			$final_criteria = "Project.status = 'safe' AND " . $final_criteria; 
@@ -146,7 +146,7 @@ Class TaggedController  extends AppController {
 		
 		$tag_id = $tag['Tag']['id'];
 		$days = LATEST_TOPLOVED_DAY_INTERVAL;
-		$final_criteria = "Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.created > now()  - interval $days day AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
+		$final_criteria = "Project.loveitsuniqueip > 0 AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND Project.created > now()  - interval $days day AND ProjectTag.tag_id = $tag_id GROUP BY project_id";
 
         if ($content_status == "safe") {
 			$final_criteria = "Project.status = 'safe' AND " . $final_criteria; 
