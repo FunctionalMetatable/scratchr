@@ -1,0 +1,17 @@
+QA ToDo:
+
+Add following project tests as members of TODO:
+
+Add following project tests as members of ScratchR-Suite.html 
+All of these tests depend on the login test being run first. 
+- project-favorite : checks if test project can be favorited and unfavorited
+- project-love-it
+- project-flag : checks for presence of flag field, enters text :This is a QA robot, please ignore this flag. 
+- project-comment-flag : flags the first comment on the project
+- project-tag : tags the project, refreshes, checks for presence of tag
+- project-embed : opens embed area, checks for correct embed code
+- project-owner-delete:
+This sections should close with a Logout command.
+
+Next section will be gallery tests, which should all start with gallery-*
+
