@@ -1,32 +1,16 @@
+<link type="text/css" href="http://stats.scratch.mit.edu/remixtree/css/remixtree.css" rel="stylesheet" />
+<script language="javascript" type="text/javascript" src="http://stats.scratch.mit.edu/remixtree/js/jit.js"></script>
+<script language="javascript" type="text/javascript" src="http://stats.scratch.mit.edu/remixtree/js/remixtree.js"></script>
+<script language="javascript" type="text/javascript" src="http://stats.scratch.mit.edu/remixtree/js/excanvas.js"></script>
+
 <div class="fullcontent">
-<h2><?php ___('Total Remixes');?></h2>
+<h2><?php ___('Remix Visualization');?></h2>
 
-	<p>
-	<?php if(!empty($mods['linkable'])):?>
-	<?php 
-	foreach($mods['linkable'] as $elem) {
-		printf(___("%s's %sproject", true), 
-"<a href='/users/" . $elem['username']. "'>" . $elem['username'] . "</a>", "<a href='/projects/" . $elem['username'] . "/" . $elem['pid'] . "'>");
-		echo "</a><br />";
-	   }
-	?>
-	<?php endif; ?>
-	<?php if(!empty($mods['userlinkable'])):?>
-	<?php 
-	foreach($mods['userlinkable'] as $elem) {
-		printf(___("%s's project %s (not available)", true), "<a href='/users/" . $elem['username'] . "'>" . $elem['username'] . "</a>", $elem['pid']);
-		echo "<br />";
-	};
-	?>
-	<?php endif; ?>
-	<?php if(!empty($mods['unlinkable'])):?>
-	<?php 
-	foreach($mods['unlinkable'] as $elem) {
-		printf(___("user %s's project %s (not available)", true), $elem['user_pid'], $elem['pid']);
-		echo "<br />";
-	}
-	?>
-	<?php endif; ?>
-	</p>
-</div>
 
+   <div id="center-container">
+       <div id="infovis"></div>
+   </div>
+
+       <div id="right-container">
+		<div id="inner-details" ></div>
+       </div>
