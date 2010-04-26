@@ -2338,6 +2338,14 @@ class ProjectsController extends AppController {
 	
 	function mods($urlnameignored = null, $pid = null) {
 		$this->exitOnInvalidArgCount(2);
+		$isLogged   = $this->isLoggedIn();
+        $logged_id  = $this->getLoggedInUserID();
+		if ($isLogged) {
+		//store mods view statistics in database
+                $sql = "INSERT INTO `mods_views` (`id`,`user_id`,`project_id`) VALUES"
+                        ." (NULL, $logged_id, $pid)";
+                $this->ViewStat->query($sql);
+		}		
 		$this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
