@@ -104,7 +104,7 @@ height:239px;
 
 a img { border:0 none;} 
 
-.balloontext {margin-top: 100px; margin-left: 120px; float: left; font-size:15px; width:245px;}
+.balloontext {margin-top: 100px; margin-left: 113px; float: left; font-size:15px; width:245px;}
 
 /* IE6 */
 * html .balloontext {margin-top: 105px; margin-left: 65px; float: left; font-size:14px; width:245px;}
