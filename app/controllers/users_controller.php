@@ -892,7 +892,7 @@ class UsersController extends AppController {
 		$isMe = $this->activeSession($user_id);
 		$username = $user_record['User']['username'];
 		
-		$user_status = $user_record['User']['status'];
+		$user_status = trim($user_record['User']['status']);
 		if ($user_status == 'delbyadmin' || $user_status == 'delbyusr' || $user_status == 'locked') {
 			if( !$this->isAdmin() ) {
 				$this->cakeError('error',array('code'=>'404', 'message'=>'account_disabled', 'name' => __('Not Found', true)));
