@@ -333,7 +333,6 @@ class AppController extends Controller {
 		$customizableCountryList = CUSTOMIZABLE_COUNTRIES;
 		$customizableCountryArray =explode(',', trim($customizableCountryList)); 
 		$customizableCountryArray = array_flip($customizableCountryArray);
-		$this->set('cookieCountryName','worldwide');
 		return array_key_exists($countryName, $customizableCountryArray);
 	}
 

@@ -21,7 +21,7 @@ Class HomeController extends AppController {
 	function to set users country location to cookie
 	*/
 	function country($newCountry = null){
-		if($this->isCustomizableCountry($newCountry)) {
+		if($this->isCustomizableCountry($newCountry) || $newCountry==DEFAULT_COUNTRY) {
 			$this->Cookie->delete('country');
 			$this->Cookie->write('country', $newCountry, null, '+350 day');
 		}
@@ -42,7 +42,7 @@ Class HomeController extends AppController {
 			$this->Cookie->write('ip_country', $newCountry, null, '+350 day');
 		} 
 
-		$this->redirect('/');
+		$this->country($newCountry);
 	}
 	
     function index() {  
