@@ -516,7 +516,10 @@ Class GalleriesController extends AppController {
 		$isLogged = $this->isLoggedIn();
 		$this->PaginationSecondary->show = 60;
 		$errors = Array();
-
+		
+		$user_status = $this->User->field('status', array('User.id'=>$user_id));
+		if($user_status != 'normal'){exit;}
+		
 		$isLocked = $this->check_locked($user_id);
 
 		if ($isLocked) exit();
@@ -2072,7 +2075,9 @@ Class GalleriesController extends AppController {
 
 		$user_id= $this->getLoggedInUserID();
 		$isLocked = $this->check_locked($user_id);
-
+		$user_status = $this->User->field('status', array('User.id'=>$user_id));
+		if($user_status != 'normal'){exit;}
+		
 		if ($isLocked) exit();
 
         if (!$user_id) exit;
@@ -2588,6 +2593,9 @@ Class GalleriesController extends AppController {
 		$user_id = $this->getLoggedInUserID();
 		$commenter_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
+		
+		$user_status = $this->User->field('status', array('User.id'=>$user_id));
+		if($user_status != 'normal'){exit;}
 		$source_comment = $this->Gcomment->find("Gcomment.id = $source_id");
 		$gallery_id = $source_comment['Gcomment']['gallery_id'];
 		$gallery = $this->Gallery->find("Gallery.id = $gallery_id");

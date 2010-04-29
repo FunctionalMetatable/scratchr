@@ -256,6 +256,8 @@ class ProjectsController extends AppController {
 		$project_owner_id = $project['User']['id'];
 		$errors = Array();
 		
+		$user_status = $this->User->field('status', array('User.id'=>$user_id));
+		if($user_status != 'normal'){exit;}
 		$isLocked = $this->check_locked($pid);
 		
 		if ($isLocked) exit();
@@ -1419,6 +1421,9 @@ class ProjectsController extends AppController {
 		$isLogged = $this->isLoggedIn();
 		$project_owner_id = $project['Project']['user_id'];
 		$isLocked = $this->check_locked($pid);
+		
+		$user_status = $this->User->field('status', array('User.id'=>$user_id));
+		if($user_status != 'normal'){exit;}
 		
         if (empty($project) || $project['User']['urlname'] !== $urlname) exit();
 		
@@ -2642,6 +2647,9 @@ class ProjectsController extends AppController {
 		$this->autoRender = false;
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
+		
+		$user_status = $this->User->field('status', array('User.id'=>$user_id));
+		if($user_status != 'normal'){exit;}
 		$parent_comment = $this->Pcomment->find("Pcomment.id = $parent_id");
 		$project_id = $parent_comment['Pcomment']['project_id'];
         $this->Project->unbindModel(
