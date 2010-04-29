@@ -26,6 +26,7 @@ define("UNSUPPORTED_SERVICE", 406);
 define("INVALID_PROJECT", 407);
 define("USER_BLOCKED_ERROR", 408);
 define("IP_BLOCKED_ERROR", 409);
+define("USER_DELETED_ERROR", 410);
 
 Class ServicesController extends AppController {
 
@@ -408,6 +409,18 @@ Class ServicesController extends AppController {
             $this->__failed(INVALID_USER);
             return;
         }
+		
+		 // get project info
+        $user_id = $user_record['User']['id'];
+		$user_status = $user_record['User']['status'];
+        $urlname = $user_record['User']['urlname'];
+		
+		if ($user_status == 'delbyadmin' || $user_status == 'delbyusr'){
+			$this->err_codes[USER_DELETED_ERROR]="Unable to accept project because the account '$urlname' has been deleted.";
+			$this->__failed(USER_DELETED_ERROR);
+			return;
+		}
+		
 
         $binary_file = (!empty($this->params["form"]["binary_file"])) ? $this->params["form"]["binary_file"]:null;
         $thumbnail_file = (!empty($this->params["form"]["thumbnail_image"])) ? $this->params["form"]["thumbnail_image"]:null;
@@ -420,10 +433,7 @@ Class ServicesController extends AppController {
 			return;
 		}
 
-        // get project info
-        $user_id = $user_record['User']['id'];
-		$user_status = $user_record['User']['status'];
-        $urlname = $user_record['User']['urlname'];
+       
 
 		//check if user is banned
 		if ($user_status != 'locked') {
