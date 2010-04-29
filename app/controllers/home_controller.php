@@ -21,11 +21,11 @@ Class HomeController extends AppController {
 	function to set users country location to cookie
 	*/
 	function country($newCountry = null){
-		if($this->isCustomizableCountry($newCountry) || $newCountry==DEFAULT_COUNTRY) {
+		if($this->isCustomizableCountry($newCountry)) {
 			$this->Cookie->delete('country');
 			$this->Cookie->write('country', $newCountry, null, '+350 day');
 		}
-		else if(empty($newCountry)) {
+		else {
 			$this->Cookie->delete('country');
 		}
 		
@@ -38,9 +38,8 @@ Class HomeController extends AppController {
 	function set_country($newCountry = null) {
 		$this->Cookie->delete('ip_country');
 		if(!empty($newCountry)) {
-			$this->Cookie->delete('ip_country');
 			$this->Cookie->write('ip_country', $newCountry, null, '+350 day');
-		} 
+		}
 
 		$this->country($newCountry);
 	}
@@ -50,10 +49,10 @@ Class HomeController extends AppController {
 		$cookieCountry = $this->Cookie->read('country');
 		//set cookie country, if cookie country is not set
 		if(empty($cookieCountry)) {
-			$ipCountryName = $this->getUserCountryFromIP();
-			if($this->isCustomizableCountry($cookieCountry)) {
-				$this->Cookie->write('country', $ipCountryName, null, '+350 day');
-				$cookieCountry = $ipCountryName;
+			$ipCountry = $this->getUserCountryFromIP();
+			if($this->isCustomizableCountry($ipCountry)) {
+				$this->Cookie->write('country', $ipCountry, null, '+350 day');
+				$cookieCountry = $ipCountry;
 			}
 		}
 		
