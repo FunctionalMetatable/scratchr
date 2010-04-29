@@ -185,7 +185,8 @@ width:245px;
       </div>
 	  <?php endif;?>
 
-	
+
+	<?php if(count($topremixed) >= NUM_TOP_REMIXED): ?>
     <div id="TopRemixedLately" class="container">
       <h3><?php ___('What the Community is Remixing')?></h3>
 		<?php
@@ -213,7 +214,7 @@ width:245px;
 		<?php endforeach; ?>
       <p class="more"><a href="/latest/remixed"><?php ___('See more');?></a> </p>
     </div>
-
+	<?php endif; ?>
 
 <!--
 	<div id="SurpriseProjects" class="container">
@@ -245,6 +246,7 @@ width:245px;
     </div>
 //-->
 
+	<?php if(count($toploved) >= NUM_TOP_RATED): ?>
     <div id="TopLovedLately" class="container">
       <h3><?php ___('What the Community is Loving');?></h3>
 		<?php
@@ -272,7 +274,7 @@ width:245px;
 		<?php endforeach; ?>
       <p class="more"><a href="/latest/toploved"><?php ___('See more');?></a> </p>
     </div>
-
+	<?php endif; ?>
 <!--
 	 <div class="container" id=TopDownloadedLately">
       <h3><?php /*___('Top Downloaded Lately')?></h3>
@@ -302,6 +304,7 @@ width:245px;
     </div>
 //-->
 
+	<?php if(count($topviewed) >= NUM_TOP_VIEWED): ?>
     <div id="TopViewedLately" class="container">
       <h3><?php ___('What the Community is Viewing')?></h3>
 		<?php
@@ -330,6 +333,7 @@ width:245px;
       <p class="more"><a href="/latest/topviewed"><?php ___('See more');?></a> </p>
     </div>
   </div>
+  <?php endif; ?>
 <!-- ////// End main content ////// -->
 
 
