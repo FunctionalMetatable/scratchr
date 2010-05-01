@@ -178,17 +178,15 @@ Class HomeController extends AppController {
 				$myfriendsprojects = $this->set_ribbon($myfriendsprojects);
 			}
 			$this->set('friendsprojects', $myfriendsprojects);
-            
-            $newprojects = $this->Project->mc_get("newprojects");
+
+			$key = 'home_new_projects';
+			if($cookieCountry && strcmp($cookieCountry, DEFAULT_COUNTRY) != 0){
+				$key = 'home_new_projects_'.$cookieCountry;
+			}
+            $newprojects = $this->Project->mc_get($key);
             if ($newprojects === false) {
-				//limit the search to only recent projects to improve performance
-				// Otherwise we are forced to do a full table scan 1M+ rows which is expensive
-				$lowerlimitforid = $this->Project->mc_get("totalprojects");
-				if($lowerlimitforid === false) {
-					$lowerlimitforid = 940000; // if there is no value in memcached this is a safe be as of 2010-03-24
-				}
-				$newprojects = $this->__getNewProjects(intval(str_replace(",","", $lowerlimitforid)) - 100);
-                $this->Project->mc_set("newprojects", $newprojects, false, HOMEL_NEW_PROJECTS_TTL);
+				$newprojects = $this->__getNewProjects($cookieCountry);
+                $this->Project->mc_set($key, $newprojects, false, HOMEL_NEW_PROJECTS_TTL);
 			}
 			if(SHOW_RIBBON ==1){
 				$newprojects = $this->set_ribbon($newprojects);
@@ -316,8 +314,20 @@ Class HomeController extends AppController {
         return  $club['Gallery']; 
 	}
 	
-	function __getNewProjects($lowerlimitforid) {
-		return $this->Project->getTopProjects('`created`', '`created` DESC', null, null, null, NUM_NEW_PROJECTS,  "projects.id > $lowerlimitforid");
+	function __getNewProjects($country = null) {
+		//limit the search to only recent projects to improve performance
+		// Otherwise we are forced to do a full table scan 1M+ rows which is expensive
+		$lowerlimitforid = $this->Project->mc_get("totalprojects");
+		if($lowerlimitforid === false) {
+			$lowerlimitforid = 940000; // if there is no value in memcached this is a safe be as of 2010-03-24
+		}
+		$lowerlimitforid = intval(str_replace(",","", $lowerlimitforid)) - 100;
+	
+		$condition = "projects.id > $lowerlimitforid";
+		if($country) {
+			$condition .= " AND `projects`.`country`= '$country'";
+		}
+		return $this->Project->getTopProjects('`created`', '`created` DESC', null, null, null, NUM_NEW_PROJECTS,  $condition);
 	}
 
     function __getBlockedUserFrontpage(){
