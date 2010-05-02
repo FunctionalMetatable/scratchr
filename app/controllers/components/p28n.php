@@ -12,8 +12,9 @@ class P28nComponent extends Object {
     }
 
     function change($lang = null) {
-        if (!empty($lang)) {
-            $this->Session->write('Config.language', $lang);
+		if (!empty($lang)) {
+			$lang = strtolower($lang);
+			$this->Session->write('Config.language', $lang);
             $this->Cookie->write('lang', $lang, null, '+350 day'); 
         }
     }
