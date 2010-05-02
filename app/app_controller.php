@@ -7,7 +7,7 @@ class AppController extends Controller {
 
     var $helpers = array("head",'Time', "Util");
     var $uses = array('UserEvent', 'AdminTag', 'Relationship', 'Project', 'Pcomment', 'Gcomment', 'Gallery', 'GalleryProject', 'GalleryMembership', 'BlockedUser', 'Notification', 'User', 'Announcement', 'BlockedIp', 'FriendRequest');
-	var $components = array('RequestHandler', 'Cookie', 'Session', 'Thumb', 'GeoIp');
+	var $components = array('RequestHandler', 'Cookie', 'Session', 'Thumb', 'GeoIp', 'P28n');
     var $layout = 'scratchr_default';
     var $sanitize = true;
 
@@ -18,7 +18,9 @@ class AppController extends Controller {
     }
 
 	function beforeFilter() {
-
+		if(!$this->Cookie->read('lang') && $_SERVER["HTTP_ACCEPT_LANGUAGE"]) {
+			$this->P28n->change($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+		}
 		// lets trim post variables
 		$this->trimAllPostData();
 	}
