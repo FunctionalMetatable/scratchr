@@ -1,7 +1,7 @@
 <div id="footer" class="clearme">
 <?php if($isCustomizableCountry):?>
-	<?php ___('Your location: ')?><span id="countryName"><?php echo $cookieCountry ?></span>
-	<span id="countryChangeDiv" ><a href="<?php echo $html->url('/country/'.$alterCountry); ?>"><?php echo $alterCountry; ?>&nbsp;<?php  ___('instead?')?></a></span> |
+	<?php ___('Your location: ')?><span id="countryName"><?php ___(getCountryNameByCode($cookieCountry)) ?></span>
+	<span id="countryChangeDiv" ><a href="<?php echo $html->url('/country/'.$alterCountry); ?>"><?php ___(getCountryNameByCode( $alterCountry)); ?>&nbsp;<?php  ___('instead?')?></a></span> |
 <?php endif;?>
 <a href="/download"><?php ___('Download')?></a> | 
 <a href="/donate"><?php ___('Donate')?></a> | 
