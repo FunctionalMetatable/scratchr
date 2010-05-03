@@ -332,8 +332,9 @@ width:245px;
 		<?php endforeach; ?>
       <p class="more"><a href="/latest/topviewed"><?php ___('See more');?></a> </p>
     </div>
-  </div>
+ 
   <?php endif; ?>
+   </div>
 <!-- ////// End main content ////// -->
 
 
