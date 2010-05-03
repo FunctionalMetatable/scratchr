@@ -109,6 +109,7 @@ class L10n extends Object {
 								/* Dutch (Standard) */ 'dut' => 'nl',
 								/* Dutch (Standard) */ 'nld' => 'nl',
 								/* English */ 'eng' => 'en',
+								/* English */ 'en_us' => 'en-us',
 								/* Estonian */ 'est' => 'et',
 								/* Faeroese */ 'fao' => 'fo',
 								/* Farsi */ 'fas' => 'fa',
