@@ -17,7 +17,7 @@ function about(){
 	 	$lang = $lang_array['0'];
 	
 	}
-	if($lang =='de' || $lang == 'es' || $lang == "it" || $lang == "fr")
+	if($lang =='de' || $lang == 'es' || $lang == "it" || $lang == "fr" || $lang == 'he' || $lang == 'nl' || $lang == 'ja' || $lang == 'ru')
 		$this->redirect("$about_scratch_url/$lang/About_Scratch");
 	else
 		$this->redirect("$about_scratch_url/About_Scratch");
@@ -38,7 +38,7 @@ function support(){
 	 	$lang = $lang_array['0'];
 	
 	}
-	if($lang =='de' || $lang == 'es' || $lang == "it" || $lang == "fr")
+	if($lang =='de' || $lang == 'es' || $lang == "it" || $lang == "fr" || $lang == 'he' || $lang == 'nl' || $lang == 'ja' || $lang == 'ru')
 		$this->redirect("$support_url/$lang/Support");
 	else
 		$this->redirect("$support_url/Support");
