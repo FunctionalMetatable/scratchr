@@ -3,7 +3,7 @@ class P28nComponent extends Object {
     var $components = array('Session', 'Cookie');
 
     function startup() {
-        /*if the default language is not set, we do this right now */
+		/*if the default language is not set, we do this right now */
         if (!defined('DEFAULT_LANGUAGE')) {
 			  		define('DEFAULT_LANGUAGE', 'en_us'); }
         if (!$this->Session->check('Config.language')) { 
