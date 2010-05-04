@@ -28,9 +28,9 @@ function support(){
 	$support_url ='http://'.SUPPORT_URL;
 	$cookie_lang = $this->Cookie->read('lang');
 	if($scratchr2drupal[$cookie_lang])
-		$this->redirect("$about_scratch_url/$scratchr2drupal[$cookie_lang]/About_Scratch");
+		$this->redirect("$support_url/$scratchr2drupal[$cookie_lang]/Support");
 	else
-		$this->redirect("$about_scratch_url/About_Scratch");
+		$this->redirect("$support_url/Support");
 }
 
 }
