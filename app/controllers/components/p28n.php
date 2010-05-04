@@ -4,11 +4,11 @@ class P28nComponent extends Object {
 
     function startup() {
 		/*if the default language is not set, we do this right now */
-        if (!defined('DEFAULT_LANGUAGE')) {
+        /*if (!defined('DEFAULT_LANGUAGE')) {
 			  		define('DEFAULT_LANGUAGE', 'en_us'); }
         if (!$this->Session->check('Config.language')) { 
              $this->change(($this->Cookie->read('lang') ? $this->Cookie->read('lang') : DEFAULT_LANGUAGE));
-        }
+        }*/
     }
 
     function change($lang = null) {
