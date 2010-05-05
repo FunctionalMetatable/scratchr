@@ -9,7 +9,7 @@
     <div class="top_header">
         <h2><?php echo ___('Explore Projects', true) . " " . ___($heading, true);?></h2>
         <h3>
-            <?php printf(___('Do you want to know how to %supload your project%s?', true), '<a href="/share">', '</a>'); ?>
+            <?php printf(___('Do you want to know how to %supload your project%s?', true), '<a href="/redirect/share">', '</a>'); ?>
         </h3>
 	</div>
 	
