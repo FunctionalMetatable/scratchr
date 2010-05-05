@@ -2,36 +2,51 @@
 class RedirectController extends Controller {
 var $components = array('Cookie');
 var $uses =array();
-function about(){
-	$scratchr2drupal = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
-	$about_scratch_url = 'http://' . ABOUT_SCRATCH_URL;
-	$cookie_lang = $this->Cookie->read(lang);
-	if($scratchr2drupal[$cookie_lang])
-		$this->redirect("$about_scratch_url/$scratchr2drupal[$cookie_lang]/About_Scratch");
-	else
-		$this->redirect("$about_scratch_url/About_Scratch");
 
+function about(){
+	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
+        $cookie_lang = $this->Cookie->read('lang');
+	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'About_Scratch');
 }
 
+
 function support(){
-	$scratchr2drupal = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
-	$support_url ='http://'.SUPPORT_URL;
-	$cookie_lang = $this->Cookie->read('lang');
-	if($scratchr2drupal[$cookie_lang])
-		$this->redirect("$support_url/$scratchr2drupal[$cookie_lang]/Support");
-	else
-		$this->redirect("$support_url/Support");
+	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
+        $cookie_lang = $this->Cookie->read('lang');
+	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'Support');
 }
 
 function share(){
-	$scratchr2drupal = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
-        $support_url ='http://'.SUPPORT_URL;
+	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
         $cookie_lang = $this->Cookie->read('lang');
-        if($scratchr2drupal[$cookie_lang])
-                $this->redirect("$support_url/$scratchr2drupal[$cookie_lang]/Support/Get_Started");
-        else
-                $this->redirect("$support_url/Support/Get_Started");
+	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'Support/Get_Started');
 }
+
+function donate(){
+	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
+        $cookie_lang = $this->Cookie->read('lang');
+	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'Donate');
+}
+
+function copyright(){
+	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
+        $cookie_lang = $this->Cookie->read('lang');
+	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'DMCA');
+}
+
+function terms(){
+	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
+        $cookie_lang = $this->Cookie->read('lang');
+	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'Terms_of_use');
+}
+
+function privacy(){
+	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
+        $cookie_lang = $this->Cookie->read('lang');
+	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'Privacy_Policy');
+}
+
+
 
 
 }
