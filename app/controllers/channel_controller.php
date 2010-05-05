@@ -59,7 +59,7 @@ Class ChannelController extends AppController {
         $this->set('data', $final_projects);
         $this->Project->mc_close();
 
-        $this->set('heading', "new projects");
+        $this->set('heading', ___("new projects",true));
         $this->set('option', 'recent');
         $this->set('rss_link', $this->feed_links['recent']);
         $this->render('explorer');
@@ -203,7 +203,7 @@ Class ChannelController extends AppController {
         list($order,$limit,$page) = $this->Pagination->init("Project.proj_visibility = 'visible'");
         $this->Project->bindUser();
         $this->set('data', $this->Project->findAll("Project.proj_visibility = 'visible'",  NULL, "Project.id ASC", $limit, $page));
-        $this->set('heading', "new projects");
+        $this->set('heading', ___("new projects",true));
         $this->render('explorer');
     }
 
@@ -215,7 +215,7 @@ Class ChannelController extends AppController {
         list($order,$limit,$page) = $this->Pagination->init();
         $this->Project->bindUser();
         $this->set('data', $this->Project->findAll("name = 'Untitled'",  NULL, "Project.id ASC", $limit, $page));
-        $this->set('heading', "new projects");
+        $this->set('heading', ___("new projects",true));
         $this->render('explorer');
     }
 
@@ -323,7 +323,7 @@ Class ChannelController extends AppController {
 		$this->set('data', $projects);
         
         $this->set('rss_link', $this->feed_links['friends_latest']);
-        $this->set('heading', "friends' latest projects");
+        $this->set('heading', ___("friends' latest projects",true));
         $this->set('option', 'friends_latest');
         $this->render('explorer');
     }
