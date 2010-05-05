@@ -2,18 +2,8 @@
 class RedirectController extends Controller {
 var $components = array('Cookie');
 var $uses =array();
-var $scratchr2drupal = array(
-		'fr-fr' => 'fr',
-		'es-es' => 'es',
-		'ita'   => 'it',
-		'rus'	=> 'ru',
-		'dut'	=> 'nl',
-		'de-de' => 'de',
-		'heb'	=> 'he',
-		'jpn'	=> 'ja',
-		);
 function about(){
-	$lang_array =array();
+	$scratchr2drupal = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
 	$about_scratch_url = 'http://' . ABOUT_SCRATCH_URL;
 	$cookie_lang = $this->Cookie->read(lang);
 	if($scratchr2drupal[$cookie_lang])
@@ -24,7 +14,7 @@ function about(){
 }
 
 function support(){
-	$lang_array =array();
+	$scratchr2drupal = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
 	$support_url ='http://'.SUPPORT_URL;
 	$cookie_lang = $this->Cookie->read('lang');
 	if($scratchr2drupal[$cookie_lang])
@@ -32,6 +22,17 @@ function support(){
 	else
 		$this->redirect("$support_url/Support");
 }
+
+function share(){
+	$scratchr2drupal = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja',);
+        $support_url ='http://'.SUPPORT_URL;
+        $cookie_lang = $this->Cookie->read('lang');
+        if($scratchr2drupal[$cookie_lang])
+                $this->redirect("$support_url/$scratchr2drupal[$cookie_lang]/Support/Get_Started");
+        else
+                $this->redirect("$support_url/Support/Get_Started");
+}
+
 
 }
 ?>
