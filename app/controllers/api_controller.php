@@ -135,5 +135,122 @@ class ApiController extends AppController {
 		$this->Project->mc_close();
 		exit;
 	}
+	
+	/** 
+     * Returns all visible project of user
+	 @param username 
+     */
+	function getprojectsbyusername($username){
+		Configure::write('debug', 0);
+		$this->Project->mc_connect();
+		$user_id = $this->User->field('id', array('User.username' => $username));
+		$mc_key = 'get-user-projects-'.$user_id;
+		$project_ids = $this->Project->mc_get($mc_key);
+		if ($project_ids === false) {
+			$user_id = $this->User->field('id', array('User.username' => $username));
+			$projects = $this->Project->find('all', array('conditions'=>array('Project.user_id' => $user_id, 'Project.proj_visibility'=>'visible'), 'fields'=> 'id', 'recursive'=> -1, 'order' =>'created DESC'));
+			$project_list =  Set::extract('/Project/id', $projects);
+			$project_ids = implode(':', $project_list);
+			$this->Project->mc_set($mc_key, $project_ids, false, API_USER_PROJECTS_TTL);
+		}
+		
+		echo $project_ids;
+		$this->Project->mc_close();
+		exit;
+	}
+	
+	
+	/** 
+     * Returns all friends of user
+	 @param username 
+     */
+	function getfriendsbyusername($username){
+		Configure::write('debug', 0);
+		$this->Project->mc_connect();
+		$user_id = $this->User->field('id', array('User.username' => $username));
+		$mc_key = 'get-user-friends-'.$user_id;
+		$friend_ids = $this->Project->mc_get($mc_key);
+		if ($friend_ids === false) {
+			
+			$friends = $this->Relationship->find('all', array('conditions'=>array('Relationship.user_id' => $user_id, 'Relationship.friend_id > 0'), 'fields'=> 'friend_id', 'recursive'=> -1, 'order' =>'Relationship.timestamp DESC'));
+			$friends_list =  Set::extract('/Relationship/friend_id', $friends);
+			$friend_ids = implode(':', $friends_list);
+			$this->Project->mc_set($mc_key, $friend_ids, false, API_USER_FRIENDS_TTL);
+		}
+		
+		echo $friend_ids;
+		$this->Project->mc_close();
+		exit;
+	}
+	
+	/** 
+     * Returns all galleries of user
+	 @param username 
+     */
+	function getgalleriesbyusername($username){
+		Configure::write('debug', 0);
+		$this->Project->mc_connect();
+		$user_id = $this->User->field('id', array('User.username' => $username));
+		$mc_key = 'get-user-galleries-'.$user_id;
+		$gallery_ids = $this->Project->mc_get($mc_key);
+		if ($gallery_ids === false) {
+			
+			$galleries = $this->Gallery->find('all', array('conditions'=>array('Gallery.user_id' => $user_id, 'Gallery.visibility' => 'visible'), 'fields'=> 'id', 'recursive'=> -1, 'order' =>'Gallery.created DESC'));pr($galleries);
+			$gallery_list =  Set::extract('/Gallery/id', $galleries);
+			$gallery_ids = implode(':', $gallery_list);
+			$this->Project->mc_set($mc_key, $gallery_ids, false, API_USER_GALLERIES_TTL);
+		}
+		
+		echo $gallery_ids;
+		$this->Project->mc_close();
+		exit;
+	}
+	
+	/** 
+     * Returns  user's info
+	 @param username 
+     */
+	function getinfobyusername($username){
+		Configure::write('debug', 0);
+		$this->Project->mc_connect();
+		$user_id = $this->User->field('id', array('User.username' => $username));
+		$mc_key = 'get-user-info-'.$user_id;
+		$user_info = $this->Project->mc_get($mc_key);
+		if ($user_info === false) {
+			$user_details = $this->User->find('first', array('conditions' => array('User.id' => $user_id), 'fields'=> array('id', 'username', 'country')));
+			$user_info = $user_details['User']['username'].':'.$user_details['User']['id'].':'.$user_details['User']['country'];
+			$this->Project->mc_set($mc_key, $user_info, false, API_USER_INFO_TTL);
+		}
+		
+		echo $user_info;
+		$this->Project->mc_close();
+		exit;
+	}
+	
+	
+	/** 
+     * Returns  all projects of a gallery
+	 @param galleryid 
+     */
+	function getprojectsbygallery($gallery_id){
+		Configure::write('debug', 0);
+		$this->Project->mc_connect();
+		$mc_key = 'get-projects-by-gallery-'.$gallery_id;
+		$projects = $this->Project->mc_get($mc_key);
+		if ($projects === false) {
+			$gallery_projects = $this->GalleryProject->find('all', array('conditions'=>array('GalleryProject.gallery_id' => $gallery_id, 'Gallery.visibility' => 'visible'), 'recursive'=>2,'order' =>'GalleryProject.timestamp DESC'));
+			foreach($gallery_projects as $project){
+				$project_list[] = $project['Project']['User']['username'].':'.$project['Project']['id'];
+			}
+			
+			$projects = implode(',', $project_list);
+			$projects = str_replace(',','<BR>',$projects);
+			$this->Project->mc_set($mc_key, $projects, false, API_PROJECTS_BY_GALLERY_TTL);
+		}
+		
+		echo $projects;
+		$this->Project->mc_close();
+		exit;
+	}
 }
 ?>

@@ -177,6 +177,11 @@ $this->params['webservices']
   define("API_TOTAL_PROJECT_TTL", 60); //1 hours
   define("API_TOTAL_SCRIPTS_TTL", 60); //1 hour
   define("API_TOTAL_SPRITES_TTL", 60); //1 hours
+  define("API_USER_PROJECTS_TTL", 60); //1 hours
+  define("API_USER_FRIENDS_TTL", 60); //1 hours
+  define("API_USER_GALLERIES_TTL", 60); //1 hours
+  define("API_USER_INFO_TTL", 60); //1 hours
+  define("API_PROJECTS_BY_GALLERY_TTL", 60); //1 hours
 
  /**
   * IMAGE EXTENSIONS
