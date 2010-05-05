@@ -68,26 +68,39 @@ class AppController extends Controller {
 		
 		$blocked = $this->checkIP();
 		$isBanned = false;
-		$annoucements = $this->Announcement->findAll("content != ''");
-		$empties = $this->Announcement->findCount("content = ''");
-
-        $announcement_id = -1;
-        $isAnnouncementOn = false;
-		if ($empties == 3) {
-			$announcement_id = -1;
-			$isAnnouncementOn = false;
-		} else if(!empty($annoucements[0])) {
-			$isAnnouncementOn = $annoucements[0]['Announcement']['isOn'];
-			$announcement_id = $this->getAnnouncementId();
-		}
 		
-		if ($announcement_id == -1) {
-			$announcement = "";
+		//Announcement
+		$announcement_id = -1;
+       
+		$key = 'random-annoucement-';
+        $ttl = RANDOM_ANNOUNCEMENT_CACHE_TTL;
+		$this->Project->mc_connect();
+        $mc_key = $key.'desc';
+		$mc_key_status = $key.'status';
+        $announcement = $this->Project->mc_get($mc_key);
+		$isAnnouncementOn = $this->Project->mc_get($mc_key_status);
+		if ($announcement === false || $isAnnouncementOn === false) {
+			$annoucements = $this->Announcement->findAll("content != ''");
+			$empties = $this->Announcement->findCount("content = ''");
 			$isAnnouncementOn = false;
-		} else if(!empty($annoucements[$announcement_id])){
-			$announcement = $annoucements[$announcement_id]['Announcement']['content'];
+			if ($empties == 3) {
+				$announcement_id = -1;
+				$isAnnouncementOn = false;
+			} else if(!empty($annoucements[0])) {
+				$isAnnouncementOn = $annoucements[0]['Announcement']['isOn'];
+				$announcement_id = $this->getAnnouncementId($key, $ttl);
+			}
+			
+			if ($announcement_id == -1) {
+				$announcement = "";
+				$isAnnouncementOn = false;
+			} else if(!empty($annoucements[$announcement_id])){
+				$announcement = $annoucements[$announcement_id]['Announcement']['content'];
+			}
+			$this->Project->mc_set($mc_key, $announcement, false, $ttl);
+			$this->Project->mc_set($mc_key_status, $isAnnouncementOn, false, $ttl);
 		}
-		
+		 $this->Project->mc_close();
 		if (isset($this->params['controller'])) {
 			$controller = $this->params['controller'];
 		} else {
@@ -255,24 +268,32 @@ class AppController extends Controller {
 	/**
 	* Randomly determines the announcement id to show
 	**/
-	function getAnnouncementId() {
+	function getAnnouncementId($key, $ttl) {
 		$bit_index = Array();
 		$counter = 0;
-		$record = $this->Announcement->findAll();
-		foreach ($record as $announcement) {
-			$id = $announcement['Announcement']['id'] - 1;
-			$content = $announcement['Announcement']['content'];
-			if ($content == "" || $content == null) {
-			} else {
-				$bit_index[$counter] = $id;
-				$counter++;
+		$this->Announcement->mc_connect();
+		$mc_key = $key.'id';
+        $announcement_id = $this->Announcement->mc_get($mc_key);
+		if($announcement_id === false) { 
+			$record = $this->Announcement->findAll();
+			foreach ($record as $announcement) {
+				$id = $announcement['Announcement']['id'] - 1;
+				$content = $announcement['Announcement']['content'];
+				if ($content == "" || $content == null) {
+				} else {
+					$bit_index[$counter] = $id;
+					$counter++;
+				}
 			}
-		}
-        if($counter) {
-            return rand()%$counter;
-        } else {
-            return 0;
-        }
+			if($counter) {
+				$announcement_id =  rand()%$counter;
+			} else {
+				$announcement_id = 0;
+			}
+			$this->Announcement->mc_set($mc_key, $announcement_id, false, $ttl);
+		}	
+		$this->Announcement->mc_close();
+		return $announcement_id;
 	}
     /**
      * Called mostly by views

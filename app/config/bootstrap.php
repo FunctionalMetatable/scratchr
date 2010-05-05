@@ -308,6 +308,9 @@ define("NUM_LATEST_REMIXED", 100);
 define("NUM_LATEST_GETFEEDBACK", 100);
 define("NUM_LATEST_TAGED_PROJECT", 100);
 
+
+// Announcement
+define("RANDOM_ANNOUNCEMENT_CACHE_TTL", 60); // 1 hr
 // Tags 
 define("DELETED_USERS_TTL", 15); // deleted users
 
