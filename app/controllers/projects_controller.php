@@ -2343,6 +2343,8 @@ class ProjectsController extends AppController {
 	
 	function mods($urlnameignored = null, $pid = null) {
 		$this->exitOnInvalidArgCount(2);
+		$pname = $this->Project->field('name', "Project.id = $pid");
+		$this->pageTitle = "Scratch | Project | Remixers $pname";
 		$isLogged   = $this->isLoggedIn();
         $logged_id  = $this->getLoggedInUserID();
 		if ($isLogged) {
