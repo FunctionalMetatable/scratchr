@@ -1715,30 +1715,42 @@ class ProjectsController extends AppController {
 		$this->autoRender = false;
 		$user_id = $this->getLoggedInUserID();
 
-		if (empty($this->params["form"]))
+		if (empty($this->params["form"])) {
 			$this->cakeError('error404');
-
-		$formData = $this->params["form"];
-		if  ($this->isAdmin() || $formData["UID"] == $user_id)
-		{
-			$this->User->id = $formData["UID"];
-			$urlname = $this->User->field("urlname");
-			if (!$urlname)
-				$this->cakeError('error404');
-
-			array_shift($formData);
-
-			foreach ($formData as $pidstring)
-			{
-				$pidVals = explode('_',$pidstring);
-				$pid = trim($pidVals[1]);
-
-				if ($pid != "")
-					$this->Project->remove($pid, $urlname, $this->isAdmin(), $user_id);
-			}
-			$this->setFlash(___("Projects deleted", true), FLASH_NOTICE_KEY);
-			$this->redirect('/users/'.$urlname);
 		}
+		
+		$formData = $this->params["form"];
+
+		$this->User->id = $user_id;
+		$urlname = $this->User->field("urlname");
+		if (!$urlname) {
+			$this->cakeError('error404');
+		}
+
+		array_shift($formData);
+		foreach ($formData as $pidstring) {
+			$pidVals = explode('_',$pidstring);
+			$pid = trim($pidVals[1]);
+
+			//skip if pid is empty
+			if (empty($pid)) {
+				continue;
+			}
+
+			//skip if the current user is not an admin and not the owner of the project
+			if(!$this->isAdmin()) {
+				$this->Project->id = $pid;
+				$project = $this->Project->read();
+				if($project['Project']['user_id'] != $user_id) {
+					continue;
+				}
+			}
+				
+			$this->Project->remove($pid, $urlname, $this->isAdmin(), $user_id);
+		}
+
+		$this->setFlash(___("Projects deleted", true), FLASH_NOTICE_KEY);
+		$this->redirect('/users/'.$urlname);
 		exit;
 	}
 
