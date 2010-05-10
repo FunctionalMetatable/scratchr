@@ -406,10 +406,10 @@ Class Project extends AppModel
      * @param int $user_id => id of user initiating action
      */
     function remove($pid, $urlname, $isadmin, $user_id) {
-		//check if the user is the owner
+		//check if the user is not the owner and the user is not the
 		$this->id = $pid;
         $project = $this->read();
-		if($project['Project']['user_id'] != $user_id) {
+		if($project['Project']['user_id'] != $user_id && !$isadmin) {
 			return false;
 		}
 		
