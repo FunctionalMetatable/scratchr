@@ -406,6 +406,13 @@ Class Project extends AppModel
      * @param int $user_id => id of user initiating action
      */
     function remove($pid, $urlname, $isadmin, $user_id) {
+		//check if the user is the owner
+		$this->id = $pid;
+        $project = $this->read();
+		if($project['Project']['user_id'] != $user_id) {
+			return false;
+		}
+		
         $this->beforeVisChange($pid, $urlname, $user_id, true);
         if ($isadmin == true)
             $this->saveField('proj_visibility', 'delbyadmin');
