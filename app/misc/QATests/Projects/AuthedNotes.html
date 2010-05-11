@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test Love It</title>
+<title>AuthedNotes</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test Love It</td></tr>
+<tr><td rowspan="1" colspan="3">AuthedNotes</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -17,38 +17,38 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>loveitLink</td>
-	<td></td>
-</tr>
-<tr>
-	<td>refreshAndWait</td>
-	<td></td>
+	<td>verifyElementPresent</td>
+	<td>pdesc</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>3 people love it</td>
+	<td>This is a project that a robot will test to make sure the Scratch website is working properly. Please don't comment, love it, or do anything on this page. Thanks! - Scratch Team</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>loveitLink</td>
+	<td>pdesc</td>
 	<td></td>
 </tr>
 <tr>
-	<td>refreshAndWait</td>
-	<td></td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>2 people love it</td>
+	<td>verifyElementPresent</td>
+	<td>value</td>
 	<td></td>
 </tr>
 <tr>
+	<td>verifyText</td>
+	<td>//input[@value='ok']</td>
 	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>link=cancel</td>
 	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=cancel</td>
 	<td></td>
 </tr>
 

@@ -4,41 +4,46 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>LoginTest</title>
+<title>CreateGallery</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">LoginTest</td></tr>
+<tr><td rowspan="1" colspan="3">CreateGallery</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/</td>
+	<td>/users/scratchQArobot</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=Login</td>
-	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>UserInput</td>
-	<td>scratchQArobot</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>Pass</td>
-	<td>scratchME873242!</td>
+	<td>verifyText</td>
+	<td>//div[@id='userside']/div[5]/h4</td>
+	<td>Galleries</td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//input[@value='log in']</td>
+	<td>link=create a gallery!</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyTitle</td>
-	<td>Scratch | My Stuff | scratchQArobot</td>
+	<td>verifyElementPresent</td>
+	<td>create_gallery_name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>create_gallery_description</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>create_gallery_permission</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@value='Create']</td>
 	<td></td>
 </tr>
 
