@@ -983,11 +983,20 @@ Class GalleriesController extends AppController {
         $timestamp = $gallery['Gallery']['timestamp'];
 		$actual_creation_date = friendlyDate($timestamp);
         $is_deleted_author =($gallery['User']['status'] == 'delbyadmin' || $gallery['User']['status'] == 'delbyusr');
+		$owner_id = $gallery['Gallery']['user_id'];
+		$isOwner = ($user_id == $owner_id);
 		
         $isFeatured = false;
         $isClubbed  = false;
-		if(! $isLogged && $gallery['Gallery']['total_projects'] == 0){
-			$this->cakeError('error404');
+		if($gallery['Gallery']['total_projects'] == 0)
+		{
+			if(! $isLogged && !$this->check_url($gallery['Gallery']['description'])){
+				$this->cakeError('error404');
+			}
+			
+			if($isLogged && !($isAdmin || $isOwner) && !$this->check_url($gallery['Gallery']['description'])){
+				$this->cakeError('error404');
+			}
 		}
 		if (empty($gallery)) {
 			$this->cakeError('error404');

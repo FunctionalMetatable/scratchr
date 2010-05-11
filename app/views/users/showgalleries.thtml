@@ -90,7 +90,7 @@
 		?>
 		<?php 
 		//if user is not logged in don't show gallery which have 0 project
-		if((!$isLogged && $gallery['total_projects'] == 0)  || ($isLogged && (!($isMe || $isAdmin)) && $gallery['total_projects'] == 0))
+		if($gallery['total_projects'] == 0 &&(!$isLogged && !$util->check_url($gallery['description']))  || ($isLogged && (!($isMe || $isAdmin)) && !$util->check_url($gallery['description'])))
 		{
 		}
 		else
