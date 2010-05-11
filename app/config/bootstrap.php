@@ -240,6 +240,9 @@ define('CONTENT_STATUS', "all");
 //list of url patterns that will be converted to hyperlinks, separated by |
 define('WHITELISTED_URL_PATTERN', 'wikipedia.org|\.ac.uk|flickr.com|\.edu');
 
+//list of url patterns that will be show in gallery description, separated by |
+define('WHITELISTED_URL', '\.edu');
+
 //remix notification related constants
 define('SEND_REMIX_NOTIFICATION', true);
 define('ASSIGN_REMIX_NOTIFICATION', false);

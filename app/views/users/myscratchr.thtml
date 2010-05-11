@@ -536,7 +536,7 @@ function langList($countries) {
 			}
 
 			?>
-			<?php if((!$isLogged && $theme['Gallery']['total_projects'] == 0) || ($isLogged && (!($isMe || $isAdmin)) && $theme['Gallery']['total_projects'] == 0)):?>
+			<?php if($theme['Gallery']['total_projects'] == 0 &&(!$isLogged && !$util->check_url($theme['Gallery']['description'])) || ($isLogged && (!($isMe || $isAdmin)) && !$util->check_url($theme['Gallery']['description']))):?>
 			<?php else:?>
 			<li id="gallery-<?php e($theme_id)?>">
 			<a href="<?php echo $html->url($theme_url)?>"><?php echo $html->image($theme_icon,array('alt'=>$theme_name,'width'=>'43','height'=>'32'))?><?php e($theme_name_s)?></a>
