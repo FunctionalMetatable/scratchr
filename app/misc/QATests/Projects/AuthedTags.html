@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="" />
-<title>Test Comment</title>
+<title>AuthedTags</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test Comment</td></tr>
+<tr><td rowspan="1" colspan="3">AuthedTags</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -17,33 +17,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>type</td>
-	<td>pcomment_textarea</td>
-	<td>I am a QA robot. Ignore this.</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>pcomment_submit</td>
+	<td>verifyElementPresent</td>
+	<td>link=testtag</td>
 	<td></td>
 </tr>
 <tr>
-	<td>refreshAndWait</td>
-	<td></td>
-	<td></td>
+	<td>verifyText</td>
+	<td>//div[@id='club']/h5</td>
+	<td>Add Tags</td>
 </tr>
 <tr>
-	<td>verifyTextPresent</td>
-	<td>I am a QA robot. Ignore this.</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
-	<td>//*[@id=&quot;link401302627&quot;]/</td>
-	<td></td>
-</tr>
-<tr>
-	<td>typeKeys</td>
-	<td></td>
+	<td>verifyElementPresent</td>
+	<td>tag_submit</td>
 	<td></td>
 </tr>
 
