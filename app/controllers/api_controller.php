@@ -252,5 +252,51 @@ class ApiController extends AppController {
 		$this->Project->mc_close();
 		exit;
 	}
+	
+	/** 
+     * Returns project info
+	 @param project_id 
+     */
+	function getprojectinfobyid($project_id){
+		Configure::write('debug', 0);
+		$this->Project->mc_connect();
+		$mc_key = 'get-project-info-'.$project_id;
+		$project_info = $this->Project->mc_get($mc_key);
+		if ($project_info  === false) {
+	
+			$this->Project->bindHABTMTag();
+			$projects = $this->Project->find('first', array('conditions'=>array('Project.id' => $project_id), 'fields'=> array('id', 'name','description', 'created', 'country'), 'recursive'=> 1));
+			$tag_list =  Set::extract('/Tag/name', $projects);
+			$projects['Project']['tags'] = implode(',', $tag_list);
+			$project_info = $projects['Project']['name'].':'.$projects['Project']['description'].':'.$projects['Project']['created'].':'.$projects['Project']['tags'].':'.$projects['Project']['country'];
+			$this->Project->mc_set($mc_key, $project_info , false, API_PROJECT_INFO_TTL);
+		}
+		echo $project_info;
+		$this->Project->mc_close();
+		exit;
+	}
+	
+	/** 
+     * Returns user authentication
+	 @param username,password 
+     */
+	function authenticateuser($username, $password){
+		Configure::write('debug', 0);
+		$this->User->mc_connect();
+		$mc_key = 'authenticateuser-'.$username.'-'.$password;
+		$user_info = $this->User->mc_get($mc_key);
+		if ($user_info  === false) {
+			$user_record = $this->User->find('first', array('conditions' => array('User.username'=>$username, 'User.password'=>sha1($password)),'fields'=>array('id', 'username')));
+			
+			$user_info = $user_record['User']['id'].':'.strtoupper($user_record['User']['username']);
+			$this->User->mc_set($mc_key, $user_info , false, API_AUTHENTICATE_USER_TTL);
+		}
+		if(empty($user_info)){
+			return false;
+		}
+		echo $user_info;
+		$this->User->mc_close();
+		exit;
+	}
 }
 ?>
