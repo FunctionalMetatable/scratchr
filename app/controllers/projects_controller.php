@@ -2365,7 +2365,7 @@ class ProjectsController extends AppController {
                         ." (NULL, $logged_id, $pid)";
                 $this->ViewStat->query($sql);
 		}		
-		$this->Project->unbindModel(
+		/*$this->Project->unbindModel(
                 array('hasMany' => array('GalleryProject'))
             );
           
@@ -2382,7 +2382,7 @@ class ProjectsController extends AppController {
             }
 		}//foreach
 
-        $this->set('mods', $mods);
+        $this->set('mods', $mods);*/
 		$this->render('mods', 'scratchr_default');
 		return;
 	}	
