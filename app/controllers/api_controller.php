@@ -287,13 +287,14 @@ class ApiController extends AppController {
 		$user_info = $this->User->mc_get($mc_key);
 		if ($user_info  === false) {
 			$user_record = $this->User->find('first', array('conditions' => array('User.username'=>$username, 'User.password'=>sha1($password)),'fields'=>array('id', 'username')));
-			
-			$user_info = $user_record['User']['id'].':'.strtoupper($user_record['User']['username']);
+			if(empty($user_record)){
+				$user_info = 'false';
+			}else{
+				$user_info = $user_record['User']['id'].':'.strtoupper($user_record['User']['username']);
+			}
 			$this->User->mc_set($mc_key, $user_info , false, API_AUTHENTICATE_USER_TTL);
 		}
-		if(empty($user_info)){
-			return false;
-		}
+		
 		echo $user_info;
 		$this->User->mc_close();
 		exit;
