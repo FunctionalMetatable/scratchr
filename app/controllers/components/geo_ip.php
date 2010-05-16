@@ -14,7 +14,7 @@ class GeoIpComponent extends Object {
 		
 		App::import('Vendor', 'Example', array('file' => 'GeoIp'.DS.'geoip.inc'));
 		// read GeoIP database
-		$handle = geoip_open("files/GeoIP.dat", GEOIP_STANDARD);
+		$handle = geoip_open("/usr/local/share/GeoIP/GeoIP.dat", GEOIP_STANDARD);
 		return geoip_country_code_by_addr($handle, $ip);
 	}
     
