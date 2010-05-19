@@ -467,11 +467,10 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 3, 'scratch_tag',', ', null,
     </div>
 <?php endif;?>	
 
-    <div id="stats" class="sidecontainer">
-      <h4><?php ___('Community Stats');?></h4>
-      <ul class="sidelist">
-	<li><?php printf(___("%s registered members,%s%s project creators,%s%s projects uploaded,%s%s scripts%sand %s sprites.%sThat's a lot of Scratch-ing!", true), $totalusers, '<br />', $totalcreators, '<br />',  $totalprojects, '<br />',  $totalscripts, '<br />', $totalsprites, '<br />'); ?></li>
-      </ul>
+    <div id="club" class="sidecontainer">
+      <h4><?php ___('Community Stats'); ?></h4>
+        <p><a href="http://stats.scratch.mit.edu/"><img src="http://dl.dropbox.com/u/285483/tmp/screenshot208.png" alt="ScratchEd" width="77"></a>
+	<?php printf(___("%s registered members,%s%s project creators,%s%s projects uploaded. That's a lot of Scratch-ing!", true), $totalusers, '<br />', $totalcreators, '<br />',  $totalprojects, '<br />',  $totalscripts, '<br />', $totalsprites, '<br />'); ?></p>
 	  <p class="more"><a href="http://stats.scratch.mit.edu/"><?php ___('Learn more');?></a> </p>
     </div>
 
