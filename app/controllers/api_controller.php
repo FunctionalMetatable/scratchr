@@ -265,10 +265,10 @@ class ApiController extends AppController {
 		if ($project_info  === false) {
 	
 			$this->Project->bindHABTMTag();
-			$projects = $this->Project->find('first', array('conditions'=>array('Project.id' => $project_id), 'fields'=> array('id', 'name','description', 'created', 'country'), 'recursive'=> 1));
+			$projects = $this->Project->find('first', array('conditions'=>array('Project.id' => $project_id), 'fields'=> array('id','user_id','name','description', 'created', 'country'), 'recursive'=> 1));
 			$tag_list =  Set::extract('/Tag/name', $projects);
 			$projects['Project']['tags'] = implode(',', $tag_list);
-			$project_info = $projects['Project']['name'].':'.$projects['Project']['description'].':'.$projects['Project']['created'].':'.$projects['Project']['tags'].':'.$projects['Project']['country'];
+			$project_info = $projects['Project']['user_id'].':'.$projects['Project']['name'].':'.$projects['Project']['description'].':'.$projects['Project']['created'].':'.$projects['Project']['tags'].':'.$projects['Project']['country'];
 			$this->Project->mc_set($mc_key, $project_info , false, API_PROJECT_INFO_TTL);
 		}
 		echo $project_info;
