@@ -207,7 +207,7 @@ width:245px;
 						<?php echo $html->image('small_ribbon/'.$ribbon_image,array('class'=>'ribbon'));?>
 						</a>
 		<?php endif;?>
-		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
+		  <a href="<?php e($project_link)?>"><img src="<?php e($thumbnail_src)?>" title="<? e($project_name)?>" alt="<?php e($project_name)?>" width="148" height="111"></a>
 		  <h6><a href="<?php e($project_link)?>"><?php e($project_name_s)?></a></h6>
 		  <p><?php ___('by'); ?> <?php echo $util->username($owner, $owner_role);?></p>
 		</div>
