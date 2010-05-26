@@ -17,7 +17,8 @@ STEPS
 
 1. Install the latest stable versions of Apache, MySQL and PHP and Memcache
 (XAMP or WAMP are good options for Windows that come with all of them).
-Apache needs mod-rewrite enabled and PHP needs php5-mysql
+
+* Apache needs mod-rewrite enabled and PHP needs php5-mysql
 
 2. Install an SVN client on your computer
 (for Windows I recommend TortoiseSVN)
@@ -45,6 +46,8 @@ approrpiate access info for your database.
    Set your memcache configuration in app/config/bootstrap.php:
     define("MEMCACHE_SERVER", 'localhost');  //memcache server
     define("MEMCACHE_PORT", 11211);  //memcache port
+
+   apt-get install php5-memchaced php5-memcache
    
 7. Configure Apache to point to app/webroot
 
@@ -61,6 +64,27 @@ approrpiate access info for your database.
         <Directory />
                 Options FollowSymLinks
                 AllowOverride All
+        	RewriteEngine   On
+        	Options -Multiviews  FollowSymLinks
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^static/projects/.+/([0-9]+)_(sm|med).png$ static/icons/project/default_$2.jpg [QSA,L]
+
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^static/projects/.+/([0-9]+).sb$ static/misc/default.sb [QSA,L]
+
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^static/icons/gallery/(.*)$ static/icons/gallery/default.jpg [QSA,L]
+
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^static/icons/buddy/([0-9]*)_(sm|med).jpg$ static/icons/buddy/default_$2.jpg [QSA,L]
+
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^static/icons/buddy/([0-9]*)_(sm|med).png$ static/icons/buddy/default_$2.jpg [QSA,L]
+
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+        RewriteRule .*\.svn/.* - [F]
         </Directory>
     </VirtualHost>
 
