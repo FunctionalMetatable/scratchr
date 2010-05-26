@@ -17,50 +17,65 @@ STEPS
 
 1. Install the latest stable versions of Apache, MySQL and PHP and Memcache
 (XAMP or WAMP are good options for Windows that come with all of them).
+Apache needs mod-rewrite enabled and PHP needs php5-mysql.
 
-* Apache needs mod-rewrite enabled and PHP needs php5-mysql
+On Ubuntu, you can do this:
+sudo tasksel install lamp-server
+sudo apt-get install php5-mysql
+
+To enable mod-rewrite:
+sudo a2enmod rewrite
+(Then you need to restart apache: /etc/init.d/apache2 restart)
 
 2. Install an SVN client on your computer
 (for Windows I recommend TortoiseSVN)
+Ubuntu: apt-get install svn
 
 3. Do an "svn checkout" of our code:
    svn co http://svn.assembla.com/svn/scratchr
 
 4. Create a MySQL database based on sql/db-structure.sql:
+   First create a database, then replace name_of_database with the name your database.
+
     mysql -u root -p name_of_database < app/config/sql/db-structure.sql
    Also import all the data and storedprocedures from sql/db-data.sql and sql/db-sp.sql
     mysql -u root -p name_of_database < app/config/sql/db-data.sql
     mysql -u root -p name_of_database < app/config/sql/db-sp.sql
-   Execute all SQL files you find under app/config/sql/updates one by one (if any)
-   (first sort all the files by modified/filename to maintain the right order)
+   
+Using commands like those used above, execute all SQL files you find under app/config/sql/updates one by one from oldest to newest. You can sort all the sql files by filename to maintain the right order.
     
 5. Based on app/config/database.php.default create
 configuration file called app/config/database.php with the
-approrpiate access info for your database.
+appropriate access info for your database.
 
 6. Install memcached:
-    apt-get install memcached (for Ubuntu)
-   Enable the memcached extension for PHP
+apt-get install memcached memcache(for Ubuntu)
+
+Enable the memcached extension for PHP
+sudo apt-get install php5-memcached php5-memcache
+
    Start memcached daemon:
     memcached -d
    Set your memcache configuration in app/config/bootstrap.php:
     define("MEMCACHE_SERVER", 'localhost');  //memcache server
     define("MEMCACHE_PORT", 11211);  //memcache port
-
-   apt-get install php5-memchaced php5-memcache
    
 7. Configure Apache to point to app/webroot
+You can do this by editing:
+/etc/apache2/sites-available/default
 
 8. Make app/tmp/ directory writable
+Ubuntu: sudo chmod -r 777 app/tmp 
 
 9. Make app/webroot/static directory writable
+Ubuntu: sudo chmod -r 777 app/tmp 
 
-10. Set AllowOverride All in your apache vhost configuration.
+10. Set AllowOverride All in your apache vhost configuration. (/etc/apache2/sites-available/default)
    If you are setting it up for your localhost, then it should look something like this:
    <VirtualHost 127.0.0.1>
       ServerName scratch.local
       ServerAlias www.scratch.local
-      DocumentRoot /var/www/scratchr/
+      DocumentRoot [PATH TO SCRATCHR FILES]scratchr/app/webroot/
         <Directory />
                 Options FollowSymLinks
                 AllowOverride All
@@ -88,11 +103,11 @@ approrpiate access info for your database.
         </Directory>
     </VirtualHost>
 
-
+ 
 11. It is recommended that you increase your maximum memory limit for php to 32MB.
-    You can do it by changing the memory_limit parameter in your php.ini file.
+    You can do it by changing the memory_limit parameter in your php.ini file. (As of Lucid, the default value is 128 MB, so you may not need to change it.) 
 
-12. You can configure email addresses and other constants from app/config/bootstarp.php
+12. You can configure email addresses and other constants from app/config/bootstrap.php
 
 13. Send an email to andresmh@media.mit.edu letting us know that you have
 succeded and how you're planning to use the site, we'll be very happy to hear from you. 
