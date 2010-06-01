@@ -169,7 +169,7 @@ class PaginationSecondaryComponent extends Object
  * @options array
  * @return array
  */
-    function init($criteria=NULL,$parameters=Array(),$options=Array(), $overload_count = -100)
+    function init($criteria=NULL,$parameters=Array(),$options=Array())
     {
 		uses('sanitize');
 		$this->Sanitize = &new Sanitize;
@@ -203,9 +203,7 @@ class PaginationSecondaryComponent extends Object
 		$this->_setPrivateParameter("paramSeperator");
 		$this->_setPrivateParameter("url");
 		
-		if ($overload_count > 0) {
-			$count = $overload_count;
-		} elseif (isset($this->total)) // If the field is already set, we  passed in the options the total number of results
+		if (isset($this->total)) // If the field is already set, we  passed in the options the total number of results
 		{
 			$count = $this->total;
 		}
