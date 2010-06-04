@@ -46,7 +46,9 @@ else { document.getElementById(d).style.display = "none"; }
 
 <div id="langmenu">
 <?php
-$lang = array( array("العربية", "/lang/ara", "اللغة"),
+$lang = array( 
+			   array("Afrikaans", "/lang/afr", "Language"),
+			   array("العربية", "/lang/ara", "اللغة"),
 			   array("Bulgarian", "/lang/bul", "Language"),
 			   array("Catalan", "/lang/cat", "Language"),
 			   array("Croatian", "/lang/scr", "Language"),
@@ -80,7 +82,6 @@ $lang = array( array("العربية", "/lang/ara", "اللغة"),
 			   array("Portuguese", "/lang/pt", "Language"),
                array("Português-Br", "/lang/pt-br", "Idioma"),
 			   array("Русский", "/lang/rus", "Язык"),
-			   array("Romanian", "/lang/rum", "Language"),
 			   array("Slovak", "/lang/slo", "Language"),
 			   array("Slovenian", "/lang/slv", "Language"),
 			   array("Swedish", "/lang/swe", "Language"),
