@@ -302,6 +302,32 @@ class ApiController extends AppController {
 		exit;
 	}
 	
+	
+	/** 
+     * Returns gallery info
+	 @param gallery_id 
+	 results:author:name:description:total project:usgae:staus,visibility:created
+     */
+	function getgalleryinfobyid($gallery_id){
+		Configure::write('debug', 0);
+		$this->Gallery->mc_connect();
+		$mc_key = 'get-gallery-info-'.$gallery_id;
+		$gallery_info = $this->Gallery->mc_get($mc_key);
+		if ($gallery_info  === false) {
+			$gallery = $this->Gallery->find('first', array('conditions'=>array('Gallery.id' => $gallery_id), 'fields'=> array('id','user_id','name','description', 'created', 'total_projects','usage', 'status', 'visibility'), 'recursive'=> 1));
+			
+			$gallery_name = str_replace(':', '%3A', $gallery['Gallery']['name']);
+			$gallery_desc = str_replace(':', '%3A', $gallery['Gallery']['description']);
+			$gallery_created = str_replace(':', '%3A', $gallery['Gallery']['created']);
+			
+			$gallery_info = $gallery['Gallery']['user_id'].':'.$gallery_name.':'.$gallery_desc.':'.$gallery['Gallery']['total_projects'].':'.$gallery['Gallery']['usage'].':'.$gallery['Gallery']['status'].':'.$gallery['Gallery']['visibility'].':'.$gallery_created;
+			$this->Gallery->mc_set($mc_key, $gallery_info , false, API_GALLERY_INFO_TTL);
+		}
+		echo $gallery_info;
+		$this->Gallery->mc_close();
+		exit;
+	}
+	
 
 }
 ?>
