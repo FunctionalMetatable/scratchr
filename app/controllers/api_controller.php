@@ -195,7 +195,7 @@ class ApiController extends AppController {
 		$gallery_ids = $this->Project->mc_get($mc_key);
 		if ($gallery_ids === false) {
 			
-			$galleries = $this->Gallery->find('all', array('conditions'=>array('Gallery.user_id' => $user_id, 'Gallery.visibility' => 'visible'), 'fields'=> 'id', 'recursive'=> -1, 'order' =>'Gallery.created DESC'));pr($galleries);
+			$galleries = $this->Gallery->find('all', array('conditions'=>array('Gallery.user_id' => $user_id, 'Gallery.visibility' => 'visible'), 'fields'=> 'id', 'recursive'=> -1, 'order' =>'Gallery.created DESC'));
 			$gallery_list =  Set::extract('/Gallery/id', $galleries);
 			$gallery_ids = implode(':', $gallery_list);
 			$this->Project->mc_set($mc_key, $gallery_ids, false, API_USER_GALLERIES_TTL);
@@ -218,7 +218,8 @@ class ApiController extends AppController {
 		$user_info = $this->Project->mc_get($mc_key);
 		if ($user_info === false) {
 			$user_details = $this->User->find('first', array('conditions' => array('User.id' => $user_id), 'fields'=> array('id', 'username', 'country')));
-			$user_info = $user_details['User']['username'].':'.$user_details['User']['id'].':'.$user_details['User']['country'];
+			$username = str_replace(':', '%3A', $user_details['User']['username']);
+			$user_info = $username.':'.$user_details['User']['id'].':'.$user_details['User']['country'];
 			$this->Project->mc_set($mc_key, $user_info, false, API_USER_INFO_TTL);
 		}
 		
@@ -239,8 +240,10 @@ class ApiController extends AppController {
 		$projects = $this->Project->mc_get($mc_key);
 		if ($projects === false) {
 			$gallery_projects = $this->GalleryProject->find('all', array('conditions'=>array('GalleryProject.gallery_id' => $gallery_id, 'Gallery.visibility' => 'visible'), 'recursive'=>2,'order' =>'GalleryProject.timestamp DESC'));
+			
 			foreach($gallery_projects as $project){
-				$project_list[] = $project['Project']['User']['username'].':'.$project['Project']['id'];
+				$username = str_replace(':', '%3A', $project['Project']['User']['username']);
+				$project_list[] = $username.':'.$project['Project']['id'];
 			}
 			
 			$projects = implode(',', $project_list);
@@ -268,7 +271,12 @@ class ApiController extends AppController {
 			$projects = $this->Project->find('first', array('conditions'=>array('Project.id' => $project_id), 'fields'=> array('id','user_id','name','description', 'created', 'country'), 'recursive'=> 1));
 			$tag_list =  Set::extract('/Tag/name', $projects);
 			$projects['Project']['tags'] = implode(',', $tag_list);
-			$project_info = $projects['Project']['user_id'].':'.$projects['Project']['name'].':'.$projects['Project']['description'].':'.$projects['Project']['created'].':'.$projects['Project']['tags'].':'.$projects['Project']['country'];
+			
+			$project_name = str_replace(':', '%3A', $projects['Project']['name']);
+			$project_desc = str_replace(':', '%3A', $projects['Project']['description']);
+			$project_tags = str_replace(':', '%3A', $projects['Project']['tags']);
+			$project_created = str_replace(':', '%3A', $projects['Project']['created']);
+			$project_info = $projects['Project']['user_id'].':'.$project_name.':'.$project_desc.':'.$project_created.':'.$project_tags.':'.$projects['Project']['country'];
 			$this->Project->mc_set($mc_key, $project_info , false, API_PROJECT_INFO_TTL);
 		}
 		echo $project_info;
@@ -286,10 +294,14 @@ class ApiController extends AppController {
 		if(empty($user_record)){
 			$user_info = 'false';
 		}else{
-			$user_info = $user_record['User']['id'].':'.$user_record['User']['username'];
+			
+			$username = str_replace(':', '%3A', $user_record['User']['username']);
+			$user_info = $user_record['User']['id'].':'.$username;
 		}
 		echo $user_info;
 		exit;
 	}
+	
+
 }
 ?>
