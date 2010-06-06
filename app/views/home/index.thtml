@@ -362,12 +362,25 @@ width:245px;
         <p><a href="http://cacm.acm.org/magazines/2009/11/48421-scratch-programming-for-all/fulltext"><img src="/img/cacm.png" alt="Programming for All" width="77" height="73"></a><?php ___('Read a recent article about Scratch, from a popular computer science journal.'); ?></p>
       <p class="more"><a href="http://cacm.acm.org/magazines/2009/11/48421-scratch-programming-for-all/fulltext"><?php ___('Read the article');?></a> </p>
      </div>
-//-->
      <div id="club" class="sidecontainer">
       <h4><?php ___('Scratch Day'); ?></h4>
         <p><a href="http://day.scratch.mit.edu/"><img src="/img/scratchday2010.png" alt="Scratch Day 2010" width="77"></a><?php ___('Be a part of Scratch Day - a worldwide network of gatherings, where Scratchers come together to meet, share, and learn.'); ?></p>
       <p class="more"><a href="http://day.scratch.mit.edu/"><?php ___('Find out more');?></a> </p>
      </div>
+//-->
+
+<div class="sidecontainer" id="club">
+      <h4>Video Tutorials</h4>
+        <p><a href="http://info.scratch.mit.edu/Video_Tutorials"><img width="77" alt="Video Tutorials" src="/img/tutorials.png"></a>Check out our new collection of intro video tutorials.</p> <p class="more"><a href="http://info.scratch.mit.edu/Video_Tutorials">Learn more</a> </p> 
+     </div>
+
+
+<div class="sidecontainer" id="club">
+      <h4>Scratch Tours</h4>
+        <p><a href="http://info.scratch.mit.edu/Scratch_Tours"><img width="77" alt="Scratch Tours" src="/img/tours.png"></a>New to Scratch? Take a tour to see what Scratchers are creating and sharing.</p>
+      <p class="more"><a href="http://info.scratch.mit.edu/Scratch_Tours">Take a tour</a> </p>
+     </div>
+
 
      <div id="club" class="sidecontainer">
       <h4><?php ___('ScratchEd'); ?></h4>
@@ -469,8 +482,8 @@ e($tagcloud->getTagCloud($tags, '/tags/view', null, 3, 'scratch_tag',', ', null,
 
     <div id="club" class="sidecontainer">
       <h4><?php ___('Community Stats'); ?></h4>
-        <p><a href="http://stats.scratch.mit.edu/"><img src="http://dl.dropbox.com/u/285483/tmp/screenshot208.png" alt="ScratchEd" width="77"></a>
-	<?php printf(___("%s registered members,%s%s project creators,%s%s projects uploaded. That's a lot of Scratch-ing!", true), $totalusers, '<br />', $totalcreators, '<br />',  $totalprojects, '<br />',  $totalscripts, '<br />', $totalsprites, '<br />'); ?></p>
+        <p><a href="http://stats.scratch.mit.edu/"><img src="/img/statsthumb.png" alt="Community Stats" width="77"></a>
+	<?php printf(___("%s registered members,%s%s project creators,%s%s projects. That's a lot of Scratch-ing!", true), $totalusers, '<br />', $totalcreators, '<br />',  $totalprojects, '<br />',  $totalscripts, '<br />', $totalsprites, '<br />'); ?></p>
 	  <p class="more"><a href="http://stats.scratch.mit.edu/"><?php ___('Learn more');?></a> </p>
     </div>
 
