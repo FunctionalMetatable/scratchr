@@ -425,7 +425,7 @@ width:245px;
 
           <p class="tags" align="justify">
 <?php 
-e($tagcloud->getTagCloud($tags, '/tags/view', null, 3, 'scratch_tag',', ', null, 2, 6)); 
+e($tagcloud->getTagCloud($tags, '/tagged/toploved', null, 3, 'scratch_tag',', ', null, 2, 6)); 
 ?>
 </p>
 
