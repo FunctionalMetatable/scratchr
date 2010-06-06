@@ -436,9 +436,15 @@ e($tagcloud->getTagCloud($tags, '/tagged/toploved', null, 3, 'scratch_tag',', ',
      <div id="socmed" class="sidecontainer">
       <h4><?php ___('Social Media'); ?></h4>
         <p><a href="http://blog.scratch.mit.edu/"><img src="/img/blogicon.png" alt="Social Media" width="35"></a><?php printf(___('Read our %sblog%s and %s follow us on %sTwitter%s', true), "<a href='http://blog.scratch.mit.edu'>", "</a>", "<br>", "<a href='http://twitter.com/scratchteam'>", "</a>"); ?></p>
-      <!--- <p class="more"><a href="http://scratched.media.mit.edu/"><?php ___('Find out more');?></a> </p> //-->
      </div>
 
+     <div id="socmed" class="sidecontainer">
+     <h4><?php ___("Scratchers' Wiki"); ?></h4>
+       <p><a href="http://wiki.scratch.mit.edu/"><img src="http://wiki.scratch.mit.edu/images/Gobo-cropped.png" alt="Scratchers' Wiki" width="35"></a><?php printf(___('The %swiki%s made by and for Scratchers', true),"<a href='http://wiki.scratch.mit.edu/'>","</a>"); ?></p>
+    </div>
+
+
+<?php if ($isLogged): ?>
     <div id="RecentVisitors" class="sidecontainer">
       <h4><?php ___('Recent Visitors') ?></h4>
       <ul class="sidelist">
@@ -459,7 +465,6 @@ e($tagcloud->getTagCloud($tags, '/tagged/toploved', null, 3, 'scratch_tag',', ',
       </ul>
     </div>
 
-<?php if ($isLogged): ?>
     <div id="NewestMembers" class="sidecontainer">
       <h4><?php ___('Newest Members');?> </h4>
       <ul class="sidelist">
