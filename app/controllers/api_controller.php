@@ -259,16 +259,22 @@ class ApiController extends AppController {
 	/** 
      * Returns project info
 	 @param project_id 
+	 results->user_id:name:description:created:tags:country:loveit:num_favoriters:remixer:remixes:numberofcomments:numberofdownloads 
      */
 	function getprojectinfobyid($project_id){
-		Configure::write('debug', 0);
+		Configure::write('debug', 2);
 		$this->Project->mc_connect();
 		$mc_key = 'get-project-info-'.$project_id;
 		$project_info = $this->Project->mc_get($mc_key);
 		if ($project_info  === false) {
 	
 			$this->Project->bindHABTMTag();
-			$projects = $this->Project->find('first', array('conditions'=>array('Project.id' => $project_id), 'fields'=> array('id','user_id','name','description', 'created', 'country'), 'recursive'=> 1));
+			$this->Project->bindPcomment(array('Pcomment.comment_visibility'=>'visible'));
+			$projects = $this->Project->find('first', array('conditions'=>array('Project.id' => $project_id), 'fields'=> array('id','user_id','name','description', 'created', 'country', 'loveit', 'num_favoriters', 'remixer', 'remixes'), 'recursive'=> 1));
+			
+			App::import("Model","Downloader");
+			$this->Downloader = & new Downloader();
+			$downloader_record = $this->Downloader->find('count', array('conditions'=>array('project_id'=>$projects['Project']['id'])));
 			$tag_list =  Set::extract('/Tag/name', $projects);
 			$projects['Project']['tags'] = implode(',', $tag_list);
 			
@@ -276,7 +282,7 @@ class ApiController extends AppController {
 			$project_desc = str_replace(':', '%3A', $projects['Project']['description']);
 			$project_tags = str_replace(':', '%3A', $projects['Project']['tags']);
 			$project_created = str_replace(':', '%3A', $projects['Project']['created']);
-			$project_info = $projects['Project']['user_id'].':'.$project_name.':'.$project_desc.':'.$project_created.':'.$project_tags.':'.$projects['Project']['country'];
+			$project_info = $projects['Project']['user_id'].':'.$project_name.':'.$project_desc.':'.$project_created.':'.$project_tags.':'.$projects['Project']['country'].':'.$projects['Project']['loveit'].':'.$projects['Project']['num_favoriters'].':'.$projects['Project']['remixer'].':'.$projects['Project']['remixes'].':'.count($projects['Pcomment']).':'.$downloader_record;
 			$this->Project->mc_set($mc_key, $project_info , false, API_PROJECT_INFO_TTL);
 		}
 		echo $project_info;
