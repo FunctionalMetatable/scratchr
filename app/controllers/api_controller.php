@@ -262,7 +262,7 @@ class ApiController extends AppController {
 	 results->user_id:name:description:created:tags:country:loveit:num_favoriters:remixer:remixes:numberofcomments:numberofdownloads 
      */
 	function getprojectinfobyid($project_id){
-		Configure::write('debug', 2);
+		Configure::write('debug', 0);
 		$this->Project->mc_connect();
 		$mc_key = 'get-project-info-'.$project_id;
 		$project_info = $this->Project->mc_get($mc_key);
