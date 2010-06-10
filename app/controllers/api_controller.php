@@ -1,5 +1,4 @@
 <?php
-
 class ApiController extends AppController {
 
     var $uses = array('Project','User');
@@ -218,7 +217,7 @@ class ApiController extends AppController {
 		$user_info = $this->Project->mc_get($mc_key);
 		if ($user_info === false) {
 			$user_details = $this->User->find('first', array('conditions' => array('User.id' => $user_id), 'fields'=> array('id', 'username', 'country')));
-			$username = str_replace(':', '%3A', $user_details['User']['username']);
+			$username = rawurlencode($user_details['User']['username']);
 			$user_info = $username.':'.$user_details['User']['id'].':'.$user_details['User']['country'];
 			$this->Project->mc_set($mc_key, $user_info, false, API_USER_INFO_TTL);
 		}
@@ -242,7 +241,7 @@ class ApiController extends AppController {
 			$gallery_projects = $this->GalleryProject->find('all', array('conditions'=>array('GalleryProject.gallery_id' => $gallery_id, 'Gallery.visibility' => 'visible'), 'recursive'=>2,'order' =>'GalleryProject.timestamp DESC'));
 			
 			foreach($gallery_projects as $project){
-				$username = str_replace(':', '%3A', $project['Project']['User']['username']);
+				$username = rawurlencode($project['Project']['User']['username']);
 				$project_list[] = $username.':'.$project['Project']['id'];
 			}
 			
@@ -278,10 +277,10 @@ class ApiController extends AppController {
 			$tag_list =  Set::extract('/Tag/name', $projects);
 			$projects['Project']['tags'] = implode(',', $tag_list);
 			
-			$project_name = str_replace(':', '%3A', $projects['Project']['name']);
-			$project_desc = str_replace(':', '%3A', $projects['Project']['description']);
-			$project_tags = str_replace(':', '%3A', $projects['Project']['tags']);
-			$project_created = str_replace(':', '%3A', $projects['Project']['created']);
+			$project_name = rawurlencode($projects['Project']['name']);
+			$project_desc = rawurlencode($projects['Project']['description']);
+			$project_tags = rawurlencode($projects['Project']['tags']);
+			$project_created = rawurlencode($projects['Project']['created']);
 			$project_info = $projects['Project']['user_id'].':'.$project_name.':'.$project_desc.':'.$project_created.':'.$project_tags.':'.$projects['Project']['country'].':'.$projects['Project']['loveit'].':'.$projects['Project']['num_favoriters'].':'.$projects['Project']['remixer'].':'.$projects['Project']['remixes'].':'.count($projects['Pcomment']).':'.$downloader_record;
 			$this->Project->mc_set($mc_key, $project_info , false, API_PROJECT_INFO_TTL);
 		}
@@ -301,7 +300,7 @@ class ApiController extends AppController {
 			$user_info = 'false';
 		}else{
 			
-			$username = str_replace(':', '%3A', $user_record['User']['username']);
+			$username = rawurlencode($user_record['User']['username']);
 			$user_info = $user_record['User']['id'].':'.$username;
 		}
 		echo $user_info;
@@ -322,9 +321,9 @@ class ApiController extends AppController {
 		if ($gallery_info  === false) {
 			$gallery = $this->Gallery->find('first', array('conditions'=>array('Gallery.id' => $gallery_id), 'fields'=> array('id','user_id','name','description', 'created', 'total_projects','usage', 'status', 'visibility'), 'recursive'=> 1));
 			
-			$gallery_name = str_replace(':', '%3A', $gallery['Gallery']['name']);
-			$gallery_desc = str_replace(':', '%3A', $gallery['Gallery']['description']);
-			$gallery_created = str_replace(':', '%3A', $gallery['Gallery']['created']);
+			$gallery_name = rawurlencode($gallery['Gallery']['name']);
+			$gallery_desc = rawurlencode($gallery['Gallery']['description']);
+			$gallery_created = rawurlencode($gallery['Gallery']['created']);
 			
 			$gallery_info = $gallery['Gallery']['user_id'].':'.$gallery_name.':'.$gallery_desc.':'.$gallery['Gallery']['total_projects'].':'.$gallery['Gallery']['usage'].':'.$gallery['Gallery']['status'].':'.$gallery['Gallery']['visibility'].':'.$gallery_created;
 			$this->Gallery->mc_set($mc_key, $gallery_info , false, API_GALLERY_INFO_TTL);
