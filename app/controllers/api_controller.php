@@ -260,29 +260,40 @@ class ApiController extends AppController {
 	 @param project_id 
 	 results->user_id:name:description:created:tags:country:loveit:num_favoriters:remixer:remixes:numberofcomments:numberofdownloads 
      */
-	function getprojectinfobyid($project_id){
-		Configure::write('debug', 0);
-		$this->Project->mc_connect();
-		$mc_key = 'get-project-info-'.$project_id;
-		$project_info = $this->Project->mc_get($mc_key);
-		if ($project_info  === false) {
+	function getprojectinfobyid(){
+			Configure::write('debug', 0);
+			 $arg_list = array();
+			 foreach($this->params['pass'] as $param){
+				$arg_list[] = $param;
+			 }
+			 $args = implode(',' , $arg_list);
+			 $mc_args = implode('_' , $arg_list);
+		
+			$this->Project->mc_connect();
+			$mc_key = 'get-project-info-'.$mc_args;
+			$project_info = $this->Project->mc_get($mc_key);
+			if ($project_info  === false) {
 	
 			$this->Project->bindHABTMTag();
 			$this->Project->bindPcomment(array('Pcomment.comment_visibility'=>'visible'));
-			$projects = $this->Project->find('first', array('conditions'=>array('Project.id' => $project_id), 'fields'=> array('id','user_id','name','description', 'created', 'country', 'loveit', 'num_favoriters', 'remixer', 'remixes'), 'recursive'=> 1));
-			
-			App::import("Model","Downloader");
-			$this->Downloader = & new Downloader();
-			$downloader_record = $this->Downloader->find('count', array('conditions'=>array('project_id'=>$projects['Project']['id'])));
-			$tag_list =  Set::extract('/Tag/name', $projects);
-			$projects['Project']['tags'] = implode(',', $tag_list);
-			
-			$project_name = rawurlencode($projects['Project']['name']);
-			$project_desc = rawurlencode($projects['Project']['description']);
-			$project_tags = rawurlencode($projects['Project']['tags']);
-			$project_created = rawurlencode($projects['Project']['created']);
-			$project_info = $projects['Project']['user_id'].':'.$project_name.':'.$project_desc.':'.$project_created.':'.$project_tags.':'.$projects['Project']['country'].':'.$projects['Project']['loveit'].':'.$projects['Project']['num_favoriters'].':'.$projects['Project']['remixer'].':'.$projects['Project']['remixes'].':'.count($projects['Pcomment']).':'.$downloader_record;
-			$this->Project->mc_set($mc_key, $project_info , false, API_PROJECT_INFO_TTL);
+			$projects = $this->Project->find('all', array('conditions'=>"Project.id IN(".$args.")", 'fields'=> array('id','user_id','name','description', 'created', 'country', 'loveit', 'num_favoriters', 'remixer', 'remixes'), 'recursive'=> 1));
+			 $project_list =array();
+			 App::import("Model","Downloader");
+			 $this->Downloader = & new Downloader();
+			 foreach($projects as $project){
+				$downloader_record = $this->Downloader->find('count', array('conditions'=>array('project_id'=>$project['Project']['id'])));		
+				$tag_list =  Set::extract('/Tag/name', $project);
+				$project['Project']['tags'] = implode(',', $tag_list);
+				
+				$project_name = rawurlencode($project['Project']['name']);
+				$project_desc = rawurlencode($project['Project']['description']);
+				$project_tags = rawurlencode($project['Project']['tags']);
+				$project_created = rawurlencode($project['Project']['created']);
+			 	$project_list[] = $project['Project']['user_id'].':'.$project_name.':'.$project_desc.':'.$project_created.':'.$project_tags.':'.$project['Project']['country'].':'.$project['Project']['loveit'].':'.$project['Project']['num_favoriters'].':'.$project['Project']['remixer'].':'.$project['Project']['remixes'].':'.count($project['Pcomment']).':'.$downloader_record;
+			 }
+			   $project_info = implode('#', $project_list);
+			   $project_info = str_replace('#','<BR>',$project_info);
+ 			   $this->Project->mc_set($mc_key, $project_info , false, API_PROJECT_INFO_TTL);
 		}
 		echo $project_info;
 		$this->Project->mc_close();
@@ -310,22 +321,31 @@ class ApiController extends AppController {
 	
 	/** 
      * Returns gallery info
-	 @param gallery_id 
+	 @param gallery_id  one or more as parameter
 	 results:author:name:description:total project:usgae:staus,visibility:created
      */
-	function getgalleryinfobyid($gallery_id){
+	function getgalleryinfobyid(){
 		Configure::write('debug', 0);
+		$arg_list = array();
+		foreach($this->params['pass'] as $param){
+			$arg_list[] = $param;
+		}
+		$args = implode(',' , $arg_list);
+		$mc_args = implode('_' , $arg_list);
 		$this->Gallery->mc_connect();
-		$mc_key = 'get-gallery-info-'.$gallery_id;
+		$mc_key = 'get-gallery-info-'.$mc_args;
 		$gallery_info = $this->Gallery->mc_get($mc_key);
 		if ($gallery_info  === false) {
-			$gallery = $this->Gallery->find('first', array('conditions'=>array('Gallery.id' => $gallery_id), 'fields'=> array('id','user_id','name','description', 'created', 'total_projects','usage', 'status', 'visibility'), 'recursive'=> 1));
-			
-			$gallery_name = rawurlencode($gallery['Gallery']['name']);
-			$gallery_desc = rawurlencode($gallery['Gallery']['description']);
-			$gallery_created = rawurlencode($gallery['Gallery']['created']);
-			
-			$gallery_info = $gallery['Gallery']['user_id'].':'.$gallery_name.':'.$gallery_desc.':'.$gallery['Gallery']['total_projects'].':'.$gallery['Gallery']['usage'].':'.$gallery['Gallery']['status'].':'.$gallery['Gallery']['visibility'].':'.$gallery_created;
+			$galleries = $this->Gallery->find('all', array('conditions'=>"Gallery.id IN(".$args.")", 'fields'=> array('id','user_id','name','description', 'created', 'total_projects','usage', 'status', 'visibility'), 'recursive'=> 1));
+			$gallery_list =array();
+			foreach($galleries as $gallery){
+				$gallery_name = rawurlencode($gallery['Gallery']['name']);
+				$gallery_desc = rawurlencode($gallery['Gallery']['description']);
+				$gallery_created = rawurlencode($gallery['Gallery']['created']);
+			    $gallery_list[] = $gallery['Gallery']['user_id'].':'.$gallery_name.':'.$gallery_desc.':'.$gallery['Gallery']['total_projects'].':'.$gallery['Gallery']['usage'].':'.$gallery['Gallery']['status'].':'.$gallery['Gallery']['visibility'].':'.$gallery_created;
+			}
+			$gallery_info = implode('#', $gallery_list);
+			$gallery_info = str_replace('#','<BR>',$gallery_info);
 			$this->Gallery->mc_set($mc_key, $gallery_info , false, API_GALLERY_INFO_TTL);
 		}
 		echo $gallery_info;
