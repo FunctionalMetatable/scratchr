@@ -176,7 +176,8 @@ Class GalleriesController extends AppController {
             else
             {
                 if ($this->Gallery->saveField('description', $newdesc)) {
-                   $this->set('gdesc', $newdesc);
+                   $this->set('linkify', true);
+				   $this->set('gdesc', $newdesc);
                    $this->render('themedescription_ajax','ajax');
                    return;
                 }

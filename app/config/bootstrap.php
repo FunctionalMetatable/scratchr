@@ -216,6 +216,7 @@ $this->params['webservices']
 define ('INFO_URL', 'http://info.scratch.mit.edu'); 
 define ('INFO_ABOUT_ADMINS_URL', 'http://info.scratch.mit.edu/Scratch_Team'); 
 define ('TOPLEVEL_URL', 'http://scratch.mit.edu');
+define ('WIKI_URL', 'http://wiki.scratch.mit.edu');
 define ('ABOUT_SCRATCH_URL', 'info.scratch.mit.edu');
 define ('SUPPORT_URL', 'info.scratch.mit.edu');
 define ('FRONPAGE_FAQ_URL', 'http://info.scratch.mit.edu/Support/FAQ/Scratch_Website_FAQ/How_the_Scratch_front_page_works');

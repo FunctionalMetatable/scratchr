@@ -33,6 +33,7 @@ class UtilHelper extends Helper {
             TOPLEVEL_URL.'/projects' => ___('link to project', true),
             TOPLEVEL_URL.'/galleries' => ___('link to gallery', true),
             TOPLEVEL_URL.'/forums' => ___('link to forums', true),
+			WIKI_URL =>__('link to wiki', true)
         );
         foreach($url_texts as $u => $t) {
             if(strpos($url, $u) !== false) {

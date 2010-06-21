@@ -260,7 +260,8 @@
 			else
 			$pattern = '/[\n\r]/';
 			$rep = '<br>';
-			echo preg_replace($pattern, $rep, $notes);
+			$notes = preg_replace($pattern, $rep, $notes);
+			echo $util->linkify($notes); 
 			?>
 		</p>
 		<?php if ($isThemeOwner || $isAdmin) echo $ajax->editor("gdesc", "/galleries/describe/".$theme_id, Array("callback"=>"return 'description=' + encodeURIComponent(value)", "rows" => 4, "cols" => 20)); ?>
