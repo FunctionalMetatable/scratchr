@@ -129,6 +129,10 @@ Router::connect('/projects/:username/:id/:action', array('controller' => 'projec
 //Then we connect url '/test' to our test controller. This is helpful in developement.
 Router::connect('/tests', array('controller' => 'tests', 'action' => 'index'));
 
+//Also connecting url ‘uservoice’ to the uservoice controller.
+Router::connect('/uservoice', array('controller' => 'uservoice', 'action' => 'index'));
+
+
 //All other page calls will be routed  through the pages_controller
 Router::connect('/:pagename', array('controller' => 'pages', 'action' => 'display'),
 									array(
