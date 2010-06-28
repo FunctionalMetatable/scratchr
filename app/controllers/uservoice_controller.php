@@ -29,7 +29,7 @@ Class UservoiceController extends AppControler {
 
 
       if (!trim($has_projects))
-      header("Location: http http://info.scratch.mit.edu/Suggestions_New_Scratcher");
+      $this->redirect(“http http://info.scratch.mit.edu/Suggestions_New_Scratcher");
 
       // End test
 
@@ -66,7 +66,7 @@ Class UservoiceController extends AppControler {
 
       $encryptedData = urlencode(base64_encode($encryptedData));
 
-      header("Location: http://scratch.uservoice.com?sso=".$encryptedData);
+      $this -> redirect ("http://scratch.uservoice.com?sso=".$encryptedData);
       }
    }
 ?>
