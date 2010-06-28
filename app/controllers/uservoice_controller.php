@@ -1,6 +1,7 @@
 <?php
 Class UservoiceController extends AppControler {
    
+   Var $name = ‘uservoice’;
    var $uses = array("Project","RelationshipType", "Relationship", "Gallery", "GalleryMembership", "User", "FriendRequest", "Notification");
    
    // redirects the user to the page on uservoice with their login info
