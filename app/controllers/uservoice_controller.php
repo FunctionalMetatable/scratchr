@@ -31,9 +31,7 @@ class UservoiceController extends AppController {
 	if (count($projects) < 2)
 	$canSuggest = false;
 	$user = $this->User->read();
-	$created = preg_split("/[-\s:]+/",$user['created']);
-	$created = mktime($created[3],$created[4],$created[5],$created[1],$created[2],$created[0]);
-	$day_diff = (time() - $created)/86400;
+	$day_diff = strtotime('now')-strtotime($user['created'])/86400;
 	if ($day_diff <30)
 	$canSuggest = false;
 	if (!$canSuggest)
