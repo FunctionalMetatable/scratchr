@@ -61,7 +61,7 @@ $this->params['webservices']
  define("NUM_MIN_SCRIPT_FOR_TOP_REMIX", 1);
  define("NUM_MIN_SCRIPT_FOR_TOP_LOVED", 1);
  //List of country for custumizable for home page.
- define("CUSTOMIZABLE_COUNTRIES", "");
+ define("CUSTOMIZABLE_COUNTRIES", "IL");
  define("DEFAULT_COUNTRY", "worldwide");
 /**
  * Email Address Related to Flagging
@@ -157,16 +157,16 @@ $this->params['webservices']
  define("TAGED_PROJECT_CACHE_TTL", 720); // 12 hrs
  
  define("NUM_SHARED_TAGED_PROJECT", 100); // 
- define("TAGED_SHARED_PROJECT_CACHE_TTL", 30); 
+ define("TAGED_SHARED_PROJECT_CACHE_TTL", 360); 
  define("LATEST_SHARED_DAY_INTERVAL", 30);
  define("NUM_RAMIXED_TAGED_PROJECT", 100); // 
- define("TAGED_RAMIXED_PROJECT_CACHE_TTL", 30); 
+ define("TAGED_RAMIXED_PROJECT_CACHE_TTL", 360); 
  define("LATEST_RAMIXED_DAY_INTERVAL", 30);
  define("NUM_TOPVIEWED_TAGED_PROJECT", 100); // 
- define("TAGED_TOPVIEWED_PROJECT_CACHE_TTL", 30); 
+ define("TAGED_TOPVIEWED_PROJECT_CACHE_TTL", 360); 
   define("LATEST_TOPVIEWED_DAY_INTERVAL", 30);
  define("NUM_TOPLOVED_TAGED_PROJECT", 100); // 
- define("TAGED_TOPLOVED_PROJECT_CACHE_TTL", 30); 
+ define("TAGED_TOPLOVED_PROJECT_CACHE_TTL", 360); 
   define("LATEST_TOPLOVED_DAY_INTERVAL", 30);
   
   /**
@@ -648,7 +648,7 @@ function friendlyDate($original) {
 
 function isInappropriate($content) {
     $whitelist = array("grape", "packing", "skyscraper");
-    $blacklist = array("pendej","chinga","chingo", "verga","cabron","pucha","ash0le", "ashole","asshole", "assface","assh0le","asswipe","azzhole","bassterds","bastard","basterd","bitch","blow job","butthole","buttwipe","c0ck", "c0k", "cockbiter", "cock-biter", "cockhead","cock-head","cocksucker",  "dild0","dild0s","dildo","dildos","dilld0","dilld0s","dyke", "f u c k","fag1t","faget","fagg1t","faggit","faggot","fagit","fuck", "ƒuck", "fukah","fuken","fuker","fukin","fukk","fukkah","fukken","fukker","fukkin","g00k","h00r","h0ar","h0re","hoar","hoore","jackoff","jerk-off","jisim","jiss","jizm","jizz", "lezzian","massterbait","masst", "masstrbate","masterbate","masterbates","motha fuker","n1gr","nigga", "nastt","nigger","nigur","niiger","niigr","packi","packie","packy","paki","pakie","pecker","phuc","phuck","phuk","phuker","phukker","polac","polack","polak","poonani","pr1c","pr1ck","pr1k","pusse","pussee","pussy","puuke","puuker","scank","schlong","sh1t","sh1ter","sh1ts","shtter","sh1tz","shit","shyt","skanck","skank", "slut", "wh00r","wh0re","whore","rape","gay", "g4y", "it sux", "it sucks");
+    $blacklist = array("pendej","chinga","chingo", "verga","cabron","pucha","ash0le", "ashole","asshole", "assface","assh0le","asswipe","azzhole","bassterds","bastard","basterd","bitch","blow job","butthole","buttwipe","c0ck", "c0k", "cockbiter", "cock-biter", "cockhead","cock-head","cocksucker",  "dild0","dild0s","dildo","dildos","dilld0","dilld0s","dyke", "f u c k","fag1t","faget","fagg1t","faggit","faggot","fagit","fuck", "ƒuck", "fukah","fuken","fuker","fukin","fukk","fukkah","fukken","fukker","fukkin","g00k","h00r","h0ar","h0re","hoar","hoore","jackoff","jerk-off","jisim","jiss","jizm","jizz", "lezzian","massterbait","masst", "masstrbate","masterbate","masterbates","motha fuker","n1gr","nigga", "nastt","nigger","nigur","niiger","niigr","packi","packie","packy","paki","pakie","pecker","phuc","phuck","phuk","phuker","phukker","polac","polack","polak","poonani","pr1c","pr1ck","pr1k","pusse","pussee","pussy","puuke","puuker","scank","schlong","sh1t","sh1ter","sh1ts","shtter","sh1tz","shit","shyt","skanck","skank", "slut", "wh00r","wh0re","whore","rape","gay", "g4y", "it sux", "it sucks","lemonparty","goatse","meatspin","tubgirl","hai2u","bottleguy","goregasm","tubboy","youraresogay","bagslap","ls.gd");
 // while the word gay is not inappropriate, our analysis show that it is almost always used as a derogatory term and given our resources moderating the website we decided to add it to this list
 
     $content = strtolower($content);
