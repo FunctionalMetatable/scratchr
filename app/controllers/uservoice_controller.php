@@ -1,76 +1,81 @@
 <?php
 class UservoiceController extends AppController {
    
-   var $name = 'uservoice';
-   var $uses = array("Project","User","Pcomment","Gcomment");
+	var $name = 'uservoice';
+	var $uses = array("Project","User","Pcomment","Gcomment");
    
-   // redirects the user to the page on uservoice with their login info
-   // if the user is an experienced user, or to a page explaining why
-   // they can't if it is a new scratcher.
-   function index() {
-    $account_key = "scratch";
-    $api_key = "fc52e139e19cdb76957c674fa2a9f609";
-    $salted = $api_key . $account_key;
-    $hash = hash('sha1',$salted,true);
-    $saltedHash = substr($hash,0,16);
-    $iv = "OpenSSL for Ruby";
+	// redirects the user to the page on uservoice with their login info
+	// if the user is qualified, or to a page explaining why
+	// they can't if it is a new scratcher.
+	function index() 
+	{
+
+		$username = $this->getLoggedInUsername();
+		// If the user is not logged in, bail to suggestions not enough privs page. Otherwise queries will fail.
+		if(!$username)
+		{
+			$this->redirect('http://info.scratch.mit.edu/Suggestions_New_Scratcher');
+			return;
+		}
+
+		$account_key = "scratch";
+		$api_key = "fc52e139e19cdb76957c674fa2a9f609";
+		$salted = $api_key . $account_key;
+		$hash = hash('sha1',$salted,true);
+		$saltedHash = substr($hash,0,16);
+		$iv = "OpenSSL for Ruby";
     
-    $username = $this->getLoggedInUsername();
-	$user_id = $this->getLoggedInUserID();
+		$user_id = $this->getLoggedInUserID();
 
-    // Decide whether to send user data and login to uservoice, or send user to sorry can't vote page.
-	// Eventually this should be done on basis of group membership (New Scratcher or Scratcher). 
-	// For now, let's make criteria:
-	// > 10 comments && > 2 projects && account age > 30 days.
-	
-	$canSuggest = true;
-	$comment_count = $this->Pcomment->findCount(array('Pcomment.user_id' => $user_id,'comment_visibility'=>'visible')) + $this->Gcomment->findCount(array('Gcomment.user_id' => $user_id,'comment_visibility'=>'visible'));
-	if ($comment_count < 10)
-	$canSuggest = false;
-	$projects = $this->Project->find('all', array('conditions'=>array('Project.user_id' => $user_id, 'Project.proj_visibility'=>'visible'), 'fields'=> 'id', 'recursive'=> -1, 'order' =>'created DESC'));
-	if (count($projects) < 2)
-	$canSuggest = false;
-	$user = $this->User->read();
-	$day_diff = strtotime('now')-strtotime($user['created'])/86400;
-	if ($day_diff <30)
-	$canSuggest = false;
-	if (!$canSuggest)
-    $this->redirect('http://info.scratch.mit.edu/Suggestions_New_Scratcher');
+		// Gather data to evaluate if user is qualified to make suggestions via uservoice. 	
+		$comment_count = $this->Pcomment->findCount(array('Pcomment.user_id' => $user_id,'comment_visibility'=>'visible')) + $this->Gcomment->findCount(array('Gcomment.user_id' => $user_id,'comment_visibility'=>'visible'));
 
-    // End test
+		$projects = $this->Project->find('all', array('conditions'=>array('Project.user_id' => $user_id, 'Project.proj_visibility'=>'visible'), 'fields'=> 'id', 'recursive'=> -1, 'order' =>'created DESC'));
 
-    $user_data = array(
-	    "guid" => $this->$user_id,
-        "expires" => date('Y-m-d', strtotime('+1 year')),
-        "display_name" => $username,
-        "url" => 'http://scratch.mit.edu/users/'.$this->getLoggedInUrlname(),
-        "avatar_url" => 'http://scratch.mit.edu/static/icons/buddy/'.$this->getLoggedInuser_id().'_med.png'
-      );
+		$user = $this->User->read();
+		$day_diff = strtotime('now')-strtotime($user['created'])/86400;
 
-      if ($this->isAdmin())
-         $user_data['admin'] = 'accept';
-      else
-         $user_data['admin'] = 'deny';
+		// For now, let's use the following criteria to see if the account is eligible
+		// 30 days old & more than 2 projects & more than 10 comments // (count($projects) > 2) &&
+		if (($day_diff >30) && ($comment_count > 10))
+		{    	
+			$user_data = array(
+		    	"guid" => $user_id,
+			"expires" => date('Y-m-d', strtotime('+1 year')),
+			"display_name" => $username,
+			"url" => 'http://scratch.mit.edu/users/'.$this->getLoggedInUrlname(),
+			"avatar_url" => 'http://scratch.mit.edu/static/icons/buddy/'.$user_id.'_med.png'
+	      		);
 
-      $data = json_encode($user_data);
+	      		if ($this->isAdmin())
+		 		$user_data['admin'] = 'accept';
+	      		else
+		 		$user_data['admin'] = 'deny';
 
-      // double XOR first block
-      for ($i = 0; $i < 16; $i++)
-      {
-        $data[$i] = $data[$i] ^ $iv[$i];
-      }
-      
-      $pad = 16 - (strlen($data) % 16);
-      $data = $data . str_repeat(chr($pad), $pad);
-	
-      $cipher = mcrypt_module_open(MCRYPT_RIJNDAEL_128,'','cbc','');
-      mcrypt_generic_init($cipher, $saltedHash, $iv);
-      $encryptedData = mcrypt_generic($cipher,$data);
-      mcrypt_generic_deinit($cipher);
+	      		$data = json_encode($user_data);
 
-      $encryptedData = urlencode(base64_encode($encryptedData));
+	      		// double XOR first block
+	      		for ($i = 0; $i < 16; $i++)
+	      		{
+				$data[$i] = $data[$i] ^ $iv[$i];
+	      		}
+	     
+			$pad = 16 - (strlen($data) % 16);
+			$data = $data . str_repeat(chr($pad), $pad);
+			$cipher = mcrypt_module_open(MCRYPT_RIJNDAEL_128,'','cbc','');
+			mcrypt_generic_init($cipher, $saltedHash, $iv);
+			$encryptedData = mcrypt_generic($cipher,$data);
+			mcrypt_generic_deinit($cipher);
 
-      $this -> redirect ("http://scratch.uservoice.com?sso=".$encryptedData);
-      }
-   }
+			$encryptedData = urlencode(base64_encode($encryptedData));
+
+			$this -> redirect ("http://scratch.uservoice.com?sso=".$encryptedData);
+		}
+		// If the user is ineligible to make suggestions, redirect them to a page that says why.
+		else
+		{
+			$this->redirect('http://info.scratch.mit.edu/Suggestions_New_Scratcher');
+		}
+	}
+}
 ?>
