@@ -258,7 +258,7 @@ class ApiController extends AppController {
 	/** 
      * Returns project info
 	 @param project_id 
-	 results->user_id:name:description:created:tags:country:loveit:num_favoriters:remixer:remixes:numberofcomments:numberofdownloads 
+	 results->user_id:name:description:created:tags:country:loveit:num_favoriters:remixer:remixes:numberOfSprites:totalScripts:numberofcomments:numberofdownloads 
      */
 	function getprojectinfobyid(){
 			Configure::write('debug', 0);
@@ -276,7 +276,7 @@ class ApiController extends AppController {
 	
 			$this->Project->bindHABTMTag();
 			$this->Project->bindPcomment(array('Pcomment.comment_visibility'=>'visible'));
-			$projects = $this->Project->find('all', array('conditions'=>"Project.id IN(".$args.")", 'fields'=> array('id','user_id','name','description', 'created', 'country', 'loveit', 'num_favoriters', 'remixer', 'remixes'), 'recursive'=> 1));
+			$projects = $this->Project->find('all', array('conditions'=>"Project.id IN(".$args.")", 'fields'=> array('id','user_id','name','description', 'created', 'country', 'loveit', 'num_favoriters', 'remixer', 'remixes', 'numberOfSprites', 'totalScripts'), 'recursive'=> 1));
 			 $project_list =array();
 			 App::import("Model","Downloader");
 			 $this->Downloader = & new Downloader();
@@ -289,10 +289,10 @@ class ApiController extends AppController {
 				$project_desc = rawurlencode($project['Project']['description']);
 				$project_tags = rawurlencode($project['Project']['tags']);
 				$project_created = rawurlencode($project['Project']['created']);
-			 	$project_list[] = $project['Project']['user_id'].':'.$project_name.':'.$project_desc.':'.$project_created.':'.$project_tags.':'.$project['Project']['country'].':'.$project['Project']['loveit'].':'.$project['Project']['num_favoriters'].':'.$project['Project']['remixer'].':'.$project['Project']['remixes'].':'.count($project['Pcomment']).':'.$downloader_record;
+			 	$project_list[] = $project['Project']['user_id'].':'.$project_name.':'.$project_desc.':'.$project_created.':'.$project_tags.':'.$project['Project']['country'].':'.$project['Project']['loveit'].':'.$project['Project']['num_favoriters'].':'.$project['Project']['remixer'].':'.$project['Project']['remixes'].':'.$project['Project']['numberOfSprites'].':'.$project['Project']['totalScripts'].':'.count($project['Pcomment']).':'.$downloader_record;
 			 }
-			   $project_info = implode('#', $project_list);
-			   $project_info = str_replace('#','<BR>',$project_info);
+			   $project_info = implode('##', $project_list);
+			   $project_info = str_replace('##','<BR>',$project_info);
  			   $this->Project->mc_set($mc_key, $project_info , false, API_PROJECT_INFO_TTL);
 		}
 		echo $project_info;
@@ -350,6 +350,55 @@ class ApiController extends AppController {
 		}
 		echo $gallery_info;
 		$this->Gallery->mc_close();
+		exit;
+	}
+	
+	/** 
+     * Returns number of project visible/all depends on parameter onlyvisible(yes/no)
+	 By default only visible projects
+     */
+	function getnumprojectsbyuser($username){
+		Configure::write('debug', 0);
+		$user_id = $this->User->field('id', array('User.username' => $username));
+		$final_criteria = "Project.user_id = $user_id AND Project.proj_visibility = 'visible' AND Project.status != 'notsafe'";
+		
+		if(isset($_GET['onlyvisible']) && $_GET['onlyvisible'] == 'no'){
+			$final_criteria = "Project.user_id = $user_id";
+		} 
+		$this->Project->recursive =-1;
+		echo $projects = $this->Project->find('count',array('conditions'=>$final_criteria));
+		exit;
+	}
+	
+	
+	/** 
+     * Returns all visible pcomment
+	 @param pid
+	 results:user_id:createddate:comment
+     */
+	function getpcommentsbyid ($pid){
+		Configure::write('debug', 0);
+		
+		$this->Project->mc_connect();
+		$mc_key = 'get-pcomments-'.$pid;
+		$pcomment_info = $this->Project->mc_get($mc_key);
+		
+		if ($pcomment_info  === false) {
+			$this->Pcomment->unbindModel(array('belongsTo' => array('User', 'Project')));
+		$pcomments = $this->Pcomment->find('all', array('conditions'=> array('Pcomment.project_id'=>$pid, 'Pcomment.comment_visibility'=>'visible')));
+			$pcomments_list =array();
+			foreach($pcomments as $pcomment){
+				$user_id = $pcomment['Pcomment']['user_id'];
+				$content = rawurlencode($pcomment['Pcomment']['content']);
+				$created = rawurlencode($pcomment['Pcomment']['created']);
+			    $pcomments_list[] = $user_id.':'.$created.':'.$content;
+			}
+			$pcomment_info = implode('##', $pcomments_list);
+			$pcomment_info = str_replace('##','<BR>',$pcomment_info);
+			$this->Project->mc_set($mc_key, $pcomment_info, false, API_PCOMMENT_BY_ID_TTL);
+		}
+		echo $pcomment_info ;
+		$this->Project->mc_close();
 		exit;
 	}
 	
