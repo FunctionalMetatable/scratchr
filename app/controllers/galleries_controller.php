@@ -3089,23 +3089,23 @@ Class GalleriesController extends AppController {
 		//listing ignored user by gallery owner.
 		$ignored_user_array =array();
 		$ignore_user_list = $this->IgnoredUser->findAll("IgnoredUser.blocker_id = $owner_id",'user_id');
-		foreach($ignore_user_list as $ignore_user)
-		array_push($ignored_user_array,$ignore_user['IgnoredUser']['user_id']);
+		foreach($ignore_user_list as $ignore_user) {
+			array_push($ignored_user_array,$ignore_user['IgnoredUser']['user_id']);
+		}
 		$ignored_list = implode(',',$ignored_user_array);
 		if(!empty($ignored_list)){
 			if ($content_status == 'safe') {
-				$conditions = "gallery_id = $gallery_id AND Gallery.visibility = 'visible' AND Project.status = 'safe' AND Project.user_id not in (".$ignored_list.") ";
+				$conditions = "gallery_id = $gallery_id AND Project.status = 'safe' AND Project.user_id not in (".$ignored_list.") ";
 			} else {
-				$conditions = "gallery_id = $gallery_id AND Gallery.visibility = 'visible' AND Project.user_id not in (".$ignored_list.") ";
+				$conditions = "gallery_id = $gallery_id AND Project.user_id not in (".$ignored_list.") ";
 			}
 		}
 		else{
-		if ($content_status == 'safe') {
-				$conditions = "gallery_id = $gallery_id  AND Gallery.visibility = 'visible' AND Project.status = 'safe' ";
+			if ($content_status == 'safe') {
+				$conditions = "gallery_id = $gallery_id AND Project.status = 'safe' ";
 			} else {
-				$conditions = "gallery_id = $gallery_id  AND Gallery.visibility = 'visible'";
+				$conditions = "gallery_id = $gallery_id";
 			}
-		
 		}
 		if ($option == "creator") {
 			$options = Array("sortBy"=>"user_id", "sortByClass" => "Project",
@@ -3123,12 +3123,24 @@ Class GalleriesController extends AppController {
 			$options = Array("sortBy"=>"timestamp", "sortByClass" => "GalleryProject",
 								"direction"=> "DESC", "url"=>"/galleries/renderProjects/" . $gallery_id . "/added");
 		}
+		
 		if(!empty($ignored_list)){
-		list($order,$limit,$page) = $this->Pagination->init("gallery_id = $gallery_id  AND Gallery.visibility = 'visible' AND Project.user_id not in (".$ignored_list.") ", Array(), $options);
+			list($order,$limit,$page) = $this->Pagination->init("gallery_id = $gallery_id AND Project.user_id not in (".$ignored_list.") ", Array(), $options);
 		}
-		else
-		list($order,$limit,$page) = $this->Pagination->init("gallery_id = $gallery_id  AND Gallery.visibility = 'visible'", Array(), $options);
-		$gallery_projects = $this->GalleryProject->findAll($conditions, null, $order, $limit, $page, 3);
+		else {
+			list($order,$limit,$page) = $this->Pagination->init("gallery_id = $gallery_id", Array(), $options);
+		}
+		
+		$this->GalleryProject->unbindModel(
+			        array('belongsTo' => array('Gallery'))
+	    );
+		$this->GalleryProject->Project->unbindModel(
+			        array('hasMany' => array('GalleryProject'))
+	    );
+	    $this->GalleryProject->Gallery->unbindModel(
+			        array('belongsTo' => array('User'))
+	    );
+		$gallery_projects = $this->GalleryProject->findAll($conditions, null, $order, $limit, $page, 2);
 		$gallery_projects = $this->set_gallery_projects($gallery_projects, $gallery_id);
 		$data = $gallery_projects;
 		
