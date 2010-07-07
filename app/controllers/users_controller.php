@@ -23,8 +23,9 @@ class UsersController extends AppController {
 	  // Check for active session and valid action\
 	  $action = $this->params['action'];
 	  if ($this->activeSession())
-		if ($action == 'login' || $action == 'signup')
+		if ($action == 'login' || $action == 'signup'){
 			$this->redirect('/');
+		}
 
 
 	  // remove all add to gallery cookies
@@ -504,6 +505,14 @@ class UsersController extends AppController {
 				//for these action redirect to Mystuff page.
 				$action = array('/','/multiaccountwarn',$ban_url);
 				//Now, let's figure out where to redirect this person to.
+				if ($this->Session->read('uservoiceRedirect')=='uservoice'){
+					$this->Session->del('uservoiceRedirect');
+					if ((time()-$this->Session->read('uservoiceRedirectTime')) <120){
+						$this->Session->del('uservoiceRedirectTime');
+						$this->redirect('/uservoice');
+					}
+					$this->Session->del('uservoiceRedirectTime');
+				}
 				if($user_record['User']['email']=="" || $user_record['User']['email']=="rather-not-say@scratchr.org"){
 					$this->redirect('/users/set_email/'.$user_record['User']['urlname']);
 				}
