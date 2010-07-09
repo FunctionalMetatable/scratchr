@@ -47,7 +47,7 @@ class UservoiceController extends AppController {
 		// 30 days old & more than 2 projects & more than 10 comments // (count($projects) > 2) &&
 		if (($day_diff >30) && ($comment_count > 10) && (count($projects) > 2))
 		{    	
-			echo 'in';
+			echo 'json package needed';
 			
 			$user_data = array(
 		    	"guid" => $user_id,
@@ -65,7 +65,7 @@ class UservoiceController extends AppController {
 		 		$user_data['admin'] = 'deny';
 
 	      		$data = json_encode($user_data);
-			echo 'next';
+			echo '<br>Never mind. It seems that you have that. Now I need the mcrypt package';
 
 	      		// double XOR first block
 	      		for ($i = 0; $i < 16; $i++)
