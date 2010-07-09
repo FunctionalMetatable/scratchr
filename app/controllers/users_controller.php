@@ -509,7 +509,7 @@ class UsersController extends AppController {
 					$this->Session->del('uservoiceRedirect');
 					if ((time()-$this->Session->read('uservoiceRedirectTime')) <120){
 						$this->Session->del('uservoiceRedirectTime');
-						$this->redirect('/uservoice');
+						$this->redirect('/uservoice/index');
 					}
 					$this->Session->del('uservoiceRedirectTime');
 				}
