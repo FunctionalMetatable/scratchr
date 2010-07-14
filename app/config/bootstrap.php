@@ -61,7 +61,7 @@ $this->params['webservices']
  define("NUM_MIN_SCRIPT_FOR_TOP_REMIX", 1);
  define("NUM_MIN_SCRIPT_FOR_TOP_LOVED", 1);
  //List of country for custumizable for home page.
- define("CUSTOMIZABLE_COUNTRIES", "IL");
+ define("CUSTOMIZABLE_COUNTRIES", "IL,MX");
  define("DEFAULT_COUNTRY", "worldwide");
 /**
  * Email Address Related to Flagging
