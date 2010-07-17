@@ -143,7 +143,10 @@ Class ServicesController extends AppController {
 
 		if(!empty($this->data))
 		{
-			$project_name =  (!empty($this->data['Project']['project_name'])) ? trim($this->data['Project']['project_name']) : null;
+			$project_name =  null;
+			if(!empty($this->data['Project']['project_name'])) {
+				$project_name =  strip_tags(trim($this->data['Project']['project_name']));
+			}
 
 			$binary_file = (!empty($this->params["form"]["binary_file"])) ? $this->params["form"]["binary_file"]:null;
         	$thumbnail_file = (!empty($this->params["form"]["priview_image"])) ? $this->params["form"]["priview_image"]:null;
@@ -214,8 +217,12 @@ Class ServicesController extends AppController {
 				$inappropriates[] = 'inappropriate_ptitle_upload';
 
 			}
-			$project_description = (!empty($this->data['Project']['project_description'])) ? trim($this->data['Project']['project_description']) : null;
-
+			
+			$project_description =  null;
+			if(!empty($this->data['Project']['project_description'])) {
+				$project_description = strip_tags(trim($this->data['Project']['project_description']));
+			}
+			
 			$project_text_Scripts = (!empty($this->params['form']['allScripts'])) ? trim($this->params['form']['allScripts']) : null;
 			if(isInappropriate($project_description))
 			{
@@ -332,7 +339,7 @@ Class ServicesController extends AppController {
 
 
 				foreach ($this->data['Project']['tags'] as $tag) {
-					$ntag = strtolower(trim($tag));
+					$ntag = strtolower(strip_tags(trim($tag)));
 					if (!strcmp($ntag,""))
 						continue;
 
