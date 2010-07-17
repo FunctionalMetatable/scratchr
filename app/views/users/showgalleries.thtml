@@ -90,10 +90,19 @@
 		?>
 		<?php 
 		//if user is not logged in don't show gallery which have 0 project
-		if($gallery['total_projects'] == 0 &&(!$isLogged && !$util->check_url($gallery['description']))  || ($isLogged && (!($isMe || $isAdmin)) && !$util->check_url($gallery['description'])))
+		$should_display = true;
+		if($gallery['total_projects'] == 0)
 		{
+			if(! $isLogged && !$util->check_url($gallery['description'])){
+				$should_display = false;
+			}
+			
+			if($isLogged && !($isAdmin || $isMe) && !$util->check_url($gallery['description'])){
+				$should_display = false;
+			}
 		}
-		else
+		
+		if($should_display)
 		{
 		?>
 		
@@ -117,6 +126,7 @@
 				if($isMe)
 				{
 				?>
+
 				<a href="<?php echo $html->url('/users/removegallery/'.$gallery_id)?>/<?php echo $option?>">[x]</a></span>
 				<?
 				
