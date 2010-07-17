@@ -450,9 +450,10 @@ Class ServicesController extends AppController {
 			$project = null;
 			
 			$project_name =  null;
-			if(!empty($this->data['Project']['project_name'])) {
-				$project_name =  strip_tags(trim($this->data['Project']['project_name']));
+			if(!empty($this->params['form']['project_name'])) {
+				$project_name =  strip_tags(trim($this->params['form']['project_name']));
 			}
+			
 			
 			if(isInappropriate($project_name))
 			{
@@ -462,8 +463,8 @@ Class ServicesController extends AppController {
 			}
 			
 			$project_description =  null;
-			if(!empty($this->data['Project']['project_description'])) {
-				$project_description = strip_tags(trim($this->data['Project']['project_description']));
+			if(!empty($this->params['form']['project_description'])) {
+				$project_description = strip_tags(trim($this->params['form']['project_description']));
 			}
 			
 			if(isInappropriate($project_description))
