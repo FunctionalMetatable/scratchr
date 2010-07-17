@@ -448,14 +448,24 @@ Class ServicesController extends AppController {
 
 			// save project data
 			$project = null;
-			$project_name =  (!empty($this->params['form']['project_name'])) ? trim($this->params['form']['project_name']) : null;
+			
+			$project_name =  null;
+			if(!empty($this->data['Project']['project_name'])) {
+				$project_name =  strip_tags(trim($this->data['Project']['project_name']));
+			}
+			
 			if(isInappropriate($project_name))
 			{
 				$project_name = "Untitled";
 				$inappropriates[] = 'inappropriate_ptitle_upload';
 
 			}
-			$project_description = (!empty($this->params['form']['project_description'])) ? trim($this->params['form']['project_description']) : null;
+			
+			$project_description =  null;
+			if(!empty($this->data['Project']['project_description'])) {
+				$project_description = strip_tags(trim($this->data['Project']['project_description']));
+			}
+			
 			if(isInappropriate($project_description))
 			{
 				$project_description = "";
@@ -602,7 +612,7 @@ Class ServicesController extends AppController {
 
 				$tagsarray = explode(",",htmlspecialchars($this->params['form']['tags']));
 				foreach ($tagsarray as $tag) {
-					$ntag = strtolower(trim($tag));
+					$ntag = strtolower(strip_tags(trim($tag)));
 					if (!strcmp($ntag,""))
 						continue;
 
