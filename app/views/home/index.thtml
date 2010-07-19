@@ -440,7 +440,7 @@ e($tagcloud->getTagCloud($tags, '/tagged/toploved', null, 3, 'scratch_tag',', ',
 
      <div id="socmed" class="sidecontainer">
      <h4><?php ___("Scratchers' Wiki"); ?></h4>
-       <p><a href="http://wiki.scratch.mit.edu/"><img src="http://wiki.scratch.mit.edu/images/Gobo-cropped.png" alt="Scratchers' Wiki" width="35"></a><?php printf(___('The %swiki%s made by and for Scratchers', true),"<a href='http://wiki.scratch.mit.edu/'>","</a>"); ?></p>
+       <p><a href="http://wiki.scratch.mit.edu/"><img src="/img/wikilogo_35x35.png" alt="Scratchers' Wiki" width="35"></a><?php printf(___('The %swiki%s made by and for Scratchers', true),"<a href='http://wiki.scratch.mit.edu/'>","</a>"); ?></p>
     </div>
 
 
