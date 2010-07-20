@@ -70,43 +70,11 @@ class AppController extends Controller {
 		$isBanned = false;
 		
 		//Announcement
-		/*$announcement_id = -1;
-       
-		$key = 'random-annoucement-';
-        $ttl = RANDOM_ANNOUNCEMENT_CACHE_TTL;
 		$this->Project->mc_connect();
-        $mc_key = $key.'desc';
-		$mc_key_status = $key.'status';
-        $announcement = $this->Project->mc_get($mc_key);
-		$isAnnouncementOn = $this->Project->mc_get($mc_key_status);
-		if ($announcement === false || $isAnnouncementOn === false) {
-			$annoucements = $this->Announcement->findAll("content != ''");
-			$empties = $this->Announcement->findCount("content = ''");
-			$isAnnouncementOn = false;
-			if ($empties == 3) {
-				$announcement_id = -1;
-				$isAnnouncementOn = false;
-			} else if(!empty($annoucements[0])) {
-				$isAnnouncementOn = $annoucements[0]['Announcement']['isOn'];
-				$announcement_id = $this->getAnnouncementId($key, $ttl);
-			}
-			
-			if ($announcement_id == -1) {
-				$announcement = "";
-				$isAnnouncementOn = false;
-			} else if(!empty($annoucements[$announcement_id])){
-				$announcement = $annoucements[$announcement_id]['Announcement']['content'];
-			}
-			$this->Project->mc_set($mc_key, $announcement, false, $ttl);
-			$this->Project->mc_set($mc_key_status, $isAnnouncementOn, false, $ttl);
-		}
-		$this->Project->mc_close();
-		*/
-		
 		$annoucements = $this->Project->mc_get('annoucements');
         if($annoucements === false) {
 			$annoucements = $this->Announcement->findAll("content != '' AND isOn = 1");
-			$this->Project->mc_set('annoucements', $announcements, false,RANDOM_ANNOUNCEMENT_CACHE_TTL);
+			$this->Project->mc_set('annoucements', $annoucements, false,RANDOM_ANNOUNCEMENT_CACHE_TTL);
         }
         $this->Project->mc_close();
         
