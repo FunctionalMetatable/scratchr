@@ -70,7 +70,7 @@ class AppController extends Controller {
 		$isBanned = false;
 		
 		//Announcement
-		$announcement_id = -1;
+		/*$announcement_id = -1;
        
 		$key = 'random-annoucement-';
         $ttl = RANDOM_ANNOUNCEMENT_CACHE_TTL;
@@ -100,7 +100,29 @@ class AppController extends Controller {
 			$this->Project->mc_set($mc_key, $announcement, false, $ttl);
 			$this->Project->mc_set($mc_key_status, $isAnnouncementOn, false, $ttl);
 		}
-		 $this->Project->mc_close();
+		$this->Project->mc_close();
+		*/
+		
+		$annoucements = $this->Project->mc_get('annoucements');
+        if($annoucements === false) {
+			$annoucements = $this->Announcement->findAll("content != '' AND isOn = 1");
+			$this->Project->mc_set('annoucements', $announcements, false,RANDOM_ANNOUNCEMENT_CACHE_TTL);
+        }
+        $this->Project->mc_close();
+        
+        $isAnnouncementOn = false;
+        $announcement = null;
+		if(!empty($annoucements)) {
+	        $count_announcements = count($annoucements);
+			if($count_announcements > 0) {
+			 	$isAnnouncementOn = true;
+				$announcement = $annoucements[rand(0, $count_announcements-1)]['Announcement']['content'];
+			}
+		}
+		$this->set('announcement', $announcement);
+		$this->set('isAnnouncementOn', $isAnnouncementOn);
+		
+		
 		if (isset($this->params['controller'])) {
 			$controller = $this->params['controller'];
 		} else {
@@ -201,8 +223,6 @@ class AppController extends Controller {
 		
 		$this->set_active_tab($controller);
 		$this->set_predefined_tags();
-		$this->set('announcement', $announcement);
-		$this->set('isAnnouncementOn', $isAnnouncementOn);
 		$this->set('isBanned', $isBanned);
 		$this->Session->delete('FLASH_NOTICE_KEY');
 		$this->Session->delete('FLASH_ERROR_KEY');
