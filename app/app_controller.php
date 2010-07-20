@@ -70,13 +70,13 @@ class AppController extends Controller {
 		$isBanned = false;
 		
 		//Announcement
-		$this->Project->mc_connect();
-		$annoucements = $this->Project->mc_get('annoucements');
+		$this->Announcement->mc_connect();
+		$annoucements = $this->Announcement->mc_get('annoucements');
         if($annoucements === false) {
 			$annoucements = $this->Announcement->findAll("content != '' AND isOn = 1");
-			$this->Project->mc_set('annoucements', $annoucements, false,RANDOM_ANNOUNCEMENT_CACHE_TTL);
+			$this->Announcement->mc_set('annoucements', $annoucements, false,RANDOM_ANNOUNCEMENT_CACHE_TTL);
         }
-        $this->Project->mc_close();
+        $this->Announcement->mc_close();
         
         $isAnnouncementOn = false;
         $announcement = null;

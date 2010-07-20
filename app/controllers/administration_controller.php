@@ -1708,6 +1708,10 @@
 		$this->Announcement->saveField('content', $a_3);
 		$this->Announcement->saveField('user_id', $user_id);
 		
+		$this->Announcement->mc_connect();
+		$this->Announcement->mc_delete('annoucements');
+		$this->Announcement->mc_close();
+		
 		$this->set('a_1', $a_1);
 		$this->set('a_2', $a_2);
 		$this->set('a_3', $a_3);
@@ -1737,6 +1741,10 @@
 		$this->Announcement->id = 3;
 		$this->Announcement->read();
 		$this->Announcement->saveField('isOn', $visibility);
+		
+		$this->Announcement->mc_connect();
+		$this->Announcement->mc_delete('annoucements');
+		$this->Announcement->mc_close();
 		
 		$this->set('isAnnouncementOn', $isAnnouncementOn);
 		$this->render('set_announcement_visibility_ajax', 'ajax');
