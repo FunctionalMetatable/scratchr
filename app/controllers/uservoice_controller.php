@@ -51,7 +51,7 @@ class UservoiceController extends AppController {
 			
 			$user_data = array(
 		    	"guid" => $user_id,
-			"expires" => date('Y-m-d G:i:s', strtotime('+1 day')),
+			"expires" => date('Y/m/d G:i:s O', strtotime('+1 day')),
 			"display_name" => $username,
 			"url" => 'http://scratch.mit.edu/users/'.$this->getLoggedInUrlname(),
 			"avatar_url" => 'http://scratch.mit.edu/static/icons/buddy/'.$user_id.'_med.png'
@@ -94,22 +94,9 @@ class UservoiceController extends AppController {
 		}
 	}
 	
-	function test(){
-		echo $user_id = $this->getLoggedInUserID();
-		echo '<br>';
-		$user = $this->User->find('first', array('conditions' => array('User.id = '.$user_id)));
-		echo print_r($user);
-		echo '<br><br>';
-		echo '<br>';
-		echo $user['User']['created'];
-		echo '<br>';
-		echo $day_diff = (strtotime('now')-strtotime($user['User']['created']))/86400;
-	}
-	
-
 	function logout(){
 	echo'<meta http-equiv="refresh" content="0;url=/logout"/>
-	<script type="text/javascript" src="http://scratch.uservoice.com/logout.json"></script>';
+	<script type="text/javascript" src="http://suggest.scratch.mit.edu/logout.json"></script>';
 	$this->autoRender = false;
 	}
 }
