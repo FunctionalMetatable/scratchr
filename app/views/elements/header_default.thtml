@@ -15,12 +15,12 @@ var WRInitTime=(new Date()).getTime();
 <?php
 if(isset($ishomepage) && $ishomepage) {
 ?>
-      <h1><a href="<?php echo $html->url('/holidaylogos')?>"><?php ___('Scratch')?></a></h1>
+      <h1><a href="<?php echo $html->url('/holidaylogos')?>"></a></h1>
 	  
 <?php
 } else {
 ?>
-         <h1><a href="<?php echo $html->url('/')?>"><?php ___('Scratch')?></a></h1>
+         <h1><a href="<?php echo $html->url('/')?>"></a></h1>
 		
 <?php
 }
