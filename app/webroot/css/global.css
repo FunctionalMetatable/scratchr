@@ -541,6 +541,13 @@ legend{
 	top: 5px;
 }
 
+/* Prevent the section header from overlapping "See more" text in RTL mode */
+.container h3{
+    text-align: left;
+}
+
+
+
 .thumb{
 	background-image: url(../img/bg_thumb.png);
 	background-position: bottom;
