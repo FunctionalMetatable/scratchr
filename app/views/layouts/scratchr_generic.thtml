@@ -1,5 +1,16 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<?php
+  if ($session->check('Config.language')) {
+      $lang = $session->read('Config.language');
+      if ($lang == 'ara' or $lang == 'heb' or $lang == 'per')
+          echo '<html dir="rtl">';
+      else
+          echo '<html dir="ltr">';
+  }
+  else {
+    echo '<html dir="ltr">';
+  }
+?>
 <head>
 <?php
 	echo $this->renderElement('superheader');
