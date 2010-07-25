@@ -304,8 +304,11 @@ class ApiController extends AppController {
      * Returns user authentication
 	 @param username,password 
      */
-	function authenticateuser($username, $password){
+	function authenticateuser(){
 		Configure::write('debug', 0);
+		$username  = $_GET['username'];
+		$password  = rawurldecode($_GET['password']);
+		
 		$user_record = $this->User->find('first', array('conditions' => array('User.username'=>$username, 'User.password'=>sha1($password)),'fields'=>array('id', 'username')));
 		if(empty($user_record)){
 			$user_info = 'false';
