@@ -118,6 +118,23 @@ class UsersController extends AppController {
 		}
 	}
 
+        function __isEmailDomainBlacklisted($email) {
+            $blacklist_handle = fopen("http://".$_SERVER['SERVER_NAME']."/static/misc/disposabledomains.txt", 'r'); //XXX: Should we directly access it via the file system ?
+            if ($blacklist_handle) {
+                $response = stream_get_contents($blacklist_handle);
+                fclose($blacklist_handle);
+
+                $blacklist = explode("\n", $response);
+
+                foreach ($blacklist as $domain) {
+                    if (stristr($email, $domain))
+                        return TRUE;
+                }
+            }
+
+            return FALSE;
+        }
+
 	function signup() {
 		$this->pageTitle = ___("Scratch | Signup", true);
         $client_ip = $this->RequestHandler->getClientIP();
@@ -226,6 +243,11 @@ class UsersController extends AppController {
 				$this->User->invalidate('email');
 				$errors['email_invalid'] =  ___('Invalid email address', true);
 			}
+
+                        if ($this->__isEmailDomainBlacklisted($email)) {
+                            $this->User->invalidate('email');
+                            $errors['email_invalid'] =  ___('Please do not use a temporary/disposable email provider.', true);
+                        }
 
 			if ($gender == "") {
 				$this->User->invalidate('gender');
