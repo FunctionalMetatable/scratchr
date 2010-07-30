@@ -13,23 +13,11 @@ class ExperimentalController extends AppController
 
         function _is_opted_in($userid = null) {
             if ($userid == null) {
-                $this->Session->setFlash(___('You need to be logged in to opt out of the experimental viewer.', true));
+                $this->Session->setFlash(___('You need to be logged to access the experimental viewer opt in/out program.', true));
                 $this->redirect('/login');
-                return FALSE; // XXX: Is this needed ?
             }
 
-            $user = $this->BetaUser->find('first', array('conditions' =>
-                array('BetaUser.user_id' => $userid)));
-
-            if ($user) {
-                // Already opted in
-                if ($user['BetaUser']['enabled'] == 1)
-                    return TRUE;
-                else // Opted out earlier
-                    return FALSE;
-            }
-            else // No records found in beta_user table
-                return FALSE;
+            return $this->BetaUser->isOptedIn($userid);
         }
 
 
