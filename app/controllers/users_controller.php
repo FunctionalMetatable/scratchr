@@ -6,7 +6,7 @@ class UsersController extends AppController {
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 
 	'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject','AdminComment', 'User','Project','Favorite', 'Pcomment',
 	'UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification',
-	'Shariable','Thank', 'ViewStat','Curator','WhitelistedIpAddress','BlockedIp');
+	'Shariable','Thank', 'ViewStat','Curator','WhitelistedIpAddress','BlockedIp', 'DisposableDomain');
 	
 
 	function admin_index() {
@@ -118,23 +118,6 @@ class UsersController extends AppController {
 		}
 	}
 
-        function __isEmailDomainBlacklisted($email) {
-            $blacklist_handle = fopen("http://".$_SERVER['SERVER_NAME']."/static/misc/disposabledomains.txt", 'r'); //XXX: Should we directly access it via the file system ?
-            if ($blacklist_handle) {
-                $response = stream_get_contents($blacklist_handle);
-                fclose($blacklist_handle);
-
-                $blacklist = explode("\n", $response);
-
-                foreach ($blacklist as $domain) {
-                    if (stristr($email, $domain))
-                        return TRUE;
-                }
-            }
-
-            return FALSE;
-        }
-
 	function signup() {
 		$this->pageTitle = ___("Scratch | Signup", true);
         $client_ip = $this->RequestHandler->getClientIP();
@@ -244,7 +227,7 @@ class UsersController extends AppController {
 				$errors['email_invalid'] =  ___('Invalid email address', true);
 			}
 
-                        if ($this->__isEmailDomainBlacklisted($email)) {
+                        if ($this->DisposableDomain->isBlacklisted($email)) {
                             $this->User->invalidate('email');
                             $errors['email_invalid'] =  ___('Please do not use a temporary/disposable email provider.', true);
                         }
