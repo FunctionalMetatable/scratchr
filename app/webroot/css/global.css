@@ -748,6 +748,16 @@ legend{
 	margin: 0 auto;
 }
 
+#beta{
+        background-image: url(../img/bg_notes.png);
+        background-repeat: no-repeat;
+        min-height: 80px;
+        overflow: hidden;
+        padding: 5px 10px 10px 10px;
+        width: 210px;
+}
+
+
 #notes{
 	background-image: url(../img/bg_notes.png);
 	background-repeat: no-repeat;

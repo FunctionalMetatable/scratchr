@@ -400,6 +400,18 @@ else {
 	?>
     </div>
 
+    <?php
+    if ($isBetaUser) {
+        echo '<div id="beta">';
+        echo '<h3>';
+        echo ___('Beta viewer');
+        echo '</h3>';
+        echo '<a href="/experimental/viewproject/'.$urlname.'/'.$project['Project']['id'].'">';
+        echo ___('View this project in the beta viewer.');
+        echo '</a>';
+        echo '</div>';
+    }
+    ?>
 	<!-- ::: Begin notes ::: -->
     <div id="notes">
       <h3><?php ___('Project Notes');?> </h3>
