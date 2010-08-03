@@ -77,14 +77,14 @@ body {
 
 .popup {
  position: absolute;
- top: 35px;
+ top: 60px;
  left: 80px;
  font-size: 13px;
  background: black;
  border: 2px solid #FFFFFF;
  opacity: 0.9;
  width: 800px;
- height: 390px;
+ height: 385px;
  -moz-border-radius: 10px;
  -webkit-border-radius: 10px;
  z-index: 10;
