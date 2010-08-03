@@ -30,11 +30,11 @@ class ExperimentalController extends AppController
             $is_opted_in = $this->_is_opted_in($userid);
 
             if ($is_opted_in) {
-                $this->pageTitle = 'Opt in for the beta Scratch viewer';
+                $this->pageTitle = 'Opt in for the Scratch experimental viewer';
                 $this->set('opted_in', TRUE);
             }
             else {
-                $this->pageTitle = 'Opt out from the beta Scratch viewer';
+                $this->pageTitle = 'Opt out from the Scratch experimental viewer';
                 $this->set('opted_in', FALSE);
             }
         }
@@ -53,11 +53,11 @@ class ExperimentalController extends AppController
 
                 $user['BetaUser']['enabled'] = 0;
                 $this->BetaUser->save($user);
-                $this->Session->setFlash(___('You have successfully opted out from the beta viewer.', true));
+                $this->Session->setFlash(___('You have successfully opted out from the experimental viewer.', true));
                 $this->redirect('/');
             }
             else {
-                $this->Session->setFlash(___('You have already opted out for the beta viewer or you never opted in', true));
+                $this->Session->setFlash(___('You have already opted out for the experimental viewer or you never opted in', true));
                 $this->redirect('/');
             }
         }
@@ -71,7 +71,7 @@ class ExperimentalController extends AppController
             $is_opted_in = $this->_is_opted_in($userid);
 
             if ($is_opted_in) {
-                $this->Session->setFlash(___('You have already opted in for the beta viewer.', true));
+                $this->Session->setFlash(___('You have already opted in for the experimental viewer.', true));
                 $this->redirect('/');
             }
             else {
