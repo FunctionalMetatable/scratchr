@@ -407,7 +407,7 @@ else {
         echo ___('Play with the code');
         echo '</h3>';
         echo ___('Try out this project in the ');
-        echo '<a href="javascript:window.open(\'/experimental/viewproject/'.$urlname.'/'.$project['Project']['id'].',\'mywin\',\'left=20,top=20,width=1035,height=680,toolbar=0,resizable=0\')">';
+        echo '<a href="javascript:window.open(\'/experimental/viewproject/'.$urlname.'/'.$project['Project']['id'].'\',\'mywin\',\'left=20,top=20,width=1035,height=680,toolbar=0,resizable=0\')">';
         echo ___('experimental viewer');
         echo '</a>';
         echo '.';
