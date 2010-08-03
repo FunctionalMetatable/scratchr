@@ -96,7 +96,7 @@ class ExperimentalController extends AppController
 
 
         function viewproject($creatorname= null, $projectid = null) {
-            $this->pageTitle = 'Beta Scratch viewer';
+            $this->pageTitle = 'Scratch Experimental viewer';
 
             $userid = $this->getLoggedInUserID();
 
