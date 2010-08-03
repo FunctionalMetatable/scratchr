@@ -32,7 +32,7 @@ var id =  urlvars['id'];
 
 <body>
 <div class="header">
- <img src="justscratch.png">Experimental Viewer
+ <img src="/static/experimental/img/justscratch.png">Experimental Viewer
  <div class="help">
   <a href="#" onClick="showHelp()">Questions about this viewer?</a>
  </div>
