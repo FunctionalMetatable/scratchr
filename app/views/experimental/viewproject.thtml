@@ -37,31 +37,27 @@ var id =  urlvars['id'];
   <a href="#" onClick="showHelp()">Questions about this viewer?</a>
  </div>
 </div>
-<script>
-document.write(
-	'<div class="frame" id="div">\n' +
-	'<div class="leftdiv" id="leftpanel">\n' +
-  '<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"\n'+
-  '  codebase="http://macromedia.com/cabs/swflash.cab#version=6,0,40,0"\n'+   
-  '  id=Scratch WIDTH="100%" HEIGHT="100%">\n'+
-  '  <PARAM NAME=movie '+
-  '    VALUE="http://www.playfulinvention.com/viewer/iscratchV2/Scratch.swf?owner=' + <?php echo $creatorname; ?> + '&projectname=' + <?php echo $projectid; ?> + '">\n'+
-  '  <PARAM NAME="bgcolor" VALUE="#000000">\n'+
-  '  <PARAM NAME=quality VALUE=medium>\n'+
-  '  <PARAM NAME="allowScriptAccess" VALUE="always">\n'+
-  '  <param NAME="wmode" VALUE="opaque">\n'+
-  '  <EMBED src="http://www.playfulinvention.com/viewer/iscratchV2/Scratch.swf?owner=' + <?php echo $creatorname; ?> + '&projectname=' + <?php echo $projectid; ?> + '"\n'+
-  '    bgcolor="#000000" \n'+
-  '    WIDTH="100%" HEIGHT="100%" \n'+
-  '    allowScriptAccess="always" \n'+
-  '    wmode="opaque"\n'+
-  '    TYPE="application/x-shockwave-flash">\n'+
-  '</embed>\n'+
-  '</OBJECT>\n'+
-  '<div class="popup"></div>\n'+
-  '</div>\n'+
-   '</div>\n');
- </script>
+<div class="frame" id="div">
+	<div class="leftdiv" id="leftpanel">
+	<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+		codebase="http://macromedia.com/cabs/swflash.cab#version=6,0,40,0"
+		id=Scratch WIDTH="100%" HEIGHT="100%">
+	<PARAM NAME=movie VALUE="http://www.playfulinvention.com/viewer/iscratchV2/Scratch.swf?owner=<?php echo $creatorname; ?>&projectname=<?php echo $projectid; ?>">
+	<PARAM NAME="bgcolor" VALUE="#000000">
+	<PARAM NAME=quality VALUE=medium>
+	<PARAM NAME="allowScriptAccess" VALUE="always">
+	<param NAME="wmode" VALUE="opaque">
+	<EMBED src="http://www.playfulinvention.com/viewer/iscratchV2/Scratch.swf?owner=<?php echo $creatorname; ?>&projectname=<?php echo $projectid; ?>"
+		bgcolor="#000000"
+		WIDTH="100%" HEIGHT="100%"
+		allowScriptAccess="always"
+		wmode="opaque"
+		TYPE="application/x-shockwave-flash">
+	</EMBED>
+	</OBJECT>
+	<div class="popup"></div>
+	</div>
+</div>
 </body>
 </html>
 
