@@ -97,7 +97,7 @@ class ExperimentalController extends AppController
 
         function viewproject($creatorname= null, $projectid = null) {
             $this->pageTitle = 'Scratch Experimental viewer';
-
+            $this->layout = 'empty';
             $userid = $this->getLoggedInUserID();
 
             if (!($userid) or !($projectid) or !($creatorname)) {
