@@ -404,11 +404,14 @@ else {
     if ($isBetaUser) {
         echo '<div id="beta">';
         echo '<h3>';
-        echo ___('Beta viewer');
+        echo ___('Play with the code');
         echo '</h3>';
+        echo ___('Try out this project in the ');
         echo '<a href="/experimental/viewproject/'.$urlname.'/'.$project['Project']['id'].'">';
-        echo ___('View this project in the beta viewer.');
+        echo '<a href="javascript:window.open(\'/experimental/viewproject/\'.$urlname.\'/\'.$project[\'Project\'][\'id\'].\',\'mywin\',\'left=20,top=20,width=1035,height=680,toolbar=0,resizable=0\')">';
+        echo ___('experimental viewer');
         echo '</a>';
+        echo '.';
         echo '</div>';
     }
     ?>
