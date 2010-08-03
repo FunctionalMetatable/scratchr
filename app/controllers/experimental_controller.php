@@ -89,7 +89,7 @@ class ExperimentalController extends AppController
                     $data['BetaUser']['enabled'] = TRUE;
                     $this->BetaUser->save($data);
                 }
-                $this->Session->setFlash(___('Congratulations! You have now opted in for the beta viewer.', true));
+                $this->Session->setFlash(___('Congratulations! You have now opted in for the experimental viewer.', true));
                 $this->redirect('/');
             }
         }
