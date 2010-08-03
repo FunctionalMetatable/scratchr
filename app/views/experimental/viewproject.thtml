@@ -9,3 +9,71 @@
 </EMBED>
 </OBJECT>
 </div>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<style type="text/css">@import "/static/experimental/viewproject.css";</style>
+<script type="text/javascript" src="/static/experimental/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="/static/experimental/viewproject.js"></script>
+<script type="text/javascript" src="/static/experimental/experimental.js"></script>
+<script>
+function getUrlVars()
+{
+	var args = window.location.href.slice(window.location.href.indexOf('?') + 1);
+	var vars = [], hash;
+	var hashes = args.split('&');
+	for(var i = 0; i < hashes.length; i++){
+		hash = hashes[i].split('=');
+		vars.push(hash[0]);
+		vars[hash[0]] = hash[1];
+	}
+  return vars;
+}
+
+var urlvars = getUrlVars();
+var sb = urlvars['sb'];
+var id =  urlvars['id'];
+
+</script>
+
+</head>
+
+<body>
+<div class="header">
+ <img src="justscratch.png">Experimental Viewer
+ <div class="help">
+  <a href="#" onClick="showHelp()">Questions about this viewer?</a>
+ </div>
+</div>
+<script>
+document.write(
+	'<div class="frame" id="div">\n' +
+	'<div class="leftdiv" id="leftpanel">\n' +
+  '<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"\n'+
+  '  codebase="http://macromedia.com/cabs/swflash.cab#version=6,0,40,0"\n'+   
+  '  id=Scratch WIDTH="100%" HEIGHT="100%">\n'+
+  '  <PARAM NAME=movie '+
+  '    VALUE="http://www.playfulinvention.com/viewer/iscratchV2/Scratch.swf?owner=' + <?php echo $creatorname; ?> + '&projectname=' + <?php echo $projectid; ?> + '">\n'+
+  '  <PARAM NAME="bgcolor" VALUE="#000000">\n'+
+  '  <PARAM NAME=quality VALUE=medium>\n'+
+  '  <PARAM NAME="allowScriptAccess" VALUE="always">\n'+
+  '  <param NAME="wmode" VALUE="opaque">\n'+
+  '  <EMBED src="http://www.playfulinvention.com/viewer/iscratchV2/Scratch.swf?owner=' + <?php echo $creatorname; ?> + '&projectname=' + <?php echo $projectid; ?> + '"\n'+
+  '    bgcolor="#000000" \n'+
+  '    WIDTH="100%" HEIGHT="100%" \n'+
+  '    allowScriptAccess="always" \n'+
+  '    wmode="opaque"\n'+
+  '    TYPE="application/x-shockwave-flash">\n'+
+  '</embed>\n'+
+  '</OBJECT>\n'+
+  '<div class="popup"></div>\n'+
+  '</div>\n'+
+   '</div>\n');
+ </script>
+</body>
+</html>
+
