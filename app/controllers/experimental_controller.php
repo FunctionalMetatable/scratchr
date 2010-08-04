@@ -108,11 +108,14 @@ class ExperimentalController extends AppController
 
             if ($is_opted_in) {
                 // We create a new entry everytime (even for repeat visits)
+                $client_ip = $this->RequestHandler->getClientIP();
+                $long = ip2long($client_ip);
                 $data = array();
                 $data['BetaView'] = array();
                 $data['BetaView']['id'] = null;
                 $data['BetaView']['user_id'] = $userid;
                 $data['BetaView']['project_id'] = $projectid;
+                $data['BetaView']['ipaddress'] = $long;
                 $this->BetaView->save($data);
 
                 $this->set('creatorname', $creatorname);
