@@ -370,15 +370,15 @@ width:245px;
 //-->
 
 <div class="sidecontainer" id="club">
-      <h4>Video Tutorials</h4>
-        <p><a href="http://info.scratch.mit.edu/Video_Tutorials"><img width="77" alt="Video Tutorials" src="/img/tutorials.png"></a>Check out our new collection of intro video tutorials.</p> <p class="more"><a href="http://info.scratch.mit.edu/Video_Tutorials">Learn more</a> </p> 
+      <h4><?php ___('Video Tutorials'); ?></h4>
+        <p><a href="http://info.scratch.mit.edu/Video_Tutorials"><img width="77" alt="Video Tutorials" src="/img/tutorials.png"></a><?php ___('Check out our new collection of intro video tutorials.');?></p> <p class="more"><a href="http://info.scratch.mit.edu/Video_Tutorials"><?php ___('Learn more');?></a> </p> 
      </div>
 
 
 <div class="sidecontainer" id="club">
-      <h4>Scratch Tours</h4>
-        <p><a href="http://info.scratch.mit.edu/Scratch_Tours"><img width="77" alt="Scratch Tours" src="/img/tours.png"></a>New to Scratch? Take a tour to see what Scratchers are creating and sharing.</p>
-      <p class="more"><a href="http://info.scratch.mit.edu/Scratch_Tours">Take a tour</a> </p>
+      <h4><?php ___('Scratch Tours'); ?></h4>
+        <p><a href="http://info.scratch.mit.edu/Scratch_Tours"><img width="77" alt="Scratch Tours" src="/img/tours.png"></a><?php ___('New to Scratch? Take a tour to see what Scratchers are creating and sharing.');?></p>
+      <p class="more"><a href="http://info.scratch.mit.edu/Scratch_Tours"><?php ___('Take a tour');?></a> </p>
      </div>
 
 
