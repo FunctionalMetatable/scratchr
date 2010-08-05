@@ -19,3 +19,14 @@ CREATE TABLE `experimental_views` (
     KEY `project_id` ( `project_id` )
 );
 
+CREATE TABLE `experimental_logs` (
+    `id` int( 10 ) unsigned NOT NULL AUTO_INCREMENT,
+    `user_id` int( 10 ) unsigned NOT NULL,
+    `project_id` int( 10 ) unsigned NOT NULL,
+    `action` char(40) NOT NULL,
+    `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP,
+    `ipaddress` bigint(20) default NULL,
+    PRIMARY KEY ( `id` ) ,
+    KEY `user_id` ( `user_id` ),
+    KEY `project_id` ( `project_id` )
+);
