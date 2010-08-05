@@ -2,7 +2,7 @@
 
 class ProjectsController extends AppController {
 
-    var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject', 'AnonViewStat', 'BetaUser');
+    var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject', 'AnonViewStat', 'ExperimentalUser');
     var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
     var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination', 'Util');
 
@@ -2190,10 +2190,10 @@ class ProjectsController extends AppController {
             $this->set('urlname', $urlname);
 
 
-            if ($this->BetaUser->isOptedIn($current_user_id))
-                $this->set('isBetaUser', TRUE);
+            if ($this->ExperimentalUser->isOptedIn($current_user_id))
+                $this->set('isExperimentalUser', TRUE);
             else
-                $this->set('isBetaUser', FALSE);
+                $this->set('isExperimentalUser', FALSE);
 
 
             $this->render('projectcontent','scratchr_projectpage');

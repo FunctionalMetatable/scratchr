@@ -3,7 +3,7 @@ class ExperimentalController extends AppController
 {
 
 	var $name = 'Experimental';
-        var $uses = array('Project','User', 'BetaUser', 'BetaView');
+        var $uses = array('Project','User', 'ExperimentalUser', 'ExperimentalView');
 
 
         // This controller handles all the relevant stuff for
@@ -17,7 +17,7 @@ class ExperimentalController extends AppController
                 $this->redirect('/login');
             }
 
-            return $this->BetaUser->isOptedIn($userid);
+            return $this->ExperimentalUser->isOptedIn($userid);
         }
 
 
@@ -48,11 +48,11 @@ class ExperimentalController extends AppController
             $is_opted_in = $this->_is_opted_in($userid);
 
             if ($is_opted_in) {
-                $user = $this->BetaUser->find('first', array('conditions' =>
-                    array('BetaUser.user_id' => $userid)));
+                $user = $this->ExperimentalUser->find('first', array('conditions' =>
+                    array('ExperimentalUser.user_id' => $userid)));
 
-                $user['BetaUser']['enabled'] = 0;
-                $this->BetaUser->save($user);
+                $user['ExperimentalUser']['enabled'] = 0;
+                $this->ExperimentalUser->save($user);
                 $this->Session->setFlash(___('You have successfully opted out from the experimental viewer.', true));
                 $this->redirect('/');
             }
@@ -75,19 +75,19 @@ class ExperimentalController extends AppController
                 $this->redirect('/');
             }
             else {
-                $user = $this->BetaUser->find('first', array('conditions' =>
-                    array('BetaUser.user_id' => $userid)));
+                $user = $this->ExperimentalUser->find('first', array('conditions' =>
+                    array('ExperimentalUser.user_id' => $userid)));
                 if ($user) { // The user opted out at some point.
-                    $user['BetaUser']['enabled'] = 1;
-                    $this->BetaUser->save($user);
+                    $user['ExperimentalUser']['enabled'] = 1;
+                    $this->ExperimentalUser->save($user);
                 }
                 else {
                     $data = array();
-                    $data['BetaUser'] = array();
-                    $data['BetaUser']['id'] = null; /*A new record will be created*/
-                    $data['BetaUser']['user_id'] = $userid;
-                    $data['BetaUser']['enabled'] = TRUE;
-                    $this->BetaUser->save($data);
+                    $data['ExperimentalUser'] = array();
+                    $data['ExperimentalUser']['id'] = null; /*A new record will be created*/
+                    $data['ExperimentalUser']['user_id'] = $userid;
+                    $data['ExperimentalUser']['enabled'] = TRUE;
+                    $this->ExperimentalUser->save($data);
                 }
                 $this->Session->setFlash(___('You have opted in to try out the Scratch experimental viewer', true));
                 $this->redirect('/');
@@ -111,12 +111,12 @@ class ExperimentalController extends AppController
                 $client_ip = $this->RequestHandler->getClientIP();
                 $long = ip2long($client_ip);
                 $data = array();
-                $data['BetaView'] = array();
-                $data['BetaView']['id'] = null;
-                $data['BetaView']['user_id'] = $userid;
-                $data['BetaView']['project_id'] = $projectid;
-                $data['BetaView']['ipaddress'] = $long;
-                $this->BetaView->save($data);
+                $data['ExperimentalView'] = array();
+                $data['ExperimentalView']['id'] = null;
+                $data['ExperimentalView']['user_id'] = $userid;
+                $data['ExperimentalView']['project_id'] = $projectid;
+                $data['ExperimentalView']['ipaddress'] = $long;
+                $this->ExperimentalView->save($data);
 
                 $this->set('creatorname', $creatorname);
                 $this->set('projectid', $projectid);
