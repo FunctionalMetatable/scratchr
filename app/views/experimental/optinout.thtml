@@ -21,6 +21,7 @@
 	                    <b>Would you like to try out an experimental new way to play with Scratch projects online? This new viewer lets you see and play with all the parts of a Scratch project directly in your web browser.
 	                    <br>
 	                    <br>If you are interested in testing this viewer, click 'Opt in' below.</b>
+	                    <br><br>
 	                    <?php
                             if ($opted_in) {
                                 echo '<a class="button" href="/experimental/optout">';
