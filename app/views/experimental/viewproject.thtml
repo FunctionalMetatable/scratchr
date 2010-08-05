@@ -41,12 +41,12 @@ var id =  urlvars['id'];
 	<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
 		codebase="http://macromedia.com/cabs/swflash.cab#version=6,0,40,0"
 		id=Scratch WIDTH="100%" HEIGHT="100%">
-	<PARAM NAME=movie VALUE="/static/experimental/Scratch.swf?owner=<?php echo $creatorname; ?>&projectname=<?php echo $projectid; ?>">
+	<PARAM NAME=movie VALUE="/static/experimental/Scratch.swf?owner=<?php echo $creatorname; ?>&projectname=<?php echo $projectid; ?>&userid=<?php echo $userid; ?>">
 	<PARAM NAME="bgcolor" VALUE="#000000">
 	<PARAM NAME=quality VALUE=medium>
 	<PARAM NAME="allowScriptAccess" VALUE="always">
 	<param NAME="wmode" VALUE="opaque">
-	<EMBED src="/static/experimental/Scratch.swf?owner=<?php echo $creatorname; ?>&projectname=<?php echo $projectid; ?>"
+	<EMBED src="/static/experimental/Scratch.swf?owner=<?php echo $creatorname; ?>&projectname=<?php echo $projectid; ?>&userid=<?php echo $userid; ?>"
 		bgcolor="#000000"
 		WIDTH="100%" HEIGHT="100%"
 		allowScriptAccess="always"

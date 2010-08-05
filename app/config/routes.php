@@ -53,6 +53,7 @@ Router::connect('/sitemap.xml', array('controller' => 'sitemaps', 'action' => 'i
 Router::connect('/sitemap.xml.gz', array('controller' => 'sitemaps', 'action' => 'index'));
 Router::connect('/robots.txt', array('controller' => 'sitemaps', 'action' => 'robots'));
 Router::connect('/experimental', array('controller' => 'experimental', 'action' => 'optinout'));
+Router::connect('/track/*', array('controller' => 'experimental', 'action' => 'track'));
 // Routes the language controller
 Router::connect('/lang/*', array('controller' => 'p28n', 'action' => 'change'));
 

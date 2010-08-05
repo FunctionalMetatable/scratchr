@@ -3,7 +3,7 @@ class ExperimentalController extends AppController
 {
 
 	var $name = 'Experimental';
-        var $uses = array('Project','User', 'ExperimentalUser', 'ExperimentalView');
+        var $uses = array('Project','User', 'ExperimentalUser', 'ExperimentalView', 'ExperimentalLog');
 
 
         // This controller handles all the relevant stuff for
@@ -120,11 +120,29 @@ class ExperimentalController extends AppController
 
                 $this->set('creatorname', $creatorname);
                 $this->set('projectid', $projectid);
+                $this->set('userid', $userid);
             }
             else {
                 // Redundant, since is_opted_in() should have redirected earlier
                 $this->redirect('/');
             }
+        }
+
+        function track($projectid = null, $userid = null, $actionname = null) {
+            if (!$projectid or !$userid or !$actionname)
+                die;
+
+            $client_ip = $this->RequestHandler->getClientIP();
+            $long = ip2long($client_ip);
+            $data = array();
+            $data['ExperimentalLog'] = array();
+            $data['ExperimentalLog']['id'] = null;
+            $data['ExperimentalLog']['user_id'] = $userid;
+            $data['ExperimentalLog']['project_id'] = $projectid;
+            $data['ExperimentalLog']['action'] = $actionname;
+            $data['ExperimentalLog']['ipaddress'] = $long;
+            $this->ExperimentalLog->save($data);
+            die;
         }
 
 }
