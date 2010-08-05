@@ -13,9 +13,15 @@
   </div>
 		
 					
-                    <p><img src="/static/experimental/img/screenshot.png" width="400px" align="right"> <br><br><br><b>Would you like to try out an experimental new way to play with Scratch projects online? This new viewer lets you see and play with all the parts of a Scratch project directly in your web browser.<br><br>If you are interested in testing this viewer, click 'Opt in' below.</b><br clear="both"><br><strong>What can I do?</strong><br>You can run the project, and also experiment with changes to the scripts.<br><br><strong>Can I save?</strong><br>Currently, you cannot save any changes from this viewer.<br><br><strong>How do I use it?</strong><br>Click a sprite beneath the stage to see its scripts, costumes, and sounds.<br><br>&#x2022; Make changes to scripts and click to see them run.<br>&#x2022; Click << or a colored square to open the palette of available blocks.<br>&#x2022; Click the green flag to run.<br><br><strong>Why is it called experimental?</strong><br>This is a temporary prototype. It is part of preliminary investigations for future versions of Scratch online. <br><br><strong>Questions or comments?</strong><br>Please report any questions or suggestions about this experimental viewer on this <a href="#">Scratch forum</a>.<br><br><br></p>
-
-                        <?php
+                    <p>
+	                    <img src="/static/experimental/img/screenshot.png" width="350px" align="right">
+	                    <br>
+	                    <br>
+	                    <br>
+	                    <b>Would you like to try out an experimental new way to play with Scratch projects online? This new viewer lets you see and play with all the parts of a Scratch project directly in your web browser.
+	                    <br>
+	                    <br>If you are interested in testing this viewer, click 'Opt in' below.</b>
+	                    <?php
                             if ($opted_in) {
                                 echo '<a class="button" href="/experimental/optout">';
                                 echo ___('Opt out');
@@ -27,7 +33,23 @@
                                 echo '</a>';
                             }
                         ?>
-            &nbsp;<a class="button" href="/"><?php ___('Cancel')?></a>
+            			&nbsp;<a class="button" href="/"><?php ___('Cancel')?></a>
+	                    <br clear="both">
+	                    <br><strong>What can I do?</strong>
+	                    <br>You can run the project, and also experiment with changes to the scripts.<br><br><strong>Can I save?</strong>
+	                    <br>Currently, you cannot save any changes from this viewer.<br><br><strong>How do I use it?</strong>
+	                    <br>Click a sprite beneath the stage to see its scripts, costumes, and sounds.
+	                    <br>
+	                    <br>&#x2022; Make changes to scripts and click to see them run.
+	                    <br>&#x2022; Click << or a colored square to open the palette of available blocks.
+	                    <br>&#x2022; Click the green flag to run.<br><br><strong>Why is it called experimental?</strong>
+	                    <br>This is a temporary prototype. It is part of preliminary experimenting to design future versions of Scratch online.
+	                    <br>
+	                    <br><strong>Questions or comments?</strong><br>Please share any questions or suggestions about this experimental viewer on this <a href="#">Scratch forum</a>.
+	                    <br>
+	                    <br>
+	                    <br>
+                    </p>
 		
 </div>
 <!-- ////// End main content ////// -->
