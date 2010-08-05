@@ -401,7 +401,7 @@ else {
     </div>
 
     <?php
-    if ($isBetaUser) {
+    if ($isExperimentalUser) {
         echo '<div id="beta">';
         echo '<h3>';
         echo ___('Play with the code');

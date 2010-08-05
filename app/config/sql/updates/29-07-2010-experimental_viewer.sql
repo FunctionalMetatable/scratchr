@@ -1,4 +1,4 @@
-CREATE TABLE `beta_users` (
+CREATE TABLE `experimental_users` (
     `id` int( 10 ) unsigned NOT NULL AUTO_INCREMENT ,
     `user_id` int( 10 ) unsigned NOT NULL,
     `opt_in_stamp` timestamp NOT NULL default CURRENT_TIMESTAMP,
@@ -8,7 +8,7 @@ CREATE TABLE `beta_users` (
     KEY `user_id` ( `user_id` )
 );
 
-CREATE TABLE `beta_views` (
+CREATE TABLE `experimental_views` (
     `id` int( 10 ) unsigned NOT NULL AUTO_INCREMENT,
     `user_id` int( 10 ) unsigned NOT NULL,
     `project_id` int( 10 ) unsigned NOT NULL,
