@@ -2288,3 +2288,9 @@ color:#FF0000;
 margin-left:140px;
 }
 
+/** Experimental viewer **/
+
+span.notify {
+color: blue;
+font-size: 1.1em;
+}
