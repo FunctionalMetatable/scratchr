@@ -13,7 +13,7 @@ class ExperimentalController extends AppController
 
         function _is_opted_in($userid = null) {
             if ($userid == null) {
-                $this->Session->setFlash(___('If you want to try the experimental viewer, please log in.', true));
+                $this->Session->setFlash('<span class="notify">'.___('If you want to try the experimental viewer, please log in.', true).'</span>');
                 $this->redirect('/login');
             }
 
@@ -53,11 +53,11 @@ class ExperimentalController extends AppController
 
                 $user['ExperimentalUser']['enabled'] = 0;
                 $this->ExperimentalUser->save($user);
-                $this->Session->setFlash(___('You have successfully opted out from the experimental viewer.', true));
+                $this->Session->setFlash('<span class="notify">'.___('You have successfully opted out from the experimental viewer.', true).'</span>');
                 $this->redirect('/');
             }
             else {
-                $this->Session->setFlash(___('You have already opted out for the experimental viewer or you never opted in', true));
+                $this->Session->setFlash('<span class="notify">'.___('You have already opted out for the experimental viewer or you never opted in', true).'</span>');
                 $this->redirect('/');
             }
         }
@@ -71,7 +71,7 @@ class ExperimentalController extends AppController
             $is_opted_in = $this->_is_opted_in($userid);
 
             if ($is_opted_in) {
-                $this->Session->setFlash(___('You have already opted in for the experimental viewer.', true));
+                $this->Session->setFlash('<span class="notify">'.___('You have already opted in for the experimental viewer.', true).'</span>');
                 $this->redirect('/');
             }
             else {
@@ -89,7 +89,7 @@ class ExperimentalController extends AppController
                     $data['ExperimentalUser']['enabled'] = TRUE;
                     $this->ExperimentalUser->save($data);
                 }
-                $this->Session->setFlash(___('You have opted in to try out the Scratch experimental viewer', true));
+                $this->Session->setFlash('<span class="notify">'.___('You have opted in to try out the Scratch experimental viewer', true).'</span>');
                 $this->redirect('/');
             }
         }
