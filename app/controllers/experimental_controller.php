@@ -15,6 +15,7 @@ class ExperimentalController extends AppController
             if ($userid == null) {
                 $this->Session->setFlash('<span class="notify">'.___('If you want to try the experimental viewer, please log in.', true).'</span>');
                 $this->Session->write('experimentalviewerRedirect', 'TRUE');
+                $this->Session->write('experimentalviewerRedirectTime', time());
                 $this->redirect('/login');
             }
 
