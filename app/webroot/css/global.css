@@ -2294,3 +2294,7 @@ span.notify {
 color: blue;
 font-size: 1.1em;
 }
+
+#optinForm img {
+margin-left: 10px;
+}
