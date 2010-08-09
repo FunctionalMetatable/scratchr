@@ -518,6 +518,10 @@ class UsersController extends AppController {
 					}
 					$this->Session->del('uservoiceRedirectTime');
 				}
+                                if ($this->Session->read('experimentalviewerRedirect')=='TRUE'){
+                                    $this->Session->del('experimentalviewerRedirect');
+                                    $this->redirect('/experimental');
+                                }
 				if($user_record['User']['email']=="" || $user_record['User']['email']=="rather-not-say@scratchr.org"){
 					$this->redirect('/users/set_email/'.$user_record['User']['urlname']);
 				}

@@ -14,6 +14,7 @@ class ExperimentalController extends AppController
         function _is_opted_in($userid = null) {
             if ($userid == null) {
                 $this->Session->setFlash('<span class="notify">'.___('If you want to try the experimental viewer, please log in.', true).'</span>');
+                $this->Session->write('experimentalviewerRedirect', 'TRUE');
                 $this->redirect('/login');
             }
 
