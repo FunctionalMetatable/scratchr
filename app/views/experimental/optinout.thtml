@@ -18,9 +18,15 @@
 	                    <br>
 	                    <br>
 	                    <br>
-	                    <b>Would you like to try out an experimental new way to play with Scratch projects online? This new viewer lets you see and play with all the parts of a Scratch project directly in your web browser.
+	                    <b>
+	                    Would you like to try out a new way to play with Scratch projects online? This experimental viewer lets you see and play with all the parts of a Scratch project directly in your web browser.
 	                    <br>
-	                    <br>If you are interested in testing this viewer, click 'Opt in' below.</b>
+	                    <br>
+	                    If you are interested in testing this viewer, click 'Opt in' below.
+	                    <br>
+	                    <br>
+	                    After you opt in, a new link will appear on every Scratch project page, allowing you to launch the experimental viewer and play with the project.  You will also still be able to play the project in the regular, Java player.
+	                    </b>
 	                    <br><br>
 	                    <?php
                             if ($opted_in) {
@@ -37,14 +43,22 @@
             			&nbsp;<a class="button" href="/"><?php ___('Cancel')?></a>
 	                    <br clear="both">
 	                    <br><strong>What can I do?</strong>
-	                    <br>You can run the project, and also experiment with changes to the scripts.<br><br><strong>Can I save?</strong>
-	                    <br>Currently, you cannot save any changes from this viewer.<br><br><strong>How do I use it?</strong>
-	                    <br>Click a sprite beneath the stage to see its scripts, costumes, and sounds.
+	                    <br>You can run the project, and also experiment with changes to the scripts.
 	                    <br>
+	                    <br><strong>Can I save?</strong>
+	                    <br>Currently, you cannot save any changes from this viewer.
+	                    <br>
+	                    <br><strong>How do I use it?</strong>
+	                    <br>Click a sprite beneath the stage to see its scripts, costumes, and sounds.
 	                    <br>&#x2022; Make changes to scripts and click to see them run.
-	                    <br>&#x2022; Click << or a colored square to open the palette of available blocks.
-	                    <br>&#x2022; Click the green flag to run.<br><br><strong>Why is it called experimental?</strong>
+	                    <br>&#x2022; Click << or a colored square to open the palette of programming blocks.
+	                    <br>&#x2022; Click the green flag to run.
+	                    <br>
+	                    <br><strong>Why is it called experimental?</strong>
 	                    <br>This is a temporary prototype. It is part of preliminary experimenting to design future versions of Scratch online.
+	                    <br>
+	                    <br><strong>What information will be collected?</strong>
+	                    <br>The experimental viewer records mouse clicks. If you choose to participate, you are agreeing to allow the Scratch team to record and analyze this information in order to understand usage patterns and inform improvements on the design. You can also return to this page and click "Opt out" at any time.
 	                    <br>
 	                    <br><strong>Questions or comments?</strong><br>Please share any questions or suggestions about this experimental viewer on this <a href="#">Scratch forum</a>.
 	                    <br>
