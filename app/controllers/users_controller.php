@@ -520,7 +520,13 @@ class UsersController extends AppController {
 				}
                                 if ($this->Session->read('experimentalviewerRedirect')=='TRUE'){
                                     $this->Session->del('experimentalviewerRedirect');
-                                    $this->redirect('/experimental');
+                                    if ((time()-$this->Session->read('experimentalviewerRedirectTime')) < 120) {
+                                        $this->Session->del('experimentalviewerRedirectTime');
+                                        $this->redirect('/experimental');
+                                    }
+                                    else {
+                                        $this->Session->del('experimentalviewerRedirectTime');
+                                    }
                                 }
 				if($user_record['User']['email']=="" || $user_record['User']['email']=="rather-not-say@scratchr.org"){
 					$this->redirect('/users/set_email/'.$user_record['User']['urlname']);
