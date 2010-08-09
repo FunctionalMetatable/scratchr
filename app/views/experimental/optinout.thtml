@@ -18,12 +18,21 @@
 	                    <b>
 	                    Would you like to try out a new way to play with Scratch projects online? This experimental viewer lets you see and play with all the parts of a Scratch project directly in your web browser.
 	                    <br>
-	                    <br>
-	                    If you are interested in testing this viewer, click 'Opt in' below.
-	                    <br>
-	                    <br>
-	                    After you opt in, a new link will appear on every Scratch project page, allowing you to launch the experimental viewer and play with the project.  You will also still be able to play the project in the regular, Java player.
+                            <?php
+                            if (!$opted_in) {
+                                echo "<br>";
+	                        echo "If you are interested in testing this viewer, click 'Opt in' below.";
+	                        echo "<br>";
+	                        echo "<br>";
+	                        echo "After you opt in, a new link will appear on every Scratch project page, allowing you to launch the experimental viewer and play with the project.  You will also still be able to play the project in the regular, Java player.";
+                            }
+                            else {
+                                echo "<br>";
+                                echo "If you are no longer interested in testing this viewer, click 'Opt out' below.";
+                            }
+                            ?>
 	                    </b>
+
 	                    <br><br>
 	                    <?php
                             if ($opted_in) {
