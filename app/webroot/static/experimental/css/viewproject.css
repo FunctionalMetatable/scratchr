@@ -26,6 +26,7 @@ body {
  width: auto;
  height: auto;
  float: right;
+ clear: left;
  padding: 5px;
  font-size: 11px;
  font-weight: bold;
