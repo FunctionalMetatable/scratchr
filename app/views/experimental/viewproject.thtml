@@ -33,9 +33,9 @@ var id =  urlvars['id'];
 <body>
 <div class="header">
  <img src="/static/experimental/img/justscratch.png">Experimental Viewer
- <div class="help">
+</div>
+<div class="help">
   <a href="#" onClick="showHelp()">Questions about this viewer?</a>
- </div>
 </div>
 <div class="frame" id="div">
 	<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
