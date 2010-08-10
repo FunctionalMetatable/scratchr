@@ -55,7 +55,7 @@ class ExperimentalController extends AppController
 
                 $user['ExperimentalUser']['enabled'] = 0;
                 $this->ExperimentalUser->save($user);
-                $this->Session->setFlash('<span class="notify">'.___('You have successfully opted out from the Experimental Viewer.', true).'</span>');
+                $this->Session->setFlash('<span class="notify">'.___('You have opted out from the Experimental Viewer.', true).'</span>');
                 $this->redirect('/');
             }
             else {
@@ -91,7 +91,7 @@ class ExperimentalController extends AppController
                     $data['ExperimentalUser']['enabled'] = TRUE;
                     $this->ExperimentalUser->save($data);
                 }
-                $this->Session->setFlash('<span class="notify">'.___('You have opted in to try out the Scratch Experimental Viewer', true).'</span>');
+                $this->Session->setFlash('<span class="notify">'.___('You have opted in to try the Scratch Experimental Viewer', true).'</span>');
                 $this->redirect('/');
             }
         }
