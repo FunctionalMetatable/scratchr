@@ -26,6 +26,9 @@
 	                        	echo "After you opt in, a new link will appear on every Scratch project page, allowing you to launch the Experimental Viewer.";
                             }
                             else {
+                                echo "<br>";
+                                echo "<br>";
+                                echo "<br>";
                                 echo "You previously opted in to participate in testing the Experimental Viewer. If you want to discontinue participation, simply click the 'Opt out' button below.";
                             }
                             ?>
