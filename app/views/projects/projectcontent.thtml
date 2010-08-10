@@ -408,7 +408,7 @@ else {
         echo '</h3>';
         echo ___('Try out this project in the ');
         echo '<a href="http://scratch.mit.edu" onclick="javascript:window.open(\'/experimental/viewproject/'.$urlname.'/'.$project['Project']['id'].'\',\'mywin\',\'left=20,top=20,width=1035,height=678,toolbar=0\'); return false;">';
-        echo ___('experimental viewer');
+        echo ___('Experimental Viewer');
         echo '</a>';
         echo '</div>';
     }

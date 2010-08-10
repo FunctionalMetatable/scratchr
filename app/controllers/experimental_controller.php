@@ -7,13 +7,13 @@ class ExperimentalController extends AppController
 
 
         // This controller handles all the relevant stuff for
-        // the new flash based experimental viewer
+        // the new flash based Experimental Viewer
 
 
 
         function _is_opted_in($userid = null) {
             if ($userid == null) {
-                $this->Session->setFlash('<span class="notify">'.___('If you want to try the experimental viewer, please log in.', true).'</span>');
+                $this->Session->setFlash('<span class="notify">'.___('If you want to try the Experimental Viewer, please log in.', true).'</span>');
                 $this->Session->write('experimentalviewerRedirect', 'TRUE');
                 $this->Session->write('experimentalviewerRedirectTime', time());
                 $this->redirect('/login');
@@ -32,11 +32,11 @@ class ExperimentalController extends AppController
             $is_opted_in = $this->_is_opted_in($userid);
 
             if ($is_opted_in) {
-                $this->pageTitle = 'Opt in for the Scratch experimental viewer';
+                $this->pageTitle = 'Opt in for the Scratch Experimental Viewer';
                 $this->set('opted_in', TRUE);
             }
             else {
-                $this->pageTitle = 'Opt out from the Scratch experimental viewer';
+                $this->pageTitle = 'Opt out from the Scratch Experimental Viewer';
                 $this->set('opted_in', FALSE);
             }
         }
@@ -55,11 +55,11 @@ class ExperimentalController extends AppController
 
                 $user['ExperimentalUser']['enabled'] = 0;
                 $this->ExperimentalUser->save($user);
-                $this->Session->setFlash('<span class="notify">'.___('You have successfully opted out from the experimental viewer.', true).'</span>');
+                $this->Session->setFlash('<span class="notify">'.___('You have successfully opted out from the Experimental Viewer.', true).'</span>');
                 $this->redirect('/');
             }
             else {
-                $this->Session->setFlash('<span class="notify">'.___('You have already opted out for the experimental viewer or you never opted in', true).'</span>');
+                $this->Session->setFlash('<span class="notify">'.___('You have already opted out for the Experimental Viewer or you never opted in', true).'</span>');
                 $this->redirect('/');
             }
         }
@@ -73,7 +73,7 @@ class ExperimentalController extends AppController
             $is_opted_in = $this->_is_opted_in($userid);
 
             if ($is_opted_in) {
-                $this->Session->setFlash('<span class="notify">'.___('You have already opted in for the experimental viewer.', true).'</span>');
+                $this->Session->setFlash('<span class="notify">'.___('You have already opted in for the Experimental Viewer.', true).'</span>');
                 $this->redirect('/');
             }
             else {
@@ -91,14 +91,14 @@ class ExperimentalController extends AppController
                     $data['ExperimentalUser']['enabled'] = TRUE;
                     $this->ExperimentalUser->save($data);
                 }
-                $this->Session->setFlash('<span class="notify">'.___('You have opted in to try out the Scratch experimental viewer', true).'</span>');
+                $this->Session->setFlash('<span class="notify">'.___('You have opted in to try out the Scratch Experimental Viewer', true).'</span>');
                 $this->redirect('/');
             }
         }
 
 
         function viewproject($creatorname= null, $projectid = null) {
-            $this->pageTitle = 'Scratch Experimental viewer';
+            $this->pageTitle = 'Scratch Experimental Viewer';
             $this->layout = 'empty';
             $userid = $this->getLoggedInUserID();
 
