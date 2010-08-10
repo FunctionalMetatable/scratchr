@@ -104,3 +104,12 @@ body {
 .popup img#close {
  float: right;
 }
+.popup a {
+ color: #5588BB;
+}
+.popup a:hover{
+ color: #5588BB;
+}
+.popup a:visited{
+ color: #5588BB;
+}
