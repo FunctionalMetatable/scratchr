@@ -33,10 +33,11 @@ var id =  urlvars['id'];
 <body>
 <div class="header">
  <img src="/static/experimental/img/justscratch.png">Experimental Viewer
-</div>
-<div class="help">
+ <div class="help">
   <a href="#" onClick="showHelp()">Questions about this viewer?</a>
 </div>
+</div>
+
 <div class="frame" id="div">
 	<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
 		codebase="http://macromedia.com/cabs/swflash.cab#version=6,0,40,0"
