@@ -15,7 +15,7 @@
 					
                     <p>
 	                    <img src="/static/experimental/img/screenshot.png" width="350px" align="right">
-	                    <b>
+	                   
                             <?php
                             if (!$opted_in) {
                             	echo "Would you like to try a new way to play with Scratch projects online? This Experimental Viewer lets you see and play with all the parts of a Scratch project directly in your web browser.";
@@ -33,7 +33,7 @@
                                 echo "You previously opted in to participate in testing the Experimental Viewer. If you want to discontinue participation, simply click the 'Opt out' button below.";
                             }
                             ?>
-	                    </b>
+	                   
 
 	                    <br><br>
 	                    <?php
