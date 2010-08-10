@@ -2291,10 +2291,22 @@ margin-left:140px;
 /** Experimental viewer **/
 
 span.notify {
-color: white;
+color: blue;
 font-size: 1.1em;
 }
 
 #optinForm img {
 margin-left: 10px;
+}
+
+#optinForm a.button {
+color: #FFF;
+}
+
+#optinForm a.button:hover {
+color: #FFF;
+}
+
+#optinForm a.button:visited {
+color: #FFF;
 }
