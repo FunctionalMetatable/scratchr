@@ -21,6 +21,11 @@ body {
  margin-right: 5px;
 }
 
+.logo {
+ width: 300px;
+ float: left;
+}
+
 
 .help {
  width: auto;
