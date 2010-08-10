@@ -20,6 +20,7 @@
                             if (!$opted_in) {
                             	echo "Would you like to try a new way to play with Scratch projects online? This Experimental Viewer lets you see and play with all the parts of a Scratch project directly in your web browser.";
                                 echo "<br>";
+                                echo "<br>";
 	                        	echo "If you are interested in testing this viewer, click 'Opt in' below.";
 	                        	echo "<br>";
 	                       		echo "<br>";
