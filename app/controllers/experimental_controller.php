@@ -54,6 +54,7 @@ class ExperimentalController extends AppController
                     array('ExperimentalUser.user_id' => $userid)));
 
                 $user['ExperimentalUser']['enabled'] = 0;
+                $user['ExperimentalUser']['opt_out_stamp'] = date('Y-m-d H:i:s', time());
                 $this->ExperimentalUser->save($user);
                 $this->Session->setFlash('<span class="notify">'.___('You have opted out from the Experimental Viewer', true).'</span>');
                 $this->redirect('/');
