@@ -32,11 +32,11 @@ class ExperimentalController extends AppController
             $is_opted_in = $this->_is_opted_in($userid);
 
             if ($is_opted_in) {
-                $this->pageTitle = 'Opt in for the Scratch Experimental Viewer';
+                $this->pageTitle = 'Opt out fro, the Scratch Experimental Viewer';
                 $this->set('opted_in', TRUE);
             }
             else {
-                $this->pageTitle = 'Opt out from the Scratch Experimental Viewer';
+                $this->pageTitle = 'Opt in for the Scratch Experimental Viewer';
                 $this->set('opted_in', FALSE);
             }
         }
