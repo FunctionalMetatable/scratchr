@@ -42,14 +42,21 @@
                                 echo '<a class="button" href="/experimental/optout">';
                                 echo ___('Opt out');
                                 echo '</a>';
+                                echo '&nbsp;';
+                                echo '<a class="button" href="/experimental/cancel_optout">';
+                                echo ___('Cancel');
+                                echo '</a>';
                             }
                             else {
                                 echo '<a class="button" href="/experimental/optin">';
                                 echo ___('Opt in');
                                 echo '</a>';
+                                echo '&nbsp;';
+                                echo '<a class="button" href="/experimental/cancel_optin">';
+                                echo ___('Cancel');
+                                echo '</a>';
                             }
                         ?>
-            			&nbsp;<a class="button" href="/"><?php ___('Cancel')?></a>
 	                    <br clear="both">
 	                    <br><strong>What can I do with the Experimental Viewer?</strong>
 	                    <br>You can run the project, and also experiment with changes to the scripts.
