@@ -3,7 +3,7 @@ class ExperimentalController extends AppController
 {
 
 	var $name = 'Experimental';
-        var $uses = array('Project','User', 'ExperimentalUser', 'ExperimentalView', 'ExperimentalLog');
+        var $uses = array('Project','User', 'ExperimentalUser', 'ExperimentalView', 'ExperimentalLog', 'ExperimentalCancelLog');
 
 
         // This controller handles all the relevant stuff for
@@ -148,6 +148,49 @@ class ExperimentalController extends AppController
             die;
         }
 
+        function cancel_optin() {
+            $userid = $this->getLoggedInUserID();
+
+            if (!$userid) {
+                $this->redirect('/');
+            }
+
+            $client_ip = $this->RequestHandler->getClientIP();
+            $long = ip2long($client_ip);
+
+            $data = array();
+            $data['ExperimentalCancelLog'] = array();
+            $data['ExperimentalCancelLog']['id'] = null;
+            $data['ExperimentalCancelLog']['user_id'] = $userid;
+            $data['ExperimentalCancelLog']['cancelled_action'] = 'optin';
+            $data['ExperimentalCancelLog']['ipaddress'] = $long;
+
+            $this->ExperimentalCancelLog->save($data);
+
+            $this->redirect('/');
+        }
+
+        function cancel_optout() {
+            $userid = $this->getLoggedInUserID();
+
+            if (!$userid) {
+                $this->redirect('/');
+            }
+
+            $client_ip = $this->RequestHandler->getClientIP();
+            $long = ip2long($client_ip);
+
+            $data = array();
+            $data['ExperimentalCancelLog'] = array();
+            $data['ExperimentalCancelLog']['id'] = null;
+            $data['ExperimentalCancelLog']['user_id'] = $userid;
+            $data['ExperimentalCancelLog']['cancelled_action'] = 'optout';
+            $data['ExperimentalCancelLog']['ipaddress'] = $long;
+
+            $this->ExperimentalCancelLog->save($data);
+
+            $this->redirect('/');
+        }
 }
 
 ?>
