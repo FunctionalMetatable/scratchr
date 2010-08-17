@@ -354,7 +354,8 @@ width:245px;
 			$desc_array =explode('--',$scratch_club['description']);
 		 	$gallery_desc = $desc_array['0'];
 		}
-	?>
+	    ?>
+    <?php endif; ?>
 
 <!--
      <div id="club" class="sidecontainer">
@@ -369,16 +370,24 @@ width:245px;
      </div>
 //-->
 
-<div class="sidecontainer" id="club">
-      <h4><?php ___('Video Tutorials'); ?></h4>
-        <p><a href="http://info.scratch.mit.edu/Video_Tutorials"><img width="77" alt="Video Tutorials" src="/img/tutorials.png"></a><?php ___('Check out our new collection of intro video tutorials.');?></p> <p class="more"><a href="http://info.scratch.mit.edu/Video_Tutorials"><?php ___('Learn more');?></a> </p> 
-     </div>
-
 
 <div class="sidecontainer" id="club">
       <h4><?php ___('Scratch Tours'); ?></h4>
         <p><a href="http://info.scratch.mit.edu/Scratch_Tours"><img width="77" alt="Scratch Tours" src="/img/tours.png"></a><?php ___('New to Scratch? Take a tour to see what Scratchers are creating and sharing.');?></p>
       <p class="more"><a href="http://info.scratch.mit.edu/Scratch_Tours"><?php ___('Take a tour');?></a> </p>
+     </div>
+
+<?php if ($isLogged): ?>
+<div class="sidecontainer" id="club">
+      <h4><?php ___('Scratch Suggestions'); ?></h4>
+        <p><a href="http://info.scratch.mit.edu/Suggestions"><img width="77" alt="Scratch Suggestions" src="http://info.scratch.mit.edu/sites/infoscratch.media.mit.edu/files/image/wolfie-idea-head2.png"></a><?php ___('Share suggestions to improve Scratch!');?><br><br></p>
+      <p class="more"><a href="http://info.scratch.mit.edu/Suggestions"><?php ___('Find out more');?></a> </p>
+     </div>
+<?php endif; ?>
+
+<div class="sidecontainer" id="club">
+      <h4><?php ___('Video Tutorials'); ?></h4>
+        <p><a href="http://info.scratch.mit.edu/Video_Tutorials"><img width="77" alt="Video Tutorials" src="/img/tutorials.png"></a><?php ___('Check out our new collection of intro video tutorials.');?></p> <p class="more"><a href="http://info.scratch.mit.edu/Video_Tutorials"><?php ___('Learn more');?></a> </p> 
      </div>
 
 
@@ -394,7 +403,6 @@ width:245px;
       <p><a href="/galleries/view/<?php e($scratch_club['id']) ?>"><img src="<?php e($scratch_club['icon_src']); ?>" title="<?php e($club_name)?>" alt="<?php e($club_name)?>" width="90" height="68"></a><?php e($gallery_desc)?></p>
       <p class="more"><a href="/galleries/browse/clubbed"><?php ___('See more');?></a> </p>
     </div>
-    <?php endif; ?>
 
 
 	<div id="FeaturedGalleries" class="sidecontainer">
