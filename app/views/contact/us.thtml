@@ -102,7 +102,7 @@ document.getElementById('subtopicsdiv').style.display="block";
 <?php }else{?>
 <?php if (isset($error)){?> 
 	  <p><h2><?php echo($error) ?></h2></p>
-	  <p><?php ___('Not working for you? help@scratch.mit.edu'); ?></p>
+	  <p><?php ___('Not working for you? Let us know on the <a href="http://scratch.mit.edu/forums/viewforum.php?id=9">Troubleshooting Forum</a>.'); ?></p>
 <?}?>
 
 <div id="main">
@@ -169,11 +169,11 @@ document.getElementById('subtopicsdiv').style.display="block";
 
 <?php 
 if (!$isLogged) {
-echo '&nbsp;&nbsp;&nbsp;';	___('Username')
+echo '<p>';   ___('Username') 
 ?>
 	:  <input type="text" name="data[Page][username]" size="25" /> 
-</p><?php
-	
+<?php 
+echo '</p>';   	
 }
 ?>
 
