@@ -8,7 +8,7 @@ topic[4] = "<?php print(TOPIC4); ?>";
 topic[5] = "<?php print(TOPIC5); ?>";
 topic[6] = "<?php print(TOPIC6); ?>";
 topic[7] = "<?php print(TOPIC7); ?>";
-topic[8] = "<?php print(TOPIC8); ?>";
+
 
 var subtopic = new Array();
 subtopic[1] = "<?php print(SUBTOPIC1); ?>";
@@ -16,25 +16,58 @@ subtopic[2] = "<?php print(SUBTOPIC2); ?>";
 subtopic[3] = "<?php print(SUBTOPIC3); ?>";
 
 function selectTopic(isList){
-txtIndex = isList.selectedIndex;
-if(txtIndex==0)
-{
-document.getElementById('questionform').style.display="none";
-document.getElementById('subtopicsdiv').style.display="none";
+	txtIndex = isList.selectedIndex;
+
+	// Clear everything in case it was displayed previously
+	document.getElementById('questionform').style.display="none";
+	document.getElementById('subtopicsdiv').style.display="none";
+	document.getElementById('lostpassworddiv').style.display="none";
+	document.getElementById('permissionToUseScratchdiv').style.display="none";
+	document.getElementById('educatorQuestionsdiv').style.display="none";
+	document.getElementById('inappropriateBehaviordiv').style.display="none";
+
+	if(txtIndex==0)
+	{
+		document.getElementById('questionform').style.display="none";
+		document.getElementById('subtopicsdiv').style.display="none";
+	}
+	// Lost password 
+	else if(txtIndex==1)
+	{
+		document.getElementById('lostpassworddiv').style.display="block";
+	}
+	//Permission to use Scratch for...
+	else if(txtIndex==2)
+	{
+		document.getElementById('permissionToUseScratchdiv').style.display="block";
+	}
+	// Educators
+	else if(txtIndex==3)
+	{
+		document.getElementById('educatorQuestionsdiv').style.display="block";
+	}
+	//Inappropriate behavior
+	else if(txtIndex==4)
+	{
+		document.getElementById('inappropriateBehaviordiv').style.display="block";
+	}
+	// Technical question
+	else if(txtIndex==6)
+	{
+		document.getElementById('questionform').style.display="none";
+		document.getElementById('technicalquestiondiv').style.display="block";
+	}
+
+	// Show the question form if answer is not 0 or technical questions (which has a special subform)
+	if((txtIndex>0)&&(txtIndex!=6))
+	{
+	document.getElementById('topicinput').value = topic[txtIndex];
+	document.getElementById('questionform').style.display="block";
+	document.getElementById('technicalquestiondiv').style.display="none";
+	document.getElementById('subtopicsdiv').style.display="none";
+	}
 }
-else if(txtIndex==9)
-{
-document.getElementById('questionform').style.display="none";
-document.getElementById('technicalquestiondiv').style.display="block";
-}
-else
-{
-document.getElementById('topicinput').value = topic[txtIndex];
-document.getElementById('questionform').style.display="block";
-document.getElementById('technicalquestiondiv').style.display="none";
-document.getElementById('subtopicsdiv').style.display="none";
-}
-}
+
 
 function selectSubtopic(isList){
 txtIndex = isList.selectedIndex;
@@ -59,8 +92,7 @@ document.getElementById('subtopicsdiv').style.display="block";
 
 <div class="fullcontent">
   <h2><?php ___('Contact Us'); ?></h2>
-  <h3><?php printf(___('Did you try posting your question on the %sforums%s?', true), '<a href="/forums">', '</a>');?> </h3>
-  <br />
+  <h3><?php printf(___('Questions? Check out the %sScratch FAQ%s, or consider posting your question on the %sforums%s.', true),'<a href="http://info.scratch.mit.edu/Support/Scratch_FAQ">', '</a>', '<a href="/forums">', '</a>');?> </h3>
   <h3> <?php ___('Or contact us directly'); ?>:</h3>
 
 <?php if (isset($succes)){ ?>
@@ -79,16 +111,36 @@ document.getElementById('subtopicsdiv').style.display="block";
         <select id="topic_select" name="topic_select" onchange="selectTopic(this);">
           <option selected><?php ___('Select one of the following options:'); ?></option>
           <option><?php ___('Lost password'); ?></option>
-	  <option><?php ___('Account issues'); ?></option>
 	  <option><?php ___('Permission to use Scratch for...'); ?></option>
           <option><?php ___('Questions from educators'); ?></option>
-          <option><?php ___('Sponsoring / Partnering'); ?></option>
           <option><?php ___('Inappropriate behavior'); ?></option>
           <option><?php ___('Scratch Sensor Board'); ?></option>
+	  <option><?php ___('Technical questions'); ?></option>
           <option><?php ___('Other'); ?></option>
-          <option><?php ___('Technical questions'); ?></option>
 	</select>
 </p>
+<div id="lostpassworddiv" style="display:none">
+<?php ___('<p>You can easily reset your password on the Scratch website by visiting this page:
+<a href="http://scratch.mit.edu/password_recovery">http://scratch.mit.edu/password_recovery</a>.</p>
+<p>If you no longer have access to the email associated with your Scratch account, you can request that your password be reset using the form below. Be sure to tell us the birth month and year that you entered when you created your Scratch account.</p>'); ?>
+</div>
+
+<div id="permissionToUseScratchdiv" style="display:none">
+<?php ___('<p>Feel free to use Scratch and Scratch support materials. If you will be creating any documentation related to Scratch, we do ask that you include the following statement:</p>
+<p>"Scratch is developed by the Lifelong Kindergarten Group at the MIT Media Lab. See http://scratch.mit.edu".</p>
+<p>If you have additional questions or would like to use the Scratch logo, see the <a href="http://info.scratch.mit.edu/Support/Scratch_FAQ#Permission">Scratch FAQ</a> for more information.</p>
+<p>Our work on Scratch is funded by donations from individuals and organizations. If you find Scratch useful, please consider <a href="http://info.scratch.mit.edu/Donate">making a donation</a> to support future development of Scratch.</p>'); ?>
+</div>
+
+<div id="educatorQuestionsdiv" style="display:none">
+<?php ___('<p> See the <a href="http://info.scratch.mit.edu/Educators">Educators page</a> to learn more about using Scratch in schools. The best place to ask questions about teaching with Scratch is <a href="http://scratched.media.mit.edu/">ScratchEd</a>, an online community for educators using Scratch.</p>'); ?>
+</div>
+
+<div id="inappropriateBehaviordiv" style="display:none">
+<?php ___('<p>If you see any disrespectful or inappropriate comments or projects on Scratch, please click the link that says "flag as inappropriate." That sends us a message that takes us right to the comment or project so we can check it out.</p>
+<p>You can also use the form below to explain the situation to us. Please include links to the pages where you are seeing the problem.</p>'); ?>
+</div>
+
 <div id="technicalquestiondiv" style="display:none">
 <p>
 <?php ___('We strongly recommend to post your question to the on-line forums where not only the Scratch Team can help you but also the online community at large. Do you want to post your question on the forums?'); ?>
@@ -110,18 +162,18 @@ document.getElementById('subtopicsdiv').style.display="block";
 
 	 <form method="post" enctype="multipart/form-data" action="<?php echo $html->url('/contact/us/')?>">
 <div id="questionform" style="display:none">
+<hr color="black">
 	<input id="topicinput" type="hidden" name="data[Page][cc_topic]" value="">
 <p>
 	<?php ___('Name'); ?>:	<input type="text" name="data[Page][name]" size="25" /> 
-</p>
 
 <?php 
 if (!$isLogged) {
-echo '<p>';	___('Username')
+echo '&nbsp;&nbsp;&nbsp;';	___('Username')
 ?>
 	:  <input type="text" name="data[Page][username]" size="25" /> 
-<?php
-echo '</p>';	
+</p><?php
+	
 }
 ?>
 
