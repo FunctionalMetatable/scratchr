@@ -102,7 +102,7 @@ document.getElementById('subtopicsdiv').style.display="block";
 <?php }else{?>
 <?php if (isset($error)){?> 
 	  <p><h2><?php echo($error) ?></h2></p>
-	  <p><?php ___('Not working for you? Let us know on the <a href="http://scratch.mit.edu/forums/viewforum.php?id=9">Troubleshooting Forum</a>.'); ?></p>
+	  <p><?php ___('Not working for you? Email us at help@scratch.mit.edu.'); ?></p>
 <?}?>
 
 <div id="main">
