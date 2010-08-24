@@ -28,6 +28,10 @@ $is_comment_ignored = in_array($comment['Pcomment']['id'], $ignored_comments);
 $is_deleted_commenter_ignored = (in_array($comment['User']['id'], $deleted_commenters));
 $is_comment_ok = (!$is_commenter_ignored && !$is_comment_ignored && !$is_deleted_commenter_ignored);
 $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
+$can_delete_comment = true;
+if(($isProjectOwner ||isset($users_permission['delete_project_comments'])) && !$isAdmin && $comment['User']['role'] == 'admin'){
+	$can_delete_comment = false;
+}
 ?>
 <?php if ($is_comment_ok):?>
 <div class="comment_<?= $comment_level; ?>" id="<?= $comment_id ?>">
@@ -87,7 +91,7 @@ $markcomment_url = '/projects/markcomment/' . $project_id . '/' . $comment_id;
                             'Are you sure?', false) .')';
             }
         }
-        if ($isLogged && ($isAdmin || $isProjectOwner
+        if ($isLogged && $can_delete_comment && ($isAdmin || $isProjectOwner
             || isset($users_permission['delete_project_comments']))) {
             $comment_links[] = $ajax->link('(x)', '#',
             array('url' => '/projects/delete_comment/'.$project_id.'/'.$comment_id,
