@@ -30,39 +30,7 @@ Class ChannelController extends AppController {
     }
 	
     function recent() {
-        if (! $this->isAdmin()) { 
-           $this->cakeError('error404');
-        }
-        $this->layout = 'scratchr_explorer';
-        $this->pageTitle = "Scratch | Newest projects";
-        $this->modelClass = "Project";
-        $options = array("sortBy"=>"created", "direction" => "DESC");
-        $moreconditions = "(User.status != 'delbyadmin' AND User.status != 'delbyusr')";
-        $key = 'channel-recent-';
-        $ttl = CHANNEL_RECENT_CACHE_TTL;
-        $projects_count = $this->_getProjectsCount("proj_visibility = 'visible'  AND status != 'notsafe' AND $moreconditions",
-                                                $key, $ttl);
-        list($order, $limit, $page) = $this->Pagination->init(null, array(),
-                                            $options, $projects_count);
-
-        $this->Project->mc_connect();
-        $mc_key = $key.$limit.'-'.$page;
-        $final_projects = $this->Project->mc_get($mc_key);
-        if ($final_projects === false) {
-            $this->Project->unbindModel(
-                array('hasMany' => array('GalleryProject'))
-            );
-            $final_projects = $this->Project->findAll("Project.proj_visibility = 'visible' AND Project.status != 'notsafe' AND $moreconditions", NULL, $order, $limit, $page, NULL, $this->getContentStatus());
-            $final_projects = $this->set_projects($final_projects);
-            $this->Project->mc_set($mc_key, $final_projects, false, $ttl);
-        }
-        $this->set('data', $final_projects);
-        $this->Project->mc_close();
-
-        $this->set('heading', ___("new projects",true));
-        $this->set('option', 'recent');
-        $this->set('rss_link', $this->feed_links['recent']);
-        $this->render('explorer');
+        $this->redirect(array('controller' => 'latest', 'action' => 'shared'));
     }
 	
     function featured() {
