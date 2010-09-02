@@ -8,6 +8,7 @@ topic[4] = "<?php print(TOPIC4); ?>";
 topic[5] = "<?php print(TOPIC5); ?>";
 topic[6] = "<?php print(TOPIC6); ?>";
 topic[7] = "<?php print(TOPIC7); ?>";
+topic[8] = "<?php print(TOPIC8); ?>";
 
 
 var subtopic = new Array();
@@ -23,8 +24,10 @@ function selectTopic(isList){
 	document.getElementById('subtopicsdiv').style.display="none";
 	document.getElementById('lostpassworddiv').style.display="none";
 	document.getElementById('permissionToUseScratchdiv').style.display="none";
+	document.getElementById('feedbackdiv').style.display="none";
 	document.getElementById('educatorQuestionsdiv').style.display="none";
 	document.getElementById('inappropriateBehaviordiv').style.display="none";
+	document.getElementById('deleteaccountdiv').style.display="none";
 
 	if(txtIndex==0)
 	{
@@ -46,8 +49,14 @@ function selectTopic(isList){
 	{
 		document.getElementById('educatorQuestionsdiv').style.display="block";
 	}
-	//Inappropriate behavior
+	//Feedback
 	else if(txtIndex==4)
+	{
+		document.getElementById('feedbackdiv').style.display="block";
+	}
+
+	//Inappropriate behavior
+	else if(txtIndex==5)
 	{
 		document.getElementById('inappropriateBehaviordiv').style.display="block";
 	}
@@ -56,6 +65,11 @@ function selectTopic(isList){
 	{
 		document.getElementById('questionform').style.display="none";
 		document.getElementById('technicalquestiondiv').style.display="block";
+	}
+	// Delete account
+	else if(txtIndex==7)
+	{
+		document.getElementById('deleteaccountdiv').style.display="block";
 	}
 
 	// Show the question form if answer is not 0 or technical questions (which has a special subform)
@@ -92,8 +106,8 @@ document.getElementById('subtopicsdiv').style.display="block";
 
 <div class="fullcontent">
   <h2><?php ___('Contact Us'); ?></h2>
-  <h3><?php printf(___('Questions? Check out the %sScratch FAQ%s, or consider posting your question on the %sforums%s.', true),'<a href="http://info.scratch.mit.edu/Support/Scratch_FAQ">', '</a>', '<a href="/forums">', '</a>');?> </h3>
-  <h3> <?php ___('Or contact us directly'); ?>:</h3>
+  <h3><?php printf(___('<br>Since the Scratch website went live in 2007, we\'ve replied to over 10,000 messages!<br><br>Based on the most common questions, we created the %sScratch FAQ%s so you can quickly find answers. You can also post your questions on the Scratch %sforums%s.<br><br>', true),'<a href="http://info.scratch.mit.edu/Support/Scratch_FAQ">', '</a>', '<a href="/forums">', '</a>');?> </h3>
+  <h3> <?php ___('You can contact us directly too'); ?>:</h3>
 
 <?php if (isset($succes)){ ?>
 	 <p>
@@ -113,9 +127,10 @@ document.getElementById('subtopicsdiv').style.display="block";
           <option><?php ___('Lost password'); ?></option>
 	  <option><?php ___('Permission to use Scratch for...'); ?></option>
           <option><?php ___('Questions from educators'); ?></option>
+	  <option><?php ___('Feedback'); ?></option>
           <option><?php ___('Inappropriate behavior'); ?></option>
-          <option><?php ___('Scratch Sensor Board'); ?></option>
 	  <option><?php ___('Technical questions'); ?></option>
+	  <option><?php ___('Delete account'); ?></option>
           <option><?php ___('Other'); ?></option>
 	</select>
 </p>
@@ -132,6 +147,10 @@ document.getElementById('subtopicsdiv').style.display="block";
 <p>Our work on Scratch is funded by donations from individuals and organizations. If you find Scratch useful, please consider <a href="http://info.scratch.mit.edu/Donate">making a donation</a> to support future development of Scratch.</p>'); ?>
 </div>
 
+<div id="feedbackdiv" style="display:none">
+<?php ___('<p>We\'re always trying to improve Scratch, so we\'re interested in hearing your feedback. If you\'ve been Scratching for a while and have a specific suggestion for Scratch or the Scratch website, consider sharing it on the <a href="http://info.scratch.mit.edu/Suggestions">Scratch Suggestions</a> page.</p>'); ?>
+</div>
+
 <div id="educatorQuestionsdiv" style="display:none">
 <?php ___('<p> See the <a href="http://info.scratch.mit.edu/Educators">Educators page</a> to learn more about using Scratch in schools. The best place to ask questions about teaching with Scratch is <a href="http://scratched.media.mit.edu/">ScratchEd</a>, an online community for educators using Scratch.</p>'); ?>
 </div>
@@ -139,6 +158,10 @@ document.getElementById('subtopicsdiv').style.display="block";
 <div id="inappropriateBehaviordiv" style="display:none">
 <?php ___('<p>If you see any disrespectful or inappropriate comments or projects on Scratch, please click the link that says "flag as inappropriate." That sends us a message that takes us right to the comment or project so we can check it out.</p>
 <p>You can also use the form below to explain the situation to us. Please include links to the pages where you are seeing the problem.</p>'); ?>
+</div>
+
+<div id="deleteaccountdiv" style="display:none">
+<?php ___('<p>There\'s no need to close your Scratch account when moving on. But if you wish to have it deleted, be sure to download any of your projects that you\'d like to keep before continuing. Use the form below to request that your account be removed. Be sure to include the account name and the <b>birth month and year</b> that you entered when you signed up, so we can confirm that you are the owner.</p><p>If you have any additional feedback, we hope you\'ll share it with us.</p>'); ?>
 </div>
 
 <div id="technicalquestiondiv" style="display:none">
