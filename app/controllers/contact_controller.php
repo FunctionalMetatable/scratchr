@@ -46,7 +46,7 @@ class ContactController extends AppController {
 	}
 
 	function msg($nosubject=null, $mailto=null){			
-		  $autoreplySubject = 'Autoreply from Scratch Website\: We received your message!';
+		  $autoreplySubject = 'Autoreply from Scratch Website: We received your message!';
 		  $autoreplyBody = 'We\'ve received your message - Thanks!<br><br>We get a lot of email, so it may take a few days to get back to you. In the meantime, you can try looking for an answer to your question in the <a href="http://info.scratch.mit.edu/Support/Scratch_FAQ">Scratch FAQ</a>. You can also post questions that aren\'t related to specific accounts in the <a href="http://scratch.mit.edu/forums/">Scratch Forums</a>.<br><br>Scratch On!<br>Scratch Team';
 
 #		  $this->set('content_status', $this->getContentStatus());
