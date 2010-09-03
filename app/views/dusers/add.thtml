@@ -187,9 +187,8 @@ name="data[Duser][role-researcher]" value="1" id="DuserRole-researcher" /> <?php
 </div>
 <!-- |||||| Begin content area ||||||| -->
 
-<?php ___('If you are having difficulties with this form, please go directly to'); ?> <a href="<?php echo $html->url('/pages/download')?>"><?php ___('Scratch download'); ?></a><BR>
-<?php ___('Please send questions to us at:'); ?> <a 
-href="mailto:help&#64;scratch.mit.edu">help&#64;scratch.mit.edu</a>.
+<?php ___('If you are having difficulties with this form, please go directly to'); ?> <a href="<?php echo $html->url('/pages/download')?>"><?php ___('Scratch download.'); ?></a><BR>
+<?php ___('Questions? '); ?> <a href="<?php echo $html->url('/contact/us')?>"><?php ___('Contact us.'); ?></a><BR><BR>
 <!-- ////// End Content area ////// -->
 
 
