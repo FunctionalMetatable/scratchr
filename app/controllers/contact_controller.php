@@ -4,8 +4,6 @@ class ContactController extends AppController {
 	var $uses = array('Notification', 'Announcement');
 	var $name = 'Contact';
 	var $components = array('Email', 'RequestHandler');
-	var $autoreplySubject = 'Autoreply from Scratch Website\: We received your message!';
-	var $autoreplyBody = 'We\'ve received your message - Thanks!<br><br>We get a lot of email, so it may take a few days to get back to you. In the meantime, you can try looking for an answer to your question in the <a href="http://info.scratch.mit.edu/Support/Scratch_FAQ">Scratch FAQ</a>. You can also post questions that aren\'t related to specific accounts in the <a href="http://scratch.mit.edu/forums/">Scratch Forums</a>.<br><br>Scratch On!<br>Scratch Team';
 
 	function us(){
 		$this->pageTitle = ___('Scratch | Contact us', true);
@@ -47,7 +45,10 @@ class ContactController extends AppController {
 		}
 	}
 
-	function msg($nosubject=null, $mailto=null){
+	function msg($nosubject=null, $mailto=null){			
+		  var $autoreplySubject = 'Autoreply from Scratch Website\: We received your message!';
+		  var $autoreplyBody = 'We\'ve received your message - Thanks!<br><br>We get a lot of email, so it may take a few days to get back to you. In the meantime, you can try looking for an answer to your question in the <a href="http://info.scratch.mit.edu/Support/Scratch_FAQ">Scratch FAQ</a>. You can also post questions that aren\'t related to specific accounts in the <a href="http://scratch.mit.edu/forums/">Scratch Forums</a>.<br><br>Scratch On!<br>Scratch Team';
+
 #		  $this->set('content_status', $this->getContentStatus());
 		  $email = $this->data['Page']['email'];
 		  $name = $this->data['Page']['name'];
@@ -100,7 +101,7 @@ class ContactController extends AppController {
 
 			// Now send the sender a reply confirmation email
 			// Leave last argument (mailfrom) empty so ScratchR loads its own info( see /app/controllers/components/email.php )
-			$this->Email->email("<CONTACTUS_EMAIL>",'Scratch Team', $autoreplyBody, $autoreplySubject,$email,'' ); 
+			$this->Email->email('help@scratch.mit.edu','Scratch Team', $autoreplyBody, $autoreplySubject,$email,'' ); 
  
 			// $this->Email->email($email, $name, $message, $subject, $cc_topic, $email);  //copy of the email sent to the person in charge of the topic selected
 			$this->set('succes', ___('The message was sent', true) . " <br />" . ___('Thank you!', true));
