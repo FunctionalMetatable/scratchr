@@ -562,6 +562,15 @@ Class GalleriesController extends AppController {
 				{
 				    $possible_spam = true;
 				}
+				//set visibility as "hiddenduetourl"if commenter have upload zero project
+				// count commenters project
+				$hiddenduetourl = false;
+				$this->Project->recursive = -1;
+				$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$commenter_id));
+				//if pcomments contains url and user have post zero project
+				if($projects_count == 0 && !$this->check_url($comment)){
+					$hiddenduetourl = true;
+				}
 
 				if(isInappropriate($comment)) {
 					$vis = 'censbyadmin';
@@ -569,6 +578,8 @@ Class GalleriesController extends AppController {
 								array('gallery_id' => $gallery_id),
 								array($comment)
 							);
+				}else if($hiddenduetourl){
+				$vis = 'hiddenduetourl';
 				} else {
 					$vis = 'visible';
 				}
@@ -2654,12 +2665,23 @@ Class GalleriesController extends AppController {
 				    $possible_spam = true;
 				}
 				endif;
+				//set visibility as "hiddenduetourl"if commenter have upload zero project
+				// count commenters project
+				$hiddenduetourl = false;
+				$this->Project->recursive = -1;
+				$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$commenter_id));
+				//if pcomments contains url and user have post zero project
+				if($projects_count == 0 && !$this->check_url($comment)){
+					$hiddenduetourl = true;
+				}
 				if(isInappropriate($comment)) {
 					$vis = 'censbyadmin';
 					$this->notify('inappropriate_gcomment_reply', $user_id,
 								array('gallery_id' => $gallery_id),
 								array($comment));
-				} else {
+				}else if($hiddenduetourl){
+				$vis = 'hiddenduetourl';
+				}else {
 					$vis = 'visible';
 				}
 				
@@ -2833,7 +2855,9 @@ Class GalleriesController extends AppController {
                 . ' AND comment_visibility = "visible"' . $comment_condition,
                 null, $order, $limit, $page, 1);
 
-            $commenter_ids = array();
+            //hide comment if commenter have uploded zero projects
+			$comments = $this->filter_comments($comments);
+			$commenter_ids = array();
             $comment_ids = array();
 
             foreach ($comments as $key => $comment) {
@@ -2980,7 +3004,9 @@ Class GalleriesController extends AppController {
             . ' AND comment_visibility = "visible" AND reply_to = ' . $parent_id,
             null, 'Gcomment.timestamp DESC', $limit);
 
-        //set comments info
+        //hide comment if commenter have uploded zero projects
+         $comments = $this->filter_comments($comments);
+		//set comments info
         $commenter_ids = array();
         $comment_ids = array();
 
@@ -3222,6 +3248,22 @@ Class GalleriesController extends AppController {
 			  return ($this->comment_index($comment['Gcomment']['reply_to']));
 			  }
 			
+	}
+	
+	function filter_comments($comments_data){
+		$temp_array = array();
+		foreach($comments_data as $key =>$comments){
+			// count commenters project
+			$this->Project->recursive = -1;
+			$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$comments['Gcomment']['user_id']));
+			//if pcomments contains url and user have post zero project
+			if($projects_count == 0 && !$this->check_url($comments['Gcomment']['content'])){
+			}else{
+				$temp_array[$key] = $comments;
+			}
+		}//foreach
+		
+		return $temp_array;
 	}
 	
 

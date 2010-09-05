@@ -1,5 +1,4 @@
 <?php
-
 class ProjectsController extends AppController {
 
     var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject', 'AnonViewStat', 'ExperimentalUser');
@@ -303,6 +302,17 @@ class ProjectsController extends AppController {
 				    $possible_spam = true;
 				}
 
+				
+				//set visibility as "hiddenduetourl"if commenter have upload zero project
+				// count commenters project
+				$hiddenduetourl = false;
+				$this->Project->recursive = -1;
+				$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$commenter_id));
+				//if pcomments contains url and user have post zero project
+				if($projects_count == 0 && !$this->check_url($comment)){
+					$hiddenduetourl = true;
+				}
+				
 				if(isInappropriate($comment)) {
 					$vis = 'censbyadmin';
 					$this->notify('inappropriate_pcomment', $commenter_id,
@@ -310,7 +320,9 @@ class ProjectsController extends AppController {
 									'project_owner_name' => $urlname),
 									array($comment)
 								);
-				} else {
+				}else if($hiddenduetourl){
+				$vis = 'hiddenduetourl';
+				}else{
 					$vis = 'visible';
 				}
 				if($comment_id==null)
@@ -1919,7 +1931,7 @@ class ProjectsController extends AppController {
 			}//if comment id
 			
 			$comment_data = $this->set_comments($pid, $owner_id, $isLogged, $comment_id);
-            $this->set_comment_errors(array());
+			$this->set_comment_errors(array());
             $this->set('comments', $comment_data['comments']);
             $this->set('ignored_commenters', $comment_data['ignored_commenters']);
 			$this->set('deleted_commenters', $comment_data['deleted_commenters']);
@@ -2727,13 +2739,24 @@ class ProjectsController extends AppController {
 					$possible_spam = true;
 				}
 				endif;
+				//set visibility as "hiddenduetourl"if commenter have upload zero project
+				// count commenters project
+				$hiddenduetourl = false;
+				$this->Project->recursive = -1;
+				$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$commenter_id));
+				//if pcomments contains url and user have post zero project
+				if($projects_count == 0 && !$this->check_url($comment)){
+					$hiddenduetourl = true;
+				}
 				if(isInappropriate($comment)) {
 					$vis = 'censbyadmin';
 					$this->notify('inappropriate_pcomment_reply', $user_id,
 								array('project_id' => $project_id,
 								'project_owner_name' => $urlname),
 								array($comment));
-				} else {
+				}else if($hiddenduetourl){
+				$vis = 'hiddenduetourl';
+				}else {
 					$vis = 'visible';
 				}
 				
@@ -2952,8 +2975,9 @@ class ProjectsController extends AppController {
                 . ' AND Pcomment.comment_visibility = "visible"'.$comment_condition,
                 'Pcomment.*, User.id, User.username, User.urlname, User.role, User.timestamp',
                 $order, $limit, $page, 1, 'all', 0, true);
-
-            //set comments info
+			//hide comment if commenter have uploded zero projects
+            $comments = $this->filter_comments($comments);
+			//set comments info
             $commenter_ids = array();
             $comment_ids = array();
 
@@ -3044,7 +3068,9 @@ class ProjectsController extends AppController {
                 'Pcomment.*, User.id, User.username, User.urlname, User.role, User.timestamp',
                 'Pcomment.created DESC', $limit, 1, 1, 'all', 0, true);
 
-        //set comments info
+        //hide comment if commenter have uploded zero projects
+         $comments = $this->filter_comments($comments);
+		//set comments info
         $commenter_ids = array();
         $comment_ids = array();
 
@@ -3264,6 +3290,22 @@ class ProjectsController extends AppController {
         else {
             return ($this->findOriginalProject($project['Project']['based_on_pid']));
         }
+	}
+	
+	function filter_comments($comments_data){
+		$temp_array = array();
+		foreach($comments_data as $key =>$comments){
+			// count commenters project
+			$this->Project->recursive = -1;
+			$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$comments['Pcomment']['user_id']));
+			//if pcomments contains url and user have post zero project
+			if($projects_count == 0 && !$this->check_url($comments['Pcomment']['content'])){
+			}else{
+				$temp_array[$key] = $comments;
+			}
+		}//foreach
+		
+		return $temp_array;
 	}
 }
 ?>
