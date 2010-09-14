@@ -957,13 +957,15 @@ class ProjectsController extends AppController {
 							//$this->notify('account_temp_lock', $project['Project']['user_id'], array());
 						}
 					}
+					$this->redirect("/projects/$urlname/$pid");
 				}
 				else {
-					$this->render("projectflagging_ajax", "ajax");
+					$this->redirect("/projects/$urlname/$pid");
+					//$this->render("projectflagging_ajax", "ajax");
 				}
 			}
 		}
-        return;
+        $this->redirect("/projects/$urlname/$pid");
     }
 
 
@@ -1818,7 +1820,13 @@ class ProjectsController extends AppController {
             if ($project['User']['urlname'] !== $urlname) {
 				$this->cakeError('error404');
             }
-
+			//When someone flags a project, that person should no longer be able to view the project. 
+			if($isLogged){
+				$flaggerCount = $this->Flagger->findCount("Flagger.project_id = $pid AND Flagger.user_id  = $logged_id");
+				if($flaggerCount > 0 && $project['Project']['proj_visibility'] == 'visible' && !$this->isAdmin()){
+					$this->cakeError('error',array('code'=>'404', 'message'=>'project_flaged', 'name' => __('Not Found', true)));
+				}
+			}
             $owner_id = $project['User']['id'];
 			//if project visibility is censbycommunity and project created before the new code change date
             if($project['Project']['proj_visibility'] == 'censbycomm'
