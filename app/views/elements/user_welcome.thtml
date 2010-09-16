@@ -7,21 +7,21 @@
 
 <!-- Should match user_projects from here on out -->
        	<div class="mystuff_content">
-		<table border="0" cellpadding="10" align=center>
+		<table border="0" cellpadding="10" align=center style="padding:0px 20px;">
 			<tbody>
 				<tr>
 					<td align=center>
 						<a href="http://scratch.mit.edu/projects/gobo/1040203"><img width="161" height="121" src="http://scratch.mit.edu/static/projects/gobo/1040203_sm.png" alt=""></a>
 					</td>
 
-   					<td align=center>
+   					<td align=center style="padding:0px 25px;">
 						<br><b>Questions about Scratch?</b><br><br>
 Check out the <a href="http://info.scratch.mit.edu/Support/Scratch_FAQ">Scratch FAQ</a>, or ask the community in the <a href="http://scratch.mit.edu/forums/viewforum.php?id=6">All About Scratch</a> forum.
 					</td>
 				</tr>
 				<tr>
 					<td align=center>
-						Check out <a href="http://scratch.mit.edu/projects/gobo/944206">Gobo's Welcome Project!</a>
+						<a href="http://scratch.mit.edu/projects/gobo/1040203">Gobo's Welcome Project!</a>
 					</td>
 				</tr>
 			</tbody>
