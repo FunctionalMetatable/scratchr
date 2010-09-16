@@ -1,5 +1,11 @@
 <div class="mystuff_content">
 
+<?php if ($isMe && count($data) < 1 ): ?>
+<div class="mystuff_header">
+<?php ___('Find')?>&nbsp;<a href="<?php echo $html->url('/latest/shared')?>">
+<?php ___("interesting projects")?></a>&nbsp;<?php ___('to add to your favorites.')?>
+	</div>
+<?php endif;?>
 <?php if ($isMe || $isAdmin): ?>
 	<div class="mystuff_project_action">
 	<form id="removeFavorites" action="<?php echo $html->url('/users/removefavorites')?>" method="post">
