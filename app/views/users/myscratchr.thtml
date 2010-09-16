@@ -562,6 +562,15 @@ function langList($countries) {
   <!-- ////// End User sidebar ////// -->
   <!-- |||||| Begin content area ||||||| -->
 <div id="usermain">
+
+
+<!-- If this is the my stuff page of a new user with 0 projects, show welcome message-->
+	<?php
+	if($isMe && !$projects):
+		e($this->renderElement('user_welcome'));
+	endif;
+	?>
+
 	<div class="mystuff_container">
 	<div id="ajax_pagination">
     <!-- ::: Begin projects ::: -->
