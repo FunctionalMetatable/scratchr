@@ -209,6 +209,14 @@
 		echo $this->renderElement('users/signup_info', Array("mode" => "city"));
 	?>
   </div>
+  <!-- These three lines call the javascript files that set up the Flash Object to retrieve a list of all users created on this computer-->
+  <script type="text/javascript" src="/js/swfobject.js"></script>
+  <script type="text/javascript" src="/js/get_comp_usernames.js"></script>
+  <script type="text/javascript"> getNames();</script>
+
+  <div id="flashContent">
+      <!-- This will be filled in by the javascript files with a Flash object -->
+  </div>
   <div class="signup_row">
 	<div class="signup_label">
 	</div>
