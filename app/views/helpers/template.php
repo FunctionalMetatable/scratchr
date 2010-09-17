@@ -30,7 +30,7 @@ class TemplateHelper extends Helper
 								$notification['gallery_name'],
 								$notification['project_id'],
 								$notification['project_owner_name'],
-								$notification['project_name'],
+								strip_tags($notification['project_name']),
                                 $notification['comment_id']
 							),
 							$notification['template']
