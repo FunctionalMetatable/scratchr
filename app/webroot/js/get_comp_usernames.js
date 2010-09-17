@@ -55,8 +55,4 @@ var getNames = function () {
                 flashvars, params, attributes, flashReady);
 	<!-- JavaScript enabled so display the flashContent div in case it is not replaced with a swf object. -->
 	swfobject.createCSS("#flashContent", "display:block;text-align:left;");
-
-
-	var movieName = 'Save_User';				
-	var isIE = (navigator.appName.indexOf("Microsoft") != -1);
 }
