@@ -174,6 +174,7 @@ class ProjectsController extends AppController {
      * @param int $pid => project id
      */
     function name($urlname, $pid) {
+	Configure::write('debug',0);
 	    $this->exitOnInvalidArgCount(2);
 		if (!$this->RequestHandler->isAjax())
 			$this->cakeError('error404');
