@@ -18,6 +18,7 @@
 			$project_id = $project['Project']['id'];
 			$project_url = "/projects/$project_creator/$project_id";
 			$project_safe_level = $project['Project']['status'];
+			$project_upload_ip = $project['Project']['upload_ip'];
 		
 			echo "<div class='gallerythumb clearme'>\n";
     		echo "\t<div class='admin_leftcolumn'>\n";
@@ -47,6 +48,9 @@
     		echo "\t\t</span><br/>\n";
     		echo "\t\t<span> Last Modified: ";
     		echo "$project_modified"; echo "</span>\n";
+		echo "\t\t</span><br/>\n";
+    		echo "\t\t<span> Shared from: ";
+		echo "$project_upload_ip";echo "</span>\n";
     		echo "\t\t<span><br/>\n";
 			?>
 			<a href="<?php echo $html->url('/administration/deleteproject/'.$project_id)?>">Delete</a> |
