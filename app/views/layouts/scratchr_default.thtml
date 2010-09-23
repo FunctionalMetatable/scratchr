@@ -27,23 +27,16 @@
 <?php
 //for home page only
 if(Router::url('') == '/'):
-    echo $javascript->link('jquery.latest.js');
-    echo $javascript->link('interface.js');
-    echo $javascript->link('thickbox.js');
-    echo $javascript->link('scratchr.jquery.js');
+    echo $html->css('global-2010-09-21');
+    echo $html->css('languagemenu');
     echo $html->css('thickbox');
+    echo $javascript->link('home-2010-07-09.js');
 else:
-    echo $javascript->link('prototype.js');
+    echo $html->css('main-2010-08-10');
+    echo $javascript->link('other-2010-07-09.js');
     echo $javascript->link('scriptaculous.js');
-    echo $javascript->link('scratchr.js?v=1.2');
-    echo $javascript->link('gallery.js');
-    echo $javascript->link('jquery.js?v=nov21');
-    echo $javascript->link('ajax.js');
-    echo $javascript->link('signup.js');
 endif;
 
-echo $html->css('global');
-echo $html->css('languagemenu');
 ?>
 
 
@@ -61,8 +54,6 @@ echo $html->css('languagemenu');
 <body>
 <!-- |||||| Begin main container ||||||| -->
 <div id="container">
-
-
 <!-- |||||| Begin header ||||||| -->
 <?php
 if ($isLoggedIn)
@@ -70,12 +61,9 @@ if ($isLoggedIn)
 else {
     echo $this->renderElement('header_default');
 }
-
 ?>
 <!-- ////// End header ////// -->
-
 <?php echo $content_for_layout?>
-
 <?php echo $this->renderElement('footer'); ?>
 <?php
 	echo $this->renderElement('ajax_indicator');
