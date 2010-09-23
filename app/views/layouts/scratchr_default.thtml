@@ -42,7 +42,7 @@ else:
     echo $javascript->link('signup.js');
 endif;
 
-echo $html->css('global_2010_09_23');
+echo $html->css('global');
 echo $html->css('languagemenu');
 ?>
 
