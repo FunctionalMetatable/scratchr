@@ -76,6 +76,11 @@ if (isset($head)) echo $head->print_registered();
 ?>
 </head>
 <body>
+<!-- ClickTale Top part -->
+<script type="text/javascript">
+var WRInitTime=(new Date()).getTime();
+</script>
+<!-- ClickTale end of Top part -->
 <!-- |||||| Begin main container ||||||| -->
 <div id="container">
 
