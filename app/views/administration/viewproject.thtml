@@ -51,6 +51,9 @@
 		echo "\t\t</span><br/>\n";
     		echo "\t\t<span> Shared from: ";
 		echo "$project_upload_ip";echo "</span>\n";
+		echo "\t\t</span><br/>\n";
+    		echo "\t\t<span> info in projects: ";
+		print_r($project);echo "</span>\n";
     		echo "\t\t<span><br/>\n";
 			?>
 			<a href="<?php echo $html->url('/administration/deleteproject/'.$project_id)?>">Delete</a> |
