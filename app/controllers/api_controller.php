@@ -39,6 +39,19 @@ class ApiController extends AppController {
         $user = $this->User->read();
         $this->redirect("/users/" . $user['User']['username'] . "/");     
     } 
+
+    /** 
+     * Redirects to user page based on a user id
+     * @parm int $uid => project id
+     */
+    function getusernamebyid($uid=null) {
+        $this->autoRender=false;
+        $this->Project->bindUser();
+        $this->User->id=$uid;
+        $user = $this->User->read();
+        echo $user['User']['username'];
+    }
+
 	
 	/** 
      * Returns all registered users
