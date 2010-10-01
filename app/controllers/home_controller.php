@@ -297,11 +297,14 @@ Class HomeController extends AppController {
 	
     //refresh the home page projects from memory
     function refresh() {
+    	if (!$this->isAdmin()) {
+    		$this->cakeError('error404');
+    	}
+    	
     	$this->Project->mc_connect();
         $key = $this->__getHomeKey($this->__setCookieCountry());
         $this->Project->mc_delete($key);
         $this->Project->mc_close();
-        
         $this->redirect('/');
     }
     

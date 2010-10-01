@@ -59,5 +59,9 @@
     <a href="/administration/ban_user_frontpage"></a>
 	<h3><a href="<?php echo $html->url('/administration/ban_user_frontpage')?>"> Frontpage User Ban  </a></h3>
 	</div>
+	
+	<div class="gallerythumb clearme">
+    <h3><a href="<?php echo $html->url('/home/refresh')?>"> Refresh Home Page Cache  </a></h3>
+	</div>
 	<?php endif;?>
 </div>
