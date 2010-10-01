@@ -42,27 +42,15 @@ Class HomeController extends AppController {
 	}
 	
     function index() {  
-		//set users country
-		$cookieCountry = $this->Cookie->read('country');
-		//set cookie country, if cookie country is not set
-		if(empty($cookieCountry)) {
-			$ipCountry = $this->getUserCountryFromIP();
-			if($this->isCustomizableCountry($ipCountry)) {
-				$this->Cookie->write('country', $ipCountry, null, '+350 day');
-				$cookieCountry = $ipCountry;
-			}
-		}
+		$cookieCountry = $this->__setCookieCountry();
 		
         $this->Project->mc_connect();
         $project_ids = array();
        	$user_ids =array();
         $this->set('client_ip', $this->RequestHandler->getClientIP());
 		
-		$key = 'home_projects_data';
-		if($cookieCountry && strcmp($cookieCountry, DEFAULT_COUNTRY) != 0){
-			$key = 'home_projects_data_'.$cookieCountry;
-		}
-		
+		$key = $this->__getHomeKey($cookieCountry);
+        
         $home_projects = $this->Project->mc_get($key);
         if($home_projects === false) {
 			$curator_name = $this->___getCuratorName();
@@ -307,6 +295,40 @@ Class HomeController extends AppController {
 		$this->set('ishomepage', true);
     }
 	
+    //refresh the home page projects from memory
+    function refresh() {
+    	$this->Project->mc_connect();
+        $key = $this->__getHomeKey($this->__setCookieCountry());
+        $this->Project->mc_delete($key);
+        $this->Project->mc_close();
+        
+        $this->redirect('/');
+    }
+    
+    function __setCookieCountry() {
+    	//set users country
+		$cookieCountry = $this->Cookie->read('country');
+		//set cookie country, if cookie country is not set
+		if(empty($cookieCountry)) {
+			$ipCountry = $this->getUserCountryFromIP();
+			if($this->isCustomizableCountry($ipCountry)) {
+				$this->Cookie->write('country', $ipCountry, null, '+350 day');
+				$cookieCountry = $ipCountry;
+			}
+		}
+		return $cookieCountry;
+    }
+    
+    function __getHomeKey($cookieCountry) {
+    	$key = 'home_projects_data';
+		
+    	if($cookieCountry && strcmp($cookieCountry, DEFAULT_COUNTRY) != 0){
+			$key = 'home_projects_data_'.$cookieCountry;
+		}
+		
+		return $key;
+    }
+    
 	function __getScratchClub() {
         $club = $this->ClubbedGallery->find(NULL, NULL, "ClubbedGallery.id DESC");
         if(empty($club)) return false;
