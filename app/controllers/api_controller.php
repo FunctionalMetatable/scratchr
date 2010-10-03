@@ -418,6 +418,30 @@ class ApiController extends AppController {
 		exit;
 	}
 	
+	/** 
+     * Returns  all favoriteproject
+	 @param userid 
+     */
+	function getusersfavoriteprojectsbyuid($uid=null){
+		Configure::write('debug', 0);
+		$this->Project->mc_connect();
+		$mc_key = 'get--favoritr-projects-by-uid-'.$uid;
+		$projects = $this->Project->mc_get($mc_key);
+		if ($projects === false) {
+			App::import("Model","Favorite");
+			$this->Favorite		= & new Favorite();
+			$favorite_projects = $this->Favorite->find('all', array('conditions'=>array('Favorite.user_id' => $uid), 'fields'=>array('Favorite.*'),'recursive'=>1,'order' =>'Favorite.timestamp DESC'));
+			$favorites_ids = Set::extract('/Favorite/project_id', $favorite_projects);
+			$projects = implode(':', $favorites_ids);
+			
+			$this->Project->mc_set($mc_key, $projects, false, API_FAVORITE_PROJECTS_BY_UID_TTL);
+		}
+		
+		 echo $projects;
+		 $this->Project->mc_close();
+		exit;
+	}
+	
 
 }
 ?>
