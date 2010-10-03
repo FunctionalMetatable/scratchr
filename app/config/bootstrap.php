@@ -186,6 +186,7 @@ $this->params['webservices']
   define("API_AUTHENTICATE_USER_TTL", 60); //1 hours
   define("API_GALLERY_INFO_TTL", 60); //1 hours
   define("API_PCOMMENT_BY_ID_TTL", 60); //1 hours
+  define("API_FAVORITE_PROJECTS_BY_UID_TTL", 60); //1 hours
 
  /**
   * IMAGE EXTENSIONS
