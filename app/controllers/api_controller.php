@@ -425,7 +425,7 @@ class ApiController extends AppController {
 	function getusersfavoriteprojectsbyuid($uid=null){
 		Configure::write('debug', 0);
 		$this->Project->mc_connect();
-		$mc_key = 'get--favoritr-projects-by-uid-'.$uid;
+		$mc_key = 'get-favorite-projects-by-uid-'.$uid;
 		$projects = $this->Project->mc_get($mc_key);
 		if ($projects === false) {
 			App::import("Model","Favorite");
