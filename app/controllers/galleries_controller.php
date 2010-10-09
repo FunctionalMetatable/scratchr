@@ -2820,17 +2820,24 @@ Class GalleriesController extends AppController {
         
         //no comment id is set that means we are not fetching a specific comment thread
         if(empty($comment_id)) {
-            //do pagination stuffs
+            $this->Gcomment->mc_connect();
+            
+        	//do pagination stuffs
+        	$total_comments = $this->Gcomment->mc_get('total_gcomments', $gallery_id);
+        	if($total_comments === false) {
+        		$total_comments = $this->Gcomment->findCount('gallery_id = ' . $gallery_id 
+										.' AND comment_visibility = "visible"'
+										.' AND reply_to = -100');
+        	}
+        	
             $this->PaginationSecondary->show = GALLERY_COMMENT_PAGE_LIMIT;
+            $this->PaginationSecondary->total = $total_comments;
             $this->modelClass = 'Gcomment';
             $options = array('sortBy' => 'timestamp', 'sortByClass' => 'Gcomment',
 						'direction' => 'DESC', 'url' => '/galleries/renderComments/' . $gallery_id);
-            list($order, $limit, $page) = $this->PaginationSecondary->init( 'gallery_id = ' 
-	 	                . $gallery_id . ' AND comment_visibility = "visible" AND reply_to = -100', 
-	 	                array(), $options); 
+            list($order, $limit, $page) = $this->PaginationSecondary->init( null, array(), $options); 
             
-            //check memcache
-            $this->Gcomment->mc_connect();
+            //collect the comments from memcache            
             $mc_key = $gallery_id.'_'.$isLoggedIn.'_'.$page;
             $num_cache_pages = GCOMMENT_CACHE_NUMPAGE; //we will store only first few pages
 

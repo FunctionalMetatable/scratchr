@@ -66,6 +66,8 @@ class Gcomment extends AppModel {
             $mc_key = $gallery_id.'_1_'.$i;
             $this->mc_delete('gcomments', $mc_key);
         }
+        //clear count cache
+        $this->mc_delete('total_gcomments', $gallery_id);
         $this->mc_close();
     }
     

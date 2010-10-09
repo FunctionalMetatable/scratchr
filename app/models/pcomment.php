@@ -93,6 +93,8 @@ class Pcomment extends AppModel {
             $mc_key = $project_id.'_1_'.$i;
             $this->mc_delete('pcomments', $mc_key);
         }
+        //clear count cache
+        $this->mc_delete('total_pcomments', $project_id);
         $this->mc_close();
     }
 	
