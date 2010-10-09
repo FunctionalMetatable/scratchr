@@ -2947,19 +2947,24 @@ class ProjectsController extends AppController {
         
         //no comment id is set that means we are not fetching a specific comment thread
         if(empty($comment_id)) {
-            //do pagination stuffs
-            $this->PaginationSecondary->show = PROJECT_COMMENT_PAGE_LIMIT;
+			$this->Pcomment->mc_connect();
+			
+			//do pagination stuffs
+			$total_comments = $this->Pcomment->mc_get('total_pcomments', $project_id);
+        	if($total_comments === false) {
+        		$total_comments = $this->Pcomment->findCount('project_id = ' . $project_id 
+									.' AND comment_visibility = "visible"'
+									.' AND reply_to = -100');	
+        	}
+			
+			$this->PaginationSecondary->show = PROJECT_COMMENT_PAGE_LIMIT;
+            $this->PaginationSecondary->total = $total_comments;
             $this->modelClass = 'Pcomment';
             $options = array('sortBy' => 'created', 'sortByClass' => 'Pcomment',
                         'direction' => 'DESC', 'url' => 'renderComments/' . $project_id . '/0');
-           
-            list($order, $limit, $page) = $this->PaginationSecondary->init( 
-	 	                                            'project_id = ' . $project_id 
-	 	                                           .' AND Pcomment.comment_visibility = "visible"' 
-	 	                                           .' AND reply_to = -100', array(), $options); 
-
-            //check memcache
-            $this->Pcomment->mc_connect();
+            list($order, $limit, $page) = $this->PaginationSecondary->init( null, array(), $options); 
+            
+            //collect the comments from memcache
             $mc_key = $project_id.'_'.$isLoggedIn.'_'.$page;
             $num_cache_pages = PCOMMENT_CACHE_NUMPAGE; //we will store only first few pages
 
