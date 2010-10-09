@@ -2954,7 +2954,8 @@ class ProjectsController extends AppController {
         	if($total_comments === false) {
         		$total_comments = $this->Pcomment->findCount('project_id = ' . $project_id 
 									.' AND comment_visibility = "visible"'
-									.' AND reply_to = -100');	
+									.' AND reply_to = -100');
+				$this->Pcomment->mc_set('total_pcomments', $total_comments, $project_id);	
         	}
 			
 			$this->PaginationSecondary->show = PROJECT_COMMENT_PAGE_LIMIT;

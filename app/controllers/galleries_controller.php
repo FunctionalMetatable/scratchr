@@ -2828,6 +2828,7 @@ Class GalleriesController extends AppController {
         		$total_comments = $this->Gcomment->findCount('gallery_id = ' . $gallery_id 
 										.' AND comment_visibility = "visible"'
 										.' AND reply_to = -100');
+				$this->Gcomment->mc_set('total_gcomments', $total_comments, $gallery_id);
         	}
         	
             $this->PaginationSecondary->show = GALLERY_COMMENT_PAGE_LIMIT;
