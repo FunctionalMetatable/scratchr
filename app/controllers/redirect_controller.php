@@ -4,46 +4,45 @@ var $components = array('Cookie');
 var $uses =array();
 
 function about(){
-	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja', 'kor' => 'ko');
-        $cookie_lang = $this->Cookie->read('lang');
-	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'About_Scratch');
+	$browser_lang = $this->_get_browser_lang();
+	$this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang) . 'About_Scratch');
 }
 
 
 function support(){
-	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja', 'kor' => 'ko');
-        $cookie_lang = $this->Cookie->read('lang');
-	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'Support');
+    $browser_lang = $this->_get_browser_lang();
+    $this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang). 'Support');
 }
 
 function share(){
-	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja', 'kor' => 'ko');
-        $cookie_lang = $this->Cookie->read('lang');
-	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'Support/Get_Started');
+	$browser_lang = $this->_get_browser_lang();
+	$this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang) . 'Support/Get_Started');
 }
 
 function donate(){
-	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja', 'kor' => 'ko');
-        $cookie_lang = $this->Cookie->read('lang');
-	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'Donate');
+	$browser_lang = $this->_get_browser_lang();
+	$this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang) . 'Donate');
 }
 
 function copyright(){
-	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja', 'kor' => 'ko');
-        $cookie_lang = $this->Cookie->read('lang');
-	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'DMCA');
+	$browser_lang = $this->_get_browser_lang();
+	$this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang). 'DMCA');
 }
 
 function terms(){
-	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja', 'kor' => 'ko');
-        $cookie_lang = $this->Cookie->read('lang');
-	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'Terms_of_use');
+	$browser_lang = $this->_get_browser_lang();
+	$this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang). 'Terms_of_use');
 }
 
 function privacy(){
-	$drupalcode = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja', 'kor' => 'ko');
-        $cookie_lang = $this->Cookie->read('lang');
-	$this->redirect('http://' . SUPPORT_URL . '/' . ((isset($drupalcode[$cookie_lang])) ? "$drupalcode[$cookie_lang]/" : '') . 'Privacy_Policy');
+	$browser_lang = $this->_get_browser_lang();
+	$this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang) . 'Privacy_Policy');
+}
+
+function _get_browser_lang(){
+	   $cookie_lang = $this->Cookie->read('lang');
+	   $set_lang = get_client_language($cookie_lang);
+	   return $browser_lang = !empty($set_lang) ? "$set_lang/" : '';
 }
 
 

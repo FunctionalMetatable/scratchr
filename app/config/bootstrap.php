@@ -678,7 +678,30 @@ function getCountryNameByCode($code){
 return $country_list[$code];
 }
 
-
+/* Helper function for redirect controller
+	check if cookie lang find then return cookie land else browser lang if lang exists in language list.
+*/
+function get_client_language( $cookie_lang = null){
+	$availableLanguages = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja', 'kor' => 'ko');
+	if(isset($availableLanguages[$cookie_lang])){ 
+		return $availableLanguages[$cookie_lang];
+	}else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
+		$langs=explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		//start going through each one
+		foreach ($langs as $value){
+			$choice=substr($value,0,2);
+			if(in_array($choice, $availableLanguages)){
+				return $choice;
+			}else{
+			return null;
+			}
+			
+		}
+	}else{
+		return null;
+	}	
+	
+}
 
 
 
