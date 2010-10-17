@@ -6,7 +6,7 @@ class UsersController extends AppController {
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 
 	'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject','AdminComment', 'User','Project','Favorite', 'Pcomment',
 	'UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification',
-	'Shariable','Thank', 'ViewStat','Curator','WhitelistedIpAddress','BlockedIp');
+	'Shariable','Thank', 'ViewStat','Curator','WhitelistedIpAddress','BlockedIp', 'DisposableDomain');
 	
 
 	function admin_index() {
@@ -118,23 +118,6 @@ class UsersController extends AppController {
 		}
 	}
 
-        function __isEmailDomainBlacklisted($email) {
-            $blacklist_handle = fopen("http://".$_SERVER['SERVER_NAME']."/static/misc/disposabledomains.txt", 'r'); //XXX: Should we directly access it via the file system ?
-            if ($blacklist_handle) {
-                $response = stream_get_contents($blacklist_handle);
-                fclose($blacklist_handle);
-
-                $blacklist = explode("\n", $response);
-
-                foreach ($blacklist as $domain) {
-                    if (stristr($email, $domain))
-                        return TRUE;
-                }
-            }
-
-            return FALSE;
-        }
-
 	function signup() {
 		$this->pageTitle = ___("Scratch | Signup", true);
         $client_ip = $this->RequestHandler->getClientIP();
@@ -197,7 +180,7 @@ class UsersController extends AppController {
 				$errors['name_length'] = ___('Username must be between 3 to 20 characters', true);
 			}
 
-			if (eregi("^[a-z0-9_-]+$", $this->data['User']['username'])) {
+			if (eregi("^[a-z0-9_\-]+$", $this->data['User']['username'])) {
 			} else {
 				$this->User->invalidate('username');
 				$errors['name_characters'] = ___('Username cannot contain special characters or spaces except _ and -', true);
@@ -234,7 +217,7 @@ class UsersController extends AppController {
 				$this->User->invalidate('byear');
 				$errors['birthdate_invalid'] =  ___('You must enter a valid birthdate', true);
 			}
-			
+
 			$pattern ="^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.((AERO|ARPA|ASIA|BIZ|CAT|COM|COOP|EDU|GOV|INFO|INT|JOBS|MIL|MOBI|MUSEUM|NAME|NET|ORG|PRO|TEL|TRAVEL|A[C-GL-OQ-UWXZ]|B[ABD-JM-OR-TVWYZ]|C[ACDF-IK-ORUVX-Z]|D[EJKMOZ]|E[CEGR-U]|F[I-KMOR]|G[ABD-IL-NP-UWY]|H[KMNRTU]|I[DEL-OQ-T]|J[EMOP]|K[EG-IMNPRWYZ]|L[A-CIKR-VY]|M[AC-EGHK-Z]|N[ACE-GILOPRUZ]|OM|P[AE-HKL-NR-TWY]|QA|R[EOSUW]|S[A-EG-ORT-VYZ]|T[CDF-HJ-PRTVWZ]|U[AGKMSYZ]|V[ACEGINU]|W[FS]|XN|Y[ETU]|Z[AMW]))$";
 			
 			
@@ -244,7 +227,7 @@ class UsersController extends AppController {
 				$errors['email_invalid'] =  ___('Invalid email address', true);
 			}
 
-                        if ($this->__isEmailDomainBlacklisted($email)) {
+                        if ($this->DisposableDomain->isBlacklisted($email)) {
                             $this->User->invalidate('email');
                             $errors['email_invalid'] =  ___('Please do not use a temporary/disposable email provider.', true);
                         }
@@ -272,48 +255,6 @@ class UsersController extends AppController {
 				 //at some point we though of having a urlname
 				 $this->data['User']['urlname'] =  $this->data['User']['username'];
 				 $this->data['User']['ipaddress'] = $client_ip_long;
-				 
-				 // This is the hidden form value that I added for the purposes of checking previous users made on this computer
-				 $prevNames = $this->data['User']['prevNames'];
-				 // This is the code that checks if any blocked accounts were originated here.
-				 // It is only entered into if actual names were found on the LSO.
-				 // This first test in the if is to see if it is set to a non-valid-username value
-				 // that I use if the flash object failed to load properly.
-				 // The second test makes sure that actual values were found in the LSO. 
-				 if ($prevNames != 'no flash' and $prevNames != ''){
-					$prevNames = explode(',',$prevNames);   // prevNames is made into an array so that I can iterate through it
-					$prevBlocked = false;
-					$blockedUsers = array(); // an array of all users currently blocked who were created on this computer
-					$notBlocked = array();  // an array of all other users created on this computer
-					foreach($prevNames as $name){
-						$checkingUser = $this->User->find(array('User.username'=>$name), 'status');
-						if ($checkingUser['User']['status'] != 'normal'){	// This should find any blocked users
-							$prevBlocked = true;		// The following email step only happens if this is true
-							array_push($blockedUsers, $name); // adds this user to the blocked list
-						}
-						else {
-							array_push($notBlocked, $name); // adds this user to the not-blocked list
-						}
-					      
-					}
-				      
-					// Only happens if at least one blocked user was found
-					// In this case, an email is sent to caution telling about the situation and listing all of the users
-					// created on this computer
-					if ($prevBlocked){
-						$subject = "Account '".$this->data['User']['username']."' Formed From Computer of '$blockedUsers[0]'";
-						$newusername_href =TOPLEVEL_URL.'/users/'.$this->data['User']['username'];
-						$linked_newusername = "<a href='$newusername_href'>".$this->data['User']['username']."</a>"; 
-						$blockedUsers = implode(', ', $blockedUsers);
-						foreach($notBlocked as $linkednotblock){
-						      $linkednotblock_href =TOPLEVEL_URL.'/users/'.$linkednotblock;
-						      $linked_notblocked = "<a href='$linkednotblock_href'>".$linkednotblock."</a>"; 
-						}
-						$notBlocked = implode(', ',$notBlocked);
-						$msg = "This is a warning that the account '$linked_newusername' was formed on the same computer as the following blocked users: $blockedUsers. As well as the following active users: ".$notBlocked.".";
-						$this->Email->email('caution','Scratch Website', $msg, $subject, 'caution@scratch.mit.edu');
-					}
-				  }
 
 					if ($this->User->save($this->data['User'], false)) {
 						$this->data['User']['id'] = $this->User->getLastInsertID();
@@ -321,8 +262,7 @@ class UsersController extends AppController {
 						$saved_user_id = $this->data['User']['id'];
 						$user_record = $this->User->find("User.id = $saved_user_id");
 						$this->Session->write('User', $user_record['User']);
-						$this->Session->write('newUser', true); // This tells the view function that the current user was just created
-						$this->redirect('/users/'.$this->data['User']['username']);	
+						$this->redirect('/users/'.$this->data['User']['username']);
 					} else {
 						$this->data['User']['password'] = '';
 						$this->data['User']['password2'] = '';
@@ -578,6 +518,16 @@ class UsersController extends AppController {
 					}
 					$this->Session->del('uservoiceRedirectTime');
 				}
+                                if ($this->Session->read('experimentalviewerRedirect')=='TRUE'){
+                                    $this->Session->del('experimentalviewerRedirect');
+                                    if ((time()-$this->Session->read('experimentalviewerRedirectTime')) < 120) {
+                                        $this->Session->del('experimentalviewerRedirectTime');
+                                        $this->redirect('/experimental');
+                                    }
+                                    else {
+                                        $this->Session->del('experimentalviewerRedirectTime');
+                                    }
+                                }
 				if($user_record['User']['email']=="" || $user_record['User']['email']=="rather-not-say@scratchr.org"){
 					$this->redirect('/users/set_email/'.$user_record['User']['urlname']);
 				}
@@ -1266,13 +1216,7 @@ class UsersController extends AppController {
 		$this->set('urlname', $user_record['User']['urlname']);
 		$this->set('age', $this->getUserAge($user_record) );
 		$this->set('isMe', $isMe);
-		if ($this->Session->read('newUser')) {				// This is true if this user has just been created
-		  $this->set('new', true);					// This tells the myscratchr view page to submit the username to the LSO
-		  $this->Session->write('newUser', false);
-		}
-		else {
-		  $this->set('new', false);
-		}
+		
 		$this->render('myscratchr', 'scratchr_userpage');
 	}
 
