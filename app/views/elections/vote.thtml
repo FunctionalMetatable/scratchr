@@ -3,6 +3,36 @@
 
 <script LANGUAGE="JavaScript">
 <!--
+
+function errorChecking()
+{
+	var error = "Please only choose one candidate per column";
+	var candidates = new Array();
+	var iserror = false;
+	var j = 0;
+	for (i = 0; i < document.forms["myform"].elements.length; i++){
+		if (document.forms["myform"].elements[i].checked){
+			candidates[j] = (i%6);
+			j++;
+		}
+	}
+	for (i=0; i <candidates.length; i++){
+		for (j=0; j <i; j++){
+			if (candidates[i] == candidates[j]){
+				iserror = true;			
+			}
+		}
+		
+	}
+	if (iserror){
+		document.getElementById("error").innerHTML = error;
+		return false;
+	}
+	else {
+		return confirmVote();
+	}
+	
+}
 function confirmVote()
 {
 var agree=confirm("Your vote is final. Are you sure these are the votes you want?");
@@ -11,23 +41,21 @@ if (agree)
 else
 	return false ;
 }
+
 // -->
 </script> 
 
 <form name="myform" action="sendvote"  method="POST">
-<div align="center"><br>
-<h1> Fall Community Moderator Elections </h1>
+<div align="center">
+<br>
+<h2> Fall Community Moderator Elections </h2>
 <h3>Please rank each candidate</h3>
- <div class="signup_error_wrapper">
-<?php
-  if (isset($errors['column'])) {
-			echo "<div align='left' id='signup_error_name' class='signup_error'>\n";
-				echo $errors['column'];
-			echo "</div>";
-			$errors['column'] = NULL;
-  }
-?>
 </div>
+<br>
+<div class="signup_error" id="error">
+</div>
+<br>
+<div align="center">
 <table cellspacing="10">
     <tr>
 	<td></td>
@@ -96,10 +124,8 @@ else
 </table>
 <input type="hidden" name="user" value="<?php echo $user;?>">
 
-<input type="submit" class="button2" name="Vote" onclick="return confirmVote()">
+<input type="submit" class="button2" name="Vote" onclick="return errorChecking()">
 
-<hr>
-
-</div>
 </form>
+</div>
 </body>

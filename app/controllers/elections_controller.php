@@ -51,36 +51,17 @@ class ElectionsController extends AppController {
 
 	function sendvote() 
 	{
-	      $candidates = array('candidate1', 'candidate2', 'candidate3', 'candidate4', 'candidate5', 'candidate6', 'candidate7', 'candidate8');
-	      $duplicates = false;
-	      for ($i = 1; $i < 8; $i++){
-			for ($j = $i + 1; $j <= 8; $j++){
-				if ($_POST[$candidates[$i]] == $_POST[$candidates[$j]] && $_POST[$candidates[$i]] != 0){
-					    $errors = array();
-					    $duplicates = true;
-					    $errors['column'] = "Please only choose one candidate per column";
-					    $this->set('errors', $errors);
-					    $this->render('vote', 'scratchr_userpage');
-					    break;
-				}
-			}
-			if ($duplicates){
-				break;
-			}
-	      }
-	      if (!$duplicates){
-			$postdata = array();
-			foreach ($candidates as $candidate){
-				$postdata[$candidate] = $_POST[$candidate];
-			}
-			$postdata['username'] = $this->getLoggedInUsername();
-			$postdata['ip'] = ip2long($this->RequestHandler->getClientIP());
-			App::import('Core', 'HttpSocket');
-			$HttpSocket = new HttpSocket();
-			$results = $HttpSocket->post('http://chinuas.scripts.mit.edu/php/elections.php', $postdata);
-			$this->set('results', $results);
-			$this->render('sendvote', 'scratchr_userpage');
-	      }
+		$postdata = array();
+		foreach ($candidates as $candidate){
+			$postdata[$candidate] = $_POST[$candidate];
+		}
+		$postdata['username'] = $this->getLoggedInUsername();
+		$postdata['ip'] = ip2long($this->RequestHandler->getClientIP());
+		App::import('Core', 'HttpSocket');
+		$HttpSocket = new HttpSocket();
+		$results = $HttpSocket->post('http://chinuas.scripts.mit.edu/php/elections.php', $postdata);
+		$this->set('results', $results);
+		$this->render('sendvote', 'scratchr_userpage');
 	}
 }
 ?>
