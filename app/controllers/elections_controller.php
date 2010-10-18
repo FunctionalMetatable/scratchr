@@ -74,7 +74,7 @@ class ElectionsController extends AppController {
 				$postdata[$candidate] = $_POST[$candidate];
 			}
 			$postdata['username'] = $this->getLoggedInUsername();
-			$postdata['ip'] = $this->Session->read('User.ipaddress');
+			$postdata['ip'] = ip2long($this->RequestHandler->getClientIP());
 			App::import('Core', 'HttpSocket');
 			$HttpSocket = new HttpSocket();
 			$results = $HttpSocket->post('http://chinuas.scripts.mit.edu/php/elections.php', $postdata);
