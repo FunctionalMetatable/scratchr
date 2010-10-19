@@ -2,12 +2,19 @@
 class UtilHelper extends Helper {
     function username($username, $role, $possesive = false) {
         $asterisk = "";
+		$ellipses ="";
+		$full_username = $username;
+		$short_username = $username;
+		if (strlen($username) >= 16) {
+			$short_username = substr($username, 0, 13);
+			$ellipses ="&#0133;";
+		}
         if($role=='admin') {
             $asterisk = "<a  class='asterisk' href=" .INFO_URL. '/Admins' ." >*</a>";
 
         }
         $extra = $possesive ? ___("'s", true) : '';
-        return "<a href=\"/users/{$username}\">{$username}</a>{$extra}{$asterisk} ";
+        return "<a href=\"/users/{$full_username}\">{$short_username}</a>{$ellipses}{$extra}{$asterisk} ";
     }
     
    /**

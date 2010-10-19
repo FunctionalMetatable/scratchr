@@ -116,11 +116,7 @@
 		</a>
 		  
 		  <h6><a href="<?php echo $html->url($project_url)?>"><?php e($project_name)?></a></h6>
-		  <p><?php ___('by'); ?><?php
-		if (isset($owner_username{16})){
-			$owner_username = substr($owner_username, 0, 13)."&#0133;";
-		}; 
- ?>
+		  <p><?php ___('by'); ?>
 		 <?php echo $util->username($owner_username, $owner_role);?>
 		  <?php if ($isThemeOwner || $isProjectOwner || $isAdmin): ?>
 		  | <a href="<?php echo $html->url('/galleries/removeproject/')?><?php e($theme_id) ?>/<?php e($project_id)?>">[x]</a></p>

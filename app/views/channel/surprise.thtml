@@ -143,6 +143,7 @@
 				$ribbon_image = (isset($project['Project']['ribbon_name'])) ? $project['Project']['ribbon_name']:null;
 				$urlname = $project['User']['urlname'];
 				$username = htmlspecialchars($project['User']['username']);
+				$owner_role = $project['User']['role'];
 				$project_url = "/projects/$urlname/$pid";
 				$project_desc = htmlspecialchars($project['Project']['description']);
 				$project_desc = wordwrap($project_desc, 88, "\n",true);
@@ -170,7 +171,9 @@
 						<?php endif;?>
 						<a href="<?php echo $html->url($project_url)?>"><?php echo $html->image($mini_img_src,array('title'=>$project_name,'alt'=>$project_name,'width'=>'148','height'=>'111'))?></a>
 				<h3><a href="<?php echo $html->url($project_url)?>"><?php echo $project_name?></a></h3>
-				<p><strong><?php ___('By');?>: </strong><a href="<?php echo $html->url('/users/'.$username)?>"><?php echo $username?></a></p>
+				<p><strong><?php ___('By');?>: </strong>
+				<?php echo $util->username($username, $owner_role);?>
+				</p>
 								
 					<?php			
 								echo "<p>\n"; 
