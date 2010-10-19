@@ -466,9 +466,9 @@ e($tagcloud->getTagCloud($tags, '/tagged/toploved', null, 3, 'scratch_tag',', ',
 		$user_id = $visitor['User']['id'];
 		$buddy_icon = getBuddyIconBySize($user_id, 'mini', $content_status, $visitor['User']['timestamp']);
 		$user_link = "/users/".$username;
-		$username = (strlen($username) > 23)? substr($username,0,23) . "&#0133;" : $username;
+		//$username = (strlen($username) > 23)? substr($username,0,23) . "&#0133;" : $username;
 		?>
-		<li><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><a href="<?php e($user_link)?>"><?php e($username);?></a></li>
+		<li><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php echo $util->username($username, $user_role);?></li>
         <?php endforeach;?>
       </ul>
     </div>
@@ -482,12 +482,13 @@ e($tagcloud->getTagCloud($tags, '/tagged/toploved', null, 3, 'scratch_tag',', ',
 		 */
 		foreach ($newmembers as $member):
 		$username = $member['User']['urlname'];
+		$user_role = $visitor['User']['role'];
 		$user_id = $member['User']['id'];
 		$buddy_icon = getBuddyIconBySize($user_id, 'mini', $content_status, $member['User']['timestamp']);
 		$user_link = "/users/".$username;
-		$username = (strlen($username) > 23)? substr($username,0,23) . "&#0133;" : $username;
+		//$username = (strlen($username) > 23)? substr($username,0,23) . "&#0133;" : $username;
 		?>
-		<li><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><a href="<?php e($user_link)?>"><?php e($username)?></a></li>
+		<li><img src="<?php e($buddy_icon)?>" title="<?php e($username)?>" alt="<?php e($username)?>" width="28" height="28"><?php echo $util->username($username, $user_role);?></li>
 		<?php endforeach;?>
       </ul>
     </div>
