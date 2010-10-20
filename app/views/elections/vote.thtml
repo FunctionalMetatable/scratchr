@@ -67,7 +67,7 @@ else
 	<td> Sixth   </td>
     </tr>
     <tr>
-	<td> candidate1 </td>
+	<td> 06dknibbs </td>
 	<td> <input type="radio" name="candidate1" value="6"> </td>
 	<td> <input type="radio" name="candidate1" value="5"> </td>
 	<td> <input type="radio" name="candidate1" value="4"> </td>
@@ -76,7 +76,7 @@ else
 	<td> <input type="radio" name="candidate1" value="1" checked> </td>
     </tr>
     <tr>
-	<td> candidate2 </td>
+	<td> demosthenes </td>
 	<td> <input type="radio" name="candidate2" value="6"> </td>
 	<td> <input type="radio" name="candidate2" value="5"> </td>
 	<td> <input type="radio" name="candidate2" value="4"> </td>
@@ -85,7 +85,7 @@ else
 	<td> <input type="radio" name="candidate2" value="1" checked> </td>
     </tr> 
     <tr>
-	<td> candidate3 </td>
+	<td> fullmoon </td>
 	<td> <input type="radio" name="candidate3" value="6"> </td>
 	<td> <input type="radio" name="candidate3" value="5"> </td>
 	<td> <input type="radio" name="candidate3" value="4"> </td>
@@ -94,7 +94,7 @@ else
 	<td> <input type="radio" name="candidate3" value="1" checked> </td>
     </tr> 
     <tr>
-	<td> candidate4 </td>
+	<td> Harakou </td>
 	<td> <input type="radio" name="candidate4" value="6"> </td>
 	<td> <input type="radio" name="candidate4" value="5"> </td>
 	<td> <input type="radio" name="candidate4" value="4"> </td>
@@ -103,7 +103,7 @@ else
 	<td> <input type="radio" name="candidate4" value="1" checked> </td>
     </tr> 
     <tr>
-	<td> candidate5 </td>
+	<td> Kileymeister </td>
 	<td> <input type="radio" name="candidate5" value="6"> </td>
 	<td> <input type="radio" name="candidate5" value="5"> </td>
 	<td> <input type="radio" name="candidate5" value="4"> </td>
@@ -112,7 +112,7 @@ else
 	<td> <input type="radio" name="candidate5" value="1" checked> </td>
     </tr> 
     <tr>
-	<td> candidate6 </td>
+	<td> Telemachus </td>
 	<td> <input type="radio" name="candidate6" value="6"> </td>
 	<td> <input type="radio" name="candidate6" value="5"> </td>
 	<td> <input type="radio" name="candidate6" value="4"> </td>
