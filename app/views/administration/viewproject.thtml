@@ -18,7 +18,7 @@
 			$project_id = $project['Project']['id'];
 			$project_url = "/projects/$project_creator/$project_id";
 			$project_safe_level = $project['Project']['status'];
-			$project_upload_ip = $project['Project']['upload_ip'];
+			$project_upload_ip = long2ip($project['Project']['upload_ip']);
 		
 			echo "<div class='gallerythumb clearme'>\n";
     		echo "\t<div class='admin_leftcolumn'>\n";
