@@ -321,14 +321,19 @@ class ApiController extends AppController {
 		Configure::write('debug', 0);
 		$username  = $_GET['username'];
 		$password  = rawurldecode($_GET['password']);
-		
-		$user_record = $this->User->find('first', array('conditions' => array('User.username'=>$username, 'User.password'=>sha1($password)),'fields'=>array('id', 'username')));
+		$this->User->bindModel( array('hasOne' => array('BlockedUser')) );
+		$user_record = $this->User->find('first', array('conditions' => array('User.username'=>$username, 'User.password'=>sha1($password)),'fields'=>array('BlockedUser.*','User.id', 'User.username')));pr($user_record);
 		if(empty($user_record)){
 			$user_info = 'false';
 		}else{
 			
 			$username = rawurlencode($user_record['User']['username']);
-			$user_info = $user_record['User']['id'].':'.$username;
+			if(isset($user_record['BlockedUser']['user_id']) && !empty($user_record['BlockedUser']['user_id']))
+				$status = 'blocked';
+			else
+				$status = 'unblocked';
+			
+			$user_info = $user_record['User']['id'].':'.$username.':'.$status;
 		}
 		echo $user_info;
 		exit;
