@@ -518,14 +518,6 @@ class UsersController extends AppController {
 					}
 					$this->Session->del('uservoiceRedirectTime');
 				}
-				elseif ($this->Session->read('uservoiceRedirect')=='moderationelections'){
-					$this->Session->del('uservoiceRedirect');
-					if ((time()-$this->Session->read('uservoiceRedirectTime')) <120){
-						$this->Session->del('uservoiceRedirectTime');
-						$this->redirect('/elections/vote');
-					}
-					$this->Session->del('uservoiceRedirectTime');
-				}
                                 if ($this->Session->read('experimentalviewerRedirect')=='TRUE'){
                                     $this->Session->del('experimentalviewerRedirect');
                                     if ((time()-$this->Session->read('experimentalviewerRedirectTime')) < 120) {
