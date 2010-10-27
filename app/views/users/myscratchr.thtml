@@ -567,7 +567,11 @@ function langList($countries) {
 <!-- If this is the my stuff page of a new user with 0 projects, show welcome message-->
 	<?php
 	if($isMe && (count($projects)<1)):
-		e($this->renderElement('user_welcome'));
+		$optionNo = $this->requestAction(array('controller' => 'users', 'action' => 'getWelcomeOption'));
+		if($optionNo){
+			$pageurl = 'user_welcome'.DS.'welcome_option'.intval($optionNo);
+			e($this->renderElement($pageurl));
+		}
 	endif;
 	?>
 

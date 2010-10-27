@@ -1,6 +1,6 @@
 <?php
 class RedirectController extends Controller {
-var $components = array('Cookie');
+var $components = array('Cookie','Session');
 var $uses =array();
 
 function about(){
@@ -45,8 +45,25 @@ function _get_browser_lang(){
 	   return $browser_lang = !empty($set_lang) ? "$set_lang/" : '';
 }
 
+function scratch_faq(){
+	App::import('model', 'UserWelcome');
+	$this->UserWelcome = new UserWelcome();
+	$logged_id  = $this->Session->read('User.id');
+	$sql = "INSERT INTO `user_clicks` (`id`,`user_id`,`page`) VALUES"
+                        ." (NULL, $logged_id, 'Scratch_FAQ')";
+                $this->UserWelcome->query($sql);
+	$this->redirect('http://' . SUPPORT_URL . '/' . 'Support/Scratch_FAQ');
+}
 
-
+function about_scratch(){
+	App::import('model', 'UserWelcome');
+	$this->UserWelcome = new UserWelcome();
+	$logged_id  = $this->Session->read('User.id');
+	$sql = "INSERT INTO `user_clicks` (`id`,`user_id`,`page`) VALUES"
+                        ." (NULL, $logged_id, 'All About Scratch forum')";
+                $this->UserWelcome->query($sql);
+	$this->redirect("/forums/viewforum.php?id=6");
+}
 
 }
 ?>
