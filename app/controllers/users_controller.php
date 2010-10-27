@@ -124,7 +124,6 @@ class UsersController extends AppController {
         $client_ip_long = ip2long($client_ip);
         $server_ip = ip2long($_SERVER['SERVER_ADDR']);
         $local_ip = 2130706433;
-
 		$user_data = $this->data;
 		$errors = Array();
 		$signup_interval = SIGNUP_INTERVAL;
@@ -260,6 +259,13 @@ class UsersController extends AppController {
 						$this->data['User']['id'] = $this->User->getLastInsertID();
 						$this->setFlash(___("Welcome!", true) . " <a href='/pages/download'>" . ___('Download Scratch', true) . "</a>", FLASH_NOTICE_KEY);
 						$saved_user_id = $this->data['User']['id'];
+						//save into user_welcoming
+						App::import('model', 'UserWelcome');
+						$this->UserWelcome = new UserWelcome();
+						$this->data['UserWelcome']['user_id'] = $saved_user_id;
+						$this->data['UserWelcome']['option'] = $this->UserWelcome->getOption();
+						$this->UserWelcome->save($this->data['UserWelcome']);
+						
 						$user_record = $this->User->find("User.id = $saved_user_id");
 						$this->Session->write('User', $user_record['User']);
 						$this->redirect('/users/'.$this->data['User']['username']);
@@ -987,6 +993,7 @@ class UsersController extends AppController {
 			$final_projects[$counter] = $temp_project;
 			$counter++;
 		}
+		
 		$this->set('projects', $final_projects);
 		$this->set('user_id', $user_id);
 		
@@ -2301,5 +2308,18 @@ class UsersController extends AppController {
 		$this->set('username', $user['User']['username']);
 		$this->set('user_id', $user['User']['id']);
 	}//function
+	
+	function getWelcomeOption(){ 
+		//get users welcome option if user has zero project
+			$user_id = $this->getLoggedInUserID();
+			App::import('model', 'UserWelcome');
+			$this->UserWelcome = new UserWelcome();
+			$option = $this->UserWelcome->field('option', "user_id=$user_id");
+			if($option)
+				return $option;
+			else
+				return false;
+	
+	}	
   }
 ?>
