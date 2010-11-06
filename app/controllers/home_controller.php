@@ -176,6 +176,8 @@ Class HomeController extends AppController {
 				$newprojects = $this->__getNewProjects($cookieCountry);
                 $this->Project->mc_set($key, $newprojects, false, HOMEL_NEW_PROJECTS_TTL);
 			}
+            shuffle($newprojects);
+            $newprojects = array_slice($newprojects,0,NUM_NEW_PROJECTS);
 			if(SHOW_RIBBON ==1){
 				$newprojects = $this->set_ribbon($newprojects);
 			}
@@ -352,7 +354,7 @@ Class HomeController extends AppController {
 		if($country) {
 			$condition .= " AND `projects`.`country`= '$country'";
 		}
-		return $this->Project->getTopProjects('`created`', '`created` DESC', null, null, null, NUM_NEW_PROJECTS,  $condition);
+		return $this->Project->getTopProjects('`created`', '`created` DESC', null, null, null, NUM_NEW_PROJECTS_CACHE,  $condition);
 	}
 
     function __getBlockedUserFrontpage(){
