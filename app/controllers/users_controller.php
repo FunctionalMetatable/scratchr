@@ -179,7 +179,7 @@ class UsersController extends AppController {
 				$errors['name_length'] = ___('Username must be between 3 to 20 characters', true);
 			}
 
-			if (eregi("^[a-z0-9_-]+$", $this->data['User']['username'])) {
+			if (eregi("^[a-zA-Z0-9]+[a-zA-Z0-9_-]+$", $this->data['User']['username'])) {
 			} else {
 				$this->User->invalidate('username');
 				$errors['name_characters'] = ___('Username cannot contain special characters or spaces except _ and -', true);
