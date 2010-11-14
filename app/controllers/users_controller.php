@@ -1209,8 +1209,11 @@ class UsersController extends AppController {
 		}
 		
 		/* welcoming message */
-		$this->loadModel('UserWelcome');
-		$welcome_option_number = $this->UserWelcome->getWelcomeOption($user_id);
+		$welcome_option_number = false;
+		if($isMe && (count($final_projects) < 1)) {
+			$this->loadModel('UserWelcome');
+			$welcome_option_number = $this->UserWelcome->getWelcomeOption($user_id);
+		}
 		$this->set('welcome_option_number', $welcome_option_number);
 		
 		$this->set('notification_count',$this->Notification->countAllNotification($user_id));
