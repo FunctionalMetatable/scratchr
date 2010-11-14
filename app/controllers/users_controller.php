@@ -1207,6 +1207,12 @@ class UsersController extends AppController {
 			$this->set('upload_error', $upload_error);
 			$this->Session->del('upload_error');
 		}
+		
+		/* welcoming message */
+		$this->loadModel('UserWelcome');
+		$welcome_option_number = $this->UserWelcome->getWelcomeOption($user_id);
+		$this->set('welcome_option_number', $welcome_option_number);
+		
 		$this->set('notification_count',$this->Notification->countAllNotification($user_id));
 		$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id AND Curator.visibility = 'visible'"));
 		$this->set('isIgnored',$isIgnored);
@@ -2307,19 +2313,6 @@ class UsersController extends AppController {
 		}
 		$this->set('username', $user['User']['username']);
 		$this->set('user_id', $user['User']['id']);
-	}//function
-	
-	function getWelcomeOption(){ 
-		//get users welcome option if user has zero project
-			$user_id = $this->getLoggedInUserID();
-			App::import('model', 'UserWelcome');
-			$this->UserWelcome = new UserWelcome();
-			$option = $this->UserWelcome->field('option', "user_id=$user_id");
-			if($option)
-				return $option;
-			else
-				return false;
-	
-	}	
-  }
+	}//function	
+ }
 ?>
