@@ -14,6 +14,15 @@ Class UserWelcome extends AppModel
 			return $setOption;
 
         }//function
+        
+		function getWelcomeOption($user_id) { 
+			$option = $this->field('option', "user_id=$user_id");
+			if($option)
+				return $option;
+			else
+				return false;
+	
+	}
 }//class
 
 ?>
