@@ -94,7 +94,7 @@ $this->params['webservices']
   */
  define("NUM_NEW_THEME_PROJECTS", 0);
  //total option for welcome message
- define("WELCOME_EXPERIMENT_TOTAL_OPTIONS", 3);
+ define("WELCOME_EXPERIMENT_TOTAL_OPTIONS", 0);
 
  /**
   * myscratchr configs
