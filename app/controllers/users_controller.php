@@ -254,6 +254,75 @@ class UsersController extends AppController {
 				 //at some point we though of having a urlname
 				 $this->data['User']['urlname'] =  $this->data['User']['username'];
 				 $this->data['User']['ipaddress'] = $client_ip_long;
+				 
+				 // This is the hidden form value that I added for the purposes of checking previous users made on this computer
+				 $prevNames = $this->data['User']['prevNames'];
+				 // This is the code that checks if any blocked accounts were originated here.
+				 // It is only entered into if actual names were found on the LSO.
+				 // This first test in the if is to see if it is set to a non-valid-username value
+				 // that I use if the flash object failed to load properly.
+				 // The second test makes sure that actual values were found in the LSO. 
+				 if ($prevNames != 'no flash' and $prevNames != ''){
+					$prevNames = explode(',',$prevNames);   // prevNames is made into an array so that I can iterate through it
+					$prevBlocked = false;
+					$blockedUsers = array(); // an array of all users currently blocked who were created on this computer
+					$notBlocked = array();  // an array of all other users created on this computer
+					$weDeleted = array();  // an array of all other users deleted by admin
+					$notSure = array();
+					foreach($prevNames as $name){
+						$checkingUser = $this->User->find(array('User.username'=>$name), 'status');
+						if ($checkingUser['User']['status'] == 'locked'){	// This should find any blocked users
+							$prevBlocked = true;		// The following email step only happens if this is true
+							array_push($blockedUsers, $name); // adds this user to the blocked list
+						}
+						elseif ($checkingUser['User']['status'] == 'normal'){
+							array_push($notBlocked, $name); // adds this user to the not-blocked list
+						}
+						elseif ($checkingUser['User']['status'] == 'delbyadmin'){
+							array_push($weDeleted, $name);
+						}
+						else{
+							array_push($notSure, $name);
+						}
+					}
+				      
+					// Only happens if at least one blocked user was found
+					// In this case, an email is sent to caution telling about the situation and listing all of the users
+					// created on this computer
+					if ($prevBlocked){
+						$subject = "Ignore This Test!!! Account '".$this->data['User']['username']."' Formed From Computer of '$blockedUsers[0]'";
+						$newusername_href =TOPLEVEL_URL.'/users/'.$this->data['User']['username'];
+						$linked_newusername = "<a href='$newusername_href'>".$this->data['User']['username']."</a>"; 
+						$blockedUsers = implode(', ', $blockedUsers);
+						$msg = "This is a warning that the account '$linked_newusername' was formed on the same computer as the following blocked users: $blockedUsers.";
+						if (count($notBlocked) > 0){		
+						      echo 'hello';
+						      foreach($notBlocked as $linkednotblock){
+							    $linkednotblock_href =TOPLEVEL_URL.'/users/'.$linkednotblock;
+							    $linked_notblocked = "<a href='$linkednotblock_href'>".$linkednotblock."</a>"; 
+						      }
+						      $notBlocked = implode(', ',$notBlocked);
+						      $msg = $msg." As well as the following active users: ".$notBlocked.".";
+						}
+						if (count($weDeleted) > 0){						      
+						      foreach($weDeleted as $linkedwedeleted){
+							    $linkedwedeleted_href =TOPLEVEL_URL.'/users/'.$linkedwedeleted;
+							    $linked_wedeleted = "<a href='$linkedwedeleted_href'>".$linkedwedeleted."</a>"; 
+						      }
+						      $weDeleted = implode(', ',$weDeleted);
+						      $msg = $msg." As well as the following deleted users: ".$weDeleted.".";
+						}
+						if (count($notSure) > 0){						      
+						      foreach($notSure as $linkednotsure){
+							    $linkednotsure_href =TOPLEVEL_URL.'/users/'.$linkednotsure;
+							    $linked_notsure = "<a href='$linkednotsure_href'>".$linkednotsure."</a>"; 
+						      }
+						      $notSure = implode(', ',$notSure);
+						      $msg = $msg." As well as the following users of statuses I don't know: ".$notBlocked.".";
+						}
+						$this->Email->email('caution','Scratch Website', $msg, $subject, 'caution@scratch.mit.edu');
+					}
+				  }
 
 					if ($this->User->save($this->data['User'], false)) {
 						$this->data['User']['id'] = $this->User->getLastInsertID();
@@ -267,6 +336,7 @@ class UsersController extends AppController {
 						$this->UserWelcome->save($this->data['UserWelcome']);
 						
 						$user_record = $this->User->find("User.id = $saved_user_id");
+						$this->data['User']['newUser'] = 'happy';
 						$this->Session->write('User', $user_record['User']);
 						$this->redirect('/users/'.$this->data['User']['username']);
 					} else {
