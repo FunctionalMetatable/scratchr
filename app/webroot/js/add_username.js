@@ -8,15 +8,15 @@ var isIE = (navigator.appName.indexOf("Microsoft") != -1);
 // This function sets up the reference to the Flash Object so that it is easily accessible by each browser type.
 function flashReady(event) {
 	    if (event.success){
-	    var isIE = (navigator.appName.indexOf("Microsoft") != -1);
-	    window.ref = event.ref;
+	      var isIE = (navigator.appName.indexOf("Microsoft") != -1);
+	      window.ref = event.ref;
 	    }
 
 	}
 //This function is called by the Flash Object actionscript code when the Flash Object is fully loaded
 // It sends a name, set in the addName function, to the LSO 
 function readyToSave() {
-	window.ref.saveUsername(window.newname);
+	var t=setTimeout("window.ref.saveUsername(window.newname)",1000);
 }
 
 // This portion of the code was written by the Adobe project to use the functions of swfobject to create a Flash Object.
@@ -42,7 +42,7 @@ var addName = function (username) {
             attributes.name = "Save_User";
             attributes.align = "middle";
 	    window.newname = username;
-            swfobject.embedSWF(
+           swfobject.embedSWF(
                 "/static/Save_User.swf", "flashContent", 
                 "1%", "1%", 
                 swfVersionStr, xiSwfUrlStr, 

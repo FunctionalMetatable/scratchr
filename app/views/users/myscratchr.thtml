@@ -598,6 +598,18 @@ function langList($countries) {
 		?>
 	</div>
 	</div>
-	<!-- ::: End projects ::: -->
-  </div>
-  <!-- ////// End main content ////// -->
+	  <!-- ::: End projects ::: -->
+    </div>
+    <?php
+			  if($new):
+	?>
+				  <script type="text/javascript" src="/js/swfobject.js"></script>
+				  <script type="text/javascript" src="/js/add_username.js"></script>
+				  <script type="text/javascript"> addName('<?echo $user['username']?>');</script>
+	<?
+			  endif;
+	?>
+    <div id="flashContent">
+	<!-- This will be filled in by the javascript files with a Flash object -->
+    </div>
+    <!-- ////// End main content ////// -->
