@@ -27,7 +27,7 @@
 <?php
 //for home page only
 if(Router::url('') == '/'):
-    echo $html->css('global-2010-09-21');
+    echo $html->css('global');
     echo $html->css('languagemenu');
     echo $html->css('thickbox');
     echo $javascript->link('home-2010-07-09.js');
