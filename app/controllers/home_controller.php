@@ -150,6 +150,10 @@ Class HomeController extends AppController {
 			$clubedprojects   = $home_projects['clubedprojects'];
         }
 		
+	shuffle($clubedprojects); 
+ 	$clubedprojects = array_slice($clubedprojects,0,NUM_DESIGN_STUDIO_PROJECT); 
+
+
         $this->set('featuredprojects', $featured);
         $this->set('topremixed', $topremixed);
         $this->set('toploved', $toploved);
@@ -589,7 +593,7 @@ Class HomeController extends AppController {
                         .' AND `projects`.`id` = `gallery_projects`.`project_id`';
         
         $projects = $this->Project->getTopProjects('', 'RAND()', null, $exclude_project_ids,
-                    $exclude_user_ids, NUM_DESIGN_STUDIO_PROJECT,
+                    $exclude_user_ids, NUM_DESIGN_STUDIO_PROJECT_CACHE,
                     $condition, '`gallery_projects`');
 
         if(SHOW_RIBBON ==1){
