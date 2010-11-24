@@ -26,7 +26,6 @@ $this->params['webservices']
  define("NUM_NEW_PROJECTS", 3);
  define("NUM_NEW_PROJECTS_CACHE", 20);
  define("NUM_DESIGN_STUDIO_PROJECT", 3);
- define("NUM_DESIGN_STUDIO_PROJECT_CACHE", 20);
  define("NUM_CURATOR_FAV_PROJECT", 3);
  define("MAX_FRIENDS_PROJECTS", 100);
  define("NUM_THEME_PROJECTS", 4);
