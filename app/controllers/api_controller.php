@@ -447,6 +447,72 @@ class ApiController extends AppController {
 		exit;
 	}
 	
+	/*
+	*return the block count data of latest project version
+	*params project_id
+	*/
+	function getprojectblockscount($pid=null){
+		if(empty($pid)){
+			$errorMsg = array('error' =>'Invalid project id');
+			echo json_encode($errorMsg);
+			exit;
+		}
+		Configure::write('debug', 0);
+		$this->ProjectBlock = ClassRegistry::init('ProjectBlock');
+		$this->ProjectBlock->mc_connect();
+		$mc_key = 'get-project-block-count-'.$pid;
+		$data = $this->ProjectBlock->mc_get($mc_key);
+		
+		if ($data === false) {
+			$data = $this->ProjectBlock->find('first',
+												array('conditions'=>array('ProjectBlock.project_id'=> $pid),
+												'order' => 'ProjectBlock.project_version DESC')
+										);
+			$this->ProjectBlock->mc_set($mc_key, $data, false, API_PROJECT_BLOCK_COUNT_TTL);
+		}								
+		if(empty($data)){
+			$errorMsg = array('error' =>'Invalid project id');
+			echo json_encode($errorMsg);
+			exit;
+		}
+		echo json_encode($data['ProjectBlock']);
+		exit;
+	}//eof
+	
+	/*
+	*return the human_readable data of latest project version
+	*params project_id
+	*/
+	function getprojectblocks($pid=null){
+		if(empty($pid)){
+			$errorMsg = array('error' =>'Invalid project id');
+			echo json_encode($errorMsg);
+			exit;
+		}
+		Configure::write('debug', 0);
+		$this->ProjectSpriteBlocksStack = ClassRegistry::init('ProjectSpriteBlocksStack');
+		$this->ProjectSpriteBlocksStack->mc_connect();
+		$mc_key = 'get-project-block-'.$pid;
+		$data = $this->ProjectSpriteBlocksStack->mc_get($mc_key);
+		
+		if ($data === false) {
+			$data = $this->ProjectSpriteBlocksStack->find('first',
+												array('conditions'=>array('ProjectSpriteBlocksStack.project_id'=>$pid),
+												'order' => 'ProjectSpriteBlocksStack.project_version DESC',
+												'fields'=> array('project_id' ,'human_readable')
+												)
+										);
+			$this->ProjectSpriteBlocksStack->mc_set($mc_key, $data, false, API_PROJECT_BLOCK_TTL);
+		}								
+		if(empty($data)){
+			$errorMsg = array('error' =>'Invalid project id');
+			echo json_encode($errorMsg);
+			exit;
+		}
+		echo json_encode($data['ProjectSpriteBlocksStack']);
+		exit;
+	}//eof
+	
 
 }
 ?>
