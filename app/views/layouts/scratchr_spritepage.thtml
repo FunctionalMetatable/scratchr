@@ -19,8 +19,8 @@
 
 
 <?php
-echo $html->css('main-2010-08-10');
-echo $javascript->link('other-2010-07-09.js');
+echo $html->css('main');
+echo $javascript->link('other.js');
 echo $javascript->link('scriptaculous.js');
 
 ?>

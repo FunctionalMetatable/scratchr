@@ -19,8 +19,8 @@
 <title>Scratch 	| <?php ___('Project'); ?> | <?php echo $project['Project']['name'] ?></title>
 
 <?php
-echo $html->css('main-2010-08-10');
-echo $javascript->link('projects-2010-07-09.js');
+echo $html->css('main');
+echo $javascript->link('projects.js');
 #echo $javascript->link('prototype.js');
 echo $javascript->link('scriptaculous.js');
 #echo $javascript->link('plugins.js');

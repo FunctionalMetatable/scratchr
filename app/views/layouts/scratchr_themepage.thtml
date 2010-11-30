@@ -18,8 +18,8 @@
 <title>Scratch | <?php ___('Gallery'); ?> | <?php echo htmlspecialchars($theme['name']) ?></title>
 <link rel="alternate" type="application/rss+xml" title="RSS" href="<?php echo $html->url('/feeds/getRecentGalleryProjects/')?><?php echo $gallery_id?>">
 <?php
-echo $html->css('themes-2010-07-09');
-echo $javascript->link('themepage-2010-07-09.js');
+echo $html->css('themes');
+echo $javascript->link('themepage.js');
 echo $javascript->link('scriptaculous.js');
 
 ?>
