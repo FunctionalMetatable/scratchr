@@ -30,10 +30,10 @@ if(Router::url('') == '/'):
     echo $html->css('global');
     echo $html->css('languagemenu');
     echo $html->css('thickbox');
-    echo $javascript->link('home-2010-07-09.js');
+    echo $javascript->link('home.js');
 else:
-    echo $html->css('main-2010-08-10');
-    echo $javascript->link('other-2010-07-09.js');
+    echo $html->css('main');
+    echo $javascript->link('other.js');
     echo $javascript->link('scriptaculous.js');
 endif;
 
