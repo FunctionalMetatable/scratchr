@@ -512,7 +512,5 @@ class ApiController extends AppController {
 		echo json_encode($data['ProjectSpriteBlocksStack']);
 		exit;
 	}//eof
-	
-
-}
+}//class
 ?>
