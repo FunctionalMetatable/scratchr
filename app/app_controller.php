@@ -1047,7 +1047,5 @@ ini_restore ("memory_limit");
 	   return true;
 		}
 	}//function
-	
-	
-}
+}//class
 ?>
