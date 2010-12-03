@@ -64,7 +64,7 @@ Class ServicesController extends AppController {
                     $this->debug = true;
                 }
             }*/
-            if(!$this->params['url']['debug']) {
+            if($this->params['url']['debug']) {
             	$this->debug = true;
             }
             else {
@@ -670,7 +670,7 @@ Class ServicesController extends AppController {
      */	
 	function __notify($type, $to_user_id, $data, $extra = array()) {
 		if($this->debug) {
-			"DEBUG: Sending notification type #$type to the User #{$to_user_id}";		
+			echo "DEBUG: Sending notification type #$type to the User #{$to_user_id}";		
 		}
 		//store the notification
 		App::import('Model', 'Notification');
@@ -887,7 +887,7 @@ Class ServicesController extends AppController {
 		$this->RemixNotification->mc_close();
 		
 		if($this->debug) {
-			"DEBUG: Setting notification type #$notification_types[$index] for the User #{$user_id}";		
+			echo "DEBUG: Setting notification type #$notification_types[$index] for the User #{$user_id}";		
 		}
 		
 		return $notification_types[$index];
@@ -927,9 +927,6 @@ Class ServicesController extends AppController {
                             array('project_id' => $base['Project']['id'],
                              'from_user_name' => $remixed['User']['username']),
                             array($remixed['Project']['id'], $remixed['Project']['name']));
-				if($this->debug) {
-					
-				}
 			}
         }
     }
