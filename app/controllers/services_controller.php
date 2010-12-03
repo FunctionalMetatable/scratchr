@@ -670,7 +670,7 @@ Class ServicesController extends AppController {
      */	
 	function __notify($type, $to_user_id, $data, $extra = array()) {
 		if($this->debug) {
-			echo "DEBUG: Sending notification type #$type to the User #{$to_user_id}";		
+			echo "DEBUG: Sending notification type #$type to the User #{$to_user_id} <br/>";		
 		}
 		//store the notification
 		App::import('Model', 'Notification');
@@ -887,7 +887,7 @@ Class ServicesController extends AppController {
 		$this->RemixNotification->mc_close();
 		
 		if($this->debug) {
-			echo "DEBUG: Setting notification type #$notification_types[$index] for the User #{$user_id}";		
+			echo "DEBUG: Setting notification type #$notification_types[$index] for the User #{$user_id} <br/>";		
 		}
 		
 		return $notification_types[$index];
@@ -912,14 +912,16 @@ Class ServicesController extends AppController {
 		if(ASSIGN_REMIX_NOTIFICATION && empty($notify)) {
 			//set a notification type for him
 			$ntype = $this->__set_remix_notification_type($base['User']['id']);
+			$assignment_time = strtotime('now');
 		}
 		else {
 			$ntype = $notify['RemixNotification']['ntype'];
+			$assignment_time = strtotime($notify['RemixNotification']['timestamp']); 
 		}
 		
 		if(SEND_REMIX_NOTIFICATION && !empty($ntype) && $ntype != 'nonotification') {
 			//time duration calculation
-			$duration = strtotime('-'.REMIX_NOTIFICATION_DAYS_SPAN.' day') - strtotime($notify['RemixNotification']['timestamp']);
+			$duration = strtotime('-'.REMIX_NOTIFICATION_DAYS_SPAN.' day') - $assignment_time;
 			//within the timespan
 			if($duration <= 0) {
 				$this->__notify('project_remixed_'.$ntype,
