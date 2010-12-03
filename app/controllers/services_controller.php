@@ -64,21 +64,20 @@ Class ServicesController extends AppController {
                     $this->debug = true;
                 }
             }*/
-            if($this->params['url']['debug']) {
+            if(!$this->params['url']['debug']) {
             	$this->debug = true;
             }
             else {
                 header('Content-Type: text/xml charset=UTF-8');
-            }
-
-            $doc = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
-            $this->doc = $doc . "<scratchr-$service>";
-
-            if ((count($this->params['url']) > 1) ||
-                !$this->__validServicePostArgs()) {
-                $this->__failed(INVALID_REQUEST);
-                $this->afterFilter();
-                exit();
+	            $doc = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+	            $this->doc = $doc . "<scratchr-$service>";
+	
+	            if ((count($this->params['url']) > 1) ||
+	                !$this->__validServicePostArgs()) {
+	                $this->__failed(INVALID_REQUEST);
+	                $this->afterFilter();
+	                exit();
+	            }
             }
         }//$this->action
     }
