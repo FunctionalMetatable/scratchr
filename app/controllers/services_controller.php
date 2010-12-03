@@ -786,9 +786,9 @@ Class ServicesController extends AppController {
             $this->__update_remixes_remixer($root_based_on_pid);
             if($based_on_pid != $root_based_on_pid)  {
 				//we should send remix notification to only root based
-                //if(REMIX_NOTIFICATION_TO_LAST_BASED) {
-                 //   $this->__notify_remix($based_on_pid, $project_shared_id);
-                //}
+                if(REMIX_NOTIFICATION_TO_LAST_BASED) {
+                    $this->__notify_remix($based_on_pid, $project_shared_id);
+                }
                 $this->__update_remixes_remixer($based_on_pid);
             }
         }
@@ -908,8 +908,7 @@ Class ServicesController extends AppController {
 		else {
 			$ntype = $notify['RemixNotification']['ntype'];
 		}
-
-	    
+		
 		if(SEND_REMIX_NOTIFICATION && !empty($ntype) && $ntype != 'nonotification') {
 			//time duration calculation
 			$duration = strtotime('-'.REMIX_NOTIFICATION_DAYS_SPAN.' day') - strtotime($notify['RemixNotification']['timestamp']);
