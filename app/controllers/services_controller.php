@@ -54,7 +54,7 @@ Class ServicesController extends AppController {
             $this->service = $service = $this->params['action'];
 
             // setup xml & http return headers
-            if (isset($this->passed_args[0])) {
+            /*if (isset($this->passed_args[0])) {
                 if ($this->passed_args[0] == 'debug') {
                     pr("POST_VARS:");
                     pr($_POST);
@@ -63,6 +63,9 @@ Class ServicesController extends AppController {
                     pr($this->params);
                     $this->debug = true;
                 }
+            }*/
+            if($this->params['url']['debug']) {
+            	$this->debug = true;
             }
             else {
                 header('Content-Type: text/xml charset=UTF-8');
@@ -72,7 +75,6 @@ Class ServicesController extends AppController {
             $this->doc = $doc . "<scratchr-$service>";
 
             if ((count($this->params['url']) > 1) ||
-                (count($this->passed_args) > 1) ||
                 !$this->__validServicePostArgs()) {
                 $this->__failed(INVALID_REQUEST);
                 $this->afterFilter();
@@ -668,6 +670,9 @@ Class ServicesController extends AppController {
      * sends notification to specified user
      */	
 	function __notify($type, $to_user_id, $data, $extra = array()) {
+		if($this->debug) {
+			"DEBUG: Sending notification type #$type to the User #{$to_user_id}";		
+		}
 		//store the notification
 		App::import('Model', 'Notification');
 		$this->Notification =& ClassRegistry::init('Notification');
@@ -881,7 +886,11 @@ Class ServicesController extends AppController {
 		$this->RemixNotification->save(array('user_id' => $user_id, 'ntype' => $notification_types[$index]));
 
 		$this->RemixNotification->mc_close();
-
+		
+		if($this->debug) {
+			"DEBUG: Setting notification type #$notification_types[$index] for the User #{$user_id}";		
+		}
+		
 		return $notification_types[$index];
 	}
 
@@ -919,6 +928,9 @@ Class ServicesController extends AppController {
                             array('project_id' => $base['Project']['id'],
                              'from_user_name' => $remixed['User']['username']),
                             array($remixed['Project']['id'], $remixed['Project']['name']));
+				if($this->debug) {
+					
+				}
 			}
         }
     }
@@ -1021,6 +1033,10 @@ Class ServicesController extends AppController {
 		$this->Project->id = $pid;
 		$country = $this->GeoIp->lookupCountryCode(long2ip($ip));
 		$this->Project->saveField('country', $country);
+	}
+	
+	function notification_test($base_project_id, $remixed_project_id) {
+		$this->__notify_remix($base_project_id, $remixed_project_id);
 	}
 }
 ?>
