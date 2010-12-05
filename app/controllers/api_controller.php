@@ -410,9 +410,14 @@ class ApiController extends AppController {
 			$pcomments_list =array();
 			foreach($pcomments as $pcomment){
 				$user_id = $pcomment['Pcomment']['user_id'];
+				$comment_id = $pcomment['Pcomment']['id'];
+				$reply_to_comment_id = $pcomment['Pcomment']['reply_to'];
+				if($reply_to_comment_id == -100){
+					$reply_to_comment_id = "";
+				}
 				$content = rawurlencode($pcomment['Pcomment']['content']);
-				$created = rawurlencode($pcomment['Pcomment']['created']);
-			    $pcomments_list[] = $user_id.':'.$created.':'.$content;
+				$timestamp = rawurlencode($pcomment['Pcomment']['timestamp']);
+			    $pcomments_list[] = $user_id.':'.$comment_id.':'.$reply_to_comment_id.':'.$timestamp.':'.$content;
 			}
 			$pcomment_info = implode('##', $pcomments_list);
 			$pcomment_info = str_replace('##','<BR>',$pcomment_info);
