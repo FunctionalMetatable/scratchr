@@ -45,7 +45,9 @@ Class ServicesController extends AppController {
     );
 
     function beforeFilter() {
-       if ($this->action == 'share_project') {
+    	$this->log("\nDBG: Inside beforeFilter()\n");
+       
+    	if ($this->action == 'share_project') {
             $this->autoRender = true;
         }
         else {
@@ -64,7 +66,7 @@ Class ServicesController extends AppController {
                     $this->debug = true;
                 }
             }*/
-            if($this->params['url']['debug']) {
+            if(!empty($this->params['url']['debug'])) {
             	$this->debug = true;
             }
             else {
@@ -398,6 +400,7 @@ Class ServicesController extends AppController {
      * Direct rest upload service
      */
     function __upload() {
+    	$this->log("\nDBG: Inside _upload()\n");
 		$this->__setUploadErrCodes();
 
 		$submit_username = $this->params['form']['username'];
@@ -873,7 +876,7 @@ Class ServicesController extends AppController {
     }
 
 	function __set_remix_notification_type($user_id) {
-		$notification_types = array('positive', 'neutral', 'generosity', 'conformity', 'reputation', 'nonotification');
+		$notification_types = array('positive', 'neutral', 'generosity', 'conformity', 'reputation', 'fairness', 'nonotification');
 		$this->RemixNotification->mc_connect();
 
 		$counter = $this->RemixNotification->mc_get('remix_notification_counter');
