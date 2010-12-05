@@ -672,9 +672,7 @@ Class ServicesController extends AppController {
      * sends notification to specified user
      */	
 	function __notify($type, $to_user_id, $data, $extra = array()) {
-		if($this->debug) {
-			echo "DEBUG: Sending notification type #$type to the User #{$to_user_id} <br/>";		
-		}
+		$this->log("\nDBG: Sending notification type #$type to the User #{$to_user_id} \n");
 		//store the notification
 		App::import('Model', 'Notification');
 		$this->Notification =& ClassRegistry::init('Notification');
@@ -889,9 +887,7 @@ Class ServicesController extends AppController {
 
 		$this->RemixNotification->mc_close();
 		
-		if($this->debug) {
-			echo "DEBUG: Setting notification type #$notification_types[$index] for the User #{$user_id} <br/>";		
-		}
+		$this->log("\nDBG: Setting notification type #$notification_types[$index] for the User #{$user_id} \n");
 		
 		return $notification_types[$index];
 	}
