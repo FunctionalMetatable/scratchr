@@ -2393,9 +2393,23 @@ class ProjectsController extends AppController {
                         ." (NULL, $logged_id, $pid)";
                 $this->ViewStat->query($sql);
 		}		
-		/*$this->Project->unbindModel(
-                array('hasMany' => array('GalleryProject'))
-            );
+		$this->render('mods', 'scratchr_default');
+		return;
+	}
+
+	function modsdata($urlnameignored = null, $pid = null) {
+		$this->exitOnInvalidArgCount(2);
+		$pname = $this->Project->field('name', "Project.id = $pid");
+		$this->pageTitle = "Scratch | Project | Remixers $pname";
+		$isLogged   = $this->isLoggedIn();
+        $logged_id  = $this->getLoggedInUserID();
+		if ($isLogged) {
+		//store mods view statistics in database
+                $sql = "INSERT INTO `mods_views` (`id`,`user_id`,`project_id`) VALUES"
+                        ." (NULL, $logged_id, $pid)";
+                $this->ViewStat->query($sql);
+		}
+		$this->Project->unbindModel( array('hasMany' => array('GalleryProject')));
           
 		$modpids = $this->Project->findAll(
                     "(based_on_pid = $pid OR root_based_on_pid = $pid)",
@@ -2410,8 +2424,8 @@ class ProjectsController extends AppController {
             }
 		}//foreach
 
-        $this->set('mods', $mods);*/
-		$this->render('mods', 'scratchr_default');
+        $this->set('mods', $mods);
+		$this->render('modsdata', 'scratchr_default');
 		return;
 	}	
 	

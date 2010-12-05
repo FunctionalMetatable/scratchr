@@ -1,0 +1,32 @@
+<div class="fullcontent">
+<h2><?php ___('Total Remixes');?></h2>
+
+	<p>
+	<?php if(!empty($mods['linkable'])):?>
+	<?php 
+	foreach($mods['linkable'] as $elem) {
+		printf(___("%s's %sproject", true), 
+"<a href='/users/" . $elem['username']. "'>" . $elem['username'] . "</a>", "<a href='/projects/" . $elem['username'] . "/" . $elem['pid'] . "'>");
+		echo "</a><br />";
+	   }
+	?>
+	<?php endif; ?>
+	<?php if(!empty($mods['userlinkable'])):?>
+	<?php 
+	foreach($mods['userlinkable'] as $elem) {
+		printf(___("%s's project %s (not available)", true), "<a href='/users/" . $elem['username'] . "'>" . $elem['username'] . "</a>", $elem['pid']);
+		echo "<br />";
+	};
+	?>
+	<?php endif; ?>
+	<?php if(!empty($mods['unlinkable'])):?>
+	<?php 
+	foreach($mods['unlinkable'] as $elem) {
+		printf(___("user %s's project %s (not available)", true), $elem['user_pid'], $elem['pid']);
+		echo "<br />";
+	}
+	?>
+	<?php endif; ?>
+	</p>
+</div>
+
