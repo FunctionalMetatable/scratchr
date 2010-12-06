@@ -1302,7 +1302,13 @@ class UsersController extends AppController {
 		$this->set('urlname', $user_record['User']['urlname']);
 		$this->set('age', $this->getUserAge($user_record) );
 		$this->set('isMe', $isMe);
-		
+		if ($this->Session->read('newUser')) {				// This is true if this user has just been created
+		  $this->set('new', true);					// This tells the myscratchr view page to submit the username to the LSO
+		  $this->Session->write('newUser', false);
+		}
+		else {
+		  $this->set('new', false);
+		}
 		$this->render('myscratchr', 'scratchr_userpage');
 	}
 
