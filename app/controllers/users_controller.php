@@ -336,7 +336,7 @@ class UsersController extends AppController {
 						$this->UserWelcome->save($this->data['UserWelcome']);
 						
 						$user_record = $this->User->find("User.id = $saved_user_id");
-						$this->data['User']['newUser'] = 'happy';
+						$this->Session->write('newUser', true);
 						$this->Session->write('User', $user_record['User']);
 						$this->redirect('/users/'.$this->data['User']['username']);
 					} else {

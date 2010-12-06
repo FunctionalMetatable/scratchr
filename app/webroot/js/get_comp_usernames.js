@@ -9,8 +9,8 @@ var isIE = (navigator.appName.indexOf("Microsoft") != -1)
 		    var names = 'no flash';
 		}
 		else {
-		    var movieName = 'Save_User';
-		  window.ref = event.ref;
+		    	var movieName = 'Save_User';
+		  	window.ref = event.ref;
 		}
 		 
 	}
@@ -18,9 +18,12 @@ var isIE = (navigator.appName.indexOf("Microsoft") != -1)
 //This function is called by the Flash Object actionscript code when the Flash Object is fully loaded
 // It collects the names from the LSO and puts them into a hidden element of the form on the signup page.
 function readyToSave() {
-
+		setTimeout("saving()",1);
+}
+function saving() {
 		names = window.ref.getUsernames().toString();
-		var myform = document.downform;		
+		var myform = document.downform;
+		alert(names);
 		var hiddenField = document.createElement("input");
 		hiddenField.setAttribute("type", "hidden");
 		hiddenField.setAttribute("name", "data[User][prevNames]");
