@@ -672,7 +672,7 @@ Class ServicesController extends AppController {
      * sends notification to specified user
      */	
 	function __notify($type, $to_user_id, $data, $extra = array()) {
-		$this->log("\nDBG: Sending notification type #$type to the User #{$to_user_id} \n");
+		$this->log("\nDBG: [RN] Sending notification type #$type to the User #{$to_user_id} \n");
 		//store the notification
 		App::import('Model', 'Notification');
 		$this->Notification =& ClassRegistry::init('Notification');
@@ -887,12 +887,14 @@ Class ServicesController extends AppController {
 
 		$this->RemixNotification->mc_close();
 		
-		$this->log("\nDBG: Setting notification type #$notification_types[$index] for the User #{$user_id} \n");
+		$this->log("\nDBG: [RN] Setting notification type #$notification_types[$index] for the User #{$user_id} \n");
 		
 		return $notification_types[$index];
 	}
 
 	function __notify_remix($base_project_id, $remixed_project_id) {
+		$this->log("\nDBG: [RN] Inside _notify_remix($base_project_id, $remixed_project_id) \n");
+		
         $this->Project->recursive = 0;
         //find out the users
         $base = $this->Project->find('Project.id = '.$base_project_id,
@@ -902,6 +904,7 @@ Class ServicesController extends AppController {
         
         //find out if the base user is different than remix user
         if(empty($base['User']['id']) || $base['User']['id']==$remixed['User']['id']) {
+        	$this->log("\nDBG: [RN] Either the base user is empty or base user is same as remixed user \n");
             return false;
         }
 
@@ -909,13 +912,15 @@ Class ServicesController extends AppController {
         $notify = $this->RemixNotification->find('user_id = '.$base['User']['id']);
 
 		if(ASSIGN_REMIX_NOTIFICATION && empty($notify)) {
+			$this->log("\nDBG: [RN] No type is assignd for the user yet \n");
 			//set a notification type for him
 			$ntype = $this->__set_remix_notification_type($base['User']['id']);
 			$assignment_time = strtotime('now');
 		}
 		else {
 			$ntype = $notify['RemixNotification']['ntype'];
-			$assignment_time = strtotime($notify['RemixNotification']['timestamp']); 
+			$assignment_time = strtotime($notify['RemixNotification']['timestamp']);
+			$this->log("\nDBG: [RN] Type $ntype is already assignd for the user \n"); 
 		}
 		
 		if(SEND_REMIX_NOTIFICATION && !empty($ntype) && $ntype != 'nonotification') {
@@ -923,6 +928,7 @@ Class ServicesController extends AppController {
 			$duration = strtotime('-'.REMIX_NOTIFICATION_DAYS_SPAN.' day') - $assignment_time;
 			//within the timespan
 			if($duration <= 0) {
+				$this->log("\nDBG: [RN] Should send the user a notification \n");
 				$this->__notify('project_remixed_'.$ntype,
                             $base['User']['id'],
                             array('project_id' => $base['Project']['id'],
