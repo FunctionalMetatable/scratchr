@@ -884,7 +884,7 @@ Class ServicesController extends AppController {
 		$counter++;
 		$this->log("\nDBG: [RN] Setting... (2) Notification type #$notification_types[$index] for the User #{$user_id} \n");
 		
-		$this->RemixNotification->mc_set('remix_notification_counter', $counter);
+		$this->RemixNotification->mc_set('remix_notification_counter_1', $counter);
 		$this->RemixNotification->save(array('user_id' => $user_id, 'ntype' => $notification_types[$index]));
 		$this->RemixNotification->mc_close();
 		$this->log("\nDBG: [RN] Setting... (3) Notification type #$notification_types[$index] for the User #{$user_id} \n");
@@ -1036,16 +1036,6 @@ Class ServicesController extends AppController {
 		$this->Project->id = $pid;
 		$country = $this->GeoIp->lookupCountryCode(long2ip($ip));
 		$this->Project->saveField('country', $country);
-	}
-	
-	function notification_test() {
-		$notification_types = array('positive', 'neutral', 'generosity', 'conformity', 'reputation', 'fairness', 'nonotification');
-		$this->RemixNotification->mc_connect();
-		$counter = $this->RemixNotification->mc_get('remix_notification_counter_1');
-		$counter = (int) $counter;
-		$index = $counter % count($notification_types);
-		pr($index);
-		$this->RemixNotification->mc_close();
 	}
 }
 ?>
