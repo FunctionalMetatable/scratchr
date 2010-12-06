@@ -16,7 +16,10 @@ function flashReady(event) {
 //This function is called by the Flash Object actionscript code when the Flash Object is fully loaded
 // It sends a name, set in the addName function, to the LSO 
 function readyToSave() {
-	var t=setTimeout("window.ref.saveUsername(window.newname)",1000);
+	var t=setTimeout("saving()",1);
+}
+function saving() {
+	window.ref.saveUsername(window.newname);
 }
 
 // This portion of the code was written by the Adobe project to use the functions of swfobject to create a Flash Object.
