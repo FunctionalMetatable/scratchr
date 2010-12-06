@@ -67,6 +67,7 @@ body {
 	color: #333333;
 	font-family: "Trebuchet MS", "Luxi Sans",Verdana, Arial, Helvetica, sans-serif;
 	font-size: 13px;
+	direction:ltr;
 }
 
 td, select, input, select {
