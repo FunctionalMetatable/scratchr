@@ -256,9 +256,9 @@ define('WHITELISTED_URL_PATTERN', 'wikipedia.org|\.ac.uk|flickr.com|\.edu');
 define('WHITELISTED_URL', '\.edu');
 
 //remix notification related constants
-define('SEND_REMIX_NOTIFICATION', false);
-define('ASSIGN_REMIX_NOTIFICATION', false);
-define('REMIX_NOTIFICATION_DAYS_SPAN', 14);
+define('SEND_REMIX_NOTIFICATION', true);
+define('ASSIGN_REMIX_NOTIFICATION', true);
+define('REMIX_NOTIFICATION_DAYS_SPAN', 30);
 define('REMIX_NOTIFICATION_TO_ROOT_BASED', true);
 define('REMIX_NOTIFICATION_TO_LAST_BASED', true);
 
