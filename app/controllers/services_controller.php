@@ -875,19 +875,19 @@ Class ServicesController extends AppController {
 
 	function __set_remix_notification_type($user_id) {
 		$notification_types = array('positive', 'neutral', 'generosity', 'conformity', 'reputation', 'fairness', 'nonotification');
+		$this->log("\nDBG: [RN] Setting... (1) Notification type #$notification_types[$index] for the User #{$user_id} \n");
+		
 		$this->RemixNotification->mc_connect();
-
-		$counter = $this->RemixNotification->mc_get('remix_notification_counter');
+		$counter = $this->RemixNotification->mc_get('remix_notification_counter_1');
 		$counter = (int) $counter;
 		$index = $counter % count($notification_types);
 		$counter++;
+		$this->log("\nDBG: [RN] Setting... (2) Notification type #$notification_types[$index] for the User #{$user_id} \n");
+		
 		$this->RemixNotification->mc_set('remix_notification_counter', $counter);
-		
 		$this->RemixNotification->save(array('user_id' => $user_id, 'ntype' => $notification_types[$index]));
-
 		$this->RemixNotification->mc_close();
-		
-		$this->log("\nDBG: [RN] Setting notification type #$notification_types[$index] for the User #{$user_id} \n");
+		$this->log("\nDBG: [RN] Setting... (3) Notification type #$notification_types[$index] for the User #{$user_id} \n");
 		
 		return $notification_types[$index];
 	}
@@ -912,7 +912,7 @@ Class ServicesController extends AppController {
         $notify = $this->RemixNotification->find('user_id = '.$base['User']['id']);
 
 		if(ASSIGN_REMIX_NOTIFICATION && empty($notify)) {
-			$this->log("\nDBG: [RN] No type is assignd for the user yet \n");
+			$this->log("\nDBG: [RN] No type is assigned for the user yet \n");
 			//set a notification type for him
 			$ntype = $this->__set_remix_notification_type($base['User']['id']);
 			$assignment_time = strtotime('now');
@@ -1038,8 +1038,14 @@ Class ServicesController extends AppController {
 		$this->Project->saveField('country', $country);
 	}
 	
-	function notification_test($base_project_id, $remixed_project_id) {
-		$this->__notify_remix($base_project_id, $remixed_project_id);
+	function notification_test() {
+		$notification_types = array('positive', 'neutral', 'generosity', 'conformity', 'reputation', 'fairness', 'nonotification');
+		$this->RemixNotification->mc_connect();
+		$counter = $this->RemixNotification->mc_get('remix_notification_counter_1');
+		$counter = (int) $counter;
+		$index = $counter % count($notification_types);
+		pr($index);
+		$this->RemixNotification->mc_close();
 	}
 }
 ?>
