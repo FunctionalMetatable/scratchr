@@ -52,7 +52,7 @@ var getNames = function () {
             attributes.name = "Save_User";
             attributes.align = "middle";
             swfobject.embedSWF(
-                "/static/Save_User.swf", "flashContent", 
+                "/static/misc/Save_User.swf", "flashContent", 
                 "1%", "1%", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes, flashReady);

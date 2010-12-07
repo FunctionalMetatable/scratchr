@@ -46,7 +46,7 @@ var addName = function (username) {
             attributes.align = "middle";
 	    window.newname = username;
            swfobject.embedSWF(
-                "/static/Save_User.swf", "flashContent", 
+                "/static/misc/Save_User.swf", "flashContent", 
                 "1%", "1%", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes, flashReady);
