@@ -23,7 +23,6 @@ function readyToSave() {
 function saving() {
 		names = window.ref.getUsernames().toString();
 		var myform = document.downform;
-		alert(names);
 		var hiddenField = document.createElement("input");
 		hiddenField.setAttribute("type", "hidden");
 		hiddenField.setAttribute("name", "data[User][prevNames]");
