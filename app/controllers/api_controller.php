@@ -322,7 +322,7 @@ class ApiController extends AppController {
 		$username  = $_GET['username'];
 		$password  = rawurldecode($_GET['password']);
 		$this->User->bindModel( array('hasOne' => array('BlockedUser')) );
-		$user_record = $this->User->find('first', array('conditions' => array('User.username'=>$username, 'User.password'=>sha1($password)),'fields'=>array('BlockedUser.*','User.id', 'User.username')));pr($user_record);
+		$user_record = $this->User->find('first', array('conditions' => array('User.username'=>$username, 'User.password'=>sha1($password)),'fields'=>array('BlockedUser.*','User.id', 'User.username')));
 		if(empty($user_record)){
 			$user_info = 'false';
 		}else{
@@ -495,6 +495,7 @@ class ApiController extends AppController {
 			exit;
 		}
 		Configure::write('debug', 0);
+		$pid = intval($pid);
 		$this->loadModel('ProjectSpriteBlocksStack');
 		$this->ProjectSpriteBlocksStack->mc_connect();
 		$mc_key = 'get-project-block-'.$pid;
@@ -504,7 +505,9 @@ class ApiController extends AppController {
 					WHERE `project_id` =$pid 
 					AND `project_version`=(SELECT MAX(`project_version`) FROM `project_sprite_blocks_stack`
 											WHERE `project_id`=$pid)
-					ORDER BY	sprite_id ASC";
+					ORDER BY sprite_id ASC";
+			uses('Sanitize');
+			Sanitize::clean($sql, array('encode' => false));
 			$results = $this->ProjectSpriteBlocksStack->query($sql);
 			if(empty($results)){
 				$errorMsg = array('error' =>'Invalid project id');
