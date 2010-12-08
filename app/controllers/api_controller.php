@@ -463,7 +463,7 @@ class ApiController extends AppController {
 			exit;
 		}
 		Configure::write('debug', 0);
-		$this->ProjectBlock = ClassRegistry::init('ProjectBlock');
+		$this->loadModel('ProjectBlock');
 		$this->ProjectBlock->mc_connect();
 		$mc_key = 'get-project-block-count-'.$pid;
 		$data = $this->ProjectBlock->mc_get($mc_key);
@@ -495,26 +495,33 @@ class ApiController extends AppController {
 			exit;
 		}
 		Configure::write('debug', 0);
-		$this->ProjectSpriteBlocksStack = ClassRegistry::init('ProjectSpriteBlocksStack');
+		$this->loadModel('ProjectSpriteBlocksStack');
 		$this->ProjectSpriteBlocksStack->mc_connect();
 		$mc_key = 'get-project-block-'.$pid;
 		$data = $this->ProjectSpriteBlocksStack->mc_get($mc_key);
-		
 		if ($data === false) {
-			$data = $this->ProjectSpriteBlocksStack->find('first',
-												array('conditions'=>array('ProjectSpriteBlocksStack.project_id'=>$pid),
-												'order' => 'ProjectSpriteBlocksStack.project_version DESC',
-												'fields'=> array('project_id' ,'human_readable')
-												)
-										);
+			$sql = "SELECT * FROM `project_sprite_blocks_stack`
+					WHERE `project_id` =$pid 
+					AND `project_version`=(SELECT MAX(`project_version`) FROM `project_sprite_blocks_stack`
+											WHERE `project_id`=$pid)
+					ORDER BY	sprite_id ASC";
+			$results = $this->ProjectSpriteBlocksStack->query($sql);
+			if(empty($results)){
+				$errorMsg = array('error' =>'Invalid project id');
+				echo json_encode($errorMsg);
+				exit;
+			}
+			$data =array();
+			$temp = array();
+			$data['project_id'] = $results['0']['project_sprite_blocks_stack']['project_id'];
+			foreach($results as $result){
+				$temp[] = $result['project_sprite_blocks_stack']['human_readable'];
+			}
+			$data['sprites'] = $temp;
+			
 			$this->ProjectSpriteBlocksStack->mc_set($mc_key, $data, false, API_PROJECT_BLOCK_TTL);
 		}								
-		if(empty($data)){
-			$errorMsg = array('error' =>'Invalid project id');
-			echo json_encode($errorMsg);
-			exit;
-		}
-		echo json_encode($data['ProjectSpriteBlocksStack']);
+		echo json_encode($data);
 		exit;
 	}//eof
 }//class
