@@ -606,7 +606,7 @@ function langList($countries) {
 				  <script type="text/javascript" src="/js/swfobject.js"></script>
 				  <script type="text/javascript" src="/js/add_username.js"></script>
 				  <script type="text/javascript"> addName('<?echo $user['username']?>');</script>
-	<?
+	<?php
 			  endif;
 	?>
     <div id="flashContent">
