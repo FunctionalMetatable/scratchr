@@ -548,20 +548,22 @@ Class GalleriesController extends AppController {
 				   $excessive_commenting = true;
 				}
 				$nowhite_comment = ereg_replace("[ \t\n\r\f\v]{1,}", "[ \\t\\n\\r\\f\\v]*", $comment);
-				$similar_comments = $this->Gcomment->findAll("Gcomment.content RLIKE '".$nowhite_comment."' AND Gcomment.timestamp > now() - interval $days  day AND Gcomment.user_id = $commenter_id");
-				preg_match_all("/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/", $comment, $url_matches);
-				for($i=0; $i<count($url_matches[0]); $i++)
-				{
-				  $url_to_check = $url_matches[0][$i];
-				  if(sizeof($this->Gcomment->findAll("Gcomment.content LIKE '%".$url_to_check."%' AND Gcomment.timestamp > now() - interval $days  day AND Gcomment.user_id = $commenter_id"))>1)
-				  {
-				      $possible_spam = true;
-				  }
-				}
-				if(sizeof($similar_comments)>$max_comments)
-				{
-				    $possible_spam = true;
-				}
+				if (!$this->isAdmin()){
+					$similar_comments = $this->Gcomment->findAll("Gcomment.content RLIKE '".$nowhite_comment."' AND Gcomment.timestamp > now() - interval $days  day AND Gcomment.user_id = $commenter_id");
+					preg_match_all("/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/", $comment, $url_matches);
+					for($i=0; $i<count($url_matches[0]); $i++)
+					{
+					  $url_to_check = $url_matches[0][$i];
+					  if(sizeof($this->Gcomment->findAll("Gcomment.content LIKE '%".$url_to_check."%' AND Gcomment.timestamp > now() - interval $days  day AND Gcomment.user_id = $commenter_id"))>1)
+					  {
+						  $possible_spam = true;
+					  }
+					}
+					if(sizeof($similar_comments)>$max_comments)
+					{
+						$possible_spam = true;
+					}
+				}	
 				//set visibility as "hiddenduetourl"if commenter have upload zero project
 				// count commenters project
 				$hiddenduetourl = false;
