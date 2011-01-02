@@ -311,7 +311,7 @@ class ProjectsController extends AppController {
 				$this->Project->recursive = -1;
 				$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$commenter_id));
 				//if pcomments contains url and user have post zero project
-				if($projects_count == 0 && !$this->check_url($comment)){
+				if($projects_count == 0 && !$this->check_whitelisted_url($comment)){
 					$hiddenduetourl = true;
 				}
 				
@@ -2769,7 +2769,7 @@ class ProjectsController extends AppController {
 				$this->Project->recursive = -1;
 				$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$commenter_id));
 				//if pcomments contains url and user have post zero project
-				if($projects_count == 0 && !$this->check_url($comment)){
+				if($projects_count == 0 && !$this->check_whitelisted_url($comment)){
 					$hiddenduetourl = true;
 				}
 				if(isInappropriate($comment)) {
@@ -3329,7 +3329,7 @@ class ProjectsController extends AppController {
 			$this->Project->recursive = -1;
 			$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$comments['Pcomment']['user_id']));
 			//if pcomments contains url and user have post zero project
-			if($projects_count == 0 && !$this->check_url($comments['Pcomment']['content'])){
+			if($projects_count == 0 && !$this->check_whitelisted_url($comments['Pcomment']['content'])){
 			}else{
 				$temp_array[$key] = $comments;
 			}
