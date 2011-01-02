@@ -570,7 +570,7 @@ Class GalleriesController extends AppController {
 				$this->Project->recursive = -1;
 				$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$commenter_id));
 				//if pcomments contains url and user have post zero project
-				if($projects_count == 0 && !$this->check_url($comment)){
+				if($projects_count == 0 && !$this->check_whitelisted_url($comment)){
 					$hiddenduetourl = true;
 				}
 
@@ -2673,7 +2673,7 @@ Class GalleriesController extends AppController {
 				$this->Project->recursive = -1;
 				$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$commenter_id));
 				//if pcomments contains url and user have post zero project
-				if($projects_count == 0 && !$this->check_url($comment)){
+				if($projects_count == 0 && !$this->check_whitelisted_url($comment)){
 					$hiddenduetourl = true;
 				}
 				if(isInappropriate($comment)) {
@@ -3267,7 +3267,7 @@ Class GalleriesController extends AppController {
 			$this->Project->recursive = -1;
 			$projects_count = $this->Project->find('count',array('conditions'=>"Project.user_id = ".$comments['Gcomment']['user_id']));
 			//if pcomments contains url and user have post zero project
-			if($projects_count == 0 && !$this->check_url($comments['Gcomment']['content'])){
+			if($projects_count == 0 && !$this->check_whitelisted_url($comments['Gcomment']['content'])){
 			}else{
 				$temp_array[$key] = $comments;
 			}

@@ -1047,5 +1047,21 @@ ini_restore ("memory_limit");
 	   return true;
 		}
 	}//function
+	
+	function check_whitelisted_url($url){
+		if (preg_match('/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:;,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:;,.]*\)|[A-Z0-9+&@#\/%=~_|$])/ix', $url)) {
+   		$pattern = '/\b(https?:\/\/)?(www.)?[A-Z0-9.]*('
+                    . WHITELISTED_URL_PATTERN
+                    . ')[-A-Z0-9+&@#()\/%?=~_|!:,.;]*/i';
+			if (preg_match ($pattern, $url)) 
+			{
+				return true;
+			}else{
+			return false;
+			}
+		} else {
+	   return true;
+		}
+	}//function
 }//class
 ?>
