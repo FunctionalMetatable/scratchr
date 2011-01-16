@@ -1,7 +1,5 @@
 <?php
 /*******************************************************************************/
-##Api Controller
-##Author :Ashok kumar Gond
 ##Note:Result is encoded with php function rawurlencode().
 /*******************************************************************************/
 class ApiController extends AppController {
@@ -40,7 +38,7 @@ class ApiController extends AppController {
     }
 
     /** 
-    * This function takes user id as input and redirects to user’s my stuff page based on a user id.
+    * This function takes user id as input and redirects to user's my stuff page based on a user id.
     * Parameter: user id.
 	* Example: http://scratch.mit.edu/api/getuser/139
 	* Output: it will redirect to http://scratch.mit.edu/users/andresmh/
@@ -364,7 +362,7 @@ class ApiController extends AppController {
 	/**
 	* This function returns user information if success and  'false'. if authentication fails.
 	* Parameter: username,password
-	* Note: password should be encoded using rawurlencode() method.So if your password is “demo#123” you need to use password as
+	* Note: password should be encoded using rawurlencode() method.So if your password is "demo#123" you need to use password as
 	http://scratch.mit.edu/api/authenticateuser?username=demo&password=demo%23123
 	where "demo%23123" is rawurlencode format of "demo#123"
 	* Output:user_id:username:status
@@ -442,7 +440,7 @@ class ApiController extends AppController {
 	* Example:  http://scratch.mit.edu/api/getnumprojectsbyuser/ashok
 	* Example output: 12
 
-	* Example:  http://scratch.mit.edu/api/getnumprojectsbyuser/ashok?onlyvisible=’no’
+	* Example:  http://scratch.mit.edu/api/getnumprojectsbyuser/ashok?onlyvisible='no'
 	* Example output: 12
 	*/
 	function getnumprojectsbyuser($username){
