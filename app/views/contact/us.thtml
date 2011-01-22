@@ -115,7 +115,7 @@ document.getElementById('subtopicsdiv').style.display="block";
 	 </p> 
 <?php }else{?>
 <?php if (isset($error)){?> 
-	  <p><h2><?php echo($error) ?></h2></p>
+	  <p><h2><?php echo($error); ?></h2></p>
 	  <p><?php ___('Not working for you? Email us at help@scratch.mit.edu.'); ?></p>
 <?}?>
 
@@ -188,29 +188,30 @@ document.getElementById('subtopicsdiv').style.display="block";
 <hr color="black">
 	<input id="topicinput" type="hidden" name="data[Page][cc_topic]" value="">
 <p>
-	<?php ___('Name'); ?>:	<input type="text" name="data[Page][name]" size="25" /> 
-
+	<?php ___('Name'); ?>:	
+<?php echo $form->input('Page.name' ,array('label'=>false ,'div'=> false ,'size'=>'25'));?>
+</p>
 <?php 
 if (!$isLogged) {
 echo '<p>';   ___('Username') 
 ?>
-	:  <input type="text" name="data[Page][username]" size="25" /> 
+	:  <?php echo $form->input('Page.username' ,array('label'=>false ,'div'=> false ,'size'=>'25'));?>
 <?php 
 echo '</p>';   	
 }
 ?>
 
 <p>
-	<?php ___('Email'); ?>:	 <input type="text" name="data[Page][email]" size="25" />
+	<?php ___('Email'); ?>:	 <?php echo $form->input('Page.email' ,array('label'=>false ,'div'=> false ,'size'=>'25'));?>
 </p>
 
 <p>
-	<?php ___('Subject'); ?>:	 <input type="text" name="data[Page][subject]" size="25" />
+	<?php ___('Subject'); ?>:	 <?php echo $form->input('Page.subject' ,array('label'=>false ,'div'=> false ,'size'=>'25'));?>
 </p>
 
 <p>
-   <?php ___('Message'); ?>:<br /><textarea name="data[Page][message]" cols="40" rows="10"></textarea>
-   
+   <?php ___('Message'); ?>:<br />
+   <?php echo $form->input('Page.message' ,array('label'=>false ,'div'=> false ,'rows'=>'10','cols'=>'40','type'=>'textarea'));?>
    
 </p>
 <p>
