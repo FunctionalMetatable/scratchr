@@ -6,6 +6,13 @@ class ApiController extends AppController {
 
     var $uses = array('Project','User');
 
+   /*
+	* All functions allow cross-site execution
+   */
+    function beforeFilter() {
+       header("Access-Control-Allow-Origin: *");
+    }
+
     /**
 	* Name:getproject
 	* This function takes project id as input and redirects to project page based on a project id
@@ -195,7 +202,6 @@ class ApiController extends AppController {
 			$project_ids = implode(':', $project_list);
 			$this->Project->mc_set($mc_key, $project_ids, false, API_USER_PROJECTS_TTL);
 		}
-		
 		echo $project_ids;
 		$this->Project->mc_close();
 		exit;
@@ -589,7 +595,8 @@ class ApiController extends AppController {
 			$results = $this->ProjectSpriteBlocksStack->query($sql);
 			if(empty($results)){
 				$errorMsg = array('error' =>'Invalid project id');
-				echo json_encode($errorMsg);
+	                	header('Content-Type: application/json');
+                                echo json_encode($errorMsg);
 				exit;
 			}
 			$data =array();
@@ -602,7 +609,10 @@ class ApiController extends AppController {
 			
 			$this->ProjectSpriteBlocksStack->mc_set($mc_key, $data, false, API_PROJECT_BLOCK_TTL);
 		}								
+	        header('Content-Type: application/json');
+		echo "("; 
 		echo json_encode($data);
+		echo ")"; 
 		exit;
 	}//eof
 }//class
