@@ -199,7 +199,16 @@ class UsersController extends AppController {
 				$this->User->invalidate('password');
 				$errors['password_length'] =  ___('Password too short', true);
 			}
-
+			$usernameInput = trim($this->data['User']['username']);
+			$passwordInput = trim($this->data['User']['password']);
+			if(strlen($usernameInput) > 0 && strlen($passwordInput) > 0){
+				$pos = strpos(strtolower($passwordInput), strtolower($usernameInput)); 
+				if ($pos === false) {
+				} else {
+					$this->User->invalidate('password');
+					$errors['password_contains_username'] =  ___("Password should not contain username.", true);
+				}
+			}
 			if (strcmp($this->data['User']['password'], $this->data['User']['password2']) == 0) {
 			} else {
 				$this->User->invalidate('password2');

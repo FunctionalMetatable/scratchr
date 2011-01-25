@@ -25,6 +25,11 @@
 				echo $errors['password_length'];
 			echo "</div>\n";
 		}
+		if (isset($errors['password_contains_username'])) {
+			echo "<div id='signup_error_password' class='signup_error'>\n";
+				echo $errors['password_contains_username'];
+			echo "</div>\n";
+		}
 	}
 	
 	if ($mode == "confirmation") {
