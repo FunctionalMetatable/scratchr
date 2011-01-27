@@ -6,7 +6,7 @@
 <form action="<?php echo $html->url('/users/close_account/'.$user_id)?>" method="POST" accept-charset="UTF-8">
 <div>
 <?php ___('Reason'); ?>:<br/>
-<?php echo $form->input('User.reasons',array('type'=>'textArea','rows'=>10,'cols'=>60,'label'=>''))?>
+<?php echo $form->input('User.reasons',array('type'=>'textArea','rows'=>10,'cols'=>60,'label'=>'','div'=>array('style'=>'width:500px !important;') ,'error'=> array('class' =>'validation-error')))?>
 </div>
 <br/>
 <p>
