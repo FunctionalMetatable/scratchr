@@ -710,9 +710,9 @@ class UsersController extends AppController {
 	/**Password recovery***/
 	function password_recovery()
 	{
-		 $this->pageTitle = "Scratch | Password Recovery";
-		  $errors = Array();
-		  if(!empty($this->data)){
+		$this->pageTitle = "Scratch | Password Recovery";
+		$errors = Array();
+		if(!empty($this->data)){
 		  	if(!empty($this->data['UsernameEmail']))
 			{
 				$isEmail =0;
@@ -723,8 +723,7 @@ class UsersController extends AppController {
 				if($isEmail ==1)
 				{
 					//submitted data is email
-					$user_records=$this->User->findAll(array('email'=>$this->data['UsernameEmail']));
-					
+					$user_records=$this->User->findAll(array('email'=>$this->data['UsernameEmail'], 'User.status' => 'normal'));
 					if(!empty($user_records))
 					{
 						foreach($user_records as $user_record)
@@ -745,7 +744,7 @@ class UsersController extends AppController {
 					}
 					else
 					{
-						array_push($errors, ___("Sorry, username doesn't exist", true));
+						array_push($errors, ___("Sorry, email address doesn't exist", true));
 					}
 					
 					
@@ -754,7 +753,7 @@ class UsersController extends AppController {
 				{
 				  //submitted data is username
 				  $someone=$this->User->findByUsername($this->data['UsernameEmail']);
-					if(!empty($someone))
+					if(!empty($someone) && trim($someone['User']['status']) === 'normal')
 					{
 						$userid = $someone['User']['id'];
 						$username = $someone['User']['username'];
@@ -777,18 +776,18 @@ class UsersController extends AppController {
 			
 			}
 		  
-			  else
-			  {
-			  array_push($errors, ___("Enter a Username or email address.", true));
-			  }
-			}//this->data  
-		  if (empty($errors)) {
-			$isError = false;
-	  } else {
-			$isError = true;
-	  }
-	  $this->set('errors', $errors);
-	  $this->set('isError', $isError);
+			else
+			{
+				array_push($errors, ___("Enter a Username or email address.", true));
+			}
+		}//this->data  
+			if (empty($errors)) {
+				$isError = false;
+			} else {
+				$isError = true;
+			}
+		$this->set('errors', $errors);
+		$this->set('isError', $isError);
 		  
 	}//function
 
