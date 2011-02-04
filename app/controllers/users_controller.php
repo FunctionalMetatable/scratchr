@@ -1074,7 +1074,7 @@ class UsersController extends AppController {
 		
 		$this->set('projects', $final_projects);
 		$this->set('user_id', $user_id);
-		$this->set('num_project', count($final_projects));
+		$this->set('num_project', count($myProjects));
 		
 		$this->PaginationSecondary->show = 15;
 		$this->modelClass = "Favorite";
@@ -2378,7 +2378,7 @@ class UsersController extends AppController {
 			$this->cakeError('error404');
 		}
 		//count user's project
-		$num_project = $this->Project->find('count', array('conditions' => array('Project.user_id' => $user['User']['id'], 'Project.proj_visibility' => 'visible')));
+		$num_project = $this->Project->find('count', array('conditions' => array('Project.user_id' => $user['User']['id'])));
 		//allow user to delete account who have never posted any projects.
 		if (!$this->isAdmin() && $user['User']['id'] !== $session_user_id && $num_project > 0) {
 			$this->__err();
