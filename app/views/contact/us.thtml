@@ -1,4 +1,4 @@
-<Script Language=JavaScript>
+<Script Language="JavaScript">
 
 var topic = new Array();
 topic[1] = "<?php print(TOPIC1); ?>";
@@ -10,16 +10,30 @@ topic[6] = "<?php print(TOPIC6); ?>";
 topic[7] = "<?php print(TOPIC7); ?>";
 topic[8] = "<?php print(TOPIC8); ?>";
 
-
 var subtopic = new Array();
 subtopic[1] = "<?php print(SUBTOPIC1); ?>";
 subtopic[2] = "<?php print(SUBTOPIC2); ?>";
 subtopic[3] = "<?php print(SUBTOPIC3); ?>";
 
+var selectOption = new Array();
+selectOption[1] = "1";
+selectOption[2] = "2";
+selectOption[3] = "3";
+selectOption[4] = "4";
+selectOption[5] = "5";
+selectOption[7] = "7";
+selectOption[8] = "8";
+
+var selectSubOption = new Array();
+selectSubOption[1] = "1";
+selectSubOption[2] = "2";
+selectSubOption[3] = "3";
+
+
 function selectTopic(isList){
 	txtIndex = isList.selectedIndex;
-
-	// Clear everything in case it was displayed previously
+	document.getElementById('PageSelect').value = isList.value;
+// Clear everything in case it was displayed previously
 	document.getElementById('questionform').style.display="none";
 	document.getElementById('subtopicsdiv').style.display="none";
 	document.getElementById('lostpassworddiv').style.display="none";
@@ -85,6 +99,7 @@ function selectTopic(isList){
 
 function selectSubtopic(isList){
 txtIndex = isList.selectedIndex;
+document.getElementById('PageSelectsubtopic').value = isList.value;
 if(txtIndex==0)
 {
 document.getElementById('questionform').style.display="none";
@@ -122,17 +137,10 @@ document.getElementById('subtopicsdiv').style.display="block";
 <div id="main">
 
 <p>
-        <select id="topic_select" name="topic_select" onchange="selectTopic(this);">
-          <option selected><?php ___('Select one of the following options:'); ?></option>
-          <option><?php ___('Lost password'); ?></option>
-	  <option><?php ___('Permission to use Scratch for...'); ?></option>
-          <option><?php ___('Questions from educators'); ?></option>
-	  <option><?php ___('Feedback'); ?></option>
-          <option><?php ___('Inappropriate behavior'); ?></option>
-	  <option><?php ___('Technical questions'); ?></option>
-	  <option><?php ___('Delete account'); ?></option>
-          <option><?php ___('Other'); ?></option>
-	</select>
+        <?php $options = array('0' => ___('Select one of the following options:', true), '1' => ___('Lost password', true), '2' => ___('Permission to use Scratch for...', true), '3' => ___('Questions from educators', true), '4' => ___('Feedback', true), '5' => ___('Inappropriate behavior', true), '6' => ___('Technical questions', true), '7' => ___('Delete account', true), '8' => ___('Other', true));
+		echo $form->input('Page.topic_select', array( 'type' => 'select', 'options' => $options, 'label' => false, 'div' => false, 'id'=> 'topic_select', 'onchange' => "selectTopic(this);"))
+		?>
+		
 </p>
 <div id="lostpassworddiv" style="display:none">
 <?php ___('<p>You can easily reset your password on the Scratch website by visiting this page:
@@ -174,12 +182,11 @@ document.getElementById('subtopicsdiv').style.display="block";
 
 <div id="subtopicsdiv" style="display:none">
 <p>
-     <select id="subtopic_select" name="subtopic_select" onchange="selectSubtopic(this);">
-          <option selected><?php ___('Subtopics'); ?></option>
-          <option><?php ___('Installation'); ?></option>
-	  <option><?php ___('Uploading'); ?></option>
-	  <option><?php ___('Other'); ?></option>
-     </select>
+     
+	 <?php $subOptions = array('0' => ___('Subtopics', true), '1' => ___('Installation', true), '2' => ___('Uploading', true), '3' => ___('Other', true));
+		echo $form->input('Page.subtopic_select', array( 'type' => 'select', 'options' => $subOptions, 'label' => false, 'div' => false, 'id'=> 'subtopic_select', 'onchange' => "selectSubtopic(this);"))
+		?>
+	
 </p>
 </div>
 
@@ -188,6 +195,8 @@ document.getElementById('subtopicsdiv').style.display="block";
 <hr color="black">
 	<input id="topicinput" type="hidden" name="data[Page][cc_topic]" value="">
 <p>
+<?php echo $form->input('Page.select' ,array('label'=>false ,'div'=> false ,'size'=>'25', 'value' =>$this->data['Page']['select'], 'type' => 'hidden'));?>
+<?php echo $form->input('Page.selectsubtopic' ,array('label'=>false ,'div'=> false ,'size'=>'25', 'value' =>'', 'type' => 'hidden'));?>
 	<?php ___('Name'); ?>:	
 <?php echo $form->input('Page.name' ,array('label'=>false ,'div'=> false ,'size'=>'25'));?>
 </p>
@@ -226,11 +235,13 @@ echo '</p>';
 </div>
 <?php }?>
 </div>
-
+<?php $selected_topic = $this->data['Page']['select']?>
+<?php $selected_subtopic = $this->data['Page']['selectsubtopic']?>
 <Script Language=JavaScript>
 
 var selected_topic = "<?php echo $selected_topic; ?>";
-var index_selected_topic = topic.indexOf(selected_topic);
+var selected_subtopic = "<?php echo $selected_subtopic; ?>";
+var index_selected_topic = selectOption.indexOf(selected_topic);
 if(selected_topic=="")
 {
 	index_selected_topic = 0;
@@ -244,10 +255,10 @@ if(index_selected_topic!=-1)
 else
 {
 	var topic_select = document.getElementById("topic_select");
-	topic_select[9].selected = true;
+	topic_select[6].selected = true;
 	showSubtopics();
 
-	index_selected_subtopic = subtopic.indexOf(selected_topic);
+	index_selected_subtopic = selectSubOption.indexOf(selected_subtopic);
 	if(index_selected_subtopic!=-1)
 	{
 		var subtopic_select = document.getElementById("subtopic_select");
