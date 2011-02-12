@@ -264,6 +264,7 @@ class UsersController extends AppController {
 				 $this->data['User']['urlname'] =  $this->data['User']['username'];
 				 $this->data['User']['ipaddress'] = $client_ip_long;
 				 
+/*
 				 // This is the hidden form value that I added for the purposes of checking previous users made on this computer
 				 $prevNames = $this->data['User']['prevNames'];
 				 // This is the code that checks if any blocked accounts were originated here.
@@ -332,7 +333,7 @@ class UsersController extends AppController {
 						$this->Email->email('caution','Scratch Website', $msg, $subject, 'caution@scratch.mit.edu');
 					}
 				  }
-
+*/
 					if ($this->User->save($this->data['User'], false)) {
 						$this->data['User']['id'] = $this->User->getLastInsertID();
 						$this->setFlash(___("Welcome!", true) . " <a href='/pages/download'>" . ___('Download Scratch', true) . "</a>", FLASH_NOTICE_KEY);
@@ -345,7 +346,7 @@ class UsersController extends AppController {
 						$this->UserWelcome->save($this->data['UserWelcome']);
 						
 						$user_record = $this->User->find("User.id = $saved_user_id");
-						$this->Session->write('newUser', true);
+//						$this->Session->write('newUser', true);
 						$this->Session->write('User', $user_record['User']);
 						$this->redirect('/users/'.$this->data['User']['username']);
 					} else {
@@ -1311,6 +1312,7 @@ class UsersController extends AppController {
 		$this->set('urlname', $user_record['User']['urlname']);
 		$this->set('age', $this->getUserAge($user_record) );
 		$this->set('isMe', $isMe);
+/*
 		if ($this->Session->read('newUser')) {				// This is true if this user has just been created
 		  $this->set('new', true);					// This tells the myscratchr view page to submit the username to the LSO
 		  $this->Session->write('newUser', false);
@@ -1318,6 +1320,7 @@ class UsersController extends AppController {
 		else {
 		  $this->set('new', false);
 		}
+*/
 		$this->render('myscratchr', 'scratchr_userpage');
 	}
 
