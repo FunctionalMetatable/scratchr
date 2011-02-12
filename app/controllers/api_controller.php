@@ -382,9 +382,9 @@ class ApiController extends AppController {
 		$this->User->bindModel( array('hasOne' => array('BlockedUser')) );
 		$user_record = $this->User->find('first', array('conditions' => array('User.username'=>$username, 'User.password'=>sha1($password)),'fields'=>array('BlockedUser.*','User.id', 'User.username')));
 		if(empty($user_record)){
+			sleep(rand(0,10));
 			$user_info = 'false';
 		}else{
-			
 			$username = rawurlencode($user_record['User']['username']);
 			if(isset($user_record['BlockedUser']['user_id']) && !empty($user_record['BlockedUser']['user_id']))
 				$status = 'blocked';
