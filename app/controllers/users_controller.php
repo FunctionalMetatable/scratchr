@@ -550,8 +550,14 @@ class UsersController extends AppController {
 	 
 	  $this->pageTitle = "Scratch | Login";
 	  $errors = Array();
-	
-		if (!empty($this->params['form']['User'])) {
+	  $resp = recaptcha_check_answer (CAPTCHA_PRIVATEKEY, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
+          if(!empty($this->params['form']['Hmph']) && sha1(date("H:i")) != $this->params['form']['Hmph']) {
+			array_push($errors, ___("Hmph, authentication words were not entered correctly", true));
+			$this->setFlash(___("Hmph, seems like the squiggly words were typed incorrectly", true), FLASH_ERROR_KEY);
+	  }elseif(empty($this->params['form']['Hmph']) && !$resp->is_valid) {
+		array_push($errors, ___("Authentication words were not entered correctly", true));
+		$this->setFlash(___("Seems like the squiggly words were typed incorrectly", true), FLASH_ERROR_KEY);
+         } elseif  (!empty($this->params['form']['User'])) {
 			$submit_username = $this->params['form']['User'];
 			$submit_pwd = $this->params['form']['Pass'];
 			$this->User->bindPermission();
