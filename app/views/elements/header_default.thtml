@@ -187,6 +187,7 @@ for ($d = 0; $d < 4; $d++) { // 4 columns loop
 	<form  name="logs" action="<?php echo $html->url(array('controller'=>'users','action'=>'login'))?>" method="POST" accept-charset="UTF-8">
 	<?php ___('username'); ?>:<input id="UserInput" type="text" name="User" value="" size="12">
 	<?php ___('password'); ?>:<input type="password" name="Pass" value="" size="12">
+	<input type="hidden" name="Hmph" value="<?php echo sha1(date("H:i")) ?>">
 	<input type="hidden" name="refer" value="<?php echo str_replace("%2F", "/", urlencode($_SERVER['REQUEST_URI'])); ?>">
 	<input type="submit" class="button" value="<?php ___('log in'); ?>"> &nbsp;&nbsp;<a href="/password_recovery"><?php ___('Did you forget?')?></a>
 	</form>
