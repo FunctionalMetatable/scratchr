@@ -1,6 +1,6 @@
 <div class="fullcontent">
 <p>
-<?php printf(___('"Sorry to see you go. In order to confirm you want to close your account %s and make all your projects unavailable, please type below the reasons for doing this. Your account will be closed immediately after that."',true),'<b>'.$username.'</b>')?>
+<?php printf(___('Sorry to see you go. In order to confirm you want to close your account %s, please write down the reasons for doing this in the form below. Your account will be closed immediately after that.',true),'<b>'.$username.'</b>')?>
 </p>
 <br/>
 <form action="<?php echo $html->url('/users/close_account/'.$user_id)?>" method="POST" accept-charset="UTF-8">
