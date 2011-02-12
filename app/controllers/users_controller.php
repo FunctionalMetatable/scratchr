@@ -2395,7 +2395,7 @@ class UsersController extends AppController {
 		if(!empty($this->data))
 		{
 			if(empty($this->data['User']['reasons']))
-			$this->User->invalidate('reasons',___('Enter why do you want to close account?',true));
+			$this->User->invalidate('reasons',___('Please write a quick explanation. Thanks!',true));
 			if($this->User->validates($this->data['User'])){
 				$client_ip = $this->RequestHandler->getClientIP();
 				$reasons = $this->data['User']['reasons'];
