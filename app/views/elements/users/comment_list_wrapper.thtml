@@ -4,5 +4,7 @@
 		printf(___('You have %s comments', true), $comment_count); 
 	  ?>
 	  <br/>
+	  <?php if($comment_count > 0):?>
 	  <a href="<?php echo $html->url('/users/comment_list/')?><?php echo $user_id; ?>/<?php echo $option ?>"><?php ___('View Comment List'); ?></a>
+	  <?php endif;?>
 </div>

@@ -606,7 +606,7 @@ function langList($countries) {
 	  <!-- ::: End projects ::: -->
     </div>
     <?php
-			  if($new):
+			  if(isset($new) && $new):
 	?>
 				  <script type="text/javascript" src="/js/swfobject.js"></script>
 				  <script type="text/javascript" src="/js/add_username.js"></script>
