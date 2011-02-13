@@ -1336,6 +1336,7 @@ class UsersController extends AppController {
 	 * city, state, country
      */
     function update() {
+		Configure::write('debug',0);
 	    $this->exitOnInvalidArgCount(0);
 		if (!$this->RequestHandler->isAjax())
 			$this->__err();
@@ -1351,7 +1352,10 @@ class UsersController extends AppController {
 		if (!$this->isAdmin())
 			if ($user_id !== $form_user_id)
 				$this->__err();
-
+		//read user record
+		$this->User->id = $form_user_id;
+        $user = $this->User->read();
+		
 		// save user info
 		$valid_updates = Array("email","city", "state", "country", "bmonth", "byear");
 		$form_keys = array_keys($this->params["form"]);
@@ -1360,11 +1364,16 @@ class UsersController extends AppController {
 			$this->__err();
 
 		$form_value = htmlspecialchars( $this->params["form"][$form_field] );
-		$this->User->id = $form_user_id;
-		$this->User->saveField($form_field,$form_value);
-        echo $this->User->field($form_field);
-        exit();
-    }
+		if(isInappropriate($form_value)){
+			echo $user['User'][$form_field];
+			exit;
+		}else{
+			$this->User->id = $form_user_id;
+			$this->User->saveField($form_field,$form_value);
+			echo $this->User->field($form_field);
+			exit();
+		}
+	}
 
 
 
