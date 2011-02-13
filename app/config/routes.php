@@ -114,6 +114,7 @@ Router::connect('/projects/markTag/*', array('controller' => 'projects', 'action
 Router::connect('/projects/upgradeTag/*', array('controller' => 'projects', 'action' => 'upgradeTag'));
 Router::connect('/projects/moreprojects/*', array('controller' => 'projects', 'action' => 'moreprojects'));
 Router::connect('/projects/renderComments/*', array('controller' => 'projects', 'action' => 'renderComments'));
+Router::connect('/projects/set_player/*', array('controller' => 'projects', 'action' => 'set_player'));
 Router::connect('/projects/:username/:id', array('controller' => 'projects', 'action' => 'view'),
 													array(
 													   'pass' => array('username','id'),

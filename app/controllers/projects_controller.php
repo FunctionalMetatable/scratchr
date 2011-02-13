@@ -2198,6 +2198,13 @@ class ProjectsController extends AppController {
             //close memcache connection
             $this->Project->mc_close();
             */
+			//set project player type.
+			$player_type = null;
+			if ($isLogged) {
+				$this->loadModel('UserPlayerHistory');
+                $player_type = $this->UserPlayerHistory->getPlayerType($logged_id);
+			}
+			$this->set('player_type', $player_type);
             $remixes = $project['Project']['remixes'];
             $this->set('relatedcount', $remixes);
             $this->set('remixer', $project['Project']['remixer']);
@@ -3337,5 +3344,20 @@ class ProjectsController extends AppController {
 		
 		return $temp_array;
 	}
+	/*function to swith project player java or flash*/
+	function set_player($type = null, $urlname,$pid){
+		if(empty($type)){
+			$this->cakeError('error404');
+		}
+		$user_id = $this->getLoggedInUserID();
+		$isLogged = $this->isLoggedIn();
+		if($isLogged){
+			$this->loadModel('UserPlayerHistory');
+			$this->data['UserPlayerHistory']['user_id'] = $user_id;
+			$this->data['UserPlayerHistory']['player_type'] = $type;
+			$this->UserPlayerHistory->save($this->data);
+		}
+		$this->redirect("/projects/$urlname/$pid");
+	}//eof
 }
 ?>
