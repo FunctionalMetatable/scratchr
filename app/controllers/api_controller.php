@@ -193,7 +193,7 @@ class ApiController extends AppController {
 		Configure::write('debug', 0);
 		$this->Project->mc_connect();
 		$user_id = $this->User->field('id', array('User.username' => $username));
-		if(empty($user_id) {
+		if(empty($user_id)) {
 			echo "";
 			exit;
 		}
