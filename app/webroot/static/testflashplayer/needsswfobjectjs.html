@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
+<head> 
+<title>Embed Test</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /> 
+ 
+<script type="text/javascript"> 
+ 
+var flashapp;
+ 
+function installPlayer(swfName, swfID) {
+//	document.body.style.backgroundColor = '#FF0000';
+	var flashvars = {
+		project: 'http://scratch.mit.edu/static/projects/johnm/916243.sb'};
+	var params = {
+		allowScriptAccess: 'sameDomain',
+		allowFullScreen: true,
+	};
+	var attributes = {};
+	swfobject.embedSWF(swfName, swfID, 482, 387, '10.0', false, flashvars, params, attributes);
+	flashapp = document.getElementById(swfID);
+}
+ 
+function JSFillScreen(fillScreen) {
+	flashapp.style.zIndex = 1000; // put in front
+	if (fillScreen) {
+		document.body.style.margin = '0px';
+		var w = Math.max(document.body.clientWidth, document.documentElement.clientWidth);
+		var h = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+		setPlayerSize((w - 17), h, false);
+	} else {
+		setPlayerSize(482, 387, false);
+		document.body.style.margin = '8px';
+	}
+}
+ 
+function setPlayerSize(w, h) {
+	if (navigator.appName == 'Microsoft Internet Explorer') {
+		flashapp.style.width = w;
+		flashapp.style.height = h;
+	} else {
+		flashapp.width = w;
+		flashapp.height = h;
+	}
+}
+ 
+</script> 
+</head> 
+<body onload="installPlayer('../misc/PlayerOnly.swf', 'PlayerOnly')"> 
+	<div id="PlayerOnly"> 
+		<p>Alternative content for PlayerOnly.swf </p> 
+	</div> 
+</body> 
+</html> 
