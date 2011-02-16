@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
+<head> 
+<title>Embed Test 0</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /> 
+ 
+<script type="text/javascript"> 
+ 
+function JSFillScreen(fillScreen) {
+	if (fillScreen) {
+		document.body.style.margin = '0px';
+		var w = Math.max(document.body.clientWidth, document.documentElement.clientWidth);
+		var h = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+		setPlayerSize((w - 17), h, false);
+	} else {
+		setPlayerSize(482, 387, false);
+		document.body.style.margin = '8px';
+	}
+}
+ 
+function setPlayerSize(w, h) {
+	var outerSWF = document.getElementById("PlayerOuter");
+	var innerSWF = document.getElementById("PlayerInner");
+	if (navigator.appName == 'Microsoft Internet Explorer') {
+		outerSWF.style.zIndex = 1000; // put in front
+		outerSWF.style.width = w;
+		outerSWF.style.height = h;
+	} else {
+		outerSWF.style.zIndex = 1000; // put in front
+		innerSWF.style.zIndex = 1000; // put in front
+		outerSWF.width = w;
+		outerSWF.height = h;
+		innerSWF.width = w;
+		innerSWF.height = h;
+	}
+}
+ 
+</script> 
+</head> 
+<body> 
+	<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="482" height="387" id="PlayerOuter"> 
+		<param name="movie" value="../misc/PlayerOnly.swf"> 
+		<param name="allowscriptaccess" value="always"> 
+		<param name="FlashVars" value="project=http://scratch.mit.edu/static/projects/johnm/916243.sb"> 
+			<!--[if !IE]>--> 
+			<object type="application/x-shockwave-flash" data="PlayerOnly.swf" width="482" height="387" id="PlayerInner"
+				allowscriptaccess="always"
+				FlashVars="project=http://scratch.mit.edu/static/projects/johnm/916243.sb"> 
+				<!--<![endif]--> 
+					<p>Alternative content</p> 
+				<!--[if !IE]>--> 
+			</object> 
+			<!--<![endif]--> 
+	</object> 
+</body> 
+</html> 
