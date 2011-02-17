@@ -1,3 +1,4 @@
+
 <?php 
 if ($isLocked) {
     $lock = 1;
@@ -54,7 +55,52 @@ else {
 			</div>
 			<?php elseif(trim($player_type) == 'flash'):?>
 				<!--Play with Flash Player -->
-				<img src="/static/projects/<?php echo "$urlname/${pid}_med.png"; ?>" alt="Flash Player Here">
+				<script type="text/javascript" src="/js/swfobject.js"></script> 
+				<script type="text/javascript"> 
+				 
+				var flashapp;
+				 
+				function installPlayer(swfName, swfID) {
+				//	document.body.style.backgroundColor = '#FF0000';
+					var flashvars = {
+						project: '<?php echo $embed_project?>'};
+					var params = {
+						allowScriptAccess: 'sameDomain',
+						allowFullScreen: true,
+					};
+					var attributes = {};
+					swfobject.embedSWF(swfName, swfID, 482, 387, '10.0', false, flashvars, params, attributes);
+					flashapp = document.getElementById(swfID);
+				}
+				 
+				function JSFillScreen(fillScreen) {
+					flashapp.style.zIndex = 1000; // put in front
+					if (fillScreen) {
+						document.body.style.margin = '0px';
+						var w = Math.max(document.body.clientWidth, document.documentElement.clientWidth);
+						var h = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+						setPlayerSize((w - 17), h, false);
+					} else {
+						setPlayerSize(482, 387, false);
+						document.body.style.margin = '8px';
+					}
+				}
+				 
+				function setPlayerSize(w, h) {
+					if (navigator.appName == 'Microsoft Internet Explorer') {
+						flashapp.style.width = w;
+						flashapp.style.height = h;
+					} else {
+						flashapp.width = w;
+						flashapp.height = h;
+					}
+				}
+				 
+				</script>
+				<div id="PlayerOnly"> 
+				<p><img src="/static/projects/<?php echo "$urlname/${pid}_med.png"; ?>" alt="You need Adobe Flash to play this."> </p> 
+				</div> 
+				
 			<?php endif;?>
 		</div>
     </div>

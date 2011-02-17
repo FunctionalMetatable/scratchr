@@ -167,8 +167,14 @@ if ($isLoggedIn) {
 
 if (isset($head)) echo $head->print_registered();
 ?>
+
 </head>
+<!--init scratch player or flash player-->
+<?php if(trim($player_type) == 'java' || empty($player_type)):?>
 <body onload="initProjectbox(); initScratchPlayer();">
+<?php elseif(trim($player_type) == 'flash'):?>
+<body onload="initProjectbox();installPlayer('/static/misc/PlayerOnly.swf', 'PlayerOnly');">
+<?php endif;?>
 	<div id="overlay">
 	</div>
 	<div id="errorbox">
