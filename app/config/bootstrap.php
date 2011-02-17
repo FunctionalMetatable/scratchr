@@ -689,7 +689,8 @@ return $country_list[$code];
 	check if cookie lang find then return cookie land else browser lang if lang exists in language list.
 */
 function get_client_language( $cookie_lang = null){
-	$availableLanguages = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja', 'kor' => 'ko');
+
+	$availableLanguages = array( 'fr-fr' => 'fr', 'es-es' => 'es', 'ita'   => 'it', 'rus'	=> 'ru', 'dut'	=> 'nl', 'de-de' => 'de', 'heb'	=> 'he', 'jpn'	=> 'ja', 'kor' => 'ko', 'ara' => 'ar','zh-cn' => 'zh-hans','zh-tw' => 'zh-hant','pol' => 'pl','ukr' => 'uk);
 	if(isset($availableLanguages[$cookie_lang])){ 
 		return $availableLanguages[$cookie_lang];
 	}else if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
