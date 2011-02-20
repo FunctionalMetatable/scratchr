@@ -358,6 +358,11 @@ define('FILTERED_HOST', 'filtered.scratch.mit.edu');
 **/
 define('JAVA_PATH', '/usr/java/latest/bin/java');
 
+/***
+*Prompt CAPTCHA after number of failed attempt to login
+**/
+define('MAX_LOGIN_ATTEMPT', 2);
+
  /**
   * Returns theme url for html link destination
   */

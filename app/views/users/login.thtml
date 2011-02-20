@@ -13,7 +13,7 @@
   <div class="login_header">
     <h3><?php ___('Log in'); ?></h3>
   </div>
-	<?php 
+	<?php
 		if($isLoginError) {
 			echo "<div class='login_error'>";
 				$error = $errors[0];
@@ -31,6 +31,11 @@
 			<label for="Pass"><?php ___('Password'); ?>:</label>
 			<input type="password" name="Pass" value="" size="24">
 		</div>
+		<?php if($login_attempt >= MAX_LOGIN_ATTEMPT):?>
+		<div class="login_row">
+			<?php echo recaptcha_get_html(CAPTCHA_PUBLICKEY);  ?>
+		</div>
+		<?php endif;?>
 		<div class="login_submit">
 			<input type="submit" class="button" value="<?php ___('log in'); ?>">
             &nbsp;<a href="/password_recovery"><?php ___('Did you forget?')?></a>

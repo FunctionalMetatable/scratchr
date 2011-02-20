@@ -548,21 +548,20 @@ class UsersController extends AppController {
 
 	function login() {
 	 
-	  $this->pageTitle = "Scratch | Login";
-	  $errors = Array();
-	  $resp = recaptcha_check_answer (CAPTCHA_PRIVATEKEY, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
-          if(!empty($this->params['form']['Hmph']) && sha1(date("H:i")) != $this->params['form']['Hmph']) {
-			array_push($errors, ___("Hmph, authentication words were not entered correctly", true));
-			$this->setFlash(___("Hmph, seems like the squiggly words were typed incorrectly", true), FLASH_ERROR_KEY);
-	  }elseif(empty($this->params['form']['Hmph']) && !$resp->is_valid) {
-		array_push($errors, ___("Authentication words were not entered correctly", true));
-		$this->setFlash(___("Seems like the squiggly words were typed incorrectly", true), FLASH_ERROR_KEY);
-         } elseif  (!empty($this->params['form']['User'])) {
+		$this->pageTitle = "Scratch | Login";
+		$errors = Array();
+		$login_attempt = 0;
+		if(isset($_POST["recaptcha_challenge_field"]) && isset($_POST["recaptcha_response_field"])){
+			$resp = recaptcha_check_answer (CAPTCHA_PRIVATEKEY, $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"]);
+		}
+		
+		if  (!empty($this->params['form']['User'])) {
 			$submit_username = $this->params['form']['User'];
 			$submit_pwd = $this->params['form']['Pass'];
 			$this->User->bindPermission();
 			$users_permission = array();
 			$user_record = $this->User->findByUsername($submit_username);
+			$login_attempt = intval($user_record['User']['login_attempt']);
 			foreach($user_record['Permission'] as $user_permission) {
 				$id = $user_permission['id'];
 				$url_name =$user_permission['short_name'];
@@ -575,7 +574,11 @@ class UsersController extends AppController {
 				$user_status = $user_record['User']['status']; 
 			}
 			
-			if ($user_status == 'delbyadmin' || $user_status == 'delbyusr') {
+			if(isset($resp) && !$resp->is_valid){
+			array_push($errors, ___("Authentication words were not entered correctly", true));
+			$this->setFlash(___("Seems like the squiggly words were typed incorrectly", true), FLASH_ERROR_KEY);
+			}
+			elseif ($user_status == 'delbyadmin' || $user_status == 'delbyusr') {
 				array_push($errors, ___("Invalid username and password pair", true));
 				$this->setFlash(___("Invalid username and password pair", true), FLASH_ERROR_KEY);
 			}
@@ -583,6 +586,11 @@ class UsersController extends AppController {
 			&& $user_record['User']['password'] == sha1($submit_pwd)) {
 				$this->Session->write('User', $user_record['User']);
 				$this->Session->write('UsersPermission', $users_permission);
+				//set login attempt to 0 if login successfully.
+				if($login_attempt > 0){
+					$this->User->id = $user_record['User']['id'];
+					$this->User->saveField('login_attempt', 0);
+				}
 				$userID = $user_record['User']['id'];
 				$statID = $this->UserStat->field("id", "user_id = $userID");
 				$time = date("Y-m-d G:i:s");
@@ -631,6 +639,8 @@ class UsersController extends AppController {
 				}
 			}
 			else {
+				$this->User->id = $user_record['User']['id'];
+				$this->User->saveField('login_attempt', $login_attempt+1);
 				array_push($errors, ___("Invalid username and password pair", true));
 				$this->setFlash(___("Invalid username and password pair", true), FLASH_ERROR_KEY);
 			}
@@ -644,6 +654,7 @@ class UsersController extends AppController {
 		
 		$this->set('errors', $errors);
 		$this->set('isLoginError', $isError);
+		$this->set('login_attempt', $login_attempt);
 	}
 	
 	/*************set_email******/
