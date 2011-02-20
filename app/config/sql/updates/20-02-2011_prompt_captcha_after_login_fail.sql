@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `login_attempt` INT NOT NULL DEFAULT '0';
