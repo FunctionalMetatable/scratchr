@@ -1004,7 +1004,7 @@ Class GalleriesController extends AppController {
         $isClubbed  = false;
 		if($gallery['Gallery']['total_projects'] == 0)
 		{
-			if(! $isLogged && !$this->check_url($gallery['Gallery']['description'])){
+			if(!$isLogged){
 				$this->cakeError('error404');
 			}
 			

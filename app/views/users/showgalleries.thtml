@@ -91,17 +91,13 @@
 		<?php 
 		//if user is not logged in don't show gallery which have 0 project
 		$should_display = true;
-		if($gallery['total_projects'] == 0)
-		{
-			if(! $isLogged && !$util->check_url($gallery['description'])){
-				$should_display = false;
-			}
-			
-			if($isLogged && !($isAdmin || $isMe) && !$util->check_url($gallery['description'])){
-				$should_display = false;
-			}
+		if($gallery['total_projects'] == 0){
+				//if user is not logged in
+				if(!$isLogged){$should_display = false;}
+				//if logged in and doesnot contains valid url
+				if($isLogged && !(($isMe || $isAdmin) && $util->check_url($gallery['description']))){$should_display = false;}
+				
 		}
-		
 		if($should_display)
 		{
 		?>

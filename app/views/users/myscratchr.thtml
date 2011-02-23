@@ -539,10 +539,18 @@ function langList($countries) {
 			if (strlen($theme_name) > 17) {
 				$theme_name_s = substr($theme_name,0,16) . "&#0133;";
 			}
+			$showgallery = true;
+			if($theme['Gallery']['total_projects'] == 0 ){
+				//if user is not logged in
+				if(!$isLogged){$showgallery = false;}
+				//if logged in and doesnot contains valid url
+				if($isLogged && !(($isMe || $isAdmin) && $util->check_url($theme['Gallery']['description'])) ){$showgallery = false;}
+				
+			}
 
 			?>
-			<?php if($theme['Gallery']['total_projects'] == 0 &&(!$isLogged && !$util->check_url($theme['Gallery']['description'])) || ($isLogged && (!($isMe || $isAdmin)) && !$util->check_url($theme['Gallery']['description']))):?>
-			<?php else:?>
+			<?php if($showgallery):?>
+			
 			<li id="gallery-<?php e($theme_id)?>">
 			<a href="<?php echo $html->url($theme_url)?>"><?php echo $html->image($theme_icon,array('alt'=>$theme_name,'width'=>'43','height'=>'32'))?><?php e($theme_name_s)?></a>
 			
