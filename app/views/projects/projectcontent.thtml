@@ -57,45 +57,47 @@ else {
 				<!--Play with Flash Player -->
 				<script type="text/javascript" src="/js/swfobject.js"></script> 
 				<script type="text/javascript"> 
-				 
-				var flashapp;
-				 
-				function installPlayer(swfName, swfID) {
-				//	document.body.style.backgroundColor = '#FF0000';
-					var flashvars = {
-						project: '<?php echo $embed_project?>'};
-					var params = {
-						allowScriptAccess: 'sameDomain',
-						allowFullScreen: true,
-					};
-					var attributes = {};
-					swfobject.embedSWF(swfName, swfID, 482, 387, '10.0', false, flashvars, params, attributes);
-					flashapp = document.getElementById(swfID);
-				}
-				 
-				function JSFillScreen(fillScreen) {
-					flashapp.style.zIndex = 1000; // put in front
-					if (fillScreen) {
-						document.body.style.margin = '0px';
-						var w = Math.max(document.body.clientWidth, document.documentElement.clientWidth);
-						var h = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
-						setPlayerSize((w - 17), h, false);
-					} else {
-						setPlayerSize(482, 387, false);
-						document.body.style.margin = '8px';
-					}
-				}
-				 
-				function setPlayerSize(w, h) {
-					if (navigator.appName == 'Microsoft Internet Explorer') {
-						flashapp.style.width = w;
-						flashapp.style.height = h;
-					} else {
-						flashapp.width = w;
-						flashapp.height = h;
-					}
-				}
-				 
+			       var flashapp;
+
+			       function installPlayer(swfName, swfID) {
+				       var flashvars = {
+					       project: '<?php echo $embed_project?>'};
+				       var params = {
+					       allowScriptAccess: 'sameDomain',
+					       allowFullScreen: true,
+				       };
+				       var attributes = {};
+				       swfobject.embedSWF(swfName, swfID, 482, 387, '10.0', false, flashvars, params, attributes);
+				       flashapp = document.getElementById(swfID);
+				       flashapp.style.position = 'relative';
+				       flashapp.parentNode.parentNode.style.overflow = 'visible'; // override CSS
+				       flashapp.style.zIndex = 1000; // put in front
+				       setPlayerSize(482, 387);
+			       }
+
+			       function JSFillScreen(fillScreen) {
+				       if (fillScreen) {
+					       var r = flashapp.getBoundingClientRect();
+					       flashapp.style.left = -r.left + 'px';
+					       flashapp.style.top = -r.top + 'px';
+					       setPlayerSize(window.innerWidth, window.innerHeight - 10);
+				       } else {
+					       setPlayerSize(482, 387);
+					       flashapp.style.left = flashapp.style.top = '0px';
+				       }
+			       }
+
+			       function setPlayerSize(w, h) {
+				       var isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > 0;
+				       if (isFirefox) w += 1;
+				       if (navigator.appName == 'Microsoft Internet Explorer') {
+					       flashapp.style.width = w;
+					       flashapp.style.height = h;
+				       } else {
+					       flashapp.width = w;
+					       flashapp.height = h;
+				       }
+			       }
 				</script>
 				<div id="PlayerOnly"> 
 				<p><img src="/static/projects/<?php echo "$urlname/${pid}_med.png"; ?>" alt="You need Adobe Flash to play this."> </p> 
@@ -470,12 +472,13 @@ else {
 	<div id="beta">
 		<?php if(trim($player_type) == 'java' || empty($player_type)):?>
 		<h3><?php ___('Try the new player');?></h3>
-		<?php ___('You can play this and all other projects using our new Flash-based player.');?>
+		<?php ___('You can play this project (and all others) using our new Flash-based player.');?>
 		<?php echo $html->link(___('Try it out now!',true), array('action' => 'set_player/flash',$urlname,$pid))?>
 		<?php elseif(trim($player_type) == 'flash'):?>
-		<h3><?php ___('Want the old player instead?');?></h3>
+		<h3><?php ___('Want to switch back?');?></h3>
 		<?php echo $html->link(___('Click here',true), array('action' => 'set_player/java',$urlname,$pid))?>
-		<?php ___('to switch to the old default java player.');?>
+		<?php ___('to switch back to the default Java player.');?>
+		<?php ___('Please <a href="http://j.mp/feedbackflashplayer">let us know</a> what you think of the new Flash player.');?>
 		<?php endif;?>
 	</div>
 	<?php endif;?>
