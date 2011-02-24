@@ -65,5 +65,21 @@ function about_scratch(){
 	$this->redirect("/forums/viewforum.php?id=6");
 }
 
+function url(){
+	$logged_id  = $this->Session->read('User.id');
+	$unencoded_url = trim(urldecode($_GET['link']));
+	if($logged_id){
+		$this->loadModel ('UserWelcome');
+		$time = date("Y-m-d G:i:s");
+		$referrer_url =isset($_SERVER['HTTP_REFERER']) ? trim($_SERVER['HTTP_REFERER']) : NULL;
+		$sql = "INSERT INTO `user_redirects` (`id`,`user_id`,`unencoded_url`, `referrer_url`, `created`) VALUES"
+                        ." (NULL, $logged_id, '$unencoded_url', '$referrer_url', '$time')";
+        uses('Sanitize');
+		Sanitize::clean($sql, array('encode' => false));
+		$this->UserWelcome->query($sql);
+	}
+	$this->redirect($unencoded_url);
+}
+
 }
 ?>
