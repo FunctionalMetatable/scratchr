@@ -169,7 +169,8 @@ document.getElementById('subtopicsdiv').style.display="block";
 </div>
 
 <div id="deleteaccountdiv" style="display:none">
-<?php ___('<p>There\'s no need to close your Scratch account when moving on. But if you wish to have it deleted, be sure to download any of your projects that you\'d like to keep before continuing. Use the form below to request that your account be removed. Be sure to include the account name and the <b>birth month and year</b> that you entered when you signed up, so we can confirm that you are the owner.</p><p>If you have any additional feedback, we hope you\'ll share it with us.</p>'); ?>
+<?php ___('<p>There\'s no need to close your Scratch account when moving on. But if you wish to have it removed, here are the steps to take:</p>
+<p>If you have never used your account to upload a Scratch project, simply login to your account and visit your "my stuff" page. A link to close your account will appear in the upper left corner, near your user icon.<p> <p>If you have ever used your account to upload a project, the "close account" link will not appear. Instead, follow these instructions to remove your account. Download any of your projects that you\'d like to keep before continuing. Use the form below to request that your account be removed. Be sure to include the account name and the <b>birth month and year</b> that you entered when you signed up, so we can confirm that you are the owner.</p><p>If you have any additional feedback, we hope you\'ll share it with us.</p>'); ?>
 </div>
 
 <div id="technicalquestiondiv" style="display:none">
