@@ -6,3 +6,7 @@ CREATE TABLE `user_redirects` (
 `created` DATETIME NOT NULL ,
 PRIMARY KEY ( `id` )
 );
+
+
+
+ALTER TABLE `blocked_users` ADD `unblock_date` DATE NULL DEFAULT '0000-00-00';

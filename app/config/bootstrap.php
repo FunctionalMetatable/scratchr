@@ -363,6 +363,11 @@ define('JAVA_PATH', '/usr/java/latest/bin/java');
 **/
 define('MAX_LOGIN_ATTEMPT', 2);
 
+/***
+*number of days after unblock user automatically
+**/
+define('USER_UNBLOCK_DAYS', '3 days');
+
  /**
   * Returns theme url for html link destination
   */
@@ -757,4 +762,21 @@ function get_client_language( $cookie_lang = null){
 			}
 		}
 	}
+	
+	$otherBlockSet = array(  //MOTOR AND WTF (feel free to categorize what you recognize) (no slice of pie for these guys)
+    "allMotorsOff",
+    "allMotorsOn",
+    "comment_",
+    "motorOnFor_elapsed_from_",
+    "startMotorPower_",
+    "setMotorDirection_",
+    "yourself",
+    "askYahoo",
+    "wordOfTheDay_",
+    "jokeOfTheDay_",
+    "synonym_",
+    "info_fromZip_",
+    "scratchrInfo_forUser_",
+    "other"
+);
 ?>

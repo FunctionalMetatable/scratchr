@@ -1996,7 +1996,10 @@
 		if (!empty($this->params['form']['admin_banuser_name'])) {
 			$username = $this->params['form']['admin_banuser_name'];
 			$reason = htmlspecialchars($this->params['form']['admin_banuser_reason']);
-			
+			$unblock_date = '0000-00-00';
+			if(isset($this->params['form']['unblock_date'])){
+				$unblock_date = $this->params['form']['unblock_date'];
+			}
 			$user_record = $this->User->find("User.username = '$username'");
 			
 			if (empty($user_record)) {
@@ -2008,7 +2011,7 @@
                 if (empty($blocked_record)) {
 					$this->User->id = $current_user_id;
 					if($this->User->saveField("status", 'locked')) {
-                        $info = Array('BlockedUser' => Array('id' => null, 'user_id' => $current_user_id, 'admin_id' => $admin_id, 'reason' => $reason));
+                        $info = Array('BlockedUser' => Array('id' => null, 'user_id' => $current_user_id, 'admin_id' => $admin_id, 'reason' => $reason, 'unblock_date' => $unblock_date));
                         $this->BlockedUser->save($info);
                     }
                     else {
