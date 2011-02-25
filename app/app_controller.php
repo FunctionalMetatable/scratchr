@@ -121,8 +121,8 @@ class AppController extends Controller {
 		if ($isLoggedIn) {
 			$user_id = $this->getLoggedInUserID();
 			$this->set('notify_count', $this->Notification->countAll($user_id));
+			$this->User->bindModel( array('hasOne' => array('BlockedUser')) );
 			$user = $this->User->find("User.id = $user_id");
-						
 			$isLocked = false;
 			$temporary_locked = false;
 			//locked user
@@ -138,6 +138,19 @@ class AppController extends Controller {
 					else {
 						$isLocked = true;
 						$temporary_locked = true;
+						}
+				}elseif(isset($user['BlockedUser']['unblock_date']) && $user['BlockedUser']['unblock_date'] != '0000-00-00'){
+					//blocked_till time is in past
+					if($user['BlockedUser']['unblock_date'] <= date("Y-m-d", time())) {
+						//so unblock the user
+						if($this->BlockedUser->deleteAll("BlockedUser.user_id =$user_id")){
+							$this->User->id = $user_id;
+							$this->User->saveField('status', 'normal');
+						}
+					}
+					//block time is in future..
+					else {
+							$isLocked = true;
 						}
 				}
 				//permanent block..
