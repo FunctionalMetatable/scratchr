@@ -80,7 +80,12 @@ else {
 					       var r = flashapp.getBoundingClientRect();
 					       flashapp.style.left = -r.left + 'px';
 					       flashapp.style.top = -r.top + 'px';
-					       setPlayerSize(window.innerWidth, window.innerHeight - 10);
+					       var h = window.innerHeight;
+					       if (typeof(w) != 'number') { // If IE:
+							w = document.documentElement.clientWidth;
+							h = document.documentElement.clientHeight;
+						}
+					       setPlayerSize(w, h - 10);
 				       } else {
 					       setPlayerSize(482, 387);
 					       flashapp.style.left = flashapp.style.top = '0px';
