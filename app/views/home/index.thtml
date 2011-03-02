@@ -357,6 +357,14 @@ width:245px;
 	    ?>
     <?php endif; ?>
 
+<?php if ($isLogged): ?>
+<div class="sidecontainer" id="club">
+      <h4><?php ___('Collab Challenge'); ?></h4>
+        <p><a href="http://j.mp/collabchallenge"><img width="77" alt="Collab Challenge" src="http://info.scratch.mit.edu/sites/infoscratch.media.mit.edu/files/image/pinwheel(1).png"></a><?php ___('What can you and other Scratchers create together using 3 images and a lot of imagination?');?></p>
+      <p class="more"><a href="http://j.mp/collabchallenge"><?php ___('Join the challenge!');?></a> </p>
+     </div>
+<?php endif; ?>
+
      <div id="club" class="sidecontainer">
       <h4><?php ___('ScratchEd'); ?></h4>
         <p><a href="http://scratched.media.mit.edu/"><img src="/img/scratched.png" alt="ScratchEd" width="77"></a><?php ___('Do you help people learn Scratch? Join ScratchEd, our new online community for educators.'); ?></p>
