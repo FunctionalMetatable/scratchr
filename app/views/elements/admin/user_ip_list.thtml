@@ -1,19 +1,24 @@
 <div>
 <?php
     foreach ($data as $ip):
-        $user_ip = 	$ip[0]['ip'];
-		$expand_address = "/administration/expand_ip/$user_ip";
-		$ban_address = '/administration/ban_ip/'.$user['User']['id'].'/'.$user_ip;
+        $user_ip =      $ip[0]['ip'];
+        $user_ip_timestamp = $ip[0]['v_time'];
+                $expand_address = "/administration/expand_ip/$user_ip";
+                $ban_address = '/administration/ban_ip/'.$user['User']['id'].'/'.$user_ip;
+                $ip_hostinfo = gethostbyaddr($user_ip);
+                if ($ip_hostinfo == $user_ip)
+                        $ip_hostinfo = "<br>";
 ?>
     <div class="gallerythumb clearme">
-		<div class="admin_leftcolumn">
-            <span>IP: <?= $user_ip ?></span>
-		</div>
-		<div class='admin_rightcolumn'>
+                <div class="admin_leftcolumn">
+            <span>IP: <?= $user_ip ?> <br> <?= $ip_hostinfo ?> </span>
+                </div>
+                <div class='admin_rightcolumn'>
             <span>
             <a href="<?= $ban_address ?>"> Ban IP </a>
             &nbsp;|&nbsp;
-            <a href="<?php echo $html->url($expand_address)?>"> Show All Users From This IP </a>
+            <a href="<?php echo $html->url($expand_address)?>"> Show All Users</a>
+        <br> <?= $user_ip_timestamp ?>
             </span>
         </div>
     </div>
