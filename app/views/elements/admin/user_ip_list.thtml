@@ -3,11 +3,19 @@
     foreach ($data as $ip):
         $user_ip =      $ip[0]['ip'];
         $user_ip_timestamp = $ip[0]['v_time'];
-                $expand_address = "/administration/expand_ip/$user_ip";
-                $ban_address = '/administration/ban_ip/'.$user['User']['id'].'/'.$user_ip;
-                $ip_hostinfo = gethostbyaddr($user_ip);
-                if ($ip_hostinfo == $user_ip)
-                        $ip_hostinfo = "<br>";
+	$expand_address = "/administration/expand_ip/$user_ip";
+        $ban_address = '/administration/ban_ip/'.$user['User']['id'].'/'.$user_ip;
+
+	// Less laggy alternative to gethostbyaddr()
+	$ptr= implode(".",array_reverse(explode(".",$user_ip))).".in-addr.arpa";
+        $host = dns_get_record($ptr,DNS_PTR);
+
+        if ($host == null){
+        	$ip_hostinfo = "<br>";
+	}	
+	else{
+		$ip_hostinfo = $host[0]['target'];
+	}
 ?>
     <div class="gallerythumb clearme">
                 <div class="admin_leftcolumn">
