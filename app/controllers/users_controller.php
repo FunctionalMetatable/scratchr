@@ -264,6 +264,30 @@ class UsersController extends AppController {
 				 $this->data['User']['urlname'] =  $this->data['User']['username'];
 				 $this->data['User']['ipaddress'] = $client_ip_long;
 				 
+				 	// CHECK IF THERE WAS AN EVERCOOKIE
+					// IF THERE WAS, SEND A CAUTION WARNING!
+					$ecookie = $this->data['ecookie'];
+					if($ecookie != "NULL" && $ecookie != "undefined" && !empty($ecookie))
+					{
+						// An actual evercookie was detected.
+						
+						$euserdata = $this->User->findByUsername(trim($ecookie));
+													
+						if($euserdata['User']['status'] == "locked")
+						{
+							// The user is actually banned
+		
+							$subject = "Banned account registration attempt ($ecookie)";
+			
+							$msg = "A computer used to login to a banned account has been used to register a new one.<br />
+								Banned user: <a href='http://scratch.mit.edu/users/$ecookie'>$ecookie</a><br />
+								New user created: <a href='http://scratch.mit.edu/users/" . $this->data['User']['username'] . "'>" . $this->data['User']['username'] . "</a><br />
+								IP address for new account: " . $this->RequestHandler->getClientIP();
+						
+							$this->Email->email('caution','Scratch Website', $msg, $subject, 'caution@scratch.mit.edu');
+						}
+					}
+				 
 /*
 				 // This is the hidden form value that I added for the purposes of checking previous users made on this computer
 				 $prevNames = $this->data['User']['prevNames'];
