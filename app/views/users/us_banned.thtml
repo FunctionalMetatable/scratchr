@@ -12,6 +12,7 @@
 <div style="border:#CCCCCC 1px solid; padding:2px;margin:5px 0px 5px 0px;"><?php echo $reasonsforblocking;?></div>
 <br /><br />
 <?php ___("Please contact us with the form below to discuss this issue.")?>
+
 <?php endif?>
 <?php
 			echo "<div id='success_msg'>";

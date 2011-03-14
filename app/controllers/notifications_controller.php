@@ -16,6 +16,7 @@ class NotificationsController extends AppController {
 	
 	function index() {
 		$user_id = $this->Session->read('User.id');
+
 		if(empty($user_id)) {
 			$this->cakeError('error404');
 		}
@@ -24,11 +25,14 @@ class NotificationsController extends AppController {
 		if(empty($user_record)) {
 			$this->cakeError('error404');
 		}
+
+// Just for logging IPs?
 		$client_ip = $this->RequestHandler->getClientIP();
 		$sql = "INSERT INTO `notification_histories` (`id`,`user_id`,`ipaddress`) VALUES"
                         ." (NULL, $user_id, INET_ATON('$client_ip'))";
         $this->Notification->query($sql);
-				
+
+	
 		$username = $user_record['User']['username'];
 		$notify_pcomment = $user_record['User']['notify_pcomment'];
 		$notify_gcomment = $user_record['User']['notify_gcomment'];
@@ -45,9 +49,11 @@ class NotificationsController extends AppController {
         $rss_link = '/feeds/getNotificationFeeds/'.$this->encode($user_id);
         $this->set('rss_link', $rss_link);
 		$this->set('title', "Scratch | Messages and notifications");
+
 		$this->render('notifications');
 	}
 	
+	// This appears to be the code for the "Past notiifications" page
 	function view($user_id){
 		if(!$this->isAdmin()) {
 			$this->cakeError('error404');
@@ -68,6 +74,8 @@ class NotificationsController extends AppController {
 		
 		$inappropriate_notifications = array();
 		$notifications = $this->Notification->getInappropriateNotifications($user_id, $page, $limit);
+
+	
 		foreach($notifications as $notification) {
 			$inappropriate_notifications[$i++]['0'] = array_merge($notification['Notification'], $notification['NotificationType'], $notification['0']);
 		}

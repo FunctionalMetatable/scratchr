@@ -28,6 +28,10 @@
  * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
  * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
+// Evercookie bans
+Router::connect('/signupcheck', array('controller' => 'evercookie', 'action' => 'checkCookie'));
+Router::connect('/bannedAccountWarn/*', array('controller' => 'evercookie', 'action' => 'checkBan'));
 	
 //top level pages
 /**
