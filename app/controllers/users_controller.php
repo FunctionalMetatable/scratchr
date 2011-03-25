@@ -280,11 +280,11 @@ class UsersController extends AppController {
 							$subject = "Banned account registration attempt ($ecookie)";
 			
 							$msg = "A computer used to login to a banned account has been used to register a new one.<br />
-								Banned user: <a href='http://scratch.mit.edu/users/$ecookie'>$ecookie</a><br />
-								New user created: <a href='http://scratch.mit.edu/users/" . $this->data['User']['username'] . "'>" . $this->data['User']['username'] . "</a><br />
+								Banned user: <a href='" . TOPLEVEL_URL . "/users/$ecookie'>$ecookie</a><br />
+								New user created: <a href='" TOPLEVEL_URL . "users/" . $this->data['User']['username'] . "'>" . $this->data['User']['username'] . "</a><br />
 								IP address for new account: " . $this->RequestHandler->getClientIP();
 						
-							$this->Email->email('caution','Scratch Website', $msg, $subject, 'caution@scratch.mit.edu');
+							$this->Email->email('caution','Scratch Website', $msg, $subject, TO_BANNED_EC);
 						}
 					}
 				 

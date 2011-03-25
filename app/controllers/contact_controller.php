@@ -4,7 +4,6 @@ class ContactController extends AppController {
 	var $uses = array('Notification', 'Announcement');
 	var $name = 'Contact';
 	var $components = array('Email', 'RequestHandler');
-	var $helpers = array('Form');
 
 	function us(){
 		$this->pageTitle = ___('Scratch | Contact us', true);

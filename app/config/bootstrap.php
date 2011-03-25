@@ -90,6 +90,10 @@ $this->params['webservices']
  define("CONTACTUS_EMAIL", "help@scratch.mit.edu");
  //Used in  users password recovery reply email id.
  define("REPLY_TO_PASSWORD_RECOVERY", "help@scratch.mit.edu");
+ 
+ // Used for banned account registration detection
+ define("TO_BANNED_EC", "caution@scratch.mit.edu");
+ 
  /**
   * Themes config
   */
