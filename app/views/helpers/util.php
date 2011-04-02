@@ -28,7 +28,12 @@ class UtilHelper extends Helper {
         return preg_replace_callback(
                 $pattern, array( &$this,'linkify_cb'),
                 $content
-            );
+	);
+	/*
+	$content = preg_replace('/awesome/i','<a href="http://www.cornify.com" onclick="cornify_add();return false;">awesome</a><script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>',$content);
+	$content = preg_replace('/friday/i','<a href="http://scratch.mit.edu/redirect/url?link=http%3A%2F%2Fscratch.mit.edu%2Ffriday.html">FRIDAY</a>',$content);
+	$content = preg_replace('/april/i','<a href="http://scratch.mit.edu/redirect/url?link=http%3A%2F%2Fscratch.mit.edu%2Ffriday.html">APRIL</a>',$content);
+	 */
     }
 
     /**
