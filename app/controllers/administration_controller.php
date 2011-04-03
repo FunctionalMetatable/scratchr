@@ -873,6 +873,8 @@
 			$temp_user['User']['reason'] = "";
 		} else {
 			$temp_user['User']['reason'] = $ban_record['BlockedUser']['reason'];
+			$temp_user['User']['unblock_date'] = $ban_record['BlockedUser']['unblock_date'];
+			$temp_user['User']['active'] = $ban_record['BlockedUser']['active'];
 		}
 		
 		//connected ip list
@@ -1996,10 +1998,7 @@
 		if (!empty($this->params['form']['admin_banuser_name'])) {
 			$username = $this->params['form']['admin_banuser_name'];
 			$reason = htmlspecialchars($this->params['form']['admin_banuser_reason']);
-			$unblock_date = '0000-00-00';
-			if(isset($this->params['form']['unblock_date'])){
-				$unblock_date = $this->params['form']['unblock_date'];
-			}
+			$unblock_date = Date('Y-m-d', strtotime("+".USER_UNBLOCK_DAYS));
 			$user_record = $this->User->find("User.username = '$username'");
 			
 			if (empty($user_record)) {
@@ -2795,5 +2794,22 @@
         echo '</pre>';
         exit;
     }
+	
+	/*
+		//allow admin to set unblock automatically if he checke checkbox on admin user details page.
+	*/
+	function activeBlockedUser($user_id =null,$flag =0){
+		if($user_id && $this->RequestHandler->isAjax()){
+			$banrecords = $this->BlockedUser->find('first', array('conditions' => array('BlockedUser.user_id' => $user_id)));
+			if($banrecords){
+				$this->BlockedUser->id = $banrecords['BlockedUser']['id']; 
+				if($this->BlockedUser->saveField('active', $flag)){
+					echo $flag;exit;
+				}else{
+					echo $banrecords['BlockedUser']['active'];exit;
+				}
+			}
+		}
+	}//eof
 }
 ?>

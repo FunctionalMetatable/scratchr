@@ -17,7 +17,9 @@
 			$user_url = "/users/$user_name";
 			$user_status = $user['User']['status'];
 			$user_reason = $user['User']['reason'];
-	
+			$unblock_date = isset($user['User']['unblock_date'])?$user['User']['unblock_date'] : '0000-00-00';
+			$unblock_active = isset($user['User']['active'])?$user['User']['active'] :'0';
+			
 			echo "<div class='gallerythumb clearme'>\n";
     		echo "\t<div class='admin_leftcolumn'>\n";
 			?>
@@ -67,6 +69,14 @@
 			<?php endif;?>
              <!--<a href="<?php echo $html->url('/administration/users_event/'.$user_id)?>">List Events</a>-->
     		<?php
+			if ($user_status == "locked" && $unblock_date!= '0000-00-00') {
+				echo "\t\t<br/><span>\n";
+			?>	
+			<input type="checkbox" name="unblock_date" id="unblock_date" value="<?php echo $unblock_active?>" onclick="unBlockUser(<?php echo $user_id?>,this.value)" <?php if($unblock_active == 1)echo 'checked'?>>
+			<?php	
+				echo "Unblock on ".date('m/d/Y', strtotime($unblock_date));
+				echo "\t\t</span>\n";
+			}
 			echo "\t</div>\n";
 			echo "</div>\n";
 		?>
@@ -214,3 +224,21 @@
 			</div>
 		</div>
 </div>
+<script>
+function unBlockUser(id,flag){
+	if(flag == 0)
+	{
+		var setFlag = 1;
+	}else if(flag == 1){
+		var setFlag = 0;
+	}
+	var postUrl = '/administration/activeBlockedUser/'+id+'/'+setFlag;
+	var ajax =new Ajax.Request(postUrl, {
+	    method: 'get',
+	    onSuccess: function(result) {
+			document.getElementById('unblock_date').value = result.responseText;
+		}
+	  });
+
+}
+</script>
