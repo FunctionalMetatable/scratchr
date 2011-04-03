@@ -139,7 +139,7 @@ class AppController extends Controller {
 						$isLocked = true;
 						$temporary_locked = true;
 						}
-				}elseif(isset($user['BlockedUser']['unblock_date']) && $user['BlockedUser']['unblock_date'] != '0000-00-00'){
+				}elseif($user['BlockedUser']['active'] ==1 && $user['BlockedUser']['unblock_date'] != '0000-00-00'){
 					//blocked_till time is in past
 					if($user['BlockedUser']['unblock_date'] <= date("Y-m-d", time())) {
 						//so unblock the user

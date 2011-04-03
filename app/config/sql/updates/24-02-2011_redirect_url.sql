@@ -10,3 +10,4 @@ PRIMARY KEY ( `id` )
 
 
 ALTER TABLE `blocked_users` ADD `unblock_date` DATE NULL DEFAULT '0000-00-00';
+ALTER TABLE `blocked_users` ADD `active` TINYINT( 1 ) NOT NULL DEFAULT '0';
