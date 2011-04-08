@@ -1,8 +1,7 @@
-
 <?php
 	e($this->renderElement('admin/admin_index', Array()));
 ?>
-<div class="fullcontent">
+	<div class="fullcontent">
 	<div id="admin_project_header">
 	</div>
 	<div id="admin_project_content">	
@@ -18,6 +17,7 @@
 			$user_status = $user['User']['status'];
 			$user_reason = $user['User']['reason'];
 			$unblock_date = isset($user['User']['unblock_date'])?$user['User']['unblock_date'] : '0000-00-00';
+			$unblock_date = explode('-', $unblock_date);
 			$unblock_active = isset($user['User']['active'])?$user['User']['active'] :'0';
 			
 			echo "<div class='gallerythumb clearme'>\n";
@@ -73,13 +73,16 @@
 				echo "\t\t<br/><span>\n";
 			?>	
 			<input type="checkbox" name="unblock_date" id="unblock_date" value="<?php echo $unblock_active?>" onclick="unBlockUser(<?php echo $user_id?>,this.value)" <?php if($unblock_active == 1)echo 'checked'?>>
-			<?php	
-				echo "Unblock on ".date('m/d/Y', strtotime($unblock_date));
+			<?php
+				echo 'Unblock on : ';
+				echo $form->month('month',$unblock_date[1], array('monthNames' =>false),false);
+				echo $form->day('day',$unblock_date[2], array(), false);
+				echo $form->year('year', date('Y'),date('Y')+5,$unblock_date[0], array(), false);
 				echo "\t\t</span>\n";
 			}
 			echo "\t</div>\n";
 			echo "</div>\n";
-		?>
+			?>
 		</div>
     </div>	
 </div>
@@ -232,7 +235,11 @@ function unBlockUser(id,flag){
 	}else if(flag == 1){
 		var setFlag = 0;
 	}
-	var postUrl = '/administration/activeBlockedUser/'+id+'/'+setFlag;
+	var dateVal = $F('dayDay');
+	var monthVal = $F('monthMonth');
+	var yearVal = $F('yearYear');
+	var udate = yearVal+'-'+monthVal+'-'+dateVal;
+	var postUrl = '/administration/activeBlockedUser/'+id+'/'+setFlag+'/'+udate;
 	var ajax =new Ajax.Request(postUrl, {
 	    method: 'get',
 	    onSuccess: function(result) {

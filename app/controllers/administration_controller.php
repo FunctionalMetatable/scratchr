@@ -2798,12 +2798,13 @@
 	/*
 		//allow admin to set unblock automatically if he checke checkbox on admin user details page.
 	*/
-	function activeBlockedUser($user_id =null,$flag =0){
+	function activeBlockedUser($user_id =null,$flag =0, $dateVal='0000-00-00'){
 		if($user_id && $this->RequestHandler->isAjax()){
 			$banrecords = $this->BlockedUser->find('first', array('conditions' => array('BlockedUser.user_id' => $user_id)));
 			if($banrecords){
 				$this->BlockedUser->id = $banrecords['BlockedUser']['id']; 
 				if($this->BlockedUser->saveField('active', $flag)){
+					$this->BlockedUser->saveField('unblock_date', $dateVal);
 					echo $flag;exit;
 				}else{
 					echo $banrecords['BlockedUser']['active'];exit;
