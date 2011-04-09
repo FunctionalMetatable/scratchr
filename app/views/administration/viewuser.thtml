@@ -19,6 +19,10 @@
 			$unblock_date = isset($user['User']['unblock_date'])?$user['User']['unblock_date'] : '0000-00-00';
 			$unblock_date = explode('-', $unblock_date);
 			$unblock_active = isset($user['User']['active'])?$user['User']['active'] :'0';
+			$ischecked = null;
+			if ($unblock_active == 1) {
+				$ischecked = 'checked="checked"';
+			}
 			
 			echo "<div class='gallerythumb clearme'>\n";
     		echo "\t<div class='admin_leftcolumn'>\n";
@@ -72,7 +76,7 @@
 			if ($user_status == "locked" && $unblock_date!= '0000-00-00') {
 				echo "\t\t<br/><span>\n";
 			?>	
-			<input type="checkbox" name="unblock_date" id="unblock_date" value="<?php echo $unblock_active?>" onclick="unBlockUser(<?php echo $user_id?>,this.value)" <?php if($unblock_active == 1)echo 'checked'?>>
+			<input type="checkbox" name="unblock_date" id="unblock_date" value="<?php echo $unblock_active?>" onclick="unBlockUser(<?php echo $user_id?>,this.value)" <?php echo $ischecked?>>
 			<?php
 				echo 'Unblock on : ';
 				echo $form->month('month',$unblock_date[1], array('monthNames' =>false),false);
