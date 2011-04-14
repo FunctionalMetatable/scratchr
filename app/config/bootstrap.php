@@ -372,7 +372,12 @@ define('MAX_LOGIN_ATTEMPT', 2);
 **/
 define('USER_UNBLOCK_DAYS', '3 days');
 
- /**
+/***
+*authentication_key to get latest project
+**/
+define('GET_LATEST_PROJECT_AUTH_KEY', 'scratch');
+
+/**
   * Returns theme url for html link destination
   */
  function getThemeHref($themeid) {
