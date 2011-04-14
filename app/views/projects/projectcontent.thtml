@@ -51,7 +51,7 @@ else {
 		<?php if(trim($player_type) == 'java' || empty($player_type)):?>
 			<!--Play with Java Player -->
 			<div id="projectload" style="display:block;" align="center">
-				<applet id="ProjectApplet" style="display:block" code="ScratchApplet" codebase="/static/misc/" archive="ScratchApplet.jar" height="387" width="482"><param name="project" value="<?php echo $embed_project;?>"><param name="java_arguments" value="-Xmx128m"><h3><a href="http://www.java.com/getjava/"><? ___('Install Java'); ?></a> <? ___('to view this project right on your browser!'); ?><a href="/projects/<? echo "$urlname/$pid"; ?>/download"><img src="/static/projects/<?php echo "$urlname/${pid}_med.png"; ?>"></a></h3></applet>
+				<applet id="ProjectApplet" style="display:block" code="ScratchApplet" codebase="/static/misc/" archive="ScratchApplet.jar" height="387" width="482"><param name="project" value="<?php echo $embed_project;?>"><param name="java_arguments" value="-Xmx128m"><h3><a href="http://www.java.com/getjava/"><? ___('Install Java'); ?></a> <? ___('to view this project right on your browser!'); ?><a href="/projects/<? echo "$urlname/$pid"; ?>/downloadsb"><img src="/static/projects/<?php echo "$urlname/${pid}_med.png"; ?>"></a></h3></applet>
 			</div>
 			<?php elseif(trim($player_type) == 'flash'):?>
 				<!--Play with Flash Player -->
@@ -442,7 +442,7 @@ else {
                 $ssmsg = ' '.___('the', true).' '.$ssmsg.' '.___('of', true);
             }
             if($isLoggedIn) {
-                $project_href = $html->url('/projects/' . $urlname .'/'. $project['Project']['id'])  .'/download';
+                $project_href = $html->url('/projects/' . $urlname .'/'. $project['Project']['id'])  .'/downloadsb';
             }
             else {
                 $project_href = 'javascript:alert(\'Please login\');';
