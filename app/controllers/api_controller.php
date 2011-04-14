@@ -619,5 +619,34 @@ class ApiController extends AppController {
 		echo ")"; 
 		exit;
 	}//eof
+	
+	/**
+	* This function returns latest project uploaded by scratch user (in json format)
+	* Parameter: authentication_key
+	* Example: http://scratch.mit.edu/api/get_latest_project/XXXXXXXXXXXXX
+	* Output: {"id":"13","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_med.png","uplodedIpAddress":"127.0.0.1"}
+	*/
+	function get_latest_project($auth_key = null){
+		if(empty($auth_key) || trim($auth_key) !== GET_LATEST_PROJECT_AUTH_KEY){
+			$errorMsg = array('error' =>'Invalid authentication key');
+			header('Content-Type: application/json');
+			echo json_encode($errorMsg);
+			exit;
+		}elseif( trim($auth_key) === GET_LATEST_PROJECT_AUTH_KEY)
+		{
+			$this->Project->unbindModel(
+				array('hasMany' => array('GalleryProject'))
+			);
+			$project = $this->Project->find('first', array('order' => 'Project.created DESC', 'fields' => array('Project.id', 'Project.upload_ip', 'User.id', 'User.username')));
+			$result = array(
+							'id' 		   => $project['Project']['id'],
+							'thumbnailUrl' => TOPLEVEL_URL. '/static/projects/' .$project['User']['username']. '/' .$project['Project']['id'] . '_med.png',
+							'uplodedIpAddress'   => long2ip($project['Project']['upload_ip'])
+							);
+			header('Content-Type: application/json');
+			echo json_encode($result);
+			exit;
+		}	
+	}
 }//class
 ?>
