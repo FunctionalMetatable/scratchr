@@ -585,7 +585,7 @@ class ProjectsController extends AppController {
      * @param string $urlname => user url
      * @parm int $pid => project id
      */
-    function download($urlname=null, $pid=null) {
+    function downloadsb($urlname=null, $pid=null) {
 		$this->autoRender=false;
 		$file="../webroot/static/projects/$urlname/$pid.sb";
         $this->Project->bindUser();
