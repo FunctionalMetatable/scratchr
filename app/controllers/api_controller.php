@@ -621,7 +621,7 @@ class ApiController extends AppController {
 	}//eof
 	
 	/**
-	* This function returns latest project uploaded by scratch user (in json format)
+	* This function returns latest project uploaded (in json format)
 	* Parameter: authentication_key
 	* Example: http://scratch.mit.edu/api/get_latest_project/XXXXXXXXXXXXX
 	* Output: {"id":"13","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_med.png","uplodedIpAddress":"127.0.0.1"}
