@@ -8,7 +8,35 @@
 </style>
 <?php echo $javascript->link('tinybox.js'); ?>
 <script type="text/javascript">
-	function openJS(){alert('loaded')}
-	function closeJS(){alert('closed')}
-	TINY.box.show({html:'Do you want to take a survey?', boxid:'frameless', fixed:false, maskid:'bluemask', maskopacity:40, closejs:function(){closeJS()}});
+var Survey = {
+	key: null,
+	url: null,
+	init : function(key, url) {
+		Survey.key = key;
+		Survey.url = url;
+	}
+	done : function() {
+		//set the cookie
+		alert(Survey.key + '_done')
+	},
+	cancel : function() {
+		//set the cookie
+		alert(Survey.key + '_cancelled')
+	},
+	took: function() {
+		if(readCookie('key')) {
+			return false;
+		}
+		return false;
+	},
+	show : function() {
+		var htmlText = '<div style="font-size: 16px;">Do you want to take a survey?</div><br><input value="Okay" type="button" onclick="window.open(\'' + Survey.url + '\');"><input value="Cancel" style="margin-left: 10px;" type="button" onclick="TINY.box.hide();">';
+		TINY.box.show( { html : htmlText, boxid : 'frameless', fixed : false, maskid : 'bluemask', maskopacity : 40,
+						closejs : function() { Survey.cancel() }
+		});
+	}
+}
+
+Survey.init('k1', 'http://google.com');
+Survey.show();
 </script>
