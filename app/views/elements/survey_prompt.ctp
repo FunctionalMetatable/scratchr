@@ -14,7 +14,7 @@ var Survey = {
 	init : function(key, url) {
 		Survey.key = key;
 		Survey.url = url;
-	}
+	},
 	done : function() {
 		//set the cookie
 		alert(Survey.key + '_done')
