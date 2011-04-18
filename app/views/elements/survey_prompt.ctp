@@ -60,21 +60,24 @@ $_logged_in_user_survey_url = 'http://www.google.com/?q=logged_in_user_survey_ke
 $_logged_out_user_survey_key = 'logged_out_user_survey_key';
 $_logged_out_user_survey_url = 'http://www.google.com/?q=logged_out_user_survey_key';
 
+$_all_user_survey_key = 'all_user_survey_key';
+$_all_user_survey_url = 'http://www.google.com/?q=all_user_survey_key';
+
 $selected_survey = false;
 
 if ($isLogged && in_array($loggedInUID, $_special_user_list) && !$_COOKIE[$_special_user_survey_key]) {
 	$key = $_special_user_survey_key;
 	$url = $_special_user_survey_url;
 }
-else if($isLogged && !$_COOKIE[$_logged_in_survey_key]) {
+else if($isLogged && !$_COOKIE[$_logged_in_user_survey_key]) {
 	$key = $_logged_in_user_survey_key;
 	$url = $_logged_in_user_survey_url;
 }
-else if(!$isLogged && !$_COOKIE[$_logged_in_survey_key]) {
+else if(!$isLogged && !$_COOKIE[$_logged_in_user_survey_key]) {
 	$key = $_logged_out_user_survey_key;
 	$url = $_logged_out_user_survey_url;
 }
-else if(!$_COOKIE[$_allsurvey_key]) {
+else if(!$_COOKIE[$_all_user_survey_key]) {
 	$key = $_all_user_survey_key;
 	$url = $_all_user_survey_url;
 }
