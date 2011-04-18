@@ -50,39 +50,29 @@ var Survey = {
 }
 </script>
 <?php
-$_special_user_list = array(501, 502); 
-$_special_user_survey_key = 'special_user_survey_key';
-$_special_user_survey_url = 'http://www.google.com/?q=special_user_survey_key';
+$survey_key = false;
+$survey_url = false;
 
-$_logged_in_user_survey_key = 'logged_in_user_survey_key';
-$_logged_in_user_survey_url = 'http://www.google.com/?q=logged_in_user_survey_key';
-
-$_logged_out_user_survey_key = 'logged_out_user_survey_key';
-$_logged_out_user_survey_url = 'http://www.google.com/?q=logged_out_user_survey_key';
-
-$_all_user_survey_key = 'all_user_survey_key';
-$_all_user_survey_url = 'http://www.google.com/?q=all_user_survey_key';
-
-$selected_survey = false;
-
-if ($isLogged && in_array($loggedInUID, $_special_user_list) && !$_COOKIE[$_special_user_survey_key]) {
-	$key = $_special_user_survey_key;
-	$url = $_special_user_survey_url;
+if ($isLogged && in_array($loggedInUID, explode(',', SPECIAL_USER_LIST)) && !$_COOKIE[SPECIAL_USER_SURVEY_KEY]) {
+	$survey_key = SPECIAL_USER_SURVEY_KEY;
+	$survey_url = SPECIAL_USER_SURVEY_URL;
 }
-else if($isLogged && !$_COOKIE[$_logged_in_user_survey_key]) {
-	$key = $_logged_in_user_survey_key;
-	$url = $_logged_in_user_survey_url;
+else if($isLogged && !$_COOKIE[LOGGED_IN_USER_SURVEY_KEY]) {
+	$survey_key = LOGGED_IN_USER_SURVEY_KEY;
+	$survey_url = LOGGED_IN_USER_SURVEY_URL;
 }
-else if(!$isLogged && !$_COOKIE[$_logged_in_user_survey_key]) {
-	$key = $_logged_out_user_survey_key;
-	$url = $_logged_out_user_survey_url;
+else if(!$isLogged && !$_COOKIE[LOGGED_OUT_USER_SURVEY_KEY]) {
+	$survey_key = LOGGED_OUT_USER_SURVEY_KEY;
+	$survey_url = LOGGED_OUT_USER_SURVEY_URL;
 }
-else if(!$_COOKIE[$_all_user_survey_key]) {
-	$key = $_all_user_survey_key;
-	$url = $_all_user_survey_url;
+else if(!$_COOKIE[ALL_USER_SURVEY_KEY]) {
+	$survey_key = ALL_USER_SURVEY_KEY;
+	$survey_url = ALL_USER_SURVEY_URL;
 }
 ?>
+<?php if($survey_key && $survey_url): ?>
 <script>
-	Survey.init('<?php echo $key; ?>', '<?php echo $url; ?>');
+	Survey.init('<?php echo $survey_key; ?>', '<?php echo $survey_url; ?>');
 	Survey.show();
 </script>
+<?php endif; ?>
