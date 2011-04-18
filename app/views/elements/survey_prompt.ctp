@@ -26,7 +26,7 @@ var Survey = {
 	},
 	didTake: function() {
 		if(readCookie(Survey.key)) {
-			return false;
+			return true;
 		}
 		return false;
 	},
@@ -50,12 +50,32 @@ var Survey = {
 }
 </script>
 <?php
-//1. Show to all
-//2. Show to only logged in people
-//3. Show to only logged out people
-//4. Given a list of user id's, show to those people
+$_special_user_list = array(501, 502); 
+$_special_user_survey_key = 'special_user_survey_key';
+$_special_user_survey_url = 'http://www.google.com/?q=special_user_survey_key';
+
+$_logged_in_user_survey_key = 'logged_in_user_survey_key';
+$_logged_in_user_survey_url = 'http://www.google.com/?q=logged_in_user_survey_key';
+
+$_logged_out_user_survey_key = 'logged_out_user_survey_key';
+$_logged_out_user_survey_url = 'http://www.google.com/?q=logged_out_user_survey_key';
+
+$selected_survey = false;
+
+if ($isLogged && in_array($loggedInUID, $_special_user_list) && !$_COOKIE[$_special_user_survey_key]) {
+	$key = $_special_user_survey_key;
+	$url = $_special_user_survey_url;
+}
+else if($isLogged && !$_COOKIE[$_logged_in_survey_key]) {
+	$key = $_logged_in_user_survey_key;
+	$url = $_logged_in_user_survey_url;
+}
+else if(!$isLogged && !$_COOKIE[$_logged_in_survey_key]) {
+	$key = $_logged_out_user_survey_key;
+	$url = $_logged_out_user_survey_url;
+}
 ?>
 <script>
-	Survey.init('k1', 'http://google.com');
+	Survey.init('<?php echo $key; ?>', '<?php echo $url; ?>');
 	Survey.show();
 </script>
