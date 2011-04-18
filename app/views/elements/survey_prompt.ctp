@@ -74,6 +74,10 @@ else if(!$isLogged && !$_COOKIE[$_logged_in_survey_key]) {
 	$key = $_logged_out_user_survey_key;
 	$url = $_logged_out_user_survey_url;
 }
+else if(!$_COOKIE[$_allsurvey_key]) {
+	$key = $_all_user_survey_key;
+	$url = $_all_user_survey_url;
+}
 ?>
 <script>
 	Survey.init('<?php echo $key; ?>', '<?php echo $url; ?>');
