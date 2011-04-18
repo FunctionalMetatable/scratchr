@@ -35,19 +35,27 @@ var Survey = {
 		Survey.hide();
 	},
 	hide : function() {
+		Survey.take();
 		TINY.box.hide();
 	},
 	show : function() {
 		if(Survey.didTake()) {
 			return false;
 		}
-		var htmlText = '<div style="font-size: 16px;">Do you want to take a survey?</div><br><input value="Okay" type="button" onclick="Survey.open();"><input value="Cancel" style="margin-left: 10px;" type="button" onclick="Survey.hide();">';
+		var htmlText = '<div style="font-size: 16px;">Do you want to take a survey?</div><br><input value="Sure" type="button" onclick="Survey.open();"><input value="Not interested" style="margin-left: 10px;" type="button" onclick="Survey.hide();">';
 		TINY.box.show( { html : htmlText, boxid : 'frameless', fixed : false, maskid : 'bluemask', maskopacity : 40,
 						 width: 240, height: 65, closejs : function() { Survey.cancel() }
 		});
 	}
 }
-
-Survey.init('k1', 'http://google.com');
-Survey.show();
+</script>
+<?php
+//1. Show to all
+//2. Show to only logged in people
+//3. Show to only logged out people
+//4. Given a list of user id's, show to those people
+?>
+<script>
+	Survey.init('k1', 'http://google.com');
+	Survey.show();
 </script>
