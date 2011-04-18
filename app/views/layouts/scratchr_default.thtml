@@ -68,6 +68,9 @@ else {
 <?php
 	echo $this->renderElement('ajax_indicator');
 ?>
+<?php
+   echo $this->renderElement('survey_prompt');
+?>
 </body>
 <!-- powered by ScratchR http://scratch.mit.edu/scratchr //-->
 </html>
