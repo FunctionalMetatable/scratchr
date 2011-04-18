@@ -16,23 +16,27 @@ var Survey = {
 		Survey.url = url;
 	},
 	done : function() {
-		//set the cookie
-		alert(Survey.key + '_done')
+		Survey.take();
 	},
 	cancel : function() {
-		//set the cookie
-		alert(Survey.key + '_cancelled')
+		Survey.take();
 	},
-	took: function() {
-		if(readCookie('key')) {
+	take: function() {
+		setCookie(Survey.key, 'done', 365*2);
+	},
+	didTake: function() {
+		if(readCookie(Survey.key)) {
 			return false;
 		}
 		return false;
 	},
 	show : function() {
+		if(Survey.didTake()) {
+			return false;
+		}
 		var htmlText = '<div style="font-size: 16px;">Do you want to take a survey?</div><br><input value="Okay" type="button" onclick="window.open(\'' + Survey.url + '\');"><input value="Cancel" style="margin-left: 10px;" type="button" onclick="TINY.box.hide();">';
 		TINY.box.show( { html : htmlText, boxid : 'frameless', fixed : false, maskid : 'bluemask', maskopacity : 40,
-						closejs : function() { Survey.cancel() }
+						 width: 240, height: 65, closejs : function() { Survey.cancel() }
 		});
 	}
 }
