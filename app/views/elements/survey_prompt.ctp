@@ -30,11 +30,18 @@ var Survey = {
 		}
 		return false;
 	},
+	open : function() {
+		window.open(Survey.url);
+		Survey.hide();
+	},
+	hide : function() {
+		TINY.box.hide();
+	},
 	show : function() {
 		if(Survey.didTake()) {
 			return false;
 		}
-		var htmlText = '<div style="font-size: 16px;">Do you want to take a survey?</div><br><input value="Okay" type="button" onclick="window.open(\'' + Survey.url + '\');"><input value="Cancel" style="margin-left: 10px;" type="button" onclick="TINY.box.hide();">';
+		var htmlText = '<div style="font-size: 16px;">Do you want to take a survey?</div><br><input value="Okay" type="button" onclick="Survey.open();"><input value="Cancel" style="margin-left: 10px;" type="button" onclick="Survey.hide();">';
 		TINY.box.show( { html : htmlText, boxid : 'frameless', fixed : false, maskid : 'bluemask', maskopacity : 40,
 						 width: 240, height: 65, closejs : function() { Survey.cancel() }
 		});
