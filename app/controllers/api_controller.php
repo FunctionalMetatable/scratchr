@@ -648,5 +648,222 @@ class ApiController extends AppController {
 			exit;
 		}	
 	}
-}//class
-?>
+
+	/**
+	For a particular project, return the block count for each category.
+	UNFINISHED
+	**/
+	function get_block_category_count($pid = null){
+
+	// List of blocks per category
+
+	  $blockGroupNames = array(
+	      "Motion",
+	      "Control",
+	      "Looks",
+	      "Sensing",
+	      "Sounds",
+	      "Operators",
+	      "Pen",
+	      "Variables"
+	  );
+	  $motionBlockSet = array(  //BLOCKS IN THE MOTION CATEGORY...
+	      "forward_",
+	      "turnLeft_",
+	      "turnRight_",
+	      "heading_",
+	      "pointTowards_",
+	      "gotoX_y_",
+	      "gotoSpriteOrMouse_",
+	      "glideSecs_toX_y_elapsed_from_",
+	      "changeXposBy_",
+	      "xpos_",
+	      "changeYposBy_",
+	      "ypos_",
+	      "bounceOffEdge",
+	      "xpos",
+	      "ypos",
+	      "heading"
+	      //"gotoX_y_duration_elapsed_from_",
+	      //"turnAwayFromEdge"
+	  );
+
+	  $controlBlockSet = array(  //...CONTROL GROUP... ETC
+	      "EventHatMorph_StartClicked",
+	      "KeyEventHatMorph",
+	      "MouseClickEventHatMorph",
+	      "wait_elapsed_from_",
+	      "doForever",
+	      "doRepeat",
+	      "broadcast_",  
+	      "doBroadcastAndWait",
+	      //"WhenHatBlockMorph", //OBSOLETE
+	      "EventHatMorph",  //When I receive
+	      "doForeverIf",
+	      "doIf",
+	      "doIfElse",
+	      "doReturn",
+	      "doWaitUntil",
+	      "doUntil",
+	      "stopAll",
+	  );
+
+	  $looksBlockSet = array(  //LOOKS
+	      "backgroundIndex",
+	      //"changeBackgroundIndexBy_",
+	      //"changeBlurBy_",
+	      //"changeBrightnessShiftBy_",
+	      //"changeCostumeIndexBy_",
+	      //"changeFisheyeBy_",
+	      "changeGraphicEffect_by_",
+	      //"changeHueShiftBy_",
+	      //"changeMosaicCountBy_",  
+	      //"changePixelateCountBy_",
+	      //"changePointillizeSizeBy_",
+	      //"changeSaturationShiftBy_",
+	      "changeSizeBy_",
+	      //"changeStretchBy_",
+	      //"changeVisibilityBy_",
+	      //"changeWaterRippleBy_",
+	      //"changeWhirlBy_",
+	      "comeToFront",
+	      "costumeIndex",
+	      "filterReset",
+	      "goBackByLayers_",
+	      "hide",
+	      "lookLike_",
+	      "nextBackground",
+	      "nextCostume",
+	      "say_",
+	      "say_duration_elapsed_from_",
+	      //"sayNothing",
+	      "scale",
+	      //"setBlurTo_",
+	      //"setBrightnessShiftTo_",
+	      //"setFisheyeTo_",
+	      "setGraphicEffect_to_",
+	      //"setHueShiftTo_",
+	      //"setMosaicCountTo_",
+	      //"setPixelateCountTo_",
+	      //"setPointillizeSizeTo_",
+	      //"setSaturationShiftTo_",
+	      "setSizeTo_",
+	      //"setStretchTo_",
+	      //"setVisibilityTo_",
+	      //"setWaterRippleTo_",
+	      //"setWhirlTo_",
+	      "show",
+	      "showBackground_",
+	      "think_",
+	      "think_duration_elapsed_from_",
+	  );
+
+	  $sensingBlockSet = array(  //SENSING
+	      "answer",
+	      "color_sees_",
+	      "distanceTo_",
+	      "doAsk",
+	      "getAttribute_of_",
+	      "isLoud",
+	      "keyPressed_",
+	      "mousePressed",
+	      "mouseX",
+	      "mouseY",
+	      "sensor_",
+	      "sensorPressed_",
+	      "soundLevel",
+	      "timer",
+	      "timerReset",
+	      "touching_",
+	      "touchingColor_",
+	  );
+
+	  $soundBlockSet = array(  //SOUND
+	      "changeVolumeBy_",
+	      "doPlaySoundAndWait",
+	      "drum_duration_elapsed_from_",
+	      "midiInstrument_",
+	      "noteOn_duration_elapsed_from_",
+	      "playSound_",
+	      //"rewindSound_", //obsolete
+	      "setTempoTo_",
+	      "changeTempoBy_",
+	      "setVolumeTo_",
+	      "stopAllSounds",
+	      "tempo",
+	      "volume",
+	      "rest_elapsed_from_",
+	  );
+
+	  $operatorsBlockSet = array(  //OPERATORS
+	      "and_operator",
+	      "multiply_operator",
+	      "add_operator",
+	      "subtract_operator",
+	      "divide_operator",
+	      "isLessThan",
+	      "isEqualTo",
+	      "isGreaterThan",
+	      "mod_operator",
+	      "or_operator",
+	      //"abs", //ADD TO computeFunction_of_
+	      "concatenate_with_",
+	      "letter_of_",
+	      "not",
+	      "randomFrom_to_",
+	      "rounded",
+	      //"sqrt", //ADD TO computeFunction_of_
+	      "stringLength_",
+	      "computeFunction_of_",
+	  );
+
+	  $penBlockSet = array(  //PEN
+	      "changePenHueBy_",
+	      "changePenShadeBy_",
+	      "changePenSizeBy_", 
+	      "clearPenTrails", 
+	      "penColor_",
+	      "penSize_",
+	      "putPenDown",
+	      "putPenUp",
+	      "setPenHueTo_",
+	      "setPenShadeTo_",
+	      "stampCostume",
+	  );
+
+	  $variableBlockSet = array(  //VARIABLES AND LISTS
+	      "append_toList_",
+	      "changeVar_by_",
+	      "contentsOfList_",
+	      "deleteLine_ofList_",
+	      "getLine_ofList_",
+	      "hideVariable_",
+	      "insert_at_ofList_",
+	      "lineCountOfList_",
+	      "list_contains_",
+	      "readVariable",
+	      "setLine_ofList_to_",
+	      "setVar_to_",
+	      "showVariable_",
+	  );
+
+	  $otherBlockSet = array(  //MOTOR AND WTF (feel free to categorize what you recognize) (no slice of pie for these guys)
+	      "allMotorsOff",
+	      "allMotorsOn",
+	      "comment_",
+	      "motorOnFor_elapsed_from_",
+	      "startMotorPower_",
+	      "setMotorDirection_",
+	      "yourself",
+	      "askYahoo",
+	      "wordOfTheDay_",
+	      "jokeOfTheDay_",
+	      "synonym_",
+	      "info_fromZip_",
+	      "scratchrInfo_forUser_",
+	      "other"
+	  );
+	}
+}
+
+?>	
