@@ -5,6 +5,31 @@
 </a>
 </div>
 
+<?php if(count($inappropriate_notifications) > 0) { ?>
+<h2><?php ___("Admin message(s)");?></h2>
+
+<?php foreach($inappropriate_notifications as $not):?>
+<?php
+	$not = $not[0]; 
+	$id = $not['id'];
+	$message = $template->create($not, $username);
+    $from_user_name = $not['from_user_name'];
+    if(empty($from_user_name)) {
+        $from_user_name = ($not['is_admin']) ? 'admin' : 'system';
+    }
+?>
+	<div id='notification_<?php echo $id; ?>' class="notification" style='display:block;' align='left'>
+		<?php echo $ajax->link($html->image('delete.png'), '#', 
+			array("url"=>"/notifications/hide/".$id, "update"=>"notification_$id", 
+			"complete"=>"updateNotificationsCounter()"), NULL, false); ?>
+		<?php echo $message; ?>
+    </div> 
+
+<?php endforeach; ?>
+
+
+<?php } ?>
+
 <h2><?php ___('Message(s)'); ?></h2>
 
 <div id="main">
@@ -44,7 +69,6 @@
 	
 	<br/>
 	
-	<?php if($notify_count > 0): ?>
 	<div id="hide_all_notification">
 		<h6>
 		<?php echo $ajax->link("Click here", '#', 
@@ -53,7 +77,6 @@
 		 to delete all of your notifications
 		 </h6>
 	</div>
-	<?php endif; ?>
 	
     <div id="pnotifyDiv">
 		<?php e($this->renderElement("pnotify")); ?>

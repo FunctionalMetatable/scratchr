@@ -28,6 +28,8 @@ class Notification extends AppModel {
 			$rstatus_conditions = ' AND Request.status = "pending"';
 		}
 		
+		$nstatus_conditions .= ' AND NotificationType.negative=0';
+		
 		//try collecting first page from memcache
 		if($page==1 && !$admin) {
 			$this->mc_connect();
@@ -62,12 +64,34 @@ class Notification extends AppModel {
 	}
 	
 	function getInappropriateNotifications($user_id, $page, $limit) {
+		if($page == 1 && !$admin)
+		{
+			$this->mc_connect();
+			$notifications = $this->mc_get('adminnotifications_page1', $user_id);
+		}
+		if($notifications === false)
+		{
 		$inappropriate_conditions = ' AND `NotificationType`.`negative` = 1';
 		$offset = ($page -1) * $limit;
 		$notification_query = $this->__createNotificationQuery($user_id, $inappropriate_conditions);
         $notification_query .= ' LIMIT ' . $offset . ', ' . $limit;
 		$notifications = $this->query($notification_query);
+		}
+		if($page == 1 && !$admin)
+			$this->mc_close();
 		return $notifications;
+	}
+	
+	// Marks all notifications of a user, $user_id, read, except negatives
+	function readAllExceptAdmin($user_id)
+	{
+	     $query = "UPDATE `notifications` 
+	     LEFT JOIN `notification_types` on `notifications`.`notification_type_id` = `notification_types`.`id` 
+	     SET `notifications`.`status` = 'READ' 
+	     WHERE `notifications`.`to_user_id`=$user_id 
+	     AND `notification_types`.`negative` = 0";
+	     $this->query($query);
+	     
 	}
 	
 	function countAllNotification($user_id) {
@@ -249,6 +273,7 @@ class Notification extends AppModel {
 	function clear_memcached_notifications($user_id) {
 		$this->mc_connect();
         $this->mc_delete('notifications_page1', $user_id);
+	$this->mc_delete('adminnotifications_page1', $user_id);
         $this->mc_delete('notification_count', $user_id);
         $this->mc_close();
 	}

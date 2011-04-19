@@ -26,7 +26,6 @@ class NotificationsController extends AppController {
 			$this->cakeError('error404');
 		}
 
-// Just for logging IPs?
 		$client_ip = $this->RequestHandler->getClientIP();
 		$sql = "INSERT INTO `notification_histories` (`id`,`user_id`,`ipaddress`) VALUES"
                         ." (NULL, $user_id, INET_ATON('$client_ip'))";
@@ -46,6 +45,20 @@ class NotificationsController extends AppController {
 												$this->Notification->countAll($user_id));
 		$notifications = $this->Notification->getNotifications($user_id, $page, $limit);
 		$this->set('notifications', $notifications);
+		$this->set('notify_count', count($notifications));
+		
+		
+		// For separate admin notifications
+		$inot = $this->Notification->getInappropriateNotifications($user_id, $page, $limit);
+        $inappropriate_notifications = array();
+        $i = 0;
+		foreach($inot as $inappropriate) {
+		    if($inappropriate['Notification']['status'] == 'UNREAD' && $inappropriate['NotificationType']['is_admin'] == '1')
+			$inappropriate_notifications[$i++]['0'] = array_merge($inappropriate['Notification'], $inappropriate['NotificationType'], $inappropriate['0']);
+		}
+		
+		$this->set('inappropriate_notifications', $inappropriate_notifications);
+		
         $rss_link = '/feeds/getNotificationFeeds/'.$this->encode($user_id);
         $this->set('rss_link', $rss_link);
 		$this->set('title', "Scratch | Messages and notifications");
@@ -53,7 +66,6 @@ class NotificationsController extends AppController {
 		$this->render('notifications');
 	}
 	
-	// This appears to be the code for the "Past notiifications" page
 	function view($user_id){
 		if(!$this->isAdmin()) {
 			$this->cakeError('error404');
@@ -114,7 +126,7 @@ class NotificationsController extends AppController {
 		 $this->autoRender = false;
 		 $user_id = $this->getLoggedInUserID();
 		 //notification update
-		 $this->Notification->updateAll(array('status' => '"READ"'), array('Notification.to_user_id' => $user_id));
+		 $this->Notification->readAllExceptAdmin($user_id);
 		 //friend request update
 		 $this->FriendRequest->updateAll(array('FriendRequest.status' => '"declined"'), array('to_id' => $user_id));
 		 $this->Notification->clear_memcached_notifications($user_id);
