@@ -19,18 +19,18 @@ $visibilities = array (
 );
 if($proj_visibility == "visible") {
     $sb_path = getBinary($urlname, $pid);
-    $embed_project ='../..'.$sb_path.'?version='.$project['Project']['version'];
+    $embed_project ='/'.$sb_path.'?version='.$project['Project']['version'];
 }
 else {
     if($isAdmin || isset($users_permission['censor_projects'])
         || isset($users_permission['project_view_permission'])) {
         $sb_path = getBinary($urlname, $pid) . '.hid';
-        $embed_project ='../..'.$sb_path.'?version='. $project['Project']['version'];
+        $embed_project ='/'.$sb_path.'?version='. $project['Project']['version'];
         $admin_msg = 'This project has been '. $visibilities[$proj_visibility]['msg'];
     }
     else {
         $sb_path = $visibilities[$proj_visibility]['sb_path'];
-        $embed_project = '../../static/misc/sb/' . $sb_path;
+        $embed_project = '/static/misc/sb/' . $sb_path;
     }
 }
 ?>
