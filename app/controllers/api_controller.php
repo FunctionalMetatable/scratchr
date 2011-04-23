@@ -660,10 +660,10 @@ class ApiController extends AppController {
 			echo json_encode($errorMsg);
 			exit;
 		}
-		$this->User->mc_connect();
-		$mc_key = 'getblockcount-percategory-byuserid-'.$user_id;
-		$final_result = $this->User->mc_get($mc_key);
-		if ($final_result === false) {
+		// $this->User->mc_connect();
+		// $mc_key = 'getblockcount-percategory-byuserid-'.$user_id;
+		// $final_result = $this->User->mc_get($mc_key);
+		// if ($final_result === false) {
 			$project_list = $this->getprojectsbyusername($someone['User']['username'], true);
 			$projects = explode(":",$project_list);
 			$data2 = array();
@@ -685,9 +685,9 @@ class ApiController extends AppController {
 				}
 			}
 			$final_result = $this->_finalize_result($final_result);
-		$this->User->mc_set($mc_key, $final_result, false, API_GETBLOCKCOUNT_PER_CATEGORY_TTL);
-		}	
-		$this->User->mc_close();
+		// $this->User->mc_set($mc_key, $final_result, false, API_GETBLOCKCOUNT_PER_CATEGORY_TTL);
+		// }	
+		// $this->User->mc_close();
 		
 		#print_r($final_result);
 		print json_encode($final_result);
@@ -754,10 +754,10 @@ class ApiController extends AppController {
 	   $controlBlockSet = $this->controlBlockSet;
 	   $looksBlockSet = $this->looksBlockSet;
 	   $sensingBlockSet = $this->sensingBlockSet;
-	   $soundBlockSet = $this->soundBlockSet;
+	   $soundBlockSet = $this->soundsBlockSet;
 	   $operatorsBlockSet = $this->operatorsBlockSet;
 	   $penBlockSet =  $this->penBlockSet;
-	   $variableBlockSet = $this->variableBlockSet;
+	   $variableBlockSet = $this->variablesBlockSet;
 	   $otherBlockSet = $this->otherBlockSet;
 
 	   $i = -1;
@@ -899,7 +899,7 @@ class ApiController extends AppController {
 		"touchingColor_",
 	);
 
-	var $soundBlockSet = array(  //SOUND
+	var $soundsBlockSet = array(  //SOUND
 		"changeVolumeBy_",
 		"doPlaySoundAndWait",
 		"drum_duration_elapsed_from_",
@@ -952,7 +952,7 @@ class ApiController extends AppController {
 		"stampCostume",
 	);
 
-	var $variableBlockSet = array(  //VARIABLES AND LISTS
+	var $variablesBlockSet = array(  //VARIABLES AND LISTS
 		"append_toList_",
 		"changeVar_by_",
 		"contentsOfList_",
