@@ -197,6 +197,7 @@ $this->params['webservices']
   define("API_FAVORITE_PROJECTS_BY_UID_TTL", 60); //1 hours
   define("API_PROJECT_BLOCK_COUNT_TTL", 60); //1 hours
   define("API_PROJECT_BLOCK_TTL", 60); //1 hours
+  define("API_GETBLOCKCOUNT_PER_CATEGORY_TTL", 60); //1 hours
 
  /**
   * IMAGE EXTENSIONS

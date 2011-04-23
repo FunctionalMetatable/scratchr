@@ -189,7 +189,7 @@ class ApiController extends AppController {
 	* Example: http://scratch.mit.edu/api/getprojectsbyusername/ashok
 	* Output: 20805:920784:920767:920759:785614:715431:609769:608275:490870:490868:397124:371906
     */
-	function getprojectsbyusername($username){
+	function getprojectsbyusername($username, $return =false){
 		Configure::write('debug', 0);
 		$this->Project->mc_connect();
 		$user_id = $this->User->field('id', array('User.username' => $username));
@@ -206,8 +206,9 @@ class ApiController extends AppController {
 			$project_ids = implode(':', $project_list);
 			$this->Project->mc_set($mc_key, $project_ids, false, API_USER_PROJECTS_TTL);
 		}
-		echo $project_ids;
 		$this->Project->mc_close();
+		if($return){ return $project_ids;}
+		echo $project_ids;
 		exit;
 	}
 	
@@ -541,7 +542,7 @@ class ApiController extends AppController {
 	* Output: {"project_id":"4447","project_version":"2","scratchComment":"0","KeyEventHatMorph":"0","EventHatMorph_StartClicked":"3","EventHatMorph":"2","MouseClickEventHatMorph":"1","WhenHatBlockMorph":"0","and_operator":"0","multiply_operator":"0","add_operator":"0","subtract_operator":"0","divide_operator":"0","isLessThan":"0","isEqualTo":"0","isGreaterThan":"0","mod_operator":"0","or_operator":"0","abs":"0","allMotorsOff":"0","allMotorsOn":"0","answer":"0","append_toList_":"0","backgroundIndex":"0","bounceOffEdge":"0","broadcast_":"1","changeBackgroundIndexBy_":"0","changeBlurBy_":"0","changeBrightnessShiftBy_":"0","changeCostumeIndexBy_":"0","changeFisheyeBy_":"0","changeGraphicEffect_by_":"2","changeHueShiftBy_":"0","changeMosaicCountBy_":"0","changePenHueBy_":"0","changePenShadeBy_":"0","changePenSizeBy_":"0","changePixelateCountBy_":"0","changePointillizeSizeBy_":"0","changeSaturationShiftBy_":"0","changeSizeBy_":"0","changeStretchBy_":"0","changeTempoBy_":"0","changeVar_by_":"0","changeVisibilityBy_":"0","changeVolumeBy_":"0","changeWaterRippleBy_":"0","changeWhirlBy_":"0","changeXposBy_":"0","changeYposBy_":"2","clearPenTrails":"0","color_sees_":"0","comeToFront":"0","comment_":"0","computeFunction_of_":"0","concatenate_with_":"0","contentsOfList_":"0","costumeIndex":"0","deleteLine_ofList_":"0","distanceTo_":"0","doAsk":"0","doBroadcastAndWait":"0","doForever":"3","doForeverIf":"0","doIf":"0","doIfElse":"0","doPlaySoundAndWait":"0","doRepeat":"0","doReturn":"0","doUntil":"0","doWaitUntil":"0","drum_duration_elapsed_from_":"0","filterReset":"0","forward_":"0","getAttribute_of_":"0","getLine_ofList_":"0","glideSecs_toX_y_elapsed_from_":"0","goBackByLayers_":"0","gotoSpriteOrMouse_":"0","gotoX_y_":"1","gotoX_y_duration_elapsed_from_":"0","heading":"0","heading_":"1","hide":"2","hideVariable_":"0","insert_at_ofList_":"0","isLoud":"0","keyPressed_":"0","letter_of_":"0","lineCountOfList_":"0","list_contains_":"0","lookLike_":"0","midiInstrument_":"0","motorOnFor_elapsed_from_":"0","mousePressed":"0","mouseX":"0","mouseY":"0","nextBackground":"0","nextCostume":"0","not":"0","noteOn_duration_elapsed_from_":"0","penColor_":"0","penSize_":"0","playSound_":"1","pointTowards_":"0","putPenDown":"0","putPenUp":"0","randomFrom_to_":"0","rest_elapsed_from_":"0","rewindSound_":"0","readVariable":"0","rounded":"0","say_":"3","say_duration_elapsed_from_":"0","sayNothing":"0","scale":"0","sensor_":"0","sensorPressed_":"0","setBlurTo_":"0","setBrightnessShiftTo_":"0","setFisheyeTo_":"0","setGraphicEffect_to_":"0","setHueShiftTo_":"0","setLine_ofList_to_":"0","setMosaicCountTo_":"0","setMotorDirection_":"0","setPenHueTo_":"0","setPenShadeTo_":"0","setPixelateCountTo_":"0","setPointillizeSizeTo_":"0","setSaturationShiftTo_":"0","setSizeTo_":"0","setStretchTo_":"0","setTempoTo_":"0","setVar_to_":"0","setVisibilityTo_":"0","setVolumeTo_":"0","setWaterRippleTo_":"0","setWhirlTo_":"0","show":"2","showBackground_":"0","showVariable_":"0","soundLevel":"0","sqrt":"0","stampCostume":"0","startMotorPower_":"0","stopAll":"0","stopAllSounds":"0","stringLength_":"0","tempo":"0","think_":"0","think_duration_elapsed_from_":"0","timer":"0","timerReset":"0","touching_":"0","touchingColor_":"0","turnAwayFromEdge":"0","turnLeft_":"0","turnRight_":"3","volume":"0","wait_elapsed_from_":"4","xpos":"0","xpos_":"0","yourself":"0","ypos":"0","ypos_":"0","askYahoo":"0","wordOfTheDay_":"0","jokeOfTheDay_":"0","synonym_":"0","info_fromZip_":"0","scratchrInfo_forUser_":"0","other":""}
 
 	*/
-	function getprojectblockscount($pid=null){
+	function getprojectblockscount($pid=null, $return = false){
 		if(empty($pid)){
 			$errorMsg = array('error' =>'Invalid project id');
 			echo json_encode($errorMsg);
@@ -565,6 +566,7 @@ class ApiController extends AppController {
 			echo json_encode($errorMsg);
 			exit;
 		}
+		if($return){return json_encode($data['ProjectBlock']);}
 		echo json_encode($data['ProjectBlock']);
 		exit;
 	}//eof
@@ -621,7 +623,7 @@ class ApiController extends AppController {
 	}//eof
 	
 	/**
-	* This function returns latest project uploaded (in json format)
+	* This function returns latest project uploaded by scratch user (in json format)
 	* Parameter: authentication_key
 	* Example: http://scratch.mit.edu/api/get_latest_project/XXXXXXXXXXXXX
 	* Output: {"id":"13","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_med.png","uplodedIpAddress":"127.0.0.1"}
@@ -648,222 +650,339 @@ class ApiController extends AppController {
 			exit;
 		}	
 	}
-
-	/**
-	For a particular project, return the block count for each category.
-	UNFINISHED
-	**/
-	function get_block_category_count($pid = null){
-
-	// List of blocks per category
-
-	  $blockGroupNames = array(
-	      "Motion",
-	      "Control",
-	      "Looks",
-	      "Sensing",
-	      "Sounds",
-	      "Operators",
-	      "Pen",
-	      "Variables"
-	  );
-	  $motionBlockSet = array(  //BLOCKS IN THE MOTION CATEGORY...
-	      "forward_",
-	      "turnLeft_",
-	      "turnRight_",
-	      "heading_",
-	      "pointTowards_",
-	      "gotoX_y_",
-	      "gotoSpriteOrMouse_",
-	      "glideSecs_toX_y_elapsed_from_",
-	      "changeXposBy_",
-	      "xpos_",
-	      "changeYposBy_",
-	      "ypos_",
-	      "bounceOffEdge",
-	      "xpos",
-	      "ypos",
-	      "heading"
-	      //"gotoX_y_duration_elapsed_from_",
-	      //"turnAwayFromEdge"
-	  );
-
-	  $controlBlockSet = array(  //...CONTROL GROUP... ETC
-	      "EventHatMorph_StartClicked",
-	      "KeyEventHatMorph",
-	      "MouseClickEventHatMorph",
-	      "wait_elapsed_from_",
-	      "doForever",
-	      "doRepeat",
-	      "broadcast_",  
-	      "doBroadcastAndWait",
-	      //"WhenHatBlockMorph", //OBSOLETE
-	      "EventHatMorph",  //When I receive
-	      "doForeverIf",
-	      "doIf",
-	      "doIfElse",
-	      "doReturn",
-	      "doWaitUntil",
-	      "doUntil",
-	      "stopAll",
-	  );
-
-	  $looksBlockSet = array(  //LOOKS
-	      "backgroundIndex",
-	      //"changeBackgroundIndexBy_",
-	      //"changeBlurBy_",
-	      //"changeBrightnessShiftBy_",
-	      //"changeCostumeIndexBy_",
-	      //"changeFisheyeBy_",
-	      "changeGraphicEffect_by_",
-	      //"changeHueShiftBy_",
-	      //"changeMosaicCountBy_",  
-	      //"changePixelateCountBy_",
-	      //"changePointillizeSizeBy_",
-	      //"changeSaturationShiftBy_",
-	      "changeSizeBy_",
-	      //"changeStretchBy_",
-	      //"changeVisibilityBy_",
-	      //"changeWaterRippleBy_",
-	      //"changeWhirlBy_",
-	      "comeToFront",
-	      "costumeIndex",
-	      "filterReset",
-	      "goBackByLayers_",
-	      "hide",
-	      "lookLike_",
-	      "nextBackground",
-	      "nextCostume",
-	      "say_",
-	      "say_duration_elapsed_from_",
-	      //"sayNothing",
-	      "scale",
-	      //"setBlurTo_",
-	      //"setBrightnessShiftTo_",
-	      //"setFisheyeTo_",
-	      "setGraphicEffect_to_",
-	      //"setHueShiftTo_",
-	      //"setMosaicCountTo_",
-	      //"setPixelateCountTo_",
-	      //"setPointillizeSizeTo_",
-	      //"setSaturationShiftTo_",
-	      "setSizeTo_",
-	      //"setStretchTo_",
-	      //"setVisibilityTo_",
-	      //"setWaterRippleTo_",
-	      //"setWhirlTo_",
-	      "show",
-	      "showBackground_",
-	      "think_",
-	      "think_duration_elapsed_from_",
-	  );
-
-	  $sensingBlockSet = array(  //SENSING
-	      "answer",
-	      "color_sees_",
-	      "distanceTo_",
-	      "doAsk",
-	      "getAttribute_of_",
-	      "isLoud",
-	      "keyPressed_",
-	      "mousePressed",
-	      "mouseX",
-	      "mouseY",
-	      "sensor_",
-	      "sensorPressed_",
-	      "soundLevel",
-	      "timer",
-	      "timerReset",
-	      "touching_",
-	      "touchingColor_",
-	  );
-
-	  $soundBlockSet = array(  //SOUND
-	      "changeVolumeBy_",
-	      "doPlaySoundAndWait",
-	      "drum_duration_elapsed_from_",
-	      "midiInstrument_",
-	      "noteOn_duration_elapsed_from_",
-	      "playSound_",
-	      //"rewindSound_", //obsolete
-	      "setTempoTo_",
-	      "changeTempoBy_",
-	      "setVolumeTo_",
-	      "stopAllSounds",
-	      "tempo",
-	      "volume",
-	      "rest_elapsed_from_",
-	  );
-
-	  $operatorsBlockSet = array(  //OPERATORS
-	      "and_operator",
-	      "multiply_operator",
-	      "add_operator",
-	      "subtract_operator",
-	      "divide_operator",
-	      "isLessThan",
-	      "isEqualTo",
-	      "isGreaterThan",
-	      "mod_operator",
-	      "or_operator",
-	      //"abs", //ADD TO computeFunction_of_
-	      "concatenate_with_",
-	      "letter_of_",
-	      "not",
-	      "randomFrom_to_",
-	      "rounded",
-	      //"sqrt", //ADD TO computeFunction_of_
-	      "stringLength_",
-	      "computeFunction_of_",
-	  );
-
-	  $penBlockSet = array(  //PEN
-	      "changePenHueBy_",
-	      "changePenShadeBy_",
-	      "changePenSizeBy_", 
-	      "clearPenTrails", 
-	      "penColor_",
-	      "penSize_",
-	      "putPenDown",
-	      "putPenUp",
-	      "setPenHueTo_",
-	      "setPenShadeTo_",
-	      "stampCostume",
-	  );
-
-	  $variableBlockSet = array(  //VARIABLES AND LISTS
-	      "append_toList_",
-	      "changeVar_by_",
-	      "contentsOfList_",
-	      "deleteLine_ofList_",
-	      "getLine_ofList_",
-	      "hideVariable_",
-	      "insert_at_ofList_",
-	      "lineCountOfList_",
-	      "list_contains_",
-	      "readVariable",
-	      "setLine_ofList_to_",
-	      "setVar_to_",
-	      "showVariable_",
-	  );
-
-	  $otherBlockSet = array(  //MOTOR AND WTF (feel free to categorize what you recognize) (no slice of pie for these guys)
-	      "allMotorsOff",
-	      "allMotorsOn",
-	      "comment_",
-	      "motorOnFor_elapsed_from_",
-	      "startMotorPower_",
-	      "setMotorDirection_",
-	      "yourself",
-	      "askYahoo",
-	      "wordOfTheDay_",
-	      "jokeOfTheDay_",
-	      "synonym_",
-	      "info_fromZip_",
-	      "scratchrInfo_forUser_",
-	      "other"
-	  );
+	
+	function getblockcountpercategorybyuserid($user_id =null){
+		$user_id = intval($user_id);
+		$someone = $this->User->find('first' ,array('conditions' => array('User.id' => $user_id)));
+		if(empty($someone)){
+			$errorMsg = array('error' =>'Invalid user id');
+			header('Content-Type: application/json');
+			echo json_encode($errorMsg);
+			exit;
+		}
+		$this->User->mc_connect();
+		$mc_key = 'getblockcount-percategory-byuserid-'.$user_id;
+		$final_result = $this->User->mc_get($mc_key);
+		if ($final_result === false) {
+			$project_list = $this->getprojectsbyusername($someone['User']['username'], true);
+			$projects = explode(":",$project_list);
+			$data2 = array();
+			$final_result = array();
+			foreach($projects as $p) {
+				$data = $this->_group($this->_getProjectBlocksData($p));
+				$data2 = $this->_filter_data($data);//print_r($data2);
+				foreach($data2 as $final =>$ffv) {
+					foreach($ffv as $fk =>$fv)
+					{ 
+						if(array_key_exists($fk, $final_result[$final])){ 
+								$final_result[$final][$fk] += 1;
+						}
+						else{
+							$final_result[$final][$fk] = 1;
+						}
+					}
+					
+				}
+			}
+			$final_result = $this->_finalize_result($final_result);
+		$this->User->mc_set($mc_key, $final_result, false, API_GETBLOCKCOUNT_PER_CATEGORY_TTL);
+		}	
+		$this->User->mc_close();
+		
+		#print_r($final_result);
+		print json_encode($final_result);
+	exit;
+	}//eof
+	
+	function _finalize_result($results){
+		$temp = array();
+		foreach($results as $category =>$blocks){
+			$blockName = strtolower($category).'BlockSet';
+			$temp[$category] = array('total' => count($this->{$blockName}), 'used' => count($blocks));
+		}
+		return $temp;
 	}
-}
+	
+	function _filter_data($records){
+	$data2= array();
+		foreach($records as $key=>$val){
+			foreach($val as $k => $v){
+				if($v !=0){
+					$data2[$key][$k] = $v;
+				}
+			}	
+		}
+		return $data2;
+		
+	}//
+	
+	//GET COUNTS OF BLOCKS IN A PROJECT BY ID
+    function _getProjectBlocksData($d) {
+        //GET DATA
+		$block_data = $this->getprojectblockscount($d, true);
+        //FORMAT DATA
+        $json = explode(",",str_replace('"','',trim(substr($block_data,2),"{}")));
+        //SPLIT UP DATA
+        foreach($json as $i) {
+            $d = explode(":",$i);
+            $data[$d[0]] = $d[1]+0;
+            //print $d[1].'<br>';
+        }
+        return $data;
+    }
+	
+	//RETURNS THE COUNTS FOR EACH GROUP FROM THE getProjectBlocks DATA
+    function _group($data) {//print_r($data);
+		$blockGroupNames = $this->blockGroupNames;
+		$index = array();
+		$counts = array();
+		foreach($data as $b =>$d) { 
+            if($b == "project_id" || $b == "project_version" || $b == "scratchComment") {continue;}
+            $bt = $this->blockType($b);//echo $b.'---'.$bt.'<br>';
+            $counts[$blockGroupNames[$bt]][$b] = $d;
+			//print $bt.' - '.$b.'('.$d.')<br>';
+        }
+		return $counts;
+    }//eof
+	
+	
+	
+	
+	function blockType($b)
+	{ 
+	   $motionBlockSet = $this->motionBlockSet;
+	   $controlBlockSet = $this->controlBlockSet;
+	   $looksBlockSet = $this->looksBlockSet;
+	   $sensingBlockSet = $this->sensingBlockSet;
+	   $soundBlockSet = $this->soundBlockSet;
+	   $operatorsBlockSet = $this->operatorsBlockSet;
+	   $penBlockSet =  $this->penBlockSet;
+	   $variableBlockSet = $this->variableBlockSet;
+	   $otherBlockSet = $this->otherBlockSet;
 
-?>	
+	   $i = -1;
+	   while(++$i  < sizeof($looksBlockSet)) { //LOOPING THROUGH THIS WAY IS BETTER THAN CHECKING THEM IN SEQUENCE...
+		   if( $i<sizeof($motionBlockSet)    && $motionBlockSet[$i]==$b    ) return 0; //...CONSIDER LOOKING FOR "other"!
+		   if( $i<sizeof($controlBlockSet)   && $controlBlockSet[$i]==$b   ) return 1;
+		   if(                                  $looksBlockSet[$i]==$b     ) return 2;
+		   if( $i<sizeof($sensingBlockSet)   && $sensingBlockSet[$i]==$b   ) return 3;
+		   if( $i<sizeof($soundBlockSet)     && $soundBlockSet[$i]==$b     ) return 4;
+		   if( $i<sizeof($operatorsBlockSet) && $operatorsBlockSet[$i]==$b ) return 5;
+		   if( $i<sizeof($penBlockSet)       && $penBlockSet[$i]==$b       ) return 6;
+		   if( $i<sizeof($variableBlockSet)  && $variableBlockSet[$i]==$b  ) return 7;
+		   if( $i<sizeof($otherBlockSet)     && $otherBlockSet[$i]==$b     ) return 8;
+	   }
+	   return -1;
+	}
+	
+	//NAMES OF THE GROUPS IN ORDER
+	var $blockGroupNames = array(
+		"Motion",
+		"Control",
+		"Looks",
+		"Sensing",
+		"Sounds",
+		"Operators",
+		"Pen",
+		"Variables",
+		"Other"
+		
+	);
+	var $motionBlockSet = array(  //BLOCKS IN THE MOTION CATEGORY...
+		"forward_",
+		"turnLeft_",
+		"turnRight_",
+		"heading_",
+		"pointTowards_",
+		"gotoX_y_",
+		"gotoSpriteOrMouse_",
+		"glideSecs_toX_y_elapsed_from_",
+		"changeXposBy_",
+		"xpos_",
+		"changeYposBy_",
+		"ypos_",
+		"bounceOffEdge",
+		"xpos",
+		"ypos",
+		"heading",
+		"gotoX_y_duration_elapsed_from_",
+		"turnAwayFromEdge"
+	);
+
+	var $controlBlockSet = array(  //...CONTROL GROUP... ETC
+		"EventHatMorph_StartClicked",
+		"KeyEventHatMorph",
+		"MouseClickEventHatMorph",
+		"wait_elapsed_from_",
+		"doForever",
+		"doRepeat",
+		"broadcast_",  
+		"doBroadcastAndWait",
+		"WhenHatBlockMorph", //OBSOLETE
+		"EventHatMorph",  //When I receive
+		"doForeverIf",
+		"doIf",
+		"doIfElse",
+		"doReturn",
+		"doWaitUntil",
+		"doUntil",
+		"stopAll",
+	);
+
+	var $looksBlockSet = array(  //LOOKS
+		"backgroundIndex",
+		"changeBackgroundIndexBy_",
+		"changeBlurBy_",
+		"changeBrightnessShiftBy_",
+		"changeCostumeIndexBy_",
+		"changeFisheyeBy_",
+		"changeGraphicEffect_by_",
+		"changeHueShiftBy_",
+		"changeMosaicCountBy_",  
+		"changePixelateCountBy_",
+		"changePointillizeSizeBy_",
+		"changeSaturationShiftBy_",
+		"changeSizeBy_",
+		"changeStretchBy_",
+		"changeVisibilityBy_",
+		"changeWaterRippleBy_",
+		"changeWhirlBy_",
+		"comeToFront",
+		"costumeIndex",
+		"filterReset",
+		"goBackByLayers_",
+		"hide",
+		"lookLike_",
+		"nextBackground",
+		"nextCostume",
+		"say_",
+		"say_duration_elapsed_from_",
+		"sayNothing",
+		"scale",
+		"setBlurTo_",
+		"setBrightnessShiftTo_",
+		"setFisheyeTo_",
+		"setGraphicEffect_to_",
+		"setHueShiftTo_",
+		"setMosaicCountTo_",
+		"setPixelateCountTo_",
+		"setPointillizeSizeTo_",
+		"setSaturationShiftTo_",
+		"setSizeTo_",
+		"setStretchTo_",
+		"setVisibilityTo_",
+		"setWaterRippleTo_",
+		"setWhirlTo_",
+		"show",
+		"showBackground_",
+		"think_",
+		"think_duration_elapsed_from_",
+	);
+
+	var $sensingBlockSet = array(  //SENSING
+		"answer",
+		"color_sees_",
+		"distanceTo_",
+		"doAsk",
+		"getAttribute_of_",
+		"isLoud",
+		"keyPressed_",
+		"mousePressed",
+		"mouseX",
+		"mouseY",
+		"sensor_",
+		"sensorPressed_",
+		"soundLevel",
+		"timer",
+		"timerReset",
+		"touching_",
+		"touchingColor_",
+	);
+
+	var $soundBlockSet = array(  //SOUND
+		"changeVolumeBy_",
+		"doPlaySoundAndWait",
+		"drum_duration_elapsed_from_",
+		"midiInstrument_",
+		"noteOn_duration_elapsed_from_",
+		"playSound_",
+		"rewindSound_", //obsolete
+		"setTempoTo_",
+		"changeTempoBy_",
+		"setVolumeTo_",
+		"stopAllSounds",
+		"tempo",
+		"volume",
+		"rest_elapsed_from_",
+	);
+
+	var $operatorsBlockSet = array(  //OPERATORS
+		"and_operator",
+		"multiply_operator",
+		"add_operator",
+		"subtract_operator",
+		"divide_operator",
+		"isLessThan",
+		"isEqualTo",
+		"isGreaterThan",
+		"mod_operator",
+		"or_operator",
+		"abs", //ADD TO computeFunction_of_
+		"concatenate_with_",
+		"letter_of_",
+		"not",
+		"randomFrom_to_",
+		"rounded",
+		"sqrt", //ADD TO computeFunction_of_
+		"stringLength_",
+		"computeFunction_of_",
+	);
+
+	var $penBlockSet = array(  //PEN
+		"changePenHueBy_",
+		"changePenShadeBy_",
+		"changePenSizeBy_", 
+		"clearPenTrails", 
+		"penColor_",
+		"penSize_",
+		"putPenDown",
+		"putPenUp",
+		"setPenHueTo_",
+		"setPenShadeTo_",
+		"stampCostume",
+	);
+
+	var $variableBlockSet = array(  //VARIABLES AND LISTS
+		"append_toList_",
+		"changeVar_by_",
+		"contentsOfList_",
+		"deleteLine_ofList_",
+		"getLine_ofList_",
+		"hideVariable_",
+		"insert_at_ofList_",
+		"lineCountOfList_",
+		"list_contains_",
+		"readVariable",
+		"setLine_ofList_to_",
+		"setVar_to_",
+		"showVariable_",
+	);
+
+	var $otherBlockSet = array(  //MOTOR AND WTF (feel free to categorize what you recognize) (no slice of pie for these guys)
+		"allMotorsOff",
+		"allMotorsOn",
+		"comment_",
+		"motorOnFor_elapsed_from_",
+		"startMotorPower_",
+		"setMotorDirection_",
+		"yourself",
+		"askYahoo",
+		"wordOfTheDay_",
+		"jokeOfTheDay_",
+		"synonym_",
+		"info_fromZip_",
+		"scratchrInfo_forUser_",
+		"other"
+	);
+}//class
+?>
