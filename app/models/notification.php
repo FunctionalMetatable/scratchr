@@ -76,6 +76,10 @@ class Notification extends AppModel {
 		$notification_query = $this->__createNotificationQuery($user_id, $inappropriate_conditions);
         $notification_query .= ' LIMIT ' . $offset . ', ' . $limit;
 		$notifications = $this->query($notification_query);
+		if($page == 1 && !$admin)
+		{
+			$this->mc_set('adminnotifications_page1',$notifications,$user_id,10);
+		}
 		}
 		if($page == 1 && !$admin)
 			$this->mc_close();
