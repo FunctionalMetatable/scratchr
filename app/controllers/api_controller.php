@@ -660,10 +660,10 @@ class ApiController extends AppController {
 			echo json_encode($errorMsg);
 			exit;
 		}
-		// $this->User->mc_connect();
-		// $mc_key = 'getblockcount-percategory-byuserid-'.$user_id;
-		// $final_result = $this->User->mc_get($mc_key);
-		// if ($final_result === false) {
+		$this->User->mc_connect();
+		$mc_key = 'getblockcount-percategory-byuserid-'.$user_id;
+		$final_result = $this->User->mc_get($mc_key);
+		if ($final_result === false) {
 			$project_list = $this->getprojectsbyusername($someone['User']['username'], true);
 			$projects = explode(":",$project_list);
 			$data2 = array();
@@ -685,9 +685,9 @@ class ApiController extends AppController {
 				}
 			}
 			$final_result = $this->_finalize_result($final_result);
-		// $this->User->mc_set($mc_key, $final_result, false, API_GETBLOCKCOUNT_PER_CATEGORY_TTL);
-		// }	
-		// $this->User->mc_close();
+		$this->User->mc_set($mc_key, $final_result, false, API_GETBLOCKCOUNT_PER_CATEGORY_TTL);
+		}	
+		$this->User->mc_close();
 		
 		#print_r($final_result);
 		print json_encode($final_result);
