@@ -747,7 +747,9 @@ class ApiController extends AppController {
 	
 	
 	
-	
+/*
+Thanks to Chris Halberg and Brett A. Taylor from TCNJ for generating this list of blocks organized by categories.
+*/
 	function blockType($b)
 	{ 
 	   $motionBlockSet = $this->motionBlockSet;
@@ -761,7 +763,7 @@ class ApiController extends AppController {
 	   $otherBlockSet = $this->otherBlockSet;
 
 	   $i = -1;
-	   while(++$i  < sizeof($looksBlockSet)) { //LOOPING THROUGH THIS WAY IS BETTER THAN CHECKING THEM IN SEQUENCE...
+	   while(++$i  < sizeof($looksBlockSet)) { 
 		   if( $i<sizeof($motionBlockSet)    && $motionBlockSet[$i]==$b    ) return 0; //...CONSIDER LOOKING FOR "other"!
 		   if( $i<sizeof($controlBlockSet)   && $controlBlockSet[$i]==$b   ) return 1;
 		   if(                                  $looksBlockSet[$i]==$b     ) return 2;
@@ -968,7 +970,7 @@ class ApiController extends AppController {
 		"showVariable_",
 	);
 
-	var $otherBlockSet = array(  //MOTOR AND WTF (feel free to categorize what you recognize) (no slice of pie for these guys)
+	var $otherBlockSet = array(  //MOTOR AND OTHERS
 		"allMotorsOff",
 		"allMotorsOn",
 		"comment_",
