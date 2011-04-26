@@ -5,7 +5,7 @@
 class ApiController extends AppController {
 
     var $uses = array('Project','User');
-
+	var $components = array('GeoIp');
    /*
 	* All functions allow cross-site execution
    */
@@ -624,11 +624,13 @@ class ApiController extends AppController {
 	
 	/**
 	* This function returns latest project uploaded by scratch user (in json format)
-	* Parameter: authentication_key
+	* Parameter: authentication_key,number of project required(dafult 1).
 	* Example: http://scratch.mit.edu/api/get_latest_project/XXXXXXXXXXXXX
-	* Output: {"id":"13","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_med.png","uplodedIpAddress":"127.0.0.1"}
+	* Output:   [{"project":{"id":"13","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_med.png","uplodedIpAddress":"117.88.117.241","shortCountryName":"CN","longCountryName":"China","url":"http:\/\/scratch.mit.edu\/projects\/demo\/13","created":"2 days, 1 hour"}}]
+	Example: http://scratch.mit.edu/api/get_latest_project/XXXXXXXXXXXXX/5
+	* Output:	[{"project":{"id":"13","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_med.png","uplodedIpAddress":"117.88.117.241","shortCountryName":"CN","longCountryName":"China","url":"http:\/\/scratch.mit.edu\/projects\/demo\/13","created":"2 days, 1 hour"}},{"project":{"id":"11","projectName":"plane","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/ashok\/11_med.png","uplodedIpAddress":"174.30.85.37","shortCountryName":"US","longCountryName":"United States","url":"http:\/\/scratch.mit.edu\/projects\/ashok\/11","created":"1 week, 4 days"}},{"project":{"id":"9","projectName":"temple","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/ashok\/9_med.png","uplodedIpAddress":"124.253.245.160","shortCountryName":"IN","longCountryName":"India","url":"http:\/\/scratch.mit.edu\/projects\/ashok\/9","created":"3 weeks, 6 days"}},{"project":{"id":"12","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/ashok\/12_med.png","uplodedIpAddress":"189.59.128.212","shortCountryName":"BR","longCountryName":"Brazil","url":"http:\/\/scratch.mit.edu\/projects\/ashok\/12","created":"1 month"}},{"project":{"id":"10","projectName":"animals","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/ashok\/10_med.png","uplodedIpAddress":"119.152.21.66","shortCountryName":"PK","longCountryName":"Pakistan","url":"http:\/\/scratch.mit.edu\/projects\/ashok\/10","created":"2 months, 3 weeks"}}]
 	*/
-	function get_latest_project($auth_key = null){
+	function get_latest_project($auth_key = null, $num_projects =1){
 		if(empty($auth_key) || trim($auth_key) !== GET_LATEST_PROJECT_AUTH_KEY){
 			$errorMsg = array('error' =>'Invalid authentication key');
 			header('Content-Type: application/json');
@@ -639,18 +641,32 @@ class ApiController extends AppController {
 			$this->Project->unbindModel(
 				array('hasMany' => array('GalleryProject'))
 			);
-			$project = $this->Project->find('first', array('order' => 'Project.created DESC', 'fields' => array('Project.id', 'Project.upload_ip', 'User.id', 'User.username')));
-			$result = array(
-							'id' 		   => $project['Project']['id'],
-							'thumbnailUrl' => TOPLEVEL_URL. '/static/projects/' .$project['User']['username']. '/' .$project['Project']['id'] . '_med.png',
-							'uplodedIpAddress'   => long2ip($project['Project']['upload_ip'])
-							);
+			$projects = $this->Project->find('all', array('order' => 'Project.created DESC', 'fields' => array('Project.id', 'Project.name', 'Project.upload_ip', 'Project.country', 'Project.created', 'User.id', 'User.username'), 'limit' => $num_projects));
+			$k =0;
+			foreach($projects as $project){
+				$result[$k++]['project'] = array(
+								'id' 		   => $project['Project']['id'],
+								'projectName' => $project['Project']['name'],
+								'thumbnailUrl' => TOPLEVEL_URL. '/static/projects/' .$project['User']['username']. '/' .$project['Project']['id'] . '_med.png',
+								'uplodedIpAddress'   => long2ip($project['Project']['upload_ip']),
+								'shortCountryName' =>$project['Project']['country'],
+								'longCountryName' =>$this->GeoIp->lookupCountryName(long2ip($project['Project']['upload_ip'])),
+								'url' => TOPLEVEL_URL.'/projects/'. $project['User']['username']. '/' .$project['Project']['id'],
+								'created' =>friendlyDate($project['Project']['created'])
+								);
+			}
 			header('Content-Type: application/json');
 			echo json_encode($result);
 			exit;
 		}	
 	}
 	
+	/**
+	* This function returns category wise no.of blocks used by a user(in json format)
+	* Parameter: user_id
+	* Example: http://scratch.mit.edu/api/getblockcountpercategorybyuserid/139
+	* Output: {"Control":{"total":17,"used":15},"Operators":{"total":19,"used":8},"Sensing":{"total":17,"used":4},"Variables":{"total":13,"used":3},"Looks":{"total":47,"used":15},"Motion":{"total":18,"used":11},"Sounds":{"total":14,"used":6}}
+	*/
 	function getblockcountpercategorybyuserid($user_id =null){
 		$user_id = intval($user_id);
 		$someone = $this->User->find('first' ,array('conditions' => array('User.id' => $user_id)));
@@ -670,7 +686,7 @@ class ApiController extends AppController {
 			$final_result = array();
 			foreach($projects as $p) {
 				$data = $this->_group($this->_getProjectBlocksData($p));
-				$data2 = $this->_filter_data($data);//print_r($data2);
+				$data2 = $this->_filterData($data);//print_r($data2);
 				foreach($data2 as $final =>$ffv) {
 					foreach($ffv as $fk =>$fv)
 					{ 
@@ -684,17 +700,20 @@ class ApiController extends AppController {
 					
 				}
 			}
-			$final_result = $this->_finalize_result($final_result);
+			$final_result = $this->_finalizeResult($final_result);
 		$this->User->mc_set($mc_key, $final_result, false, API_GETBLOCKCOUNT_PER_CATEGORY_TTL);
 		}	
 		$this->User->mc_close();
 		
-		#print_r($final_result);
+		header('Content-Type: application/json');
 		print json_encode($final_result);
 	exit;
 	}//eof
 	
-	function _finalize_result($results){
+	/*
+	Helper function for getblockcountpercategorybyuserid.
+	*/
+	function _finalizeResult($results){
 		$temp = array();
 		foreach($results as $category =>$blocks){
 			$blockName = strtolower($category).'BlockSet';
@@ -703,7 +722,10 @@ class ApiController extends AppController {
 		return $temp;
 	}
 	
-	function _filter_data($records){
+	/*
+	Helper function for getblockcountpercategorybyuserid.
+	*/
+	function _filterData($records){
 	$data2= array();
 		foreach($records as $key=>$val){
 			foreach($val as $k => $v){
@@ -714,9 +736,13 @@ class ApiController extends AppController {
 		}
 		return $data2;
 		
-	}//
+	}
 	
-	//GET COUNTS OF BLOCKS IN A PROJECT BY ID
+	/*
+	Helper function for getblockcountpercategorybyuserid.
+	Returns projects block data
+	@params: pid
+	*/
     function _getProjectBlocksData($d) {
         //GET DATA
 		$block_data = $this->getprojectblockscount($d, true);
@@ -731,8 +757,10 @@ class ApiController extends AppController {
         return $data;
     }
 	
-	//RETURNS THE COUNTS FOR EACH GROUP FROM THE getProjectBlocks DATA
-    function _group($data) {//print_r($data);
+	/*
+	Helper function for getblockcountpercategorybyuserid.
+	*/
+    function _group($data) {
 		$blockGroupNames = $this->blockGroupNames;
 		$index = array();
 		$counts = array();
