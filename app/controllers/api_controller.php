@@ -626,9 +626,7 @@ class ApiController extends AppController {
 	* This function returns latest project uploaded by scratch user (in json format)
 	* Parameter: authentication_key,number of project required(dafult 1).
 	* Example: http://scratch.mit.edu/api/get_latest_project/XXXXXXXXXXXXX
-	* Output:   [{"project":{"id":"13","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_med.png","uplodedIpAddress":"117.88.117.241","shortCountryName":"CN","longCountryName":"China","url":"http:\/\/scratch.mit.edu\/projects\/demo\/13","created":"2 days, 1 hour"}}]
-	Example: http://scratch.mit.edu/api/get_latest_project/XXXXXXXXXXXXX/5
-	* Output:	[{"project":{"id":"13","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_med.png","uplodedIpAddress":"117.88.117.241","shortCountryName":"CN","longCountryName":"China","url":"http:\/\/scratch.mit.edu\/projects\/demo\/13","created":"2 days, 1 hour"}},{"project":{"id":"11","projectName":"plane","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/ashok\/11_med.png","uplodedIpAddress":"174.30.85.37","shortCountryName":"US","longCountryName":"United States","url":"http:\/\/scratch.mit.edu\/projects\/ashok\/11","created":"1 week, 4 days"}},{"project":{"id":"9","projectName":"temple","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/ashok\/9_med.png","uplodedIpAddress":"124.253.245.160","shortCountryName":"IN","longCountryName":"India","url":"http:\/\/scratch.mit.edu\/projects\/ashok\/9","created":"3 weeks, 6 days"}},{"project":{"id":"12","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/ashok\/12_med.png","uplodedIpAddress":"189.59.128.212","shortCountryName":"BR","longCountryName":"Brazil","url":"http:\/\/scratch.mit.edu\/projects\/ashok\/12","created":"1 month"}},{"project":{"id":"10","projectName":"animals","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/ashok\/10_med.png","uplodedIpAddress":"119.152.21.66","shortCountryName":"PK","longCountryName":"Pakistan","url":"http:\/\/scratch.mit.edu\/projects\/ashok\/10","created":"2 months, 3 weeks"}}]
+	* Output:   [{"project":{"id":"13","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_sm.png","uplodedIpAddress":"8.8.8.8","shortCountryName":"CN","longCountryName":"China","url":"http:\/\/scratch.mit.edu\/projects\/demo\/13","created":"2 days, 1 hour"}}]
 	*/
 	function get_latest_project($auth_key = null, $num_projects =1){
 		if(empty($auth_key) || trim($auth_key) !== GET_LATEST_PROJECT_AUTH_KEY){
@@ -647,8 +645,7 @@ class ApiController extends AppController {
 				$result[$k++]['project'] = array(
 								'id' 		   => $project['Project']['id'],
 								'projectName' => $project['Project']['name'],
-								'thumbnailUrl' => TOPLEVEL_URL. '/static/projects/' .$project['User']['username']. '/' .$project['Project']['id'] . '_med.png',
-								'uplodedIpAddress'   => long2ip($project['Project']['upload_ip']),
+								'thumbnailUrl' => TOPLEVEL_URL. '/static/projects/' .$project['User']['username']. '/' .$project['Project']['id'] . '_sm.png',
 								'shortCountryName' =>$project['Project']['country'],
 								'longCountryName' =>$this->GeoIp->lookupCountryName(long2ip($project['Project']['upload_ip'])),
 								'url' => TOPLEVEL_URL.'/projects/'. $project['User']['username']. '/' .$project['Project']['id'],
