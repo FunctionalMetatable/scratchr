@@ -1013,12 +1013,12 @@ Thanks to Chris Halberg and Brett A. Taylor from TCNJ for generating this list o
 	);
 	
 	/**
-	* This function returns latest project which is remixed (in json format)
+	* This function returns latest remixes  (in json format)
 	* Parameter: number of project required(dafult 1).
 	* Example: http://scratch.mit.edu/api/get_remixed_project
 	* Output:   [{"project":{"id":"13","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_sm.png","shortCountryName":"CN","longCountryName":"China","url":"http:\/\/scratch.mit.edu\/projects\/demo\/13","created":"6 days, 2 hours"},"basedOn":{"id":"12","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/ashok\/12_sm.png","shortCountryName":"BR","longCountryName":"Brazil","url":"http:\/\/scratch.mit.edu\/projects\/ashok\/12","created":"1 month, 1 week"}}]
 	*/
-	function get_remixed_project($num_projects =1){
+	function get_latest_remixes($num_projects =1){
 		$this->Project->unbindModel(
 				array('hasMany' => array('GalleryProject'))
 		);
@@ -1030,7 +1030,7 @@ Thanks to Chris Halberg and Brett A. Taylor from TCNJ for generating this list o
 				))));
 			
 		$this->Project->recursive =2;
-		$projects = $this->Project->find('all', array('conditions' => "Project.`based_on_pid` IS NOT NULL AND Project.user_id != Remix.user_id",'fields' => array('Remix.id','Remix.user_id','Project.id', 'Project.name', 'Project.upload_ip', 'Project.based_on_pid', 'Project.country', 'Project.created', 'User.id', 'User.username'), 'limit' => $num_projects));
+		$projects = $this->Project->find('all', array('conditions' => "Project.`based_on_pid` IS NOT NULL AND Project.user_id != Remix.user_id",'fields' => array('Remix.id','Remix.user_id','Project.id', 'Project.name', 'Project.upload_ip', 'Project.based_on_pid', 'Project.country', 'Project.created', 'User.id', 'User.username'), 'limit' => $num_projects, 'order' =>'created DESC'));
 		$k=0;
 		foreach($projects as $project){
 			$result[$k]['project'] = array(
