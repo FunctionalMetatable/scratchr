@@ -1053,7 +1053,7 @@ Thanks to Chris Halberg and Brett A. Taylor from TCNJ for generating this list o
 								);
 			$k++;
 		}
-		#header('Content-Type: application/json');
+		header('Content-Type: application/json');
 		echo json_encode($result);
 		exit;
 	}
