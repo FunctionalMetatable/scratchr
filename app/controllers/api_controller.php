@@ -1016,46 +1016,60 @@ Thanks to Chris Halberg and Brett A. Taylor from TCNJ for generating this list o
 	* This function returns latest remixes  (in json format)
 	* Parameter: number of project required(dafult 1).
 	* Example: http://scratch.mit.edu/api/get_remixed_project
-	* Output:   [{"project":{"id":"13","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_sm.png","shortCountryName":"CN","longCountryName":"China","url":"http:\/\/scratch.mit.edu\/projects\/demo\/13","created":"6 days, 2 hours"},"basedOn":{"id":"12","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/ashok\/12_sm.png","shortCountryName":"BR","longCountryName":"Brazil","url":"http:\/\/scratch.mit.edu\/projects\/ashok\/12","created":"1 month, 1 week"}}]
+	* Output:  [{"project":{"id":"13","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/demo\/13_sm.png","shortCountryName":"CN","longCountryName":"China","region":"Jiangsu","city":"Nanjing","url":"http:\/\/scratch.mit.edu\/projects\/demo\/13","created":"1 week"},"basedOn":{"id":"12","projectName":"bus","thumbnailUrl":"http:\/\/scratch.mit.edu\/static\/projects\/ashok\/12_sm.png","shortCountryName":"BR","longCountryName":"Brazil","region":"Minas Gerais","city":"Belo Horizonte","url":"http:\/\/scratch.mit.edu\/projects\/ashok\/12","created":"1 month, 1 week"}}]
 	*/
-	function get_latest_remixes($num_projects =1){
-		$this->Project->unbindModel(
-				array('hasMany' => array('GalleryProject'))
-		);
-		$this->Project->bindModel(array(
-        'belongsTo' => array(
-            'Remix' => array(
-                'className' => 'Project',
-                'foreignKey' => 'based_on_pid',
-				))));
-			
-		$this->Project->recursive =2;
-		$projects = $this->Project->find('all', array('conditions' => "Project.`based_on_pid` IS NOT NULL AND Project.user_id != Remix.user_id",'fields' => array('Remix.id','Remix.user_id','Project.id', 'Project.name', 'Project.upload_ip', 'Project.based_on_pid', 'Project.country', 'Project.created', 'User.id', 'User.username'), 'limit' => $num_projects, 'order' =>'created DESC'));
-		$k=0;
-		foreach($projects as $project){
-			$result[$k]['project'] = array(
-								'id' 		   => $project['Project']['id'],
-								'projectName' => $project['Project']['name'],
-								'thumbnailUrl' => TOPLEVEL_URL. '/static/projects/' .$project['User']['username']. '/' .$project['Project']['id'] . '_sm.png',
-								'shortCountryName' =>$project['Project']['country'],
-								'longCountryName' =>$this->GeoIp->lookupCountryName(long2ip($project['Project']['upload_ip'])),
-								'url' => TOPLEVEL_URL.'/projects/'. $project['User']['username']. '/' .$project['Project']['id'],
-								'created' =>friendlyDate($project['Project']['created'])
-								);
-			$result[$k]['basedOn'] = array(
-								'id' 		   => $project['Remix']['id'],
-								'projectName' => $project['Remix']['Remix']['name'],
-								'thumbnailUrl' => TOPLEVEL_URL. '/static/projects/' .$project['Remix']['Remix']['User']['username']. '/' .$project['Remix']['id'] . '_sm.png',
-								'shortCountryName' =>$project['Remix']['Remix']['country'],
-								'longCountryName' =>$this->GeoIp->lookupCountryName(long2ip($project['Remix']['Remix']['upload_ip'])),
-								'url' => TOPLEVEL_URL.'/projects/'. $project['Remix']['Remix']['User']['username']. '/' .$project['Remix']['id'],
-								'created' =>friendlyDate($project['Remix']['Remix']['created'])
-								);
-			$k++;
-		}
-		header('Content-Type: application/json');
-		echo json_encode($result);
-		exit;
+	function get_latest_remixes($auth_key = null, $num_projects =1){
+		if(empty($auth_key) || trim($auth_key) !== GET_LATEST_PROJECT_AUTH_KEY){
+			$errorMsg = array('error' =>'Invalid authentication key');
+			header('Content-Type: application/json');
+			echo json_encode($errorMsg);
+			exit;
+		}elseif( trim($auth_key) === GET_LATEST_PROJECT_AUTH_KEY)
+		{
+			$this->Project->unbindModel(
+					array('hasMany' => array('GalleryProject'))
+			);
+			$this->Project->bindModel(array(
+			'belongsTo' => array(
+				'Remix' => array(
+					'className' => 'Project',
+					'foreignKey' => 'based_on_pid',
+					))));
+				
+			$this->Project->recursive =2;
+			$projects = $this->Project->find('all', array('conditions' => "Project.`based_on_pid` IS NOT NULL AND Project.user_id != Remix.user_id",'fields' => array('Remix.id','Remix.user_id','Project.id', 'Project.name', 'Project.upload_ip', 'Project.based_on_pid', 'Project.country', 'Project.created', 'User.id', 'User.username'), 'limit' => $num_projects, 'order' =>'created DESC'));
+			$k=0;
+			foreach($projects as $project){
+				$projectIpDetails = $this->GeoIp->getIpDetails(long2ip($project['Project']['upload_ip']));
+				$result[$k]['project'] = array(
+									'id' 		   => $project['Project']['id'],
+									'projectName' => $project['Project']['name'],
+									'thumbnailUrl' => TOPLEVEL_URL. '/static/projects/' .$project['User']['username']. '/' .$project['Project']['id'] . '_sm.png',
+									'shortCountryName' =>$project['Project']['country'],
+									'longCountryName' =>$this->GeoIp->lookupCountryName(long2ip($project['Project']['upload_ip'])),
+									'region' => $projectIpDetails['region'],
+									'city' => $projectIpDetails['city'],
+									'url' => TOPLEVEL_URL.'/projects/'. $project['User']['username']. '/' .$project['Project']['id'],
+									'created' =>friendlyDate($project['Project']['created'])
+									);
+				$remixIpDetails = $this->GeoIp->getIpDetails(long2ip($project['Remix']['Remix']['upload_ip']));
+				$result[$k]['basedOn'] = array(
+									'id' 		   => $project['Remix']['id'],
+									'projectName' => $project['Remix']['Remix']['name'],
+									'thumbnailUrl' => TOPLEVEL_URL. '/static/projects/' .$project['Remix']['Remix']['User']['username']. '/' .$project['Remix']['id'] . '_sm.png',
+									'shortCountryName' =>$project['Remix']['Remix']['country'],
+									'longCountryName' =>$this->GeoIp->lookupCountryName(long2ip($project['Remix']['Remix']['upload_ip'])),
+									'region' => $remixIpDetails['region'],
+									'city' => $remixIpDetails['city'],
+									'url' => TOPLEVEL_URL.'/projects/'. $project['Remix']['Remix']['User']['username']. '/' .$project['Remix']['id'],
+									'created' =>friendlyDate($project['Remix']['Remix']['created'])
+									);
+				$k++;
+			}
+			header('Content-Type: application/json');
+			echo json_encode($result);
+			exit;
+		}	
 	}
 }//class
 ?>
