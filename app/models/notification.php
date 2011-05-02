@@ -28,7 +28,7 @@ class Notification extends AppModel {
 			$rstatus_conditions = ' AND Request.status = "pending"';
 		}
 		
-		$nstatus_conditions .= ' AND NotificationType.negative=0';
+		$nstatus_conditions .= ' AND NotificationType.is_admin=0';
 		
 		//try collecting first page from memcache
 		if($page==1 && !$admin) {
@@ -71,7 +71,7 @@ class Notification extends AppModel {
 		}
 		if($notifications === false)
 		{
-		$inappropriate_conditions = ' AND `NotificationType`.`negative` = 1';
+		$inappropriate_conditions = ' AND `NotificationType`.`is_admin` = 1';
 		$offset = ($page -1) * $limit;
 		$notification_query = $this->__createNotificationQuery($user_id, $inappropriate_conditions);
         $notification_query .= ' LIMIT ' . $offset . ', ' . $limit;
@@ -93,7 +93,7 @@ class Notification extends AppModel {
 	     LEFT JOIN `notification_types` on `notifications`.`notification_type_id` = `notification_types`.`id` 
 	     SET `notifications`.`status` = 'READ' 
 	     WHERE `notifications`.`to_user_id`=$user_id 
-	     AND `notification_types`.`negative` = 0";
+	     AND `notification_types`.`is_admin` = 0";
 	     $this->query($query);
 	     
 	}
