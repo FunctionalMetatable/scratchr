@@ -31,7 +31,7 @@
 define("FULL_RECORD_LENGTH",50);
 
 require_once 'geoip.inc';
-require_once 'geoipregionvars.php';
+#require_once 'geoipregionvars.php';
 
 class geoiprecord {
   var $country_code;
@@ -123,8 +123,8 @@ function _get_record($gi,$ipnum){
   
   // workaround php's broken substr, strpos, etc handling with
   // mbstring.func_overload and mbstring.internal_encoding
-  $enc = mb_internal_encoding();
-  mb_internal_encoding('ISO-8859-1'); 
+  //$enc = mb_internal_encoding();
+  //mb_internal_encoding('ISO-8859-1'); 
 
   $record_pointer = $seek_country + (2 * $gi->record_length - 1) * $gi->databaseSegments;
   
@@ -202,7 +202,7 @@ function _get_record($gi,$ipnum){
       $record->area_code = $metroarea_combo%1000;
     }
   }
-  mb_internal_encoding($enc);
+  //mb_internal_encoding($enc);
   return $record;
 }
 
