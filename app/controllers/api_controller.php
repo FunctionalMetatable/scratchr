@@ -708,7 +708,7 @@ class ApiController extends AppController {
 	}//eof
 	
 	/*
-	Helper function for getblockcountpercategorybyuserid.
+	Helper function for getblockcountpercategorybyuserid and getblockcategorycountbypid.
 	*/
 	function _finalizeResult($results){
 		$temp = array();
@@ -720,7 +720,7 @@ class ApiController extends AppController {
 	}
 	
 	/*
-	Helper function for getblockcountpercategorybyuserid.
+	Helper function for getblockcountpercategorybyuserid and getblockcategorycountbypid.
 	*/
 	function _filterData($records){
 	$data2= array();
@@ -736,7 +736,7 @@ class ApiController extends AppController {
 	}
 	
 	/*
-	Helper function for getblockcountpercategorybyuserid.
+	Helper function for getblockcountpercategorybyuserid and getblockcategorycountbypid.
 	Returns projects block data
 	@params: pid
 	*/
@@ -755,7 +755,7 @@ class ApiController extends AppController {
     }
 	
 	/*
-	Helper function for getblockcountpercategorybyuserid.
+	Helper function for getblockcountpercategorybyuserid and getblockcategorycountbypid.
 	*/
     function _group($data) {
 		$blockGroupNames = $this->blockGroupNames;
@@ -770,7 +770,34 @@ class ApiController extends AppController {
 		return $counts;
     }//eof
 	
-	
+	/**
+	* This function returns category wise no.of blocks used in a project(in json format)
+	* Parameter: pid
+	* Example: http://scratch.mit.edu/api/getblockcategorycountbypid/12339
+	* Output: {"Control":{"total":17,"used":3},"Operators":{"total":19,"used":2},"Sensing":{"total":17,"used":1},"Looks":{"total":47,"used":1}}
+	*/
+	function getblockcategorycountbypid($pid=null){
+		$pid = intval($pid);
+		if(empty($pid)){
+			$errorMsg = array('error' =>'Invalid project id');
+			header('Content-Type: application/json');
+			echo json_encode($errorMsg);
+			exit;
+		}
+		$this->Project->mc_connect();
+		$mc_key = 'getblock-category-count-bypidid-'.$pid;
+		$final_result = $this->Project->mc_get($mc_key);
+		if ($final_result === false) {
+			$data = $this->_group($this->_getProjectBlocksData($pid));
+			$data2 = $this->_filterData($data);
+			$final_result = $this->_finalizeResult($data2);
+			$this->Project->mc_set($mc_key, $final_result, false, API_GETBLOCKCATEGORYCOUNT_BYPID_TTL);
+		}
+		$this->Project->mc_close();
+		header('Content-Type: application/json');
+		print json_encode($final_result);
+		exit;
+	}
 	
 /*
 Thanks to Chris Halberg and Brett A. Taylor from TCNJ for generating this list of blocks organized by categories.
