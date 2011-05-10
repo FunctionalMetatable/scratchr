@@ -85,7 +85,7 @@ class NotificationsController extends AppController {
 												$this->Notification->countAllNotification($user_id));
 		
 		$inappropriate_notifications = array();
-		$notifications = $this->Notification->getInappropriateNotifications($user_id, $page, $limit);
+		$notifications = $this->Notification->getInappropriateNotifications_acp($user_id, $page, $limit);
 
 	
 		foreach($notifications as $notification) {

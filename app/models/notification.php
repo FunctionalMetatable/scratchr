@@ -86,6 +86,16 @@ class Notification extends AppModel {
 		return $notifications;
 	}
 	
+	// For administration view
+	function getInappropriateNotifications_acp($user_id, $page, $limit) {
+		$inappropriate_conditions = ' AND `NotificationType`.`negative` = 1';
+		$offset = ($page -1) * $limit;
+		$notification_query = $this->__createNotificationQuery($user_id, $inappropriate_conditions);
+        $notification_query .= ' LIMIT ' . $offset . ', ' . $limit;
+		$notifications = $this->query($notification_query);
+		return $notifications;
+	}
+	
 	// Marks all notifications of a user, $user_id, read, except negatives
 	function readAllExceptAdmin($user_id)
 	{
