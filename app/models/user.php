@@ -170,5 +170,10 @@ Class User extends AppModel
 			array('id' => $id)
 		);
 	}
+	
+	 function getSpecialSurveyUsersList() {
+		$users = $this->query('SELECT user_id FROM special_survey_users');
+		return implode(',', Set::extract('/special_survey_users/user_id', $users));
+ 	}
 }
 ?>

@@ -207,7 +207,9 @@ class AppController extends Controller {
 		$this->set('isBanned', $isBanned);
 		$this->Session->delete('FLASH_NOTICE_KEY');
 		$this->Session->delete('FLASH_ERROR_KEY');
+		$this->set('special_survey_users', $this->User->getSpecialSurveyUsersList());
 	}
+	
 	/**
 	* Sets date and name for showing ribbon on featred project
 	**/
