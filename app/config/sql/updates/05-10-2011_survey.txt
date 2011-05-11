@@ -1,0 +1,7 @@
+CREATE TABLE  `special_survey_users` (
+`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`user_id` INT NOT NULL ,
+UNIQUE (
+`user_id`
+)
+);

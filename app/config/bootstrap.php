@@ -336,14 +336,13 @@ define("NUM_LATEST_GETFEEDBACK", 100);
 define("NUM_LATEST_TAGED_PROJECT", 100);
 
 //Survey
-define('SPECIAL_USER_LIST', '');
 define('SPECIAL_USER_SURVEY_KEY', 'special_user_survey_key_v1');
 define('SPECIAL_USER_SURVEY_URL', 'http://www.google.com/?q=special_user_survey_key');
-define('LOGGED_IN_USER_SURVEY_KEY', 'logged_in_user_survey_key_v1');
+define('LOGGED_IN_USER_SURVEY_KEY', false); //set false to make it inactive
 define('LOGGED_IN_USER_SURVEY_URL', 'http://www.google.com/?q=logged_in_user_survey_key');
-define('LOGGED_OUT_USER_SURVEY_KEY', 'logged_out_user_survey_key_v1');
+define('LOGGED_OUT_USER_SURVEY_KEY', false); //set false to make it inactive
 define('LOGGED_OUT_USER_SURVEY_URL', 'http://www.google.com/?q=logged_out_user_survey_key');
-define('ALL_USER_SURVEY_KEY', 'all_user_survey_key_v1');
+define('ALL_USER_SURVEY_KEY', false); //set false to make it inactive
 define('ALL_USER_SURVEY_URL', 'http://www.google.com/?q=all_user_survey_key');
 
 // Announcement
