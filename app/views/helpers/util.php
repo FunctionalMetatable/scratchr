@@ -13,8 +13,14 @@ class UtilHelper extends Helper {
             $asterisk = "<a  class='asterisk' href=" .INFO_URL. '/Admins' ." >*</a>";
 
         }
-        $extra = $possesive ? ___("'s", true) : '';
-        return "<a href=\"/users/{$full_username}\">{$short_username}</a>{$ellipses}{$extra}{$asterisk} ";
+        
+		if($role == 'cm')
+		{
+         	$cm = "<a class='asterisk' href='" . CM_URL . "'>&deg;</a>";
+		}
+		
+		$extra = $possesive ? ___("'s", true) : '';
+        return "<a href=\"/users/{$full_username}\">{$short_username}</a>{$ellipses}{$extra}{$asterisk}{$cm} ";
     }
     
    /**

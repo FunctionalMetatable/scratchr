@@ -330,6 +330,10 @@ class AppController extends Controller {
 	function isAdmin() {
 		return $this->Session->read('User.role') === 'admin';
 	}
+
+	function isCM() {
+     	return $this->Session->read('User.role') === 'cm';
+	}
 	
 	function isAnyPermission()
 	{
