@@ -1339,6 +1339,7 @@ class UsersController extends AppController {
 		
 		$this->set('notification_count',$this->Notification->countAllNotification($user_id));
 		$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id AND Curator.visibility = 'visible'"));
+		$this->set('isCM', ($user_record['User']['role'] === 'cm') ? true : false);
 		$this->set('isIgnored',$isIgnored);
 		$this->set('comment_count', $comment_count);
 		$this->set('ignore_count', $ignore_count);
@@ -2263,6 +2264,42 @@ class UsersController extends AppController {
 		$user_record = $this->User->findAll(array('User.country'=>$name), NULL, $order, $limit, $page, NULL);
 		$this->set('user_record',$user_record);
 		$this->set('country',$name);
+	}
+
+	function cm($user_id=null)
+	{
+           $this->User->id = $user_id;
+		   $user = $this->User->read();
+		   if(empty($user)) {
+			   $this->cakeError('error404');
+		   }
+		   if(!$this->isAdmin())
+		   {
+            	$this->__err();
+		   }
+		   else
+		   {
+			    $this->User->query("UPDATE `users` SET `role`='cm' WHERE `id`=" . $user['User']['id']);
+		   }
+		   $this->redirect('/users/'.$user['User']['urlname']);
+	}
+
+	function uncm($user_id=null)
+	{
+          $this->User->id = $user_id;
+		   $user = $this->User->read();
+		   if(empty($user)) {
+			   $this->cakeError('error404');
+		   }
+		   if(!$this->isAdmin())
+		   {
+            	$this->__err();
+		   }
+		   else
+		   {
+			    $this->User->query("UPDATE `users` SET `role`='user' WHERE `id`=" . $user['User']['id']);
+		   }
+		   $this->redirect('/users/'.$user['User']['urlname']); 
 	}
 	
 	function curator($user_id=null){

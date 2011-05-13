@@ -426,6 +426,7 @@ class ProjectsController extends AppController {
 		else
 		$isdeleteAll =false;	
 		$isAdmin = $this->isAdmin();
+		$isCM = $this->isCM();
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
 
@@ -478,7 +479,7 @@ class ProjectsController extends AppController {
 		$stringwflaggernames = "";
 		$inappropriate_count = $this->Mpcomment->findCount("comment_id=$comment_id");
 		$project_creater_url =TOPLEVEL_URL.'/projects/'.$project_creator.'/'.$pid;
-		if ($inappropriate_count > $max_count || $isMine || $isAdmin) {
+		if ($inappropriate_count > $max_count || $isMine || $isAdmin || $isCM) {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->Pcomment->saveField("comment_visibility", "delbyusr") ;
@@ -486,6 +487,16 @@ class ProjectsController extends AppController {
                 $this->Pcomment->deleteCommentsFromMemcache($pid);
 				$subject= "Comment deleted because it was flagged by creator of '$pname'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $project_creater_url";
+			}
+			else if($isCM)
+			{
+            	// Community moderator deletion
+				$this->Pcomment->saveField("comment_visibility", "delbyusr");
+				$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
+				$this->Pcomment->deleteCommentsFromMemcache($pid);
+				$subject = "Project comment deleted because it was flagged by a community moderator ($flaggername)";
+				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by a community moderator:\n$content\n$project_creater_url";
+				$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT, $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
 			}
 			elseif ($isAdmin) {
 			    //delete all similar comments
@@ -884,6 +895,7 @@ class ProjectsController extends AppController {
 		$creator = $this->User->find("User.id = $puid");
 		$creatorname = $creator['User']['username'];
 		$msgin = $this->params['form']['flagmsg'];
+		$cmcensor = ($this->params['form']['cmcensor'] === 'censor') ? true : false;
 		$project_status = $project['Project']['status'];
 		$username = $creatorname;
 		$project_title = htmlspecialchars($project['Project']['name']);
@@ -897,6 +909,7 @@ class ProjectsController extends AppController {
 
 		$user_id = $this->getLoggedInUserID();
 		$userflagger = $this->User->find("User.id = '$user_id'");
+		$isCM = ($userflagger['User']['role'] === 'cm') ? true : false;
 		$flaggername = $userflagger['User']['username'];
 		$flagger_ip = ip2long($this->RequestHandler->getClientIP());
 
@@ -938,14 +951,22 @@ class ProjectsController extends AppController {
 				$this->set('urlname', $urlname);
 				
 				//if the number of flags on this project exceeds the current maximum, automatically censor this project
-				if ($flags >= NUM_MAX_PROJECT_FLAGS && $project_status == 'notreviewed') {
+				if (($flags >= NUM_MAX_PROJECT_FLAGS && $project_status == 'notreviewed') || ($isCM && $cmcensor)) {
 					//if the project is not censored already
 					if($project['Project']['proj_visibility'] == 'visible') {
-						$this->Project->censor($pid, $urlname, $this->isAdmin(), $user_id);
+						$this->Project->censor($pid, $urlname, $this->isAdmin(), $user_id, $isCM);
 						
 						$msg = "Project *automatically censored* because it reached the maximum number of flags.\n";
 						$msg .= "user $linked_flaggername ($user_id) just flagged $project_url";
 						$subject= "Project '$pname' censored";
+						
+						if($isCM && $cmcensor)
+						{
+
+							$subject = "Project '$pname' censored by community moderator, $flaggername";
+							$msg = "Project censored\n$linked_flaggername ($user_id) just flagged $project_url";
+						}
+						
 						$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, FROM_FLAGGED_PROJECT);
 						
 						$this->notify('project_removed_auto', $creator['User']['id'],
@@ -1956,13 +1977,15 @@ class ProjectsController extends AppController {
             }
             $this->set('isLocked', $isLocked);
 
-            //setting user status
+            //setting user status & cm
             $user_status = 'normal';
             if ($isLogged) {
-                $user_status = $this->User->find("User.id = $logged_id", 'User.status');
-                $user_status = $user_status['User']['status'];
+                $uview = $this->User->find("User.id = $logged_id");
+                $user_status = $uview['User']['status'];
+                $isCM = ($uview['User']['role'] === 'cm');
             }
             $this->set('user_status', $user_status);
+            $this->set('isCM', $isCM);
 
             //setting url name, pid
             $this->set('urlname', $urlname);

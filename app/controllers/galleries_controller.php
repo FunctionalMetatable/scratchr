@@ -2209,6 +2209,7 @@ Class GalleriesController extends AppController {
 		else
 		$isdeleteAll =false;
 		$isAdmin = $this->isAdmin();
+		$isCM = $this->isCM();
 		$user_id = $this->getLoggedInUserID();
 		$isLogged = $this->isLoggedIn();
 
@@ -2249,7 +2250,7 @@ Class GalleriesController extends AppController {
 		$max_count = NUM_MAX_COMMENT_FLAGS;
 		$inappropriate_count = $this->Mgcomment->findCount("comment_id = $comment_id");
 		$gallery_creater_url =TOPLEVEL_URL.'/galleries/view/'.$gallery_id;
-		if ($inappropriate_count > $max_count || $isMine || $isAdmin) {
+		if ($inappropriate_count > $max_count || $isMine || $isAdmin || $isCM) {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->hide_gcomment($comment_id, "delbyusr");
@@ -2257,7 +2258,19 @@ Class GalleriesController extends AppController {
                 $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 				$subject= "Comment deleted because it was flagged by creator of '$gallery_name'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $gallery_creater_url";
-			} elseif ($isAdmin) {
+			} else if ($isCM)
+			{
+			  		$this->hide_gcomment($comment_id, "delbyusr");
+					$this->__deleteChildrenComments($gallery_id, $comment_id, 'parentcommentcensored', true);
+                    $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
+					$subject= "Gallery comment deleted because it was flagged by a community moderator ($flaggername)";
+					$msg = "Comment by '$linked_creatorname' deleted because it was flagged by $flaggername:\n$content\n $gallery_creater_url";
+					$this->notify('gcomment_removed', $creator_id,
+								array('gallery_id' => $gallery_id),
+								array($content)
+							);
+			}
+			else if ($isAdmin) {
 				if($isdeleteAll)
 				{
 					$all_content = $this->Gcomment->findAll(array('content'=>$comment['Gcomment']['content']));

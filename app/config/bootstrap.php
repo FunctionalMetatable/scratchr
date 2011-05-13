@@ -236,6 +236,7 @@ define ('SUPPORT_URL', 'info.scratch.mit.edu');
 define ('FRONPAGE_FAQ_URL', 'http://info.scratch.mit.edu/Support/FAQ/Scratch_Website_FAQ/How_the_Scratch_front_page_works');
 define ('FAQ_QUESTIONS_URL', 'http://info.scratch.mit.edu/Support/FAQ/Scratch_Website_FAQ#Questions');
 define ('TOS_URL', 'http://info.scratch.mit.edu/Terms_of_use');
+define ('CM_URL', 'http://info.scratch.mit.edu/Community_Moderators');
 define ('RESOURCE_URL', 'static/');
 define ('HREF_RESOURCE_PROJECT', 'static/projects/');
 define ('HREF_RESOURCE_MINI_THUMBS', 'static/projects/');

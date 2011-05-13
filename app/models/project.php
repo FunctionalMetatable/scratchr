@@ -442,13 +442,22 @@ Class Project extends AppModel
      * @param string $urlname => owner urlname
      * @param bool $isadmin => is user who initiated action an admin?
      * @param int $user_id => id of user requesting action
+     * @param bool $iscm => is user who initiated a community mod?
      */
-    function censor($pid, $urlname, $isadmin, $user_id) {
+    function censor($pid, $urlname, $isadmin, $user_id, $iscm=false) {
         $this->beforeVisChange($pid, $urlname, $user_id, true);
-        if ($isadmin == true)
+        if ($isadmin)
+        {
             $this->saveField('proj_visibility', 'censbyadmin');
+        }
+        else if($iscm)
+        {
+            $this->saveField('proj_visibility', 'censbycm');
+        }
         else
+        {
             $this->saveField('proj_visibility', 'censbycomm');
+        }
     } 
 
 	
