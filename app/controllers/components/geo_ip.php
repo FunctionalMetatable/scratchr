@@ -38,7 +38,7 @@ class GeoIpComponent extends Object {
 		App::import('Vendor', 'Example', array('file' => 'GeoIp'.DS.'geoipcity.inc'));
 		// read GeoIP database
 		$handle = geoip_open($path."GeoLiteCity.dat", GEOIP_STANDARD);
-		$record = geoip_record_by_addr($handle, $ip);
+		$record = GeoIP_record_by_addr($handle, $ip);
 		$temp = array();
 		$temp['country'] = $record->country_code . " " . $record->country_code3 . " " . $record->country_name;
 		$temp['region'] = $this->GEOIP_REGION_NAME[$record->country_code][$record->region];
