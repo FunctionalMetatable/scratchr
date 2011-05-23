@@ -284,20 +284,6 @@ function langList($countries) {
         
 		<?php if ($isLoggedIn && $isAdmin):?>
 		<br /><br />
-		 <?php if (!$isCM): ?>
-		<form id="CM" action="<?php echo $html->url('/users/cm/')?><?php e($user['id'])?>" method="post">
-			<input type="submit" class="button" <?php echo 'onclick="if (confirm(' . "'" . ___('Are you sure?', true) . "'" . ')) return true; return false;"'; ?> value="<?php ___('Set as CM'); ?>">
-		</form>
-		<?php endif; ?>
-		<?php if ($isCM): ?>
-		<form id="CM" action="<?php echo $html->url('/users/uncm/')?><?php e($user['id'])?>" method="post">
-			<input type="submit" class="button" <?php echo 'onclick="if (confirm(' . "'" . ___('Are you sure?', true) . "'" . ')) return true; return false;"'; ?> value="<?php ___('Un-set as CM'); ?>">
-		</form>
-		<?php endif; ?>
-
-		<br /><br />
-		
-		
 		<?php if (!$isCuratored): ?>
 		<form id="Curator" action="<?php echo $html->url('/users/curator/')?><?php e($user['id'])?>" method="post">
 			<input type="submit" class="button" <?php echo 'onclick="if (confirm(' . "'" . ___('Are you sure?', true) . "'" . ')) return true; return false;"'; ?> value="<?php ___('Set as curator'); ?>">
