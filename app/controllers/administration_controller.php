@@ -2811,6 +2811,18 @@
 				}
 			}
 		}
-	}//eof
+	}
+	
+	// Community moderator status
+	function cm($user_id)
+	{
+	    $this->User->id=$user_id;
+		$user=$this->User->read();
+	    if($user['User']['role'] == 'cm')
+	        $this->User->query("UPDATE `users` SET `role`='user' WHERE `id`=". $user_id);
+	    else
+	        $this->User->query("UPDATE `users` SET `role`='cm' WHERE `id`=". $user_id);
+	    $this->redirect('/administration/viewuser/'.$user_id);
+	}
 }
 ?>

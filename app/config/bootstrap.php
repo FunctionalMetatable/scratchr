@@ -294,7 +294,7 @@ define('CACHE_DURATION', '4 days');
 /**
  * Memcache constants
  */
-define("MEMCACHE_SERVER", 'scratchdb'); //memcache server
+define("MEMCACHE_SERVER", 'localhost'); //memcache server
 define("MEMCACHE_PORT", 11211); //memcache port
 define("HOMEL_PAGE_TTL", 60); //for home page
 define("HOMEL_NEW_PROJECTS_TTL", 5);

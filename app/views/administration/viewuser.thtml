@@ -13,6 +13,7 @@
 			$user_birth = $user['User']['byear'];
 			$user_country = $user['User']['country'];
 			$user_created = $user['User']['created'];
+			$isCM = ($user['User']['role'] == 'cm') ? 1 : 0;
 			$user_url = "/users/$user_name";
 			$user_status = $user['User']['status'];
 			$user_reason = $user['User']['reason'];
@@ -40,7 +41,11 @@
 			
 			
     		echo "\t<div class='admin_rightcolumn'>\n";
-    	    echo "\t\t<span>Country:";
+    	        		if($isCM)
+    		    echo "\t\t<span><a onclick='if (confirm(\"Are you sure?\")) return true; return false;' href='/administration/cm/$user_id'>Un-set as community moderator</a></span><br />";
+    		else
+    		    echo "\t\t<span><a href='/administration/cm/$user_id' onclick='if (confirm(\"Are you sure?\")) return true; return false;'>Set as community moderator</a></span><br />";
+		echo "\t\t<span>Country:";
     	    echo " $user_country" ; 
     	    echo "\t\t</span><br/>\n";
     		echo "\t\t<span> Birth ";

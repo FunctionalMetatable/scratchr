@@ -73,8 +73,6 @@ Router::connect('/users/us_banned/*', array('controller' => 'users', 'action' =>
 Router::connect('/users/updatepic/*', array('controller' => 'users', 'action' => 'updatepic'));
 Router::connect('/users/curator/*', array('controller' => 'users', 'action' => 'curator'));
 Router::connect('/users/uncurator/*', array('controller' => 'users', 'action' => 'uncurator'));
-Router::connect('/users/cm/*', array('controller' => 'users', 'action'=>'cm'));
-Router::connect('/users/uncm/*', array('controller' => 'users', 'action'=>'uncm'));
 Router::connect('/users/showgalleries/*', array('controller' => 'users', 'action' => 'showgalleries'));
 Router::connect('/users/comment_list/*', array('controller' => 'users', 'action' => 'comment_list'));
 Router::connect('/users/ignore_user/*', array('controller' => 'users', 'action' => 'ignore_user'));

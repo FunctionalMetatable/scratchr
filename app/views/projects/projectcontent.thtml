@@ -16,6 +16,7 @@ $visibilities = array (
     "censbycomm" => array( 'sb_path' => 'censoredbycommunity.sb', 'msg' => 'Censored by Community'),
     "delbyadmin" => array( 'sb_path' => 'deletedbyadmin.sb', 'msg' => 'Deleted by Admin'),
     "delbyusr" => array( 'sb_path' => 'deletedbyuser.sb', 'msg' => 'Deleted by Author'),
+    "censbycm" => array( 'sb_path' => 'censoredbycommunity.sb', 'msg' => 'Censored by Community Moderator'),
 );
 if($proj_visibility == "visible") {
     $sb_path = getBinary($urlname, $pid);
