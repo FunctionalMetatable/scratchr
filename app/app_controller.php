@@ -205,6 +205,13 @@ class AppController extends Controller {
 		$this->set_active_tab($controller);
 		$this->set_predefined_tags();
 		$this->set('isBanned', $isBanned);
+		
+		// For ban-sync on the forums
+		if($isBanned)
+		    $this->Session->write('scratchr_ban', 1);
+		else
+		    $this->Session->delete('scratchr_ban');
+		
 		$this->Session->delete('FLASH_NOTICE_KEY');
 		$this->Session->delete('FLASH_ERROR_KEY');
 		$this->set('special_survey_users', $this->User->getSpecialSurveyUsersList());
