@@ -766,7 +766,7 @@ class UsersController extends AppController {
 				{
 					//submitted data is email
 					$user_records=$this->User->findAll(array('email'=>$this->data['UsernameEmail'], 'User.status' => 'normal'));
-					if(!empty($user_records))
+					if(!empty($user_records) && !preg_match("/^[^@]+@scratch\.mit\.edu$/", $useremail))
 					{
 						foreach($user_records as $user_record)
 						{
