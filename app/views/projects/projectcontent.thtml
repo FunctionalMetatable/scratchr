@@ -339,6 +339,16 @@ else {
 </p>
 <?php endif;?>
 
+<?php if($isCM): ?>
+<p>
+    Review status:  <strong><?php
+    if($status == 'notreviewed') echo "Not reviewed";
+    if($status == 'safe') echo "<span style='color:green'>For everyone</span>";
+    if($status == 'notsafe') echo "<span style='color:red'>Not for everyone</span>";
+    ?></strong>
+</p>
+<?php endif; ?>
+
 </div>
 <!-- ::: End info ::: -->
 
