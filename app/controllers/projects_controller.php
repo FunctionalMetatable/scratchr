@@ -925,6 +925,7 @@ class ProjectsController extends AppController {
 					$subject= "Project '$pname' flagged";
 				} else {
 					$subject= "Project '$pname' flagged" . " (REVIEWED)";
+					$cmcensor = false;
 				}
 					
 				$user_href =TOPLEVEL_URL.'/users/'.$flaggername;
@@ -962,7 +963,6 @@ class ProjectsController extends AppController {
 						
 						if($isCM && $cmcensor)
 						{
-
 							$subject = "Project '$pname' censored by community moderator, $flaggername";
 							$msg = "Project censored\n$linked_flaggername ($user_id) just flagged $project_url";
 						}
@@ -1846,7 +1846,7 @@ class ProjectsController extends AppController {
 			//When someone flags a project, that person should no longer be able to view the project. 
 			if($isLogged){
 				$flaggerCount = $this->Flagger->findCount("Flagger.project_id = $pid AND Flagger.user_id  = $logged_id");
-				if($flaggerCount > 0 && $project['Project']['proj_visibility'] == 'visible' && !$this->isAdmin()){
+				if($flaggerCount > 0 && $project['Project']['proj_visibility'] == 'visible' && !$this->isAdmin() && !$this->isCM()){
 					$this->cakeError('error',array('code'=>'404', 'message'=>'project_flaged', 'name' => __('Not Found', true)));
 				}
 			}
