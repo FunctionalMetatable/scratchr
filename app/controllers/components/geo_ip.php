@@ -35,7 +35,7 @@ class GeoIpComponent extends Object {
 	*/
 	function getIpDetails($ip){
 		$path  =  APP.'misc/';
-		App::import('Vendor', 'Example', array('file' => 'GeoIp'.DS.'geoipcity.inc'));
+		App::import('Vendor', 'GeoIpCity', array('file' => 'GeoIp'.DS.'geoipcity.inc'));
 		// read GeoIP database
 		$handle = geoip_open($path."GeoLiteCity.dat", GEOIP_STANDARD);
 		$record = GeoIP_record_by_addr($handle, $ip);
