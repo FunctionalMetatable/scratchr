@@ -467,11 +467,6 @@ class ProjectsController extends AppController {
 		//checks to see if this user has already marked this comment previously
 		if ($mpcomment_record == 0) {
 			$this->Mpcomment->save(array('Mpcomment'=>array('id'=>null, 'user_id' => $user_id, 'comment_id' => $comment_id)));
-			/*
-			$msg = "User '$flaggername' has flagged this comment by '$creatorname':\n$content\nhttp://scratch.mit.edu/projects/$project_creator/$pid";
-			$subject= "Flagged comment under '$pname'";
-			$this->Email->email('help@scratch.mit.edu',  $flaggername, $msg, $subject, 'caution@scratch.mit.edu', $userflagger['User']['email']);
-			*/
 		}
 		
 		//checks to see if the comment has been flagged too many times
@@ -515,6 +510,8 @@ class ProjectsController extends AppController {
                         //send mail
 						$creator_id = $pcontent['Pcomment']['user_id'];
 						$creatorname = $pcontent['User']['username'];
+                                                $creatorname_href = TOPLEVEL_URL.'/users/'.$creator['User']['username'];
+                                                $linked_creatorname = "<a href='$creatorname_href'>".$creator['User']['username']."</a>"; 
 						$content = $pcontent['Pcomment']['content'];
 						$pid = $pcontent['Project']['id'];
 
@@ -524,7 +521,7 @@ class ProjectsController extends AppController {
 						$project_creater_url = TOPLEVEL_URL.'/projects/'.$project_creator.'/'.$pid;
 
 						$subject= "Comment deleted because it was flagged by an admin";
-                        $msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
+                        $msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
 						$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
 
 						//notify
@@ -539,7 +536,7 @@ class ProjectsController extends AppController {
 					$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
                     $this->Pcomment->deleteCommentsFromMemcache($pid);
                     $subject= "Comment deleted because it was flagged by an admin";
-                    $msg = "Comment by '$creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
+                    $msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
 					$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
                     $this->notify('pcomment_removed', $creator_id,
                                     array('project_id' => $pid,
@@ -562,7 +559,7 @@ class ProjectsController extends AppController {
 				$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
                 $this->Pcomment->deleteCommentsFromMemcache($pid);
 				
-				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on '$pname'";
+				$subject = "Attention: more than $max_count users have flagged $linked_creatorname's comment on '$pname'";
 				$msg = "Users  $flaggernames have flagged this comment by  $linked_creatorname :\n$content\n $project_creater_url";
 				$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
 			}
