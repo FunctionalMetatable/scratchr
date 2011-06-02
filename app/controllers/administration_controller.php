@@ -2824,5 +2824,35 @@
 	        $this->User->query("UPDATE `users` SET `role`='cm' WHERE `id`=". $user_id);
 	    $this->redirect('/administration/viewuser/'.$user_id);
 	}
+	
+	// AJAX IP Resolution
+	function resolve_ip($ip)
+    { 
+        // Less laggy alternative to gethostbyaddr()
+        $ptr = implode(".",array_reverse(explode(".",$ip))).".in-addr.arpa";
+        $host = dns_get_record($ptr,DNS_PTR);
+        if ($host == null)
+            die("Could not resolve.");
+        else
+            die($host[0]['target']);
+    }
+    
+    // AJAX Proxy Ping check
+    function proxy_ping($ip)
+    {
+        $timeout = 2;
+        $ports = array(80,3128,8080);
+        $response = "No proxy detected.";
+        foreach($ports as $port)
+        {
+            @$fp = fsockopen($ip,$port,$errno,$errstr,$timeout);
+            if(!empty($fp))
+            {
+                $response = "Open proxy ports detected.";
+                fclose($fp);
+            }
+        }
+        die($response);
+    }
 }
 ?>

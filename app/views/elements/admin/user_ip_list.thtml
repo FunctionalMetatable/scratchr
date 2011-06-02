@@ -1,31 +1,61 @@
+<?php
+function fast_gethostbyaddr($ip)
+{ 
+	// Less laggy alternative to gethostbyaddr()
+    $ptr = implode(".",array_reverse(explode(".",$ip))).".in-addr.arpa";
+    $host = dns_get_record($ptr,DNS_PTR);
+    if ($host == null)
+        return "Could not resolve.";
+	else
+	    return $host[0]['target'];
+}
+?>
+<script>
+function update_resolve(update_field, ip)
+{ 
+    new Ajax.Request('/administration/resolve_ip/' + ip, {
+      method: 'get',
+      onSuccess: function(transport) {
+        $(update_field).innerHTML = transport.responseText;
+      }
+    });
+}
+
+function update_proxy(update_field, ip)
+{
+    new Ajax.Request('/administration/proxy_ping/' + ip, {
+      method: 'get',
+      onSuccess: function(transport) {
+        $(update_field).innerHTML = transport.responseText;
+      }
+    });
+}
+</script>
 <div>
 <?php
-    foreach ($data as $ip):
-        $user_ip =      $ip[0]['ip'];
-        $user_ip_timestamp = $ip[0]['v_time'];
+$count = 0;
+foreach ($data as $ip):
+    $user_ip = $ip[0]['ip'];
+    $user_ip_timestamp = $ip[0]['v_time'];
+    $count++;
+    if($count <= 5)
+        $ip_hostinfo = fast_gethostbyaddr($user_ip);
+    else
+        $ip_hostinfo = "<a href='#' onclick='update_resolve(\"{$user_ip}_resolve\",\"$user_ip\"); return false;'>Resolve</a>";
 	$expand_address = "/administration/expand_ip/$user_ip";
-        $ban_address = '/administration/ban_ip/'.$user['User']['id'].'/'.$user_ip;
-
-	// Less laggy alternative to gethostbyaddr()
-	$ptr= implode(".",array_reverse(explode(".",$user_ip))).".in-addr.arpa";
-        $host = dns_get_record($ptr,DNS_PTR);
-
-        if ($host == null){
-        	$ip_hostinfo = "<br>";
-	}	
-	else{
-		$ip_hostinfo = $host[0]['target'];
-	}
+	$ban_address = '/administration/ban_ip/'.$user['User']['id'].'/'.$user_ip;
 ?>
     <div class="gallerythumb clearme">
                 <div class="admin_leftcolumn">
-            <span>IP: <?= $user_ip ?> <br> <?= $ip_hostinfo ?> </span>
+            <span>IP: <?= $user_ip ?> <br> <span id='<?=$user_ip?>_resolve'><?= $ip_hostinfo ?></span></span>
                 </div>
                 <div class='admin_rightcolumn'>
             <span>
             <a href="<?= $ban_address ?>"> Ban IP </a>
             &nbsp;|&nbsp;
             <a href="<?php echo $html->url($expand_address)?>"> Show All Users</a>
+            &nbsp;|&nbsp;
+            <span id='<?=$user_ip?>_proxy'><a href='#' onclick='update_proxy("<?=$user_ip?>_proxy", "<?=$user_ip?>"); return false;'>Proxy ping</a></span>
         <br> <?= $user_ip_timestamp ?>
             </span>
         </div>
