@@ -18,7 +18,7 @@ var explainFlagTxt = '';
 <div id="flagMessageDiv" style="display:none;">
 <form action="<?php echo $html->url("$urlname/$pid/flag")?>" method="post">
 	<textarea cols="55" rows="5" name="flagmsg" id="flagMessageDivTb" onClick="if(this.value==explainFlagMsg){this.value=explainFlagTxt;}"></textarea>
-	<?php if($isCM): ?>
+	<?php if($isCM && $status == 'notreviewed'): ?>
 	Censor: <input type='checkbox' value='censor' name='cmcensor' />
     <?php endif; ?>
 	<input type="submit" value="<?php ___("Flag"); ?>" onclick="if($('flagMessageDivTb').getValue() == explainFlagMsg){$('flagMessageDivTb').value='';}if(confirmFlagging($('flagMessageDivTb').getValue())){return true}else{return false;}"/>&nbsp;&nbsp;<a href="#" onClick="$('flagMessageDiv').toggle();$('loveitDiv').toggle();$('favoriteDiv').toggle();return false;"> <?php ___('Cancel'); ?></a>

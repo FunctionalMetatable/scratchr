@@ -39,7 +39,7 @@
 		{ this.form.action='/projects/uncensor'; this.form.submit(); return true; } return false;" 
 			value="uncensor"/>
 <?php endif; ?>
-<?php if( $proj_visibility === 'censbycomm' ):?>
+<?php if( $proj_visibility === 'censbycomm' || $proj_visibility === 'censbycm' ):?>
 <input type="button" class="button" onclick="if (confirm('are you sure?'))
 		{ this.form.action='/projects/censor'; this.form.submit(); return true; } return false;"
 			value="confirm censorship"/> &nbsp;
