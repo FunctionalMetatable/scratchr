@@ -92,7 +92,7 @@ class ProjectsController extends AppController {
 		$final_flags = $this->ProjectFlag->find("ProjectFlag.project_id = $project_id");
 		$flag_id = $final_flags['ProjectFlag']['id'];
 		
-		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm') {
+		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm' || $project['Project']['proj_visibility'] == 'censbycm') {
 			$isCensored = true;
 		} else {
 			$isCensored = false;
@@ -146,7 +146,7 @@ class ProjectsController extends AppController {
 		$final_flags = $this->ProjectFlag->find("project_id = $project_id");
 		$flag_id = $final_flags['ProjectFlag']['id'];
 		
-		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm') {
+		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm' || $project['Project']['proj_visibility'] == 'censbycm') {
 			$isCensored = true;
 		} else {
 			$isCensored = false;
@@ -1630,7 +1630,7 @@ class ProjectsController extends AppController {
 			$this->redirect("/projects/$urlname/$pid");
 		}
 		
-		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm') {
+		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm'  || $project['Project']['proj_visibility'] == 'censbycm') {
 			$isCensored = true;
 		} else {
 			$isCensored = false;
@@ -1695,7 +1695,7 @@ class ProjectsController extends AppController {
 			$this->redirect("/projects/$urlname/$pid");
 		}
 		
-		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm') {
+		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm'  || $project['Project']['proj_visibility'] == 'censbycm') {
 			$isCensored = true;
 		} else {
 			$isCensored = false;
@@ -2074,7 +2074,7 @@ class ProjectsController extends AppController {
             }
 
 			// set generic project info
-			if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm' || $project['Project']['status'] == 'censored') {
+			if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm' || $project['Project']['status'] == 'censored' || $project['Project']['proj_visibility'] == 'censbycm') {
 				$isCensored = true;
 			} else {
 				$isCensored = false;
@@ -2475,7 +2475,7 @@ class ProjectsController extends AppController {
 		$final_flags = $this->ProjectFlag->find("project_id = $project_id");
 		$flag_id = $final_flags['ProjectFlag']['id'];
 		
-		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm') {
+		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm' || $project['Project']['proj_visibility'] == 'censbycm') {
 			$isCensored = true;
 		} else {
 			$isCensored = false;
@@ -2513,7 +2513,7 @@ class ProjectsController extends AppController {
 		$final_flags['ProjectFlag'][$attribute] = $state;
 		$flag_id = $final_flags['ProjectFlag']['id'];
 		
-		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm') {
+		if ($project['Project']['proj_visibility'] == 'censbyadmin' || $project['Project']['proj_visibility'] == 'censbycomm'  || $project['Project']['proj_visibility'] == 'censbycm') {
 			$isCensored = true;
 		} else {
 			$isCensored = false;
