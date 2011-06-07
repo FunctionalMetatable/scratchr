@@ -6,7 +6,7 @@ class UsersController extends AppController {
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 
 	'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject','AdminComment', 'User','Project','Favorite', 'Pcomment',
 	'UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification',
-	'Shariable','Thank', 'ViewStat','Curator','WhitelistedIpAddress','BlockedIp', 'DisposableDomain');
+	'Shariable','Thank', 'ViewStat','Curator','WhitelistedIpAddress','BlockedIp', 'DisposableDomain','BlockedUser');
 	
 
 	function admin_index() {
@@ -278,11 +278,15 @@ class UsersController extends AppController {
 							// The user is actually banned
 		
 							$subject = "Banned account registration attempt ($ecookie)";
+							
+							$ban_record = $this->BlockedUser->find("BlockedUser.user_id = " . $euserdata['User']['id']);
+							$ban_reason = $ban_record['BlockedUser']['reason'];
 			
 							$msg = "A computer used to login to a banned account has been used to register a new one.<br />
 								Banned user: <a href='" . TOPLEVEL_URL . "/users/$ecookie'>$ecookie</a><br />
 								New user created: <a href='" . TOPLEVEL_URL . "/users/" . $this->data['User']['username'] . "'>" . $this->data['User']['username'] . "</a><br />
-								IP address for new account: " . $this->RequestHandler->getClientIP();
+								Ban reason:  " . $ban_reason . "<br />
+								IP address for new account: " . $this->RequestHandler->getClientIP() . " (<a href='" . TOPLEVEL_URL . "/administration/search'>Search IPs</a>)"";
 						
 							$this->Email->email(TO_BANNED_EC,'Scratch Website', $msg, $subject, TO_BANNED_EC);
 						}
