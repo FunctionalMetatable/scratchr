@@ -286,7 +286,7 @@ class UsersController extends AppController {
 								Banned user: <a href='" . TOPLEVEL_URL . "/users/$ecookie'>$ecookie</a><br />
 								New user created: <a href='" . TOPLEVEL_URL . "/users/" . $this->data['User']['username'] . "'>" . $this->data['User']['username'] . "</a><br />
 								Ban reason:  " . $ban_reason . "<br />
-								IP address for new account: " . $this->RequestHandler->getClientIP() . " (<a href='" . TOPLEVEL_URL . "/administration/search'>Search IPs</a>)"";
+								IP address for new account: " . $this->RequestHandler->getClientIP() . " (<a href='" . TOPLEVEL_URL . "/administration/search'>Search IPs</a>)";
 						
 							$this->Email->email(TO_BANNED_EC,'Scratch Website', $msg, $subject, TO_BANNED_EC);
 						}
