@@ -2401,6 +2401,14 @@
 		$this->set('project', $project);
 		$this->render('expand_flaggers');
 	}
+	/*delete users notification*/
+	function delete_notification($notification_id,$user_id) {
+		$this->Notification->id = $notification_id;
+		$this->Notification->delete($notification_id);
+		$this->Notification->clear_memcached_notifications($user_id);
+		exit;
+		
+	}
 	
 	/**********************************ADMIN DEFINED TAGS***************************************/
 	function predefined_tags($mode = "active") {
