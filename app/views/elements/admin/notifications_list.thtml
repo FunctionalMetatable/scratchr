@@ -9,13 +9,29 @@
 	$pagination->setPaging($paging);
 	echo $this->renderElement('pagination');
 ?>	
-<?php foreach($data as $notification): ?>
+<?php 
+foreach($data as $notification):
+$notification_id = $notification['0']['id'];
+$uid = $notification['0']['to_user_id'];
+?>
 	<?php $message = $template->create($notification['0'], $username); ?>	
-	<div class="comment">
+	<div id="<?php echo $notification_id?>" class="comment">
 		<?php if ($notification['0']['status'] == "READ"): ?>
-			<span class='notification_read'><?= $message ?></span>
+			<span class='notification_read'><?= $message ?>&nbsp;&nbsp;
+			<?php
+					e($ajax->link("(X)", '#', 
+							array("url"=>"/administration/delete_notification/$notification_id/$uid", 
+							"update"=>"$notification_id"), NULL, false));
+			?>
+			</span>
 		<?php else: ?>
-			<span class='notification_unread'><?= $message ?></span>
+			<span class='notification_unread'><?= $message ?>&nbsp;&nbsp;
+			<?php
+					e($ajax->link("(X)", '#', 
+							array("url"=>"/administration/delete_notification/$notification_id/$uid", 
+							"update"=>"$notification_id"), NULL, false));
+			?>
+			</span>
 		<?php endif; ?>
 	</div>
 <?php endforeach; ?>
