@@ -18,7 +18,7 @@ class Notification extends AppModel {
 	* @param int $user_id	specifies the id of the user
 	* @return mixed	all notifications set to a user
 	*/
-	function getNotifications($user_id, $page, $limit, $admin = false) {
+	function getNotifications($user_id, $page, $limit, $admin = false, $filter_inappropriate=false) {
 		$notifications = false;
 		$nstatus_conditions = '';
 		$rstatus_conditions = '';
@@ -28,7 +28,9 @@ class Notification extends AppModel {
 			$rstatus_conditions = ' AND Request.status = "pending"';
 		}
 		
-		$nstatus_conditions .= ' AND NotificationType.is_admin=0';
+		if(!$filter_inappropriate) {
+			$nstatus_conditions .= ' AND NotificationType.is_admin=0';
+		}
 		
 		//try collecting first page from memcache
 		if($page==1 && !$admin) {
@@ -110,9 +112,20 @@ class Notification extends AppModel {
 	
 	function countAllNotification($user_id) {
 		
-		$nstatus_conditions = ' AND `NotificationType`.`negative` = 1';;
+		$nstatus_conditions = ' AND `NotificationType`.`negative` = 1';
 		$ncount = $this->findCount("Notification.to_user_id =".$user_id . $nstatus_conditions);
 		
+		
+		return intval($ncount);
+	}
+	
+	// For integraflag - admin notifications within unix $time
+	function countRecentAdmin($user_id, $time) {
+		
+		$nstatus_conditions = ' AND `NotificationType`.`is_admin` = 1
+								AND UNIX_TIMESTAMP(`Notification`.`created`) > ' . $time;
+		
+		$ncount = $this->findCount("Notification.to_user_id =" . $user_id . $nstatus_conditions);
 		
 		return intval($ncount);
 	}
