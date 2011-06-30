@@ -2010,6 +2010,7 @@
                 if (empty($blocked_record)) {
 					$this->User->id = $current_user_id;
 					if($this->User->saveField("status", 'locked')) {
+                        $this->User->saveField("blocked_till", '0000-00-00 00:00:00'); // remove any temp block in the system
                         $info = Array('BlockedUser' => Array('id' => null, 'user_id' => $current_user_id, 'admin_id' => $admin_id, 'reason' => $reason, 'unblock_date' => $unblock_date));
                         $this->BlockedUser->save($info);
                     }
