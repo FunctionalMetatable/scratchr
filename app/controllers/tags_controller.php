@@ -35,12 +35,15 @@ Class TagsController extends AppController {
         $this->Tag->mc_connect();
         $resultset = $this->Tag->mc_get($mc_key);
 
-        if($resultset === false) {
+        if($resultset !== false) {
 
 	    $resultset = $this->Tag->query("
 	      SELECT Tag.name, COUNT( tt.project_id ) AS tagcounter 
 	      FROM project_tags tt, tags Tag  
-	      WHERE Tag.id = tt.tag_id  GROUP BY Tag.id  
+	      WHERE Tag.id = tt.tag_id
+		  AND LENGTH( Tag.name ) >1
+		  GROUP BY Tag.id,
+		  
 	      ORDER BY tagcounter DESC LIMIT " . TAG_CLOUD_BIG);
 
 	      $this->Tag->mc_set($mc_key, $resultset, false, TAG_CLOUD_TTL);
