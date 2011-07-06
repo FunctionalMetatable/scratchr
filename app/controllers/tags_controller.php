@@ -42,9 +42,8 @@ Class TagsController extends AppController {
 	      FROM project_tags tt, tags Tag  
 	      WHERE Tag.id = tt.tag_id
 		  AND LENGTH( Tag.name ) >1
-		  GROUP BY Tag.id,
-		  
-	      ORDER BY tagcounter DESC LIMIT " . TAG_CLOUD_BIG);
+		  GROUP BY Tag.id
+		  ORDER BY tagcounter DESC LIMIT " . TAG_CLOUD_BIG);
 
 	      $this->Tag->mc_set($mc_key, $resultset, false, TAG_CLOUD_TTL);
 
