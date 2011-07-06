@@ -35,7 +35,7 @@ Class TagsController extends AppController {
         $this->Tag->mc_connect();
         $resultset = $this->Tag->mc_get($mc_key);
 
-        if($resultset !== false) {
+        if($resultset === false) {
 
 	    $resultset = $this->Tag->query("
 	      SELECT Tag.name, COUNT( tt.project_id ) AS tagcounter 
