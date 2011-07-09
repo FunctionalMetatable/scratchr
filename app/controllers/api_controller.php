@@ -40,7 +40,11 @@ class ApiController extends AppController {
         $this->Project->bindUser();
         $this->Project->id=$pid;
         $project = $this->Project->read();
-        die("/projects/" . $project['User']['urlname'] . "/" . $project['Project']['id'] . ".sb");                      
+	if($project['Project']['proj_visibility'] == "visible") {
+        	echo("/projects/" . $project['User']['urlname'] . "/" . $project['Project']['id'] . ".sb");                      
+	} else {
+		echo("unavailable:" . $project['Project']['proj_visibility']);
+	}
 	exit(1);
     }
 
