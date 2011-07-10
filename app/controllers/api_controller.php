@@ -1103,5 +1103,36 @@ Thanks to Chris Halberg and Brett A. Taylor from TCNJ for generating this list o
 			exit;
 		}	
 	}
+	
+	/** 
+    * This function returns all pcomments that A has posted on B in json format
+	* Parameter: user id1, user_id2
+	* Output:pcomment id,user_id,content,created date
+	* Example: http://scratch.mit.edu/api/getuserspcommentsbyuid/2/3 
+	* Example output: [{"Pcomment":{"id":"101","user_id":"2","content":"just for test now","created":"2011-02-02 15:38:19"}},{"Pcomment":{"id":"58","user_id":"2","content":"yes big bus","created":"2010-04-29 05:32:04"}},{"Pcomment":{"id":"57","user_id":"2","content":"big bus","created":"2010-04-29 05:31:30"}},{"Pcomment":{"id":"56","user_id":"2","content":"first comment","created":"2010-04-29 05:31:16"}},{"Pcomment":{"id":"47","user_id":"2","content":"hey this one another comment!!!!!!!!!!","created":"2009-11-30 10:56:24"}},{"Pcomment":{"id":"46","user_id":"2","content":"comment on demo's project","created":"2009-11-30 10:54:46"}},{"Pcomment":{"id":"45","user_id":"2","content":"http:\/\/scratch.mit.edu\/forums\/viewtopic.php?pid=231636#p231636","created":"2009-09-29 06:24:24"}},{"Pcomment":{"id":"44","user_id":"2","content":"http:\/\/scratch.mit.edu\/projects\/-db-\/666150","created":"2009-09-29 06:06:43"}}]
+    */
+	function getuserspcommentsbyuid($uid1 = null, $uid2 = null){
+		Configure::write('debug', 0);
+		if($uid1 == "" || $uid2 == ""){
+			$errorMsg = array('error' =>'Invalid user id');
+			header('Content-Type: application/json');
+			echo json_encode($errorMsg);
+			exit;
+		}
+		$this->Project->mc_connect();
+		$mc_key = 'get-pcomments-by-uid-'.$uid1;
+		$comments = $this->Project->mc_get($mc_key);
+		if ($comments === false) {
+			App::import("Model","Pcomment");
+			$this->Pcomment		= & new Pcomment();
+			$comments = $this->Pcomment->find('all', array('conditions'=>array('Pcomment.user_id' => $uid1, 'Project.user_id' =>$uid2), 'fields' =>array('Pcomment.id', 'Pcomment.user_id', 'Pcomment.content', 'Pcomment.created'), 'recursive'=>1,'order' =>'Pcomment.timestamp DESC'));
+			$this->Project->mc_set($mc_key, $comments, false, API_PCOMMENTS_BY_UID_TTL);
+		}
+		
+		header('Content-Type: application/json');
+		echo json_encode($comments);
+		$this->Project->mc_close();
+		exit;
+	}
 }//class
 ?>

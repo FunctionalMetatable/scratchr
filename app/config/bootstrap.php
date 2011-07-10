@@ -199,6 +199,7 @@ $this->params['webservices']
   define("API_PROJECT_BLOCK_TTL", 60); //1 hours
   define("API_GETBLOCKCOUNT_PER_CATEGORY_TTL", 60); //1 hours
   define("API_GETBLOCKCATEGORYCOUNT_BYPID_TTL", 60); //1 hours
+  define("API_PCOMMENTS_BY_UID_TTL", 60); //1 hours
 
  /**
   * IMAGE EXTENSIONS
