@@ -1,0 +1,4 @@
+<td style='border: 1px solid #000' id='f_<?php echo $flag['id'] ?>'>Gallery comment (on <a target='_blank' href='/galleries/view/<?php echo $gallery['Gallery']['id'] ?>'><?php echo $gallery['Gallery']['name'] ?></a>) removed because it was flagged by an admin.
+<blockquote>Content: <?php echo $flag['flagged_content'] ?></blockquote>
+
+</td>

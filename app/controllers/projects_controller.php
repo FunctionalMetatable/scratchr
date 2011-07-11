@@ -1,7 +1,7 @@
 <?php
 class ProjectsController extends AppController {
 
-    var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject', 'AnonViewStat', 'ExperimentalUser');
+    var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject', 'AnonViewStat', 'ExperimentalUser', 'Integraflag');
     var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
     var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination', 'Util');
 
@@ -482,6 +482,14 @@ class ProjectsController extends AppController {
                 $this->Pcomment->deleteCommentsFromMemcache($pid);
 				$subject= "Comment deleted because it was flagged by creator of '$pname'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $project_creater_url";
+			    $flag_data = array(
+			        'type' => 'cflag_by_creator',
+			        'flagged_id' => $creator_id,
+			        'flagged_content' => $content,
+			        'project_id' => $pid,
+			        'flagger_ids' => $user_id
+			        );
+			    $this->Integraflag->save($flag_data);
 			}
 			else if($isCM)
 			{
@@ -492,6 +500,14 @@ class ProjectsController extends AppController {
 				$subject = "Project comment deleted because it was flagged by a community moderator ($flaggername)";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by a community moderator:\n$content\n$project_creater_url";
 				$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT, $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
+			    $flag_data = array(
+			        'type' => 'cflag_by_cm',
+			        'flagged_id' => $creator_id,
+			        'flagged_content' => $content,
+			        'project_id' => $pid,
+			        'flagger_ids' => $user_id
+			        );
+			    $this->Integraflag->save($flag_data);
 			}
 			elseif ($isAdmin) {
 			    //delete all similar comments
@@ -510,8 +526,8 @@ class ProjectsController extends AppController {
                         //send mail
 						$creator_id = $pcontent['Pcomment']['user_id'];
 						$creatorname = $pcontent['User']['username'];
-                                                $creatorname_href = TOPLEVEL_URL.'/users/'.$creator['User']['username'];
-                                                $linked_creatorname = "<a href='$creatorname_href'>".$creator['User']['username']."</a>"; 
+                        $creatorname_href = TOPLEVEL_URL.'/users/'.$creator['User']['username'];
+                        $linked_creatorname = "<a href='$creatorname_href'>".$creator['User']['username']."</a>"; 
 						$content = $pcontent['Pcomment']['content'];
 						$pid = $pcontent['Project']['id'];
 
@@ -523,7 +539,16 @@ class ProjectsController extends AppController {
 						$subject= "Comment deleted because it was flagged by an admin";
                         $msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
 						$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
-
+                        
+                        $flag_data = array(
+                            'type' => 'cflag_by_admin',
+                            'flagged_id' => $creator_id,
+                            'flagged_content' => $content,
+                            'project_id' => $pid,
+                            'flagger_ids' => $user_id
+                            );
+                        $this->Integraflag->save($flag_data);
+                        
 						//notify
 						$this->notify('pcomment_removed', $creator_id,
                                         array('project_id' => $pid,
@@ -538,6 +563,16 @@ class ProjectsController extends AppController {
                     $subject= "Comment deleted because it was flagged by an admin";
                     $msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $project_creater_url";
 					$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
+                    
+                    $flag_data = array(
+                        'type' => 'cflag_by_admin',
+                        'flagged_id' => $creator_id,
+                        'flagged_content' => $content,
+                        'project_id' => $pid,
+                        'flagger_ids' => $user_id
+                        );
+                    $this->Integraflag->save($flag_data);
+                    
                     $this->notify('pcomment_removed', $creator_id,
                                     array('project_id' => $pid,
                                         'project_owner_name' => $project_creator),
@@ -552,7 +587,11 @@ class ProjectsController extends AppController {
 					$user_href = TOPLEVEL_URL.'/users/'.$flagger['User']['username'];
 					$flaggernames[] = sprintf('<a href ="%s">%s</a>', $user_href,
                                                 $flagger['User']['username']);
+                    $flagger_ids[] = $flagger['User']['id'];
 				}
+				
+				$flagger_ids = implode(',', $flagger_ids);
+				
                 $flaggernames = implode(', ', $flaggernames);
 				
 				$this->Pcomment->saveField("comment_visibility", "censbycomm") ;
@@ -562,6 +601,14 @@ class ProjectsController extends AppController {
 				$subject = "Attention: more than $max_count users have flagged $linked_creatorname's comment on '$pname'";
 				$msg = "Users  $flaggernames have flagged this comment by  $linked_creatorname :\n$content\n $project_creater_url";
 				$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
+			    $flag_data = array(
+                    'type' => 'cflag_by_multiuser',
+                    'flagged_id' => $creator_id,
+                    'flagged_content' => $content,
+                    'project_id' => $pid,
+                    'flagger_ids' => $flagger_ids
+                    );
+                $this->Integraflag->save($flag_data);
 			}
 		}
 		$final_comments = Array();
@@ -929,10 +976,19 @@ class ProjectsController extends AppController {
 				$linked_flaggername ="<a href ='$user_href'>";
 				$linked_flaggername .= $flaggername . "</a>";
 				$project_url =TOPLEVEL_URL.'/projects/'.$creatorname.'/'.$pid;
+				
 				$msg = "user $linked_flaggername ($user_id) just flagged $project_url \n Reason: \n " . $msgin;			
-
-			
 				$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, FROM_FLAGGED_PROJECT);
+				
+				$flag_data = array(
+                    'type' => 'pflag_by_user',
+                    'flagged_id' => $puid,
+                    'flag_message' => $msgin,
+                    'project_id' => $pid,
+                    'flagger_ids' => $user_id
+                    );
+                $this->Integraflag->save($flag_data);
+				
 				$this->Flagger->save($this->data);
 				$prev_flaggers_count = (int)$project['Project']['flagit'];
 
@@ -957,12 +1013,24 @@ class ProjectsController extends AppController {
 						$msg = "Project *automatically censored* because it reached the maximum number of flags.\n";
 						$msg .= "user $linked_flaggername ($user_id) just flagged $project_url";
 						$subject= "Project '$pname' censored";
+						$flag_type = 'pcensor_by_multiuser';
 						
 						if($isCM && $cmcensor)
 						{
 							$subject = "Project '$pname' censored by community moderator, $flaggername";
 							$msg = "Project censored\n$linked_flaggername ($user_id) just flagged $project_url";
+							$flag_type = 'pcensor_by_cm';
 						}
+						
+						
+						$flag_data = array(
+                            'type' => $flag_type,
+                            'flagged_id' => $puid,
+                            'project_id' => $pid,
+                            'flagger_ids' => $user_id
+                            );
+                        $this->Integraflag->save($flag_data);
+						
 						
 						$this->Email->email(REPLY_TO_FLAGGED_PROJECT,  'Scratch Website', $msg, $subject, TO_FLAGGED_PROJECT, FROM_FLAGGED_PROJECT);
 						

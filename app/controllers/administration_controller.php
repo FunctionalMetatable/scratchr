@@ -5,7 +5,7 @@
     var $uses = array('AdminTag', 'KarmaSetting', 'KarmaRating', 'KarmaEvent', 'KarmaRank', 'Mgcomment', 'RemixedProject', 'GalleryMembership', 
 	'BlockedUser', 'ViewStat', 'Gcomment', 'BlockedIp', 'ProjectFlag', 'GalleryFlag', 'Announcement', 'AdminComment', 'Apcomment', 'Mpcomment', 'Project', 
 	'FeaturedGallery', 'ClubbedGallery', 'Pcomment', 'User', 'Gallery', 'Tag', 'Flagger', 'Downloader', 'Favorite', 'Lover', 'Notification',
-	'Permission','PermissionUser', 'BlockedUserFrontpage','WhitelistedIpAddress');
+	'Permission','PermissionUser', 'BlockedUserFrontpage','WhitelistedIpAddress', 'Integraflag');
     var $components = array('RequestHandler','Pagination', 'Email');
     var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination', 'Template');
 
@@ -16,7 +16,7 @@
    function beforeFilter() {
 		$user_id = $this->getLoggedInUserID();
 		$users_permission =$this->isAnyPermission();
-		$allowed =array('ban_user','add_banned_user','render_banned_users','remove_banned_user','set_banned_users','ban_ip','expand_ip','render_ips','add_ban_ip','remove_ban_ip','index');
+		$allowed =array('ban_user','add_banned_user','render_banned_users','remove_banned_user','set_banned_users','ban_ip','expand_ip','render_ips','add_ban_ip','remove_ban_ip','index', 'integraflag');
 		if (($this->isAdmin() || isset($users_permission['block_IP']) || isset($users_permission['block_account'])))
 		{}
 		else
@@ -859,7 +859,7 @@
 			$this->Pagination->ajaxAutoDetect = false;
 			list($order, $limit, $page) = $this->Pagination->init(null, null, $options,
 													$count);
-			$notifications = $this->Notification->getNotifications($user_id, $page, $limit, true);
+			$notifications = $this->Notification->getNotifications($user_id, $page, $limit, true, true);
 			$username = $user['User']['username'];
 			$this->set('username', $username);
 			$this->set('data', $notifications);
@@ -1683,6 +1683,17 @@
 	
 	/**
 	* Updates Announcements
+
+
+
+
+
+
+
+
+
+
+
 	**/
 	function update_announcements() {
 		$this->autoRender = false;
@@ -1948,6 +1959,7 @@
 		
 		$final_ips = Array();
 		foreach ($results as $ip) {
+
 			$temp_ip = $ip;
 			$old_ip = $ip['BlockedIp']['ip'];
 			$new_ip = long2ip($ip['BlockedIp']['ip']);
@@ -2447,6 +2459,7 @@
 			if (empty($tag_record)) {
 				$tag_info = 
 					Array('Tag' => Array('id' => null, 'name' => $tag_name));
+
 				$this->Tag->save($tag_info, false);
 				$tag_record_id =  $this->Tag->getLastInsertID();
 			} else {
@@ -2701,6 +2714,7 @@
 		}
 		
 		$this->set('rank', $karma_rank);
+
 		$this->render('rank_permissions_ajax', 'ajax');
 	}
 	
@@ -2863,5 +2877,316 @@
         }
         die($response);
     }
+
+	/* 
+	* Integraflag - TM
+	*/
+	
+	function integraflag($status='open')
+	{
+	    if($status == 'search')
+	    {
+	        // Search pagination
+	        $this->modelClass = 'Integraflag';
+	        $this->Pagination->show = 50;
+	        $this->Pagination->direction = 'DESC';
+	        $field = addslashes($_GET['field']);
+	        $search = addslashes($_GET['q']);
+	        
+	        // Translate search usernames into IDs
+	        if(in_array($field, array('flagger_ids', 'flagged_id', 'handled_by'))) {
+	            $u = $this->User->find(array('username' => $search));
+	            $search = $u['User']['id'];
+	        }
+	        
+	        if($field == 'project_id') {
+	            $parts = explode('/', $search);
+	            $search = $parts[count($parts)-1];
+	        }
+	        if($field == 'gallery_id') {
+	            $parts = explode('/', $search);
+	            $search = $parts[count($parts)-1];
+	        }
+	        
+	        // Fuzzy action field
+	        if($field == 'action') {
+	            switch(strtolower($search)) {
+	                case 'bc1':
+	                    $search = 'Bad_Comment_1'; break;
+	                case 'bc2':
+	                    $search = 'Bad_Comment_2'; break;
+	                case 'con':
+	                case 'cons':
+	                    $search = 'Be_Constructive'; break;
+	                case 'res':
+	                case 'reslang':
+	                    $search = 'Be_Respectful_Language'; break;
+	                case 'bfg':
+	                case 'bad flag':
+	                    $search = 'Bad_Flagging'; break;
+	                case 'rxg':
+	                case 'remixing good':
+	                case 'remix good':
+	                    $search = 'Remix_Good'; break;
+	                case 'atk':
+	                case 'attack':
+	                case 'attack projects':
+	                    $search = 'Attack_Projects'; break;
+	                case 'rdc':
+	                case 'remix don\'t copy':
+	                    $search = 'Remix_Dont_Copy'; break;
+	                default:
+	                    break;
+	            }
+	        }
+	        
+	        $query = "LIKE '%$search%'"; // use fuzzy results for most fields
+	        if($field == 'project_id' || $field == 'gallery_id' || $field == 'flagged_id' || $field == 'handled_by') {
+	            $query = "= '$search'"; // use exact results for ID fields
+	        }
+	        
+	        list($order, $limit, $page) = $this->Pagination->init("Integraflag.{$field} {$query}", array());
+	        $flags = $this->Integraflag->findall("Integraflag.{$field} {$query}", null, $order, $limit, $page);
+	    }
+		else if($status == 'closed')
+		{
+		    // Pagination for closed flags
+			$this->modelClass = "Integraflag";
+			$this->Pagination->show = 50;
+			$this->Pagination->direction = 'DESC';
+			list($order,$limit,$page) = $this->Pagination->init("Integraflag.status='closed'", array());
+			$flags = $this->Integraflag->findAll("Integraflag.status='closed'", null, $order, $limit, $page);
+		}
+		else
+		{
+			$flags = $this->Integraflag->findAllByStatus($status, array(), array('Integraflag.created' => 'ASC'));
+		}
+		$flag_data = array();
+		
+		$notification_types = $this->Notification->NotificationType->find('all', array('conditions' => array('is_admin' => 1)));
+		$this->set('notification_types', $notification_types);
+		
+		foreach($flags as $flag)
+		{
+			$flag = $flag['Integraflag'];
+			$flagged = $this->User->find('id='.$flag['flagged_id']);
+			$flaggers_cs = explode(",", $flag['flagger_ids']);
+			$flaggers = array();
+			foreach($flaggers_cs as $flagger_cs)
+			{
+				$flaggers[] = $this->User->find('id=' . $flagger_cs);
+			}
+			$project = $this->Project->find("Project.id = '$flag[project_id]'");
+			$gallery = $this->Gallery->find("Gallery.id = '$flag[gallery_id]'");
+			$handler = $this->User->find('id='.$flag['handled_by']);
+			
+			$count = $this->Notification->countAllNotification($flag['flagged_id']);
+			$time_period = (60*60*24)*60;
+			$rcount = $this->Notification->countRecentAdmin($flag['flagged_id'], time()-$time_period);
+			
+			// Render the action field based on flag type.
+			switch($flag['type'])
+			{
+				case 'cflag_by_admin':
+				case 'cflag_by_cm':
+				case 'cflag_by_creator':
+				case 'cflag_by_multiuser':
+				case 'gc_by_admin':
+				case 'gc_by_cm':
+				case 'gc_by_creator':
+				case 'gc_by_multiuser':
+					$render = "comment_action";
+					$ban_reason = "This account has been blocked for posting inappropriate comments.  Please see the Scratch Terms of Use at the bottom of each page.";
+					break;
+				case 'pcensor_by_cm':
+				case 'pcensor_by_multiuser':
+				case 'pflag_by_user':
+					$render = "project_action";
+					$ban_reason = "This account has been blocked for sharing inappropriate projects.  Please see the Scratch Terms of Use at the bottom of each page.";
+					break;
+				default:
+					$render = "comment_action";
+					$ban_reason = "This account has been blocked for posting inappropriate comments.  Please see the Scratch Terms of Use at the bottom of each page.";
+					break;
+			}
+				
+			$flag_data[] = array('flag' => $flag,
+					'flagged' => $flagged,
+					'flaggers' => $flaggers,
+					'project' => $project,
+					'gallery' => $gallery,
+					'count' => $count,
+					'rcount' => $rcount,
+					'ban_reason' => urlencode($ban_reason),
+					'render' => $render,
+					'handler' => $handler);
+		}
+		$this->set('flag_data', $flag_data);
+		$this->set('status', $status);
+		$this->render('integraflag');
+	}
+	
+	// AJAX notifications fetch
+	function integraflag_notes()
+	{
+		$user_id = $_GET['user_id'];
+		$this->set('user_id', $user_id);
+		$user_record = $this->User->find("id = $user_id");
+
+        $username = $user_record['User']['username'];
+        $this->set('username', $username);
+		
+		$i = 0;
+		$options = array( 'show'=> 30  );
+		$this->Pagination->ajaxAutoDetect = false;
+		list($order, $limit, $page) = $this->Pagination->init(null, null, $options,
+												$this->Notification->countAllNotification($user_id));
+		$inappropriate_notifications = array();
+		$notifications = $this->Notification->getInappropriateNotifications_acp($user_id, $page, $limit);
+		
+		foreach($notifications as $notification) {
+			$inappropriate_notifications[$i++]['0'] = array_merge($notification['Notification'], $notification['NotificationType'], $notification['0']);
+		}
+		
+		$this->set('inappropriate_notifications', $inappropriate_notifications);
+		
+		$this->render('integraflag_notifications', 'ajax');
+	}
+	
+	// AJAX comments fetch
+	function integraflag_comments()
+	{
+		$user_id = $_GET['user_id'];
+		$this->set('user_id', $user_id);
+		$user_record = $this->User->find('id = $user_id');
+		$username = $user_record['User']['username'];
+		$this->set('username', $username);
+		
+		$this->modelClass = "Pcomment";
+		$options = Array("sortBy"=>"timestamp", "sortByClass" => "Pcomment", "direction"=> "DESC", 'show'=>50);
+		list($order,$limit,$page) = $this->Pagination->init("Pcomment.user_id = $user_id AND Pcomment.comment_visibility = 'visible'", Array(), $options);
+		$pdt = $this->Pcomment->findAll("Pcomment.user_id = $user_id AND Pcomment.comment_visibility = 'visible'", null, $order, $limit, $page);
+		$pdata = array(); $counter = 0;
+		
+		foreach ($pdt as $pcomment) {
+			$temp_comment = $pcomment;
+			$temp_user_id = $pcomment['Project']['user_id'];
+			$temp_user = $this->User->find("User.id = $temp_user_id");
+			$temp_user_name = $temp_user['User']['username'];
+			$temp_comment['Project']['username'] = $temp_user_name;
+			$pdata[$counter] = $temp_comment;
+			$counter++;
+		}
+		
+		$this->modelClass = "Gcomment";
+		$options = Array("sortBy"=>"timestamp", "sortByClass" => "Gcomment",  "direction"=> "DESC", 'show'=>50);
+		list($order, $limit,$page) = $this->Pagination->init("Gcomment.user_id = $user_id AND Gcomment.comment_visibility = 'visible'", Array(), $options);
+		$gdata = $this->Gcomment->findAll("Gcomment.user_id = $user_id AND Gcomment.comment_visibility = 'visible'", null, $order, $limit, $page);
+		
+		$merged_arrays = array_merge($pdata, $gdata);
+		
+		function sorter($a, $b) {
+			$atime = (isset($a['Pcomment']['created'])) ? strtotime($a['Pcomment']['created']) : strtotime($a['Gcomment']['created']);
+			$btime = (isset($b['Pcomment']['created'])) ? strtotime($b['Pcomment']['created']) : strtotime($b['Gcomment']['created']);
+			return ($atime > $btime) ? -1 : 1;
+		}
+		
+		usort($merged_arrays, sorter);
+		
+		$final_comments = array_slice($merged_arrays, 0, 50);
+		
+		$this->set('final_comments', $final_comments);
+		
+		$this->render('integraflag_comments', 'ajax');
+	}
+	
+	// AJAX IP info
+	
+	function integraflag_ip()
+	{
+		$this->autoRender = false;
+		$this->User->id = $_GET['user_id'];
+		$user = $this->User->read();
+		$stats = $this->ViewStat->findIps($_GET['user_id']);
+		$this->set('user', $user);
+		$this->set('status', $user['User']['status']);
+        $this->set('data', $stats);
+        $this->render('ip_info', 'ajax');
+	}
+	
+	// AJAX status-marking
+	
+	function integraflag_mark()
+	{
+		$id = $_GET['flag_id'];
+		$status = $_GET['status'];
+		$this->Integraflag->id = $id;
+		$this->Integraflag->saveField('handled_by', $this->getLoggedInUserID());
+		$this->Integraflag->saveField('status', $status);
+		die();
+	}
+	
+	// AJAX notification-sending
+	
+	function integraflag_send_note()
+	{
+	    // Check for an old notification
+	    $this->Integraflag->id = $_GET['flag_id'];
+		$onotification = $this->Integraflag->field('notification_id');
+		
+		if($onotification > 0) // remove it
+		{
+		    $this->Notification->id = $onotification; 
+            $this->Notification->delete($onotification); 
+            $this->Notification->clear_memcached_notifications($_GET['user_id']);
+		}
+		
+		// Check for the same action -- a clear
+		if($this->Integraflag->field('action') == $_GET['message_name'])
+		{
+            $this->Integraflag->saveField('handled_by', $this->getLoggedInUserID());
+		    $this->Integraflag->saveField('action', ''); // Clear the action
+		    $this->Integraflag->saveField('notification_id', 0); 
+		    // All done - the notification is deleted.
+		    die("unselect");
+		}
+		
+		// Send the new notification
+		$this->Notification->addNotification($_GET['message_name'], $_GET['user_id'], array(), array());
+
+		$notification_id = $this->Notification->id;
+		
+		// Update the status
+		$this->Integraflag->saveField('handled_by', $this->getLoggedInUserID());
+		$this->Integraflag->saveField('action', $_GET['message_name']);
+		$this->Integraflag->saveField('status', 'closed');
+		$this->Integraflag->saveField('notification_id', $notification_id);
+		
+		die("success");
+	}
+	
+	function integraflag_adminnotes()
+	{
+	    $this->autoRender = false;
+		$this->Integraflag->id = $_GET['flag_id'];
+        $flag = $this->Integraflag->read();
+        $this->set('flag', $flag['Integraflag']);
+        $this->render('/elements/admin/integraflag/admin_notes', 'ajax');
+	}
+
+    function integraflag_savenote()
+    {
+        $this->Integraflag->id = $_GET['flag_id'];
+        $text = addslashes($_POST['notes']);
+        $notes = array();
+        $notes = @unserialize($this->Integraflag->field('notes'));
+        $notes[] = array('time' => time(), 'text' => $text, 'admin' => $this->getLoggedInUsername());
+        $this->Integraflag->saveField('notes', serialize($notes));
+        die("success");
+    }
+	
+	/* 
+	* End Integraflag
+	*/
 }
 ?>
