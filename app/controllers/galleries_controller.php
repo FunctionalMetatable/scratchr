@@ -2,7 +2,7 @@
 Class GalleriesController extends AppController {
 
 	var $name = "Gallery";
-    var $uses = array("ClubbedGallery", "IgnoredUser", "GalleryFlag", "Mgcomment", "Tag", "GalleryTag", "TagFlag", "Project", "ClubbedGallery", "FeaturedGallery", "GalleryProject", "Gallery", "GalleryMembership","Gcomment","User","RelationshipType","Relationship","GalleryRequest", "Relationship", "Notification", "FeaturedProject"); //apparently order matters for associative finds
+    var $uses = array("ClubbedGallery", "IgnoredUser", "GalleryFlag", "Mgcomment", "Tag", "GalleryTag", "TagFlag", "Project", "ClubbedGallery", "FeaturedGallery", "GalleryProject", "Gallery", "GalleryMembership","Gcomment","User","RelationshipType","Relationship","GalleryRequest", "Relationship", "Notification", "FeaturedProject", "Integraflag"); //apparently order matters for associative finds
     var $helpers = array('PaginationSecondary', 'Pagination','Ajax','Javascript', 'Util');
     var $components = array('PaginationSecondary', 'Email',  'Pagination', 'RequestHandler', 'FileUploader');
 
@@ -2251,14 +2251,24 @@ Class GalleriesController extends AppController {
 		$inappropriate_count = $this->Mgcomment->findCount("comment_id = $comment_id");
 		$gallery_creater_url =TOPLEVEL_URL.'/galleries/view/'.$gallery_id;
 		if ($inappropriate_count > $max_count || $isMine || $isAdmin || $isCM) {
-			// Only do the deletion when it's the owner of the project flagging it
-			if ($isMine) {
+			if ($isMine)
+			{
 				$this->hide_gcomment($comment_id, "delbyusr");
 				$this->__deleteChildrenComments($gallery_id, $comment_id, 'parentcommentcensored', true);
                 $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
 				$subject= "Comment deleted because it was flagged by creator of '$gallery_name'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $gallery_creater_url";
-			} else if ($isCM)
+				$flag_data = array(
+                    'type' => 'gc_by_creator',
+                    'flagged_id' => $creator_id,
+                    'flagged_content' => $content,
+                    'gallery_id' => $gallery_id,
+                    'flagger_ids' => $user_id
+                    );
+                $this->Integraflag->save($flag_data);
+			
+			}
+			else if ($isCM)
 			{
 			  		$this->hide_gcomment($comment_id, "delbyusr");
 					$this->__deleteChildrenComments($gallery_id, $comment_id, 'parentcommentcensored', true);
@@ -2269,8 +2279,17 @@ Class GalleriesController extends AppController {
 								array('gallery_id' => $gallery_id),
 								array($content)
 							);
+					$flag_data = array(
+                        'type' => 'gc_by_cm',
+                        'flagged_id' => $creator_id,
+                        'flagged_content' => $content,
+                        'gallery_id' => $gallery_id,
+                        'flagger_ids' => $user_id
+                        );
+                    $this->Integraflag->save($flag_data);
 			}
-			else if ($isAdmin) {
+			else if ($isAdmin)
+			{
 				if($isdeleteAll)
 				{
 					$all_content = $this->Gcomment->findAll(array('content'=>$comment['Gcomment']['content']));
@@ -2284,7 +2303,15 @@ Class GalleriesController extends AppController {
                         $this->Gcomment->deleteCommentsFromMemcache($gcontent['Gcomment']['gallery_id']);
                         $subject= "Comment deleted because it was flagged by an admin";
                         $msg = "Comment by '$linked_creatorname' deleted because it was flagged by an admin:\n$content\n $gallery_creater_url";
-                        $this->notify('gcomment_removed', $creator_id,
+                        $flag_data = array(
+	                        'type' => 'gc_by_admin',
+	                        'flagged_id' => $creator_id,
+	                        'flagged_content' => $content,
+	                        'gallery_id' => $gallery_id,
+	                        'flagger_ids' => $user_id
+	                        );
+	                    $this->Integraflag->save($flag_data);
+						$this->notify('gcomment_removed', $creator_id,
                                     array('gallery_id' => $gallery_id),
                                     array($content)
                                 );
@@ -2302,19 +2329,32 @@ Class GalleriesController extends AppController {
 								array('gallery_id' => $gallery_id),
 								array($content)
 							);
+					
+					$flag_data = array(
+                        'type' => 'gc_by_admin',
+                        'flagged_id' => $creator_id,
+                        'flagged_content' => $content,
+                        'gallery_id' => $gallery_id,
+                        'flagger_ids' => $user_id
+                        );
+                    $this->Integraflag->save($flag_data);
+					
 				}			
 			}
-			if ($inappropriate_count > $max_count) {
+			if ($inappropriate_count > $max_count)
+			{
 				$this->Mgcomment->bindUser();
 				$linked_stringwflaggernames = "";
 				$allflaggers = $this->Mgcomment->findAll("comment_id = $comment_id");
 				$flaggernames = array();
-				foreach ($allflaggers as $flagger) {
+				foreach ($allflaggers as $flagger)
+				{
 					$user_href =TOPLEVEL_URL.'/users/'.$flagger['User']['username'];
 					$flaggernames[] = sprintf('<a href ="%s">%s</a>', $user_href,
                                                 $flagger['User']['username']);
-					
+					$flagger_ids[] = $flagger['User']['id'];
 				}
+				$flagger_ids = implode(',', $flagger_ids);
 				$flaggernames = implode(', ', $flaggernames);
 				
 				$this->hide_gcomment($comment_id, "censbycomm");
@@ -2323,6 +2363,15 @@ Class GalleriesController extends AppController {
 					
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on the gallery: '$gallery_name'";
 				$msg = "Users  $flaggernames have flagged this comment by  $linked_creatorname :\n$content\n $gallery_creater_url";
+				
+				$flag_data = array(
+                    'type' => 'gc_by_multiuser',
+                    'flagged_id' => $creator_id,
+                    'flagged_content' => $content,
+                    'gallery_id' => $gallery_id,
+                    'flagger_ids' => $flagger_ids
+                    );
+                $this->Integraflag->save($flag_data);
 				
 			}
 			

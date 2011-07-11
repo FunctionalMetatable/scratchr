@@ -10,8 +10,9 @@
 	<a href="<?php echo $html->url('/administration/set_announcements')?>"> Announcements </a> | 
 	<a href="<?php echo $html->url('/administration/search')?>"> Search </a> |
 <!--	<a href="<?php echo $html->url('/administration/search_ip')?>"> Search IP </a> | -->
-	<a href="<?php echo $html->url('/administration/predefined_tags')?>"> Admin Tags </a> 
+	<a href="<?php echo $html->url('/administration/predefined_tags')?>"> Admin Tags </a> | 
 	<!-- | <a href="<?php echo $html->url('/administration/add_budge')?>"> Add Budge </a> //-->
-	</h5>
+    <a href="<?php echo $html->url('/administration/integraflag') ?>">Integraflag</a>	
+    </h5>
 </div>
 <?php endif;?>

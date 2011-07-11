@@ -1,0 +1,43 @@
+<div><h2>See more comments 
+(<a target='_blank' href='/administration/viewuser/<?php echo $user_id ?>'>project</a> | 
+<a target='_blank' href='/administration/viewuser/<?php echo $user_id ?>/gcomments'>gallery</a>)</h2>
+</a></div>
+
+<?php foreach($final_comments as $comment): ?>
+<?php
+	if(isset($comment['Gcomment']))
+	{
+		$type = 'g';
+		$user = $comment['User'];
+		$gallery = $comment['Gallery'];
+		$comment = $comment['Gcomment'];
+		$bg = '#fff';
+	}
+	else
+	{
+		$type ='p';
+		$user = $comment['User'];
+		$project = $comment['Project'];
+		$comment = $comment['Pcomment'];
+		$bg = '#ccf';
+	}
+	$id = $notification['id'];
+?>
+<div style='background: <?php echo $bg ?>' id='c_<?php echo $comment['id']?>'>
+		<?php echo $comment['content']; ?>
+		<div style="text-align:right; border-bottom: 1px solid #000">
+			<small>
+				<?php 
+				echo $comment['created'];
+				if($type == 'g') 
+				{
+					echo " | <a target='_blank' href='/galleries/view/$gallery[id]'>$gallery[name]</a>";
+				} else {
+					echo " | <a target='_blank' href='/projects/$project[username]/$project[id]'>$project[name]</a>";
+				}
+				echo " | <a href='javascript:deleteComment($user[id], $comment[id], \"{$type}comment\")'>[X]</a>";
+				?>
+			</small>
+		</div>
+ </div>  
+<?php endforeach; ?>

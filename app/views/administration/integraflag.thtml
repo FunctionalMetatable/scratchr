@@ -1,0 +1,237 @@
+<?php
+	e($this->renderElement('admin/admin_index', Array()));
+?>
+
+<script type='text/javascript'>
+old = {}
+function fetchNotes(row_id, user_id)
+{
+	collapseInsert(row_id)
+	new Ajax.Request('/administration/integraflag_notes/?user_id=' + user_id, {
+		method: 'get',
+	  	onSuccess: function(transport) {
+			// this is deprecated, but because we're using old prototype on production... -TM
+			new Insertion.After('r_' + row_id, '<tr id="insert_' + row_id + '"> \
+				<td colspan="3"> \
+				<div style="float:right"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
+				 + transport.responseText + '</td></tr>')
+	  	}
+	});
+}
+
+function fetchComments(row_id, user_id)
+{
+	collapseInsert(row_id)
+	new Ajax.Request('/administration/integraflag_comments/?user_id=' + user_id, {
+		method: 'get',
+		onSuccess: function(transport) {
+			new Insertion.After('r_' + row_id, '<tr id="insert_' + row_id + '"> \
+				<td colspan="3"> \
+				<div style="float:right"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
+				 + transport.responseText + '</td></tr>')
+		}
+	});
+}
+
+function fetchIP(row_id, user_id)
+{
+	collapseInsert(row_id)
+	new Ajax.Request('/administration/integraflag_ip/?user_id=' + user_id, {
+		method: 'get',
+		onSuccess: function(transport) {
+			// rather hackish - make IP links target=_blank
+			ip_info = transport.responseText.replace(/\<a/g, '<a target="_blank"')
+			
+			new Insertion.After('r_' + row_id, '<tr id="insert_' + row_id + '"> \
+				<td colspan="3"> \
+				<div style="float:right"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
+				 + ip_info + '</td></tr>')
+		}
+	});
+}
+
+// Functions for IP tools - stripped by AJAX
+function update_resolve(update_field, ip)
+{ 
+    new Ajax.Request('/administration/resolve_ip/' + ip, {
+      method: 'get',
+      onSuccess: function(transport) {
+        $(update_field).innerHTML = transport.responseText;
+      }
+    });
+}
+
+function update_proxy(update_field, ip)
+{
+    new Ajax.Request('/administration/proxy_ping/' + ip, {
+      method: 'get',
+      onSuccess: function(transport) {
+        $(update_field).innerHTML = transport.responseText;
+      }
+    });
+}
+
+function collapseInsert(row_id)
+{
+	if($('insert_' + row_id))
+		$('insert_' + row_id).remove()
+}
+
+function deleteComment(user_id, comment_id, type) {
+	new Ajax.Request('/administration/delete_comment_ajax/' + user_id + '/' + comment_id + '/' + type,
+	{
+		method: 'get',
+		onSuccess: function(transport) {
+			$('c_' + comment_id).remove()
+		}
+	});
+}
+
+function sendNote(user_id, message_name, flag_id, element)
+{
+	new Ajax.Request('/administration/integraflag_send_note/?flag_id=' + flag_id + 
+					'&user_id=' + user_id + '&message_name='+ message_name, {
+	  method: 'get',
+	  onSuccess: function(transport) {
+	    if(transport.responseText.strip() == 'success')
+	    {
+	    	color(element, flag_id, true)
+	    }
+	    else
+	    {
+	        color(element, flag_id, false)
+	    }
+		collapseInsert(flag_id)
+	  }
+	});
+}
+
+function color(element, flag_id, highlight)
+{
+	$('r_' + flag_id).setStyle({backgroundColor: '#7F6'})
+    $$('#r_' + flag_id + ' input.button2_selected').each(function(b) {
+        b.removeClassName('button2_selected'); 
+        b.addClassName('button2');
+    })
+    if(highlight)
+    {
+        element.removeClassName('button2')
+        element.addClassName('button2_selected')
+    }
+}
+
+function mark(flag_id, status)
+{
+	new Ajax.Request('/administration/integraflag_mark/?flag_id=' + flag_id + '&status=' + status, {
+	  method: 'get',
+	  onSuccess: function(transport) {
+		collapseInsert(flag_id)
+		if(status == 'closed')
+    		$('r_' + flag_id).setStyle({backgroundColor: '#7F6'})
+    	else
+    	    $('r_' + flag_id).setStyle({backgroundColor: '#FF5'})
+	  }
+	});
+}
+
+function fetchAdminNotes(row_id)
+{
+	collapseInsert(row_id)
+	new Ajax.Request('/administration/integraflag_adminnotes/?flag_id=' + row_id, {
+		method: 'get',
+		onSuccess: function(transport) {
+			new Insertion.After('r_' + row_id, '<tr id="insert_' + row_id + '"> \
+				<td colspan="3" style="padding-left: 5px"> \
+				<div style="float:right"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
+				 + transport.responseText + '</td></tr>')
+		}
+	});
+	return false;
+} 
+
+function saveAdminNote(flag_id)
+{
+    $('fn_' + flag_id).disable()
+    new Ajax.Request('/administration/integraflag_savenote/?flag_id=' + flag_id, {
+        method: 'post',
+        parameters: 'notes=' + escape($('fn_' + flag_id).value),
+        onSuccess: function(transport) {
+            $('fn_' + flag_id).enable();
+            $('fw_' + flag_id).hide();
+            $('new_notes_' + flag_id).innerHTML += '<div>' + $('fn_' + flag_id).value + '<br /><div style="font-size: 10px; text-align:right; border-bottom: 1px solid #000">By you</div></div>';
+            $('fn_' + flag_id).value = '';
+            $('fetchnotes_' + flag_id).innerHTML = 'Notes:' + (parseInt($('fetchnotes_' + flag_id).innerHTML.substr(6))+1)
+        }
+    });
+}
+
+</script>
+
+<div class="fullcontent">
+	<div id="admin_project_header">
+	<h3>Integraflag - <?php echo $status ?> flags (<?php if($status != 'open'): ?><a href='/administration/integraflag'><?php endif; ?>open<?php if($status != 'open'): ?><a href='/administration/integraflag'></a><?php endif; ?> | 
+<?php if($status != 'review'): ?><a href='/administration/integraflag/review'><?php endif; ?>review<?php if($status != 'review'): ?></a> <?php endif; ?> | 
+<?php if($status != 'closed'): ?><a href='/administration/integraflag/closed'><?php endif; ?>closed<?php if($status != 'closed'): ?></a><?php endif; ?>) - 
+<a href='/administration/integraflag/search'>Search</a></h3>
+	</div>
+	<div id="admin_project_content">
+		<span>
+		<div>
+		<?php if($status == 'search') {
+		?>
+		<form action='/administration/integraflag/search/' method='get'>
+		<?php $s = array(); $s[$_GET['field']] = " selected='selected'"; ?>
+        Field: <select name='field'>
+            <option value='flagger_ids' <?php e($s['flagger_ids']); ?>>Flagger Username</option>
+            <option value='flagged_id' <?php e($s['flagged_id']); ?>>Flagged Username</option>
+            <option value='project_id' <?php e($s['project_id']); ?>>Project URL</option>
+            <option value='gallery_id' <?php e($s['gallery_id']); ?>>Gallery URL</option>
+            <option value='flag_message' <?php e($s['flag_message']); ?>>Flag Message</option>
+            <option value='flagged_content' <?php e($s['flagged_content']); ?>>Flagged Comment</option>
+            <option value='action' <?php e($s['action']); ?>>Notification Sent</option>
+            <option value='handled_by' <?php e($s['handled_by']); ?>>Admin handler</option>
+            <option value='notes' <?php e($s['notes']); ?>>Admin notes</option>
+        </select>		
+        Query: <input type='text' name='q' value='<?php e($_GET['q']); ?>' size='60' />
+		<input type='submit' value='Go!' />
+		</form>
+		
+		<?php
+        } ?>
+        </div>
+		<table style='border: 1px solid #000; border-collapse: collapse'>
+		<tr><td style='width:25%'>
+		<?php if($status == 'closed' || $status == 'search') {
+			$pagination->setPaging($paging);
+			echo str_replace('onclick=" event.returnValue = false; return false;"', '', $this->renderElement('pagination')); // temporary hack
+		} else { echo "&nbsp;"; } ?></td><td style='width:60%'></td><td style='width:15%'></td></tr>
+		<?php
+		if(count($flag_data) == 0)
+		    if($status == 'search')
+		        echo "<tr><td colspan='3'>No results.</td></tr>";
+		    else
+			    echo "<tr><td colspan='3'>No flags here.  Hooray!</td></tr>";
+		$i = 0;
+		foreach($flag_data as $fd)
+		{
+			echo "<tr" . (($fd['render'] == 'comment_action') ? ' style="background:#EEF"' : ' style="background:#FEE"') . " id='r_" . $fd['flag']['id'] . "'>";
+			e($this->renderElement("admin/integraflag/flag_user_data", $fd));
+			e($this->renderElement("admin/integraflag/" . $fd['flag']['type'], $fd));
+			e($this->renderElement("admin/integraflag/" . $fd['render'], $fd));
+			echo "</tr>";
+			
+		    $admin_notes = unserialize($fd['flag']['notes']) or array();
+		    if(!empty($admin_notes)) {
+		        e('<tr id="insert_' . $fd['flag']['id'] . '">' .
+				'<td colspan="3" style="padding-left:5px">' .
+				'<div style="float:right"><h2><a href="javascript:collapseInsert(' . $fd['flag']['id'] . ')">[X]</a></h2></div>' . 
+				 $this->renderElement("admin/integraflag/admin_notes", $fd) . '</td></tr>');
+		    }
+			
+			$i++;
+		}
+		?>
+		</table>
+		</span>
+    </div>
+</div>

@@ -1,0 +1,3 @@
+<td style='border: 1px solid #000' id='f_<?php echo $flag['id'] ?>'>Comment (on <a target='_blank' href='/projects/<?php echo $flagged['User']['username'] ?>/<?php echo $project['Project']['id'] ?>'><?php echo $project['Project']['name'] ?></a>) removed because it was flagged by the project creator.
+<blockquote>Content: <?php echo $flag['flagged_content'] ?></blockquote>
+</td>
