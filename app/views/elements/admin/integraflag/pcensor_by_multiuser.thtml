@@ -1,3 +1,23 @@
-<td style='border: 1px solid #000' id='f_<?php echo $flag['id'] ?>'>Project "<a target='_blank' href='/projects/<?php echo $flagged['User']['username'] ?>/<?php echo $project['Project']['id'] ?>'><?php echo $project['Project']['name'] ?></a>" (<?php echo $project['Project']['status'] ?>) censored because it was flagged by multiple users.
-<blockquote>Reason:  <?php echo $flag['flag_message'] ?></blockquote>
+<?php
+$status = $project['Project']['status'];
+switch($status) {
+    case 'notsafe': $abbrtitle = 'Not For Everyone'; $abbrcontent = 'NFE'; break;
+    case 'safe': $abbrtitle = 'For Everyone'; $abbrcontent = 'FE'; break;
+    default: $abbrtitle = 'Not Reviewed'; $abbrcontent = 'NR'; break;
+}
+?>
+
+<td class='flagbox' id='f_<?php echo $flag['id'] ?>'>
+    <span class='inflag'>
+    <a target='_blank' href='/projects/<?php echo $project['User']['urlname']; ?>/<?php echo $project['Project']['id'] ?>'>
+    <img src='/static/projects/<?php echo $project['User']['urlname']; ?>/<?php echo $project['Project']['id'] ?>_sm.png' style='float:left; margin-right: 5px'/>
+    </a>
+    <a target='_blank' href='/projects/<?php echo $project['User']['urlname']; ?>/<?php echo $project['Project']['id'] ?>'>
+        <?php echo $project['Project']['name'] ?></a> (<abbr title='<?php echo $abbrtitle; ?>'><?php echo $abbrcontent; ?></abbr>) censored - flagged by multiple users.
+        <?php e($this->renderElement('admin/integraflag/flagger_user_data', array('flag' => $flag, 'flaggers' => $flaggers))); ?>
+    <blockquote><strong>Reason:</strong>  <?php echo $flag['flag_message'] ?></blockquote>
+    <div style='float:right; font-size: 11px; margin-right: 10px'>
+        Last modified: <?php echo $project['Project']['modified']; ?>
+    </div>
+    </span>
 </td>
