@@ -1,5 +1,11 @@
-<td style='border: 1px solid #000' id='f_<?php echo $flag['id'] ?>'>Comment (on <a target='_blank' href='/projects/<?php echo $flagged['User']['username'] ?>/<?php echo $project['Project']['id'] ?>'><?php echo $project['Project']['name'] ?></a>) removed because it was flagged by an admin.
-
-<blockquote>Content: <?php echo $flag['flagged_content'] ?></blockquote>
-
+<td class='flagbox' id='f_<?php echo $flag['id'] ?>'>
+    <span class='inflag'>
+    Comment (on <a target='_blank' href='/projects/<?php echo $project['User']['urlname']; ?>/<?php echo $project['Project']['id'] ?>'>
+        <?php echo $project['Project']['name'] ?></a>) removed - flagged by an admin.
+    <?php e($this->renderElement('admin/integraflag/flagger_user_data', array('flag' => $flag, 'flaggers' => $flaggers))); ?>
+    <blockquote><?php echo $flag['flagged_content'] ?></blockquote>
+    <div style='float:right; font-size: 11px; margin-right: 10px'>
+        Posted: <?php echo $pcomment['Pcomment']['created']; ?>
+    </div>
+    </span>
 </td>

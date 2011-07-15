@@ -1694,6 +1694,7 @@
 
 
 
+
 	**/
 	function update_announcements() {
 		$this->autoRender = false;
@@ -2966,22 +2967,36 @@
 		$notification_types = $this->Notification->NotificationType->find('all', array('conditions' => array('is_admin' => 1)));
 		$this->set('notification_types', $notification_types);
 		
+		$time_period = (60*60*24)*60; // for last 60 days of admin notifications
+		
 		foreach($flags as $flag)
 		{
 			$flag = $flag['Integraflag'];
 			$flagged = $this->User->find('id='.$flag['flagged_id']);
 			$flaggers_cs = explode(",", $flag['flagger_ids']);
 			$flaggers = array();
+
 			foreach($flaggers_cs as $flagger_cs)
 			{
-				$flaggers[] = $this->User->find('id=' . $flagger_cs);
+				$flaggers_data = $this->User->find('id=' . $flagger_cs);
+		        $flaggers_data['rcount'] = $this->Notification->countRecentAdmin($flagger_cs, time()-$time_period);
+				$flaggers_data['count'] = $this->Notification->countAllNotification($flagger_cs);
+				$flaggers[] = $flaggers_data;
 			}
 			$project = $this->Project->find("Project.id = '$flag[project_id]'");
 			$gallery = $this->Gallery->find("Gallery.id = '$flag[gallery_id]'");
+			$cleancontent = addslashes($flag['flagged_content']);
+			$pcomment = $this->Pcomment->find("Pcomment.user_id='$flag[flagged_id]'
+			                                    AND Pcomment.project_id='$flag[project_id]'
+		                                        AND Pcomment.content='$cleancontent'
+			                                    ORDER BY Pcomment.created DESC");
+			$gcomment = $this->Gcomment->find("Gcomment.user_id='$flag[flagged_id]'
+			                                    AND Gcomment.gallery_id='$flag[gallery_id]'
+			                                    AND Gcomment.content='$cleancontent'
+			                                    ORDER BY Gcomment.created DESC");
 			$handler = $this->User->find('id='.$flag['handled_by']);
 			
 			$count = $this->Notification->countAllNotification($flag['flagged_id']);
-			$time_period = (60*60*24)*60;
 			$rcount = $this->Notification->countRecentAdmin($flag['flagged_id'], time()-$time_period);
 			
 			// Render the action field based on flag type.
@@ -3015,6 +3030,8 @@
 					'flaggers' => $flaggers,
 					'project' => $project,
 					'gallery' => $gallery,
+					'pcomment' => $pcomment,
+					'gcomment' => $gcomment,
 					'count' => $count,
 					'rcount' => $rcount,
 					'ban_reason' => urlencode($ban_reason),
@@ -3058,7 +3075,7 @@
 	{
 		$user_id = $_GET['user_id'];
 		$this->set('user_id', $user_id);
-		$user_record = $this->User->find('id = $user_id');
+		$user_record = $this->User->find("User.id = $user_id");
 		$username = $user_record['User']['username'];
 		$this->set('username', $username);
 		

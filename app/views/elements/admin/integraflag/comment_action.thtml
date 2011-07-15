@@ -22,14 +22,14 @@ if($flag['action'])
 <td style='border: 1px solid #000'>
 <input title="<?php echo(getTitle('Bad_Comment_1', $notification_types)) ?>" onclick='sendNote(<?php echo $flagged['User']['id'] ?>, "Bad_Comment_1", <?php echo $flag['id'] ?>, this);' type='button' class='<?php echo $class['Bad_Comment_1'] ?>' value='BC1' />
 <input title="<?php echo(getTitle('Bad_Comment_2', $notification_types)) ?>" onclick='sendNote(<?php echo $flagged['User']['id'] ?>, "Bad_Comment_2", <?php echo $flag['id'] ?>, this);' type='button' class='<?php echo $class['Bad_Comment_2'] ?>' value='BC2' />
-<input title="<?php echo(getTitle('Be_Constructive', $notification_types)) ?>" onclick='sendNote(<?php echo $flagged['User']['id'] ?>, "Be_Constructive", <?php echo $flag['id'] ?>, this);' type='button' class='<?php echo $class['Be_Constructive'] ?>' value='Con' />
+<br /><input title="<?php echo(getTitle('Be_Constructive', $notification_types)) ?>" onclick='sendNote(<?php echo $flagged['User']['id'] ?>, "Be_Constructive", <?php echo $flag['id'] ?>, this);' type='button' class='<?php echo $class['Be_Constructive'] ?>' value='Con' />
 <input title="<?php echo(getTitle('Be_Respectful_Language', $notification_types)) ?>" onclick='sendNote(<?php echo $flagged['User']['id'] ?>, "Be_Respectful_Language", <?php echo $flag['id'] ?>, this);' type='button' class='<?php echo $class['Be_Respectful_Language'] ?>' value='Res' />
-<?php if($flag['status'] != 'review'): ?>
-<input title="Mark flag for further review" onclick='mark(<?php echo $flag['id'] ?>, "review")' type='button' value='Review' />
+<br /><?php if($flag['status'] != 'review'): ?>
+<input title="Mark flag for further review" onclick='mark(<?php echo $flag['id'] ?>, "review")' type='button' value='Rev' id='rv_button_<?php echo $flag['id'] ?>' class='button2' style='background: #427D1D; background-image: url()' />
 <?php endif; if($flag['status'] != 'closed'): ?>
-<input title="Mark flag as closed/done" onclick='mark(<?php echo $flag['id'] ?>, "closed")' type='button' value='Close' />
+<input title="Mark flag as closed/done" onclick='mark(<?php echo $flag['id'] ?>, "closed")' type='button' value='Close' id='close_button_<?php echo $flag['id'] ?>' class='button2' style='background: #427D1D; background-image: url()' />
 <?php endif; ?>
-<a id='fetchnotes_<?php echo $flag['id'] ?>' onclick='fetchAdminNotes(<?php echo $flag['id'] ?>)'>Notes:<?php $n = @unserialize($flag['notes']); echo (empty($n)) ? 0 : count($n); ?></a>
+<br /><a id='fetchnotes_<?php echo $flag['id'] ?>' onclick='fetchAdminNotes(<?php echo $flag['id'] ?>)'>Notes:<?php $n = @unserialize($flag['notes']); echo (empty($n)) ? 0 : count($n); ?></a>
 <?php if($handler != null): ?>
 <br />~<?php echo $handler['User']['username'] ?>
 <?php endif; ?>

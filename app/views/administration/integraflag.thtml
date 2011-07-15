@@ -2,6 +2,48 @@
 	e($this->renderElement('admin/admin_index', Array()));
 ?>
 
+<style type='text/css'>
+    html {
+        overflow-y: scroll;
+    }
+    .flagbox {
+        border: 1px solid #000;
+        width: 60%;
+        font-size: 12px;
+    }
+    
+    .inflag {
+        word-wrap: break-word;
+        width: 100%;
+    }
+    
+    blockquote {
+        width: 405px;
+        word-wrap: break-word;
+    }
+    
+    abbr {
+        border-bottom: 1px dashed #000;
+    }
+    
+    .popout {
+        word-wrap: break-word;
+    }
+    
+    .popout div {
+        width: 735px;
+        word-wrap: break-word;
+    }
+    .button2 {
+        padding: 0;
+        font-size: 12px;
+    }
+    .button2_closed {
+        padding: 0;
+        font-size: 12px;
+    }
+</style>
+
 <script type='text/javascript'>
 old = {}
 function fetchNotes(row_id, user_id)
@@ -12,9 +54,9 @@ function fetchNotes(row_id, user_id)
 	  	onSuccess: function(transport) {
 			// this is deprecated, but because we're using old prototype on production... -TM
 			new Insertion.After('r_' + row_id, '<tr id="insert_' + row_id + '"> \
-				<td colspan="3"> \
-				<div style="float:right"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
-				 + transport.responseText + '</td></tr>')
+				<td colspan="3" class="popout"> \
+				<div style="float:right; width: 30px;"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
+				 + transport.responseText + '</td></tr>');
 	  	}
 	});
 }
@@ -26,9 +68,9 @@ function fetchComments(row_id, user_id)
 		method: 'get',
 		onSuccess: function(transport) {
 			new Insertion.After('r_' + row_id, '<tr id="insert_' + row_id + '"> \
-				<td colspan="3"> \
-				<div style="float:right"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
-				 + transport.responseText + '</td></tr>')
+				<td colspan="3" class="popout"> \
+				<div style="float:right; width:30px;"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
+				 + transport.responseText + '</td></tr>');
 		}
 	});
 }
@@ -40,12 +82,12 @@ function fetchIP(row_id, user_id)
 		method: 'get',
 		onSuccess: function(transport) {
 			// rather hackish - make IP links target=_blank
-			ip_info = transport.responseText.replace(/\<a/g, '<a target="_blank"')
+			ip_info = transport.responseText.replace(/\<a/g, '<a target="_blank"');
 			
 			new Insertion.After('r_' + row_id, '<tr id="insert_' + row_id + '"> \
 				<td colspan="3"> \
 				<div style="float:right"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
-				 + ip_info + '</td></tr>')
+				 + ip_info + '</td></tr>');
 		}
 	});
 }
@@ -74,7 +116,7 @@ function update_proxy(update_field, ip)
 function collapseInsert(row_id)
 {
 	if($('insert_' + row_id))
-		$('insert_' + row_id).remove()
+		$('insert_' + row_id).remove();
 }
 
 function deleteComment(user_id, comment_id, type) {
@@ -82,7 +124,7 @@ function deleteComment(user_id, comment_id, type) {
 	{
 		method: 'get',
 		onSuccess: function(transport) {
-			$('c_' + comment_id).remove()
+			$('c_' + comment_id).remove();
 		}
 	});
 }
@@ -95,13 +137,13 @@ function sendNote(user_id, message_name, flag_id, element)
 	  onSuccess: function(transport) {
 	    if(transport.responseText.strip() == 'success')
 	    {
-	    	color(element, flag_id, true)
+	    	color(element, flag_id, true);
 	    }
 	    else
 	    {
-	        color(element, flag_id, false)
+	        color(element, flag_id, false);
 	    }
-		collapseInsert(flag_id)
+		collapseInsert(flag_id);
 	  }
 	});
 }
@@ -115,8 +157,8 @@ function color(element, flag_id, highlight)
     })
     if(highlight)
     {
-        element.removeClassName('button2')
-        element.addClassName('button2_selected')
+        element.removeClassName('button2');
+        element.addClassName('button2_selected');
     }
 }
 
@@ -126,10 +168,23 @@ function mark(flag_id, status)
 	  method: 'get',
 	  onSuccess: function(transport) {
 		collapseInsert(flag_id)
-		if(status == 'closed')
-    		$('r_' + flag_id).setStyle({backgroundColor: '#7F6'})
-    	else
-    	    $('r_' + flag_id).setStyle({backgroundColor: '#FF5'})
+		if(status == 'closed') {
+            $('r_' + flag_id).setStyle({backgroundColor: '#7F6'});
+		    if($('rv_button_' + flag_id)) {
+		        $('rv_button_' + flag_id).removeClassName('button2_selected');
+    		    $('rv_button_' + flag_id).addClassName('button2');
+    		}
+    		$('close_button_' + flag_id).removeClassName('button2');
+    		$('close_button_' + flag_id).addClassName('button2_selected');
+        } else {
+            $('r_' + flag_id).setStyle({backgroundColor: '#FF5'});
+            if($('close_button_' + flag_id)) {
+		        $('close_button_' + flag_id).removeClassName('button2_selected');
+    		    $('close_button_' + flag_id).addClassName('button2');
+    		}
+    		$('rv_button_' + flag_id).removeClassName('button2');
+    		$('rv_button_' + flag_id).addClassName('button2_selected');
+    	}
 	  }
 	});
 }
@@ -141,9 +196,9 @@ function fetchAdminNotes(row_id)
 		method: 'get',
 		onSuccess: function(transport) {
 			new Insertion.After('r_' + row_id, '<tr id="insert_' + row_id + '"> \
-				<td colspan="3" style="padding-left: 5px"> \
-				<div style="float:right"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
-				 + transport.responseText + '</td></tr>')
+				<td colspan="3" style="padding-left: 5px" class="popout"> \
+				<div style="width: 30px; float:right"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
+				 + transport.responseText + '</td></tr>');
 		}
 	});
 	return false;
@@ -199,12 +254,12 @@ function saveAdminNote(flag_id)
 		<?php
         } ?>
         </div>
-		<table style='border: 1px solid #000; border-collapse: collapse'>
-		<tr><td style='width:25%'>
+		<table style='border: 1px solid #000; width:100%; border-collapse: collapse'>
+		<tr><td style='width:58%'>
 		<?php if($status == 'closed' || $status == 'search') {
 			$pagination->setPaging($paging);
-			echo str_replace('onclick=" event.returnValue = false; return false;"', '', $this->renderElement('pagination')); // temporary hack
-		} else { echo "&nbsp;"; } ?></td><td style='width:60%'></td><td style='width:15%'></td></tr>
+			echo "Flags " . str_replace('onclick=" event.returnValue = false; return false;"', '', $this->renderElement('pagination'));
+		} else { echo "Flags"; } ?></td><td style='width:27%'>Flagged User</td><td style='width:15%'>Action</td></tr>
 		<?php
 		if(count($flag_data) == 0)
 		    if($status == 'search')
@@ -215,16 +270,16 @@ function saveAdminNote(flag_id)
 		foreach($flag_data as $fd)
 		{
 			echo "<tr" . (($fd['render'] == 'comment_action') ? ' style="background:#EEF"' : ' style="background:#FEE"') . " id='r_" . $fd['flag']['id'] . "'>";
-			e($this->renderElement("admin/integraflag/flag_user_data", $fd));
 			e($this->renderElement("admin/integraflag/" . $fd['flag']['type'], $fd));
+			e($this->renderElement("admin/integraflag/flag_user_data", $fd));
 			e($this->renderElement("admin/integraflag/" . $fd['render'], $fd));
 			echo "</tr>";
 			
 		    $admin_notes = unserialize($fd['flag']['notes']) or array();
 		    if(!empty($admin_notes)) {
 		        e('<tr id="insert_' . $fd['flag']['id'] . '">' .
-				'<td colspan="3" style="padding-left:5px">' .
-				'<div style="float:right"><h2><a href="javascript:collapseInsert(' . $fd['flag']['id'] . ')">[X]</a></h2></div>' . 
+				'<td colspan="3" style="padding-left:5px" class="popout">' .
+				'<div style="float:right; width: 30px;"><h2><a href="javascript:collapseInsert(' . $fd['flag']['id'] . ')">[X]</a></h2></div>' . 
 				 $this->renderElement("admin/integraflag/admin_notes", $fd) . '</td></tr>');
 		    }
 			

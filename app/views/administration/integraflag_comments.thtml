@@ -1,6 +1,8 @@
-<div><h2>See more comments 
+<div><h3><?php echo $username ?>'s comments
 (<a target='_blank' href='/administration/viewuser/<?php echo $user_id ?>'>project</a> | 
-<a target='_blank' href='/administration/viewuser/<?php echo $user_id ?>/gcomments'>gallery</a>)</h2>
+<a target='_blank' href='/administration/viewuser/<?php echo $user_id ?>/gcomments'>gallery</a> |
+<a target='_blank' href='/administration/viewuser/<?php echo $user_id ?>/dpcomments'>deleted project</a> | 
+<a target='_blank' href='/administration/viewuser/<?php echo $user_id ?>/dgcomments'>deleted gallery</a>)</h3>
 </a></div>
 
 <?php foreach($final_comments as $comment): ?>
@@ -11,7 +13,7 @@
 		$user = $comment['User'];
 		$gallery = $comment['Gallery'];
 		$comment = $comment['Gcomment'];
-		$bg = '#fff';
+		$bg = '#FFF';
 	}
 	else
 	{
@@ -19,7 +21,7 @@
 		$user = $comment['User'];
 		$project = $comment['Project'];
 		$comment = $comment['Pcomment'];
-		$bg = '#ccf';
+		$bg = '#F2F2FF';
 	}
 	$id = $notification['id'];
 ?>
