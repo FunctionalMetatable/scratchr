@@ -1695,6 +1695,8 @@
 
 
 
+
+
 	**/
 	function update_announcements() {
 		$this->autoRender = false;
@@ -3043,6 +3045,67 @@
 		$this->render('integraflag');
 	}
 	
+	// Graphed statistics
+	function integraflag_stats() {
+	    if($_GET['start']) $start = addslashes($_GET['start']); else $start = null;
+	    if($_GET['end']) $end = addslashes($_GET['end']); else $end = null;
+	    $stats = array('action' => $this->Integraflag->findStatsByAction($start, $end),
+		                'type' => $this->Integraflag->findStatsByType($start, $end));
+	    $graph = array();
+	    foreach($stats['type'] as $vertex) {
+		    $type = $vertex['integraflags']['type'];
+		    switch($type) {
+			    case 'cflag_by_admin':
+			    case 'cflag_by_cm':
+			    case 'cflag_by_creator':
+			    case 'cflag_by_multiuser':
+				    $type = 'PComment Flags';
+				    break;
+			    case 'gc_by_admin':
+			    case 'gc_by_creator':
+			    case 'gc_by_multiuser':
+				    $type = 'GComment Flags';
+				    break;
+			    case 'pcensor_by_cm':
+			    case 'pcensor_by_multiuser':
+			    case 'pflag_by_user':
+				    $type = 'PFlags';
+				    break;
+		    }
+		    $graph[$type][$vertex[0]['date']] += $vertex[0]['count'];
+	    }
+        foreach($stats['action'] as $vertex) {
+		    $graph[$vertex['integraflags']['action']][$vertex[0]['date']] += $vertex[0]['count'];
+	    }
+	    unset($graph['']);
+	    $coords = array();
+	    $coords_final = array();
+	    foreach($graph as $gname => $gdat) {
+	        $coords_final[$gname] = array('label' => $gname, 'data' => array());
+		    foreach($gdat as $gx => $gy) {
+			    $coords[$gname]['data'][] = array($gx*1000, $gy);
+		    }
+		    // pad with zero points
+		    $i = 0;
+		    foreach($coords[$gname]['data'] as $g) {
+		        if($coords[$gname]['data'][$i-1] && 
+		            ($coords[$gname]['data'][$i-1][0]-$coords[$gname]['data'][$i][0]) < (60*60*24*1000)) {
+		            $newtime = ($coords[$gname]['data'][$i][0]-(60*60*24*1000));
+		            $coords_final[$gname]['data'][] = array($newtime, 0);
+		        }
+		        $coords_final[$gname]['data'][] = $coords[$gname]['data'][$i];
+		        if($coords[$gname]['data'][$i+1] && 
+		            ($coords[$gname]['data'][$i][0]-$coords[$gname]['data'][$i+1][0]) < (60*60*24*1000)) {
+		            $newtime = ($coords[$gname]['data'][$i][0]+(60*60*24*1000));
+		            $coords_final[$gname]['data'][] = array($newtime, 0);
+		        }
+		        $i++;
+		    }
+	    }
+	    $this->set('coords', json_encode($coords_final));
+	    $this->render('integraflag_stats');
+	}
+	
 	// AJAX notifications fetch
 	function integraflag_notes()
 	{
@@ -3113,6 +3176,7 @@
 		$final_comments = array_slice($merged_arrays, 0, 50);
 		
 		$this->set('final_comments', $final_comments);
+
 		
 		$this->render('integraflag_comments', 'ajax');
 	}
