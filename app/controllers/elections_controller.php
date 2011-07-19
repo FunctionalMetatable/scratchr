@@ -1,67 +1,102 @@
 <?php
+   
 class ElectionsController extends AppController {
    
 	var $name = 'elections';
-	var $uses = array("Project","User","Pcomment","Gcomment");
-   
-	// redirects the user to the page on uservoice with their login info
-	// if the user is qualified, or to a page explaining why
-	// they can't if it is a new scratcher.
-	function vote() 
-	{
+	var $uses = array("Project","User","Pcomment","Gcomment", 'Election');
+	
+	// Enables/disables election based on the time
+	// Modify this for new elections.
+	function enabled() {
+	    date_default_timezone_set('EDT');
+        $startTime = mktime(9, 0, 0, 7, 21, 2011); // 9AM  EDT 7/21/2011
+        $endTime   = mktime(0, 0, 0, 7, 22, 2011); // 12AM EDT 7/22/2011
+        return (time() > $startTime && time() < $endTime);
+	}
+	
+	// Utility - show the server time
+	function time() {
+	    date_default_timezone_set('EDT');
+	    echo date("r", time());
+	    die();
+	}
+	
+	// Redirects the user to the right page--if qualified to vote, the vote page.
+	// Otherwise go to an explanation page.
+	function vote() {
+	    if (!$this->enabled()) {
+	        $this->cakeError('error404');
+	    }
 		$username = $this->getLoggedInUsername();
-		// If the user is not logged in, bail to suggestions not enough privs page. Otherwise queries will fail.
-		if(!$username)
-		{
-			$this->Session->write('uservoiceRedirect', 'moderationelections');
-			$this->Session->write('uservoiceRedirectTime', time());
+		if (!$username) {
 			$this->redirect('/login');
 			return;
 		}
+		if ($this->validatevote($this->getLoggedInUserID())) {
+			$this->set('user', $username);
+			$this->render('vote', 'scratchr_userpage');
+		} else {
+			$this->redirect(INFO_URL . '/Community_Moderator_Election_New_Scratcher');
+		}
+	}
 
-		$user_id = $this->getLoggedInUserID();
+    // Saves a vote if we are qualified after a form submission
+	function sendvote() {
+	    if (!$this->enabled()) {
+	        $this->cakeError('error404');
+	    }
+		$username = $this->getLoggedInUsername();
+		if (!$username || !$this->validatevote($this->getLoggedInUserID())) {
+			$this->redirect('/login');
+			return;
+		}
+		
+		$previous = $this->Election->find('first', array('conditions' => 
+		                                            array('Election.username' => $username)));
+        if($previous && count($previous) > 0) {
+        	$this->set('results', "Sorry, you can only vote once in this election.");
+            $this->render('sendvote', 'scratchr_userpage');
+            return;
+        }
+		
+		$vote = array(
+			            'username' => $username,
+			            'ip' => $this->RequestHandler->getClientIP()
+			        );
+	    
+	    // valid post fields
+        function mkvalid($n) { return "candidate$n"; }
+        $valid = array_map(mkvalid, range(1,8));
+        
+        // add valid fields to the vote
+        foreach ($_POST as $candidate => $votes) {
+            if (in_array($candidate, $valid)) {
+                $vote[$candidate] = intval($votes);
+            }
+        }
+        
+	    $this->Election->save($vote);
+		$this->set('results', "Thank you for voting!");
+		$this->render('sendvote', 'scratchr_userpage');
+	}
+	
+	// Are we qualified to vote?
+	function validatevote($user_id) {
+	    $comment_count = $this->Pcomment->findCount(array('Pcomment.user_id' => $user_id,'comment_visibility'=>'visible')) 
+	                    + $this->Gcomment->findCount(array('Gcomment.user_id' => $user_id,'comment_visibility'=>'visible'));
 
-		// Gather data to evaluate if user is qualified to make suggestions via uservoice. 	
-		$comment_count = $this->Pcomment->findCount(array('Pcomment.user_id' => $user_id,'comment_visibility'=>'visible')) + $this->Gcomment->findCount(array('Gcomment.user_id' => $user_id,'comment_visibility'=>'visible'));
-
-		$projects = $this->Project->find('all', array('conditions'=>array('Project.user_id' => $user_id, 'Project.proj_visibility'=>'visible'), 'fields'=> 'id', 'recursive'=> -1, 'order' =>'created DESC'));
+		$projects = $this->Project->find('all', array('conditions'=>array('Project.user_id' => $user_id, 'Project.proj_visibility'=>'visible'), 'fields'=> 'id'));
 		
 		$user = $this->User->find('first', array('conditions' => array('User.id = '.$user_id)));
 		$day_diff = (strtotime('now')-strtotime($user['User']['created']))/86400;
 		
-        	// checks to see if the user is currently blocked from the site.
-                if( $this->User->find("User.status='locked' AND User.id = ".$user_id)) {
-                    $this->redirect('/users/us_banned/'.$user_blocked);
-		    exit;
-                }
+        if ($this->User->find("User.status='locked' AND User.id = ".$user_id))
+            return false; // the user is blocked
 
-
-		// For now, let's use the following criteria to see if the account is eligible
-		// 30 days old & more than 2 projects & more than 10 comments // (count($projects) > 2) &&
-		if (($day_diff >30) && ($comment_count > 10) && (count($projects) > 2))
-		{    	
-			//$username = $user['User']['username'];
-			$this->set('user', $username);
-			$this->render('vote', 'scratchr_userpage');
-		}
-		else {
-			$this->redirect('http://info.scratch.mit.edu/Community_Moderator_Election_New_Scratcher');
-		}
-	}
-
-	function sendvote() 
-	{
-		$postdata = array();
-		foreach ($candidates as $candidate){
-			$postdata[$candidate] = $_POST[$candidate];
-		}
-		$postdata['username'] = $this->getLoggedInUsername();
-		$postdata['ip'] = ip2long($this->RequestHandler->getClientIP());
-		App::import('Core', 'HttpSocket');
-		$HttpSocket = new HttpSocket();
-		$results = $HttpSocket->post('http://chinuas.scripts.mit.edu/php/elections.php', $postdata);
-		$this->set('results', $results);
-		$this->render('sendvote', 'scratchr_userpage');
+		// 30 days old & more than 2 projects & more than 10 comments
+		if (($day_diff > 30) && ($comment_count > 10) && (count($projects) > 2))
+		    return true; // valid vote
+	    return false; // not good enough
 	}
 }
 ?>
