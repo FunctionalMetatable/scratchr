@@ -227,7 +227,8 @@ function saveAdminNote(flag_id)
 	<h3>Integraflag - <?php echo $status ?> flags (<?php if($status != 'open'): ?><a href='/administration/integraflag'><?php endif; ?>open<?php if($status != 'open'): ?><a href='/administration/integraflag'></a><?php endif; ?> | 
 <?php if($status != 'review'): ?><a href='/administration/integraflag/review'><?php endif; ?>review<?php if($status != 'review'): ?></a> <?php endif; ?> | 
 <?php if($status != 'closed'): ?><a href='/administration/integraflag/closed'><?php endif; ?>closed<?php if($status != 'closed'): ?></a><?php endif; ?>) - 
-<a href='/administration/integraflag/search'>Search</a></h3>
+<a href='/administration/integraflag/search'>Search</a> - 
+<a href='/administration/integraflag_stats'>Stats</a></h3>
 	</div>
 	<div id="admin_project_content">
 		<span>
