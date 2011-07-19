@@ -824,6 +824,32 @@ CREATE TABLE `ignored_users` (
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `integraflags`
+--
+
+DROP TABLE IF EXISTS `integraflags`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `integraflags` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(30) NOT NULL,
+  `flagger_ids` varchar(255) NOT NULL,
+  `flagged_id` int(15) NOT NULL,
+  `project_id` int(10) DEFAULT NULL,
+  `gallery_id` int(10) DEFAULT NULL,
+  `flag_message` text,
+  `flagged_content` text,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` enum('open','closed','review') NOT NULL DEFAULT 'open',
+  `handled_by` int(15) DEFAULT NULL,
+  `action` text NOT NULL,
+  `notification_id` int(15) NOT NULL,
+  `notes` text,
+  PRIMARY KEY (`id`)
+);
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `karma_events`
 --
 
@@ -1298,7 +1324,7 @@ CREATE TABLE `projects` (
   `based_on_pid` int(10) default NULL,
   `root_based_on_pid` int(10) unsigned default NULL,
   `related_username` varchar(100) default NULL,
-  `proj_visibility` enum('visible','delbyusr','delbyadmin','censbyadmin','censbycomm') NOT NULL default 'visible',
+  `proj_visibility` enum('visible','delbyusr','delbyadmin','censbyadmin','censbycomm','censbycm') NOT NULL default 'visible',
   `vischangedbyid` int(10) default NULL,
   `vischangedtime` datetime default NULL,
   `safe` enum('high','mid','low') default 'low',
@@ -1915,7 +1941,7 @@ CREATE TABLE `users` (
   `lastname` char(25) NOT NULL,
   `gender` varchar(25) NOT NULL,
   `urlname` char(20) NOT NULL,
-  `role` enum('user','admin') NOT NULL default 'user',
+  `role` enum('user','admin','cm') NOT NULL default 'user',
   `email` char(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `buddyicon` varchar(255) default NULL,
