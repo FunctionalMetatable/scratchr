@@ -2234,6 +2234,8 @@ Class GalleriesController extends AppController {
 		$userflagger = $this->User->find("User.id = '$user_id'");
 		$flaggername = $userflagger['User']['username'];
 		$gallery_name = $gallery['Gallery']['name'];
+		
+		$isAdminComment = ($creator['User']['role'] === 'admin');
 
         $mgcomment_record = $this->Mgcomment->findCount("user_id = $user_id AND comment_id = $comment_id");
 		//checks to see if this user has already marked this comment previously
@@ -2250,7 +2252,7 @@ Class GalleriesController extends AppController {
 		$max_count = NUM_MAX_COMMENT_FLAGS;
 		$inappropriate_count = $this->Mgcomment->findCount("comment_id = $comment_id");
 		$gallery_creater_url =TOPLEVEL_URL.'/galleries/view/'.$gallery_id;
-		if ($inappropriate_count > $max_count || $isMine || $isAdmin || $isCM) {
+		if (($inappropriate_count > $max_count || $isMine || $isAdmin || $isCM) && !$isAdminComment) {
 			if ($isMine)
 			{
 				$this->hide_gcomment($comment_id, "delbyusr");
@@ -2341,7 +2343,7 @@ Class GalleriesController extends AppController {
 					
 				}			
 			}
-			if ($inappropriate_count > $max_count)
+			if ($inappropriate_count > $max_count && !$isAdminComment)
 			{
 				$this->Mgcomment->bindUser();
 				$linked_stringwflaggernames = "";
