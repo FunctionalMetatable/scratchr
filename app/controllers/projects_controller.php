@@ -463,6 +463,8 @@ class ProjectsController extends AppController {
 		$flaggername = $userflagger['User']['username'];
 		$pname = htmlspecialchars($project['Project']['name']);
 		
+		$isAdminComment = ($creator['User']['role'] === 'admin');
+		
         $mpcomment_record = $this->Mpcomment->findCount("user_id = $user_id AND comment_id = $comment_id");
 		//checks to see if this user has already marked this comment previously
 		if ($mpcomment_record == 0) {
@@ -474,7 +476,7 @@ class ProjectsController extends AppController {
 		$stringwflaggernames = "";
 		$inappropriate_count = $this->Mpcomment->findCount("comment_id=$comment_id");
 		$project_creater_url =TOPLEVEL_URL.'/projects/'.$project_creator.'/'.$pid;
-		if ($inappropriate_count > $max_count || $isMine || $isAdmin || $isCM) {
+		if (($inappropriate_count > $max_count || $isMine || $isAdmin || $isCM) && !$isAdminComment) {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
 				$this->Pcomment->saveField("comment_visibility", "delbyusr") ;
@@ -579,7 +581,7 @@ class ProjectsController extends AppController {
                                         array($content));
 				}
 			}
-			if ($inappropriate_count > $max_count) {
+			if ($inappropriate_count > $max_count && !$isAdminComment) {
 				$this->Mpcomment->bindUser();
 				$flaggers = $this->Mpcomment->findAll("comment_id=$comment_id");
 				$flaggernames = array();
