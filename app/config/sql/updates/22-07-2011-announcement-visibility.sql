@@ -1,0 +1,1 @@
+ALTER TABLE `announcements` ADD `visibility` TINYINT( 1 ) NOT NULL DEFAULT '0' COMMENT '1:Show Only to users who are logged in';
