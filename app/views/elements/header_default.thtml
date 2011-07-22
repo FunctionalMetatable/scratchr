@@ -200,7 +200,7 @@ for ($d = 0; $d < 4; $d++) { // 4 columns loop
 	</div>
 	
 <?php
-	if($isAnnouncementOn) {
+	if($isAnnouncementOn && $showToLoggedInUser == 0) {
 		echo "<div id='announcement'>";
 		e($announcement);
 		echo "</div>";

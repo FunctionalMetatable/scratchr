@@ -1,9 +1,9 @@
 <form id="a_1" action="<?=e("/administration/set_announcements/")?>" method="post">
-			<p><textarea id='a_1_textarea' name="a_1_textarea" cols="70" rows="2"><?php e($a_1); ?></textarea></p>	
+			<p><textarea id='a_1_textarea' name="a_1_textarea" cols="55" rows="2"><?php e($a_1); ?></textarea><input type="checkbox" name="visibility1" value="<?php echo $visibility1?>" <?php if($visibility1 == 1){echo ' checked';}?>>Show Only to users who are logged in?</p>	
 			<br/>
-			<p><textarea id='a_2_textarea' name="a_2_textarea" cols="70" rows="2"><?php e($a_2); ?></textarea></p>
+			<p><textarea id='a_2_textarea' name="a_2_textarea" cols="55" rows="2"><?php e($a_2); ?></textarea><input type="checkbox" name="visibility2" value="<?php echo $visibility2?>"<?php if($visibility2 == 1){echo ' checked';}?>>Show Only to users who are logged in?</p>
 			<br/>		
-			<p><textarea id='a_3_textarea' name="a_3_textarea" cols="70" rows="2"><?php e($a_3); ?></textarea></p>
+			<p><textarea id='a_3_textarea' name="a_3_textarea" cols="55" rows="2"><?php e($a_3); ?></textarea><input type="checkbox" name="visibility3" value="<?php echo $visibility3?>"<?php if($visibility3 == 1){echo ' checked';}?>>Show Only to users who are logged in?</p>
 			<br/>
 		<?php 
 			e($ajax->submit('Update Announcements', array('id' => 'announcement_update', 

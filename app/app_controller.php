@@ -84,11 +84,14 @@ class AppController extends Controller {
 	        $count_announcements = count($annoucements);
 			if($count_announcements > 0) {
 			 	$isAnnouncementOn = true;
-				$announcement = $annoucements[rand(0, $count_announcements-1)]['Announcement']['content'];
+				$index = rand(0, $count_announcements-1);
+				$announcement = $annoucements[$index]['Announcement']['content'];
+				$visibility = $annoucements[$index]['Announcement']['visibility'];
 			}
 		}
 		$this->set('announcement', $announcement);
 		$this->set('isAnnouncementOn', $isAnnouncementOn);
+		$this->set('showToLoggedInUser', $visibility);
 		
 		
 		if (isset($this->params['controller'])) {

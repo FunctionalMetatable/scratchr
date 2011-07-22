@@ -1677,6 +1677,9 @@
 		$this->set('a_1', $a_1);
 		$this->set('a_2', $a_2);
 		$this->set('a_3', $a_3);
+		$this->set('visibility1', $announcements[0]['Announcement']['visibility']);
+		$this->set('visibility2', $announcements[1]['Announcement']['visibility']);
+		$this->set('visibility3', $announcements[2]['Announcement']['visibility']);
 		$this->set('isAnnouncementOn', $isAnnouncementOn);
 		$this->render('set_announcements');
 	}
@@ -1710,19 +1713,27 @@
 			$a_3 = "";
 		}
 		
+		$visibility1 =isset($this->params['form']['visibility1'])?1:0;
+		$visibility2 =isset($this->params['form']['visibility2'])?1:0;
+		$visibility3 =isset($this->params['form']['visibility3'])?1:0;
+		
+		
 		$user_id = $this->getLoggedInUserID();
 		$this->Announcement->id = 1;
 		$this->Announcement->read();
 		$this->Announcement->saveField('content', $a_1);
 		$this->Announcement->saveField('user_id', $user_id);
+		$this->Announcement->saveField('visibility', $visibility1);
 		$this->Announcement->id = 2;
 		$this->Announcement->read();
 		$this->Announcement->saveField('content', $a_2);
 		$this->Announcement->saveField('user_id', $user_id);
+		$this->Announcement->saveField('visibility', $visibility2);
 		$this->Announcement->id = 3;
 		$this->Announcement->read();
 		$this->Announcement->saveField('content', $a_3);
 		$this->Announcement->saveField('user_id', $user_id);
+		$this->Announcement->saveField('visibility', $visibility3);
 		
 		$this->Announcement->mc_connect();
 		$this->Announcement->mc_delete('annoucements');
@@ -1731,6 +1742,9 @@
 		$this->set('a_1', $a_1);
 		$this->set('a_2', $a_2);
 		$this->set('a_3', $a_3);
+		$this->set('visibility1', $visibility1);
+		$this->set('visibility2', $visibility2);
+		$this->set('visibility3', $visibility3);
 		$this->render('update_announcements_ajax', 'ajax');
 		return;
 	}
