@@ -1700,6 +1700,8 @@
 
 
 
+
+
 	**/
 	function update_announcements() {
 		$this->autoRender = false;
@@ -3061,11 +3063,13 @@
 	
 	// Graphed statistics
 	function integraflag_stats() {
-	    if($_GET['start']) $start = addslashes($_GET['start']); else $start = null;
-	    if($_GET['end']) $end = addslashes($_GET['end']); else $end = null;
-	    $stats = array('action' => $this->Integraflag->findStatsByAction($start, $end),
-		                'type' => $this->Integraflag->findStatsByType($start, $end));
-	    $graph = array();
+	    define('HOUR', 60*60);
+	    define('DAY', HOUR*24);
+        $start = ($_GET['start']) ? strtotime($_GET['start']) : mktime(0,0,0)-(DAY*30);
+        $end = ($_GET['end']) ? strtotime($_GET['end']) : mktime(0,0,0)-DAY;
+	    $stats = array('action' => $this->Integraflag->findStatsByAction($start, $end+(DAY*2)),
+		                'type' => $this->Integraflag->findStatsByType($start, $end+(DAY*2)));
+	    $graphs = array();
 	    foreach($stats['type'] as $vertex) {
 		    $type = $vertex['integraflags']['type'];
 		    switch($type) {
@@ -3078,6 +3082,7 @@
 			    case 'gc_by_admin':
 			    case 'gc_by_creator':
 			    case 'gc_by_multiuser':
+			    case 'gc_by_cm':
 				    $type = 'GComment Flags';
 				    break;
 			    case 'pcensor_by_cm':
@@ -3086,37 +3091,32 @@
 				    $type = 'PFlags';
 				    break;
 		    }
-		    $graph[$type][$vertex[0]['date']] += $vertex[0]['count'];
+		    $graphs[$type][$vertex[0]['date']] += $vertex[0]['count'];
 	    }
         foreach($stats['action'] as $vertex) {
-		    $graph[$vertex['integraflags']['action']][$vertex[0]['date']] += $vertex[0]['count'];
+		    $graphs[$vertex['integraflags']['action']][$vertex[0]['date']] += $vertex[0]['count'];
 	    }
-	    unset($graph['']);
+	    unset($graphs['']);
 	    $coords = array();
-	    $coords_final = array();
-	    foreach($graph as $gname => $gdat) {
-	        $coords_final[$gname] = array('label' => $gname, 'data' => array());
-		    foreach($gdat as $gx => $gy) {
-			    $coords[$gname]['data'][] = array($gx*1000, $gy);
-		    }
-		    // pad with zero points
-		    $i = 0;
-		    foreach($coords[$gname]['data'] as $g) {
-		        if($coords[$gname]['data'][$i-1] && 
-		            ($coords[$gname]['data'][$i-1][0]-$coords[$gname]['data'][$i][0]) < (60*60*24*1000)) {
-		            $newtime = ($coords[$gname]['data'][$i][0]-(60*60*24*1000));
-		            $coords_final[$gname]['data'][] = array($newtime, 0);
-		        }
-		        $coords_final[$gname]['data'][] = $coords[$gname]['data'][$i];
-		        if($coords[$gname]['data'][$i+1] && 
-		            ($coords[$gname]['data'][$i][0]-$coords[$gname]['data'][$i+1][0]) < (60*60*24*1000)) {
-		            $newtime = ($coords[$gname]['data'][$i][0]+(60*60*24*1000));
-		            $coords_final[$gname]['data'][] = array($newtime, 0);
-		        }
-		        $i++;
-		    }
+	    foreach($graphs as $graph => $data) {
+	        $coords[$graph] = array('label' => $graph, 'data' => array());
+	        
+	        // Get the beginning and end of the graph as a timestamp
+	        // Make the dates into timestamps
+	        $tdata = array();
+	        foreach($data as $date => $count) {
+	            $tdata[strtotime($date)] = $count;
+	        }
+	        
+	        // Populate coordinates
+	        for($time = $start; $time <= $end; $time += DAY) {
+	            $count = ($tdata[$time]) ? $tdata[$time] : 0;
+	            $coords[$graph]['data'][] = array((($time-(HOUR*4))*1000), $count);
+	        }
 	    }
-	    $this->set('coords', json_encode($coords_final));
+	    $this->set('coords', json_encode($coords));
+	    $this->set('sdate', date('Y-m-d', $start));
+	    $this->set('edate', date('Y-m-d', $end));
 	    $this->render('integraflag_stats');
 	}
 	
