@@ -212,6 +212,7 @@ ec.get("user", actOnCookie);
 		echo $this->renderElement('users/signup_info', Array("mode" => "state"));
 	?>
   </div>
+  	
   <div class="signup_row">
 		<div class="signup_label">
 			<label for="data[User][city]"><?php ___('City');?></label>
@@ -227,17 +228,25 @@ ec.get("user", actOnCookie);
 		echo $this->renderElement('users/signup_info', Array("mode" => "city"));
 	?>
   </div>
-  <div class="signup_row">
-	<div class="signup_label">
-	</div>
-	<div class="signup_input">
-		<input type="submit" class="button" value="<?php ___('sign up'); ?>" id="signups">
-	</div>
+  <div class="signup_row" style="height: auto; padding-left: 50px; padding-right: 50px; width: 566px; font-size: 16px;">
+	<?php ___('As a member of the Scratch community, you\'ll be sharing projects and ideas with people of all ages, all levels of experience, and all parts of the world. Please remember to:'); ?>
+	<ul>
+        <li><?php ___('Be respectful of other Scratchers'); ?></li>
+        <li><?php ___('Be constructive when commenting'); ?></li>
+        <li><?php ___('Help keep the site friendly'); ?></li>
+    </ul>
+<?php ___('Check out the rest of the'); ?> <a href="/terms"><?php ___('Community Guidelines.'); ?></a> 
   </div>
+ 
+  <div class="signup_row" style='text-align:center; margin-bottom: 30px; margin-top:15px;'>
+		<input type="submit" class="button" value="<?php ___('sign up'); ?>" id="signups" style='width:25%; margin:auto;'>
+  </div>
+ 
   <input type='hidden' name='data[ecookie]' id='evercookieval' value='NULL' />
   </form>
   <?php }?>
 </div>
+<br/><br/>
 <!-- ////// End main content ////// -->
 <style>
 #error_message .message{
