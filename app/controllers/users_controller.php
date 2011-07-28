@@ -84,6 +84,12 @@ class UsersController extends AppController {
             exit;
         }
         
+		// After discussion, we have decided not to display the multi-account warning anymore.
+		// Instead, after checking for bans, we'll go directly to the signup page.
+
+		$this->redirect('/signup');
+		exit;
+        
 		/* First we find if the IP has been used before or not, if not then simply redirect him to sign up page */
 		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = INET_ATON('$client_ip')");
 		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = INET_ATON('$client_ip')");
