@@ -29,10 +29,6 @@
  * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-// Evercookie bans
-Router::connect('/signupcheck', array('controller' => 'evercookie', 'action' => 'checkCookie'));
-Router::connect('/bannedAccountWarn/*', array('controller' => 'evercookie', 'action' => 'checkBan'));
-	
 //top level pages
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',

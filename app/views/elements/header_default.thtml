@@ -165,9 +165,7 @@ for ($d = 0; $d < 4; $d++) { // 4 columns loop
 <!-- ////// End language menu ////// -->			
 
 	
-     <div id="userbar"><?php 
-     
-     /* TO ENABLE EVERCOOKIE PRE-CHECKING:  change multiaccountwarn to signupcheck --Tim */
+     <div id="userbar"><?php
      
      printf(___('%sLogin%s or %sSignup%s for an account', true), '<a href="/login" onclick="showLogin(); return false;">', '</a>', '<a href="/multiaccountwarn">', '</a>'); ?></div>
 	
