@@ -91,9 +91,6 @@ $this->params['webservices']
  //Used in  users password recovery reply email id.
  define("REPLY_TO_PASSWORD_RECOVERY", "help@scratch.mit.edu");
  
- // Used for banned account registration detection
- define("TO_BANNED_EC", "caution@scratch.mit.edu");
- 
  /**
   * Themes config
   */
@@ -226,6 +223,7 @@ $this->params['webservices']
  define("FLASH_NOTICE_KEY", "notice");
 
 /**
+
  * Resource URLs
  */
 define ('INFO_URL', 'http://info.scratch.mit.edu'); 

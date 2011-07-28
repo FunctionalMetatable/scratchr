@@ -1,11 +1,5 @@
 <?php $head->register_js("FormManager.js") ?>
 
-<?php
-	$head->register_raw('<script type="text/javascript" src="/evercookie/jquery-1.4.2.min.js"></script>
-	<script type="text/javascript" src="/evercookie/swfobject-2.2.min.js"></script>
-	<script type="text/javascript" src="/evercookie/evercookie.js"></script>');
-?>
-
 <?php $head->register_jsblock("
   window.onload = function() {
     setupDependencies('downform'); //name of form(s). Seperate each with a comma (ie: 'weboptions', 'myotherform' )
@@ -25,18 +19,6 @@
 
  ");
 ?>
-
-<script>
-
-var ec = new evercookie();
-
-function actOnCookie(value)
-{
-        document.getElementById("evercookieval").value = value;
-}
-
-ec.get("user", actOnCookie);
-</script>
 
 
 <!-- |||||| Begin main content area ||||||| -->
@@ -241,8 +223,7 @@ ec.get("user", actOnCookie);
   <div class="signup_row" style='text-align:center; margin-bottom: 30px; margin-top:15px;'>
 		<input type="submit" class="button" value="<?php ___('sign up'); ?>" id="signups" style='width:25%; margin:auto;'>
   </div>
- 
-  <input type='hidden' name='data[ecookie]' id='evercookieval' value='NULL' />
+
   </form>
   <?php }?>
 </div>

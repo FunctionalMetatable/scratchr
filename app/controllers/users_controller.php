@@ -270,34 +270,6 @@ class UsersController extends AppController {
 				 $this->data['User']['urlname'] =  $this->data['User']['username'];
 				 $this->data['User']['ipaddress'] = $client_ip_long;
 				 
-				 	// CHECK IF THERE WAS AN EVERCOOKIE
-					// IF THERE WAS, SEND A CAUTION WARNING!
-					$ecookie = $this->data['ecookie'];
-					if($ecookie != "NULL" && $ecookie != "undefined" && !empty($ecookie))
-					{
-						// An actual evercookie was detected.
-						
-						$euserdata = $this->User->findByUsername(trim($ecookie));
-													
-						if($euserdata['User']['status'] == "locked")
-						{
-							// The user is actually banned
-		
-							$subject = "Banned account registration attempt ($ecookie)";
-							
-							$ban_record = $this->BlockedUser->find("BlockedUser.user_id = " . $euserdata['User']['id']);
-							$ban_reason = $ban_record['BlockedUser']['reason'];
-			
-							$msg = "A computer used to login to a banned account has been used to register a new one.<br />
-								Banned user: <a href='" . TOPLEVEL_URL . "/users/$ecookie'>$ecookie</a><br />
-								New user created: <a href='" . TOPLEVEL_URL . "/users/" . $this->data['User']['username'] . "'>" . $this->data['User']['username'] . "</a><br />
-								Ban reason:  " . $ban_reason . "<br />
-								IP address for new account: " . $this->RequestHandler->getClientIP() . " (<a href='" . TOPLEVEL_URL . "/administration/search'>Search IPs</a>)";
-						
-							$this->Email->email(TO_BANNED_EC,'Scratch Website', $msg, $subject, TO_BANNED_EC);
-						}
-					}
-				 
 /*
 				 // This is the hidden form value that I added for the purposes of checking previous users made on this computer
 				 $prevNames = $this->data['User']['prevNames'];

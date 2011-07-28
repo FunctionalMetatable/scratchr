@@ -26,8 +26,7 @@ class ContactController extends AppController {
 	}
 	
 	function us_banned() {
-		$u = $this->Session->read("User");
-		$this->set("banned_username", $u['username']);
+		$this->pageTitle = ___('Scratch | Blocked Account or IP address | Contact us', true);
 #		$this->set('content_status', $this->getContentStatus());
 		if (!empty($this->data))
 		{
