@@ -476,12 +476,14 @@ class ProjectsController extends AppController {
 		$stringwflaggernames = "";
 		$inappropriate_count = $this->Mpcomment->findCount("comment_id=$comment_id");
 		$project_creater_url =TOPLEVEL_URL.'/projects/'.$project_creator.'/'.$pid;
-		if (($inappropriate_count > $max_count || $isMine || $isAdmin || $isCM) && !$isAdminComment) {
+		if ($inappropriate_count > $max_count || $isMine || $isAdmin || $isCM) {
 			// Only do the deletion when it's the owner of the project flagging it
 			if ($isMine) {
-				$this->Pcomment->saveField("comment_visibility", "delbyusr") ;
-				$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
-                $this->Pcomment->deleteCommentsFromMemcache($pid);
+				if(!$isAdminComment){
+					$this->Pcomment->saveField("comment_visibility", "delbyusr") ;
+					$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
+					$this->Pcomment->deleteCommentsFromMemcache($pid);
+				}	
 				$subject= "Comment deleted because it was flagged by creator of '$pname'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $project_creater_url";
 			    $flag_data = array(
@@ -496,9 +498,11 @@ class ProjectsController extends AppController {
 			else if($isCM)
 			{
             	// Community moderator deletion
-				$this->Pcomment->saveField("comment_visibility", "delbyusr");
-				$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
-				$this->Pcomment->deleteCommentsFromMemcache($pid);
+				if(!$isAdminComment){
+					$this->Pcomment->saveField("comment_visibility", "delbyusr");
+					$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
+					$this->Pcomment->deleteCommentsFromMemcache($pid);
+				}	
 				$subject = "Project comment deleted because it was flagged by a community moderator ($flaggername)";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by a community moderator:\n$content\n$project_creater_url";
 				$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT, $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
@@ -581,7 +585,7 @@ class ProjectsController extends AppController {
                                         array($content));
 				}
 			}
-			if ($inappropriate_count > $max_count && !$isAdminComment) {
+			if ($inappropriate_count > $max_count) {
 				$this->Mpcomment->bindUser();
 				$flaggers = $this->Mpcomment->findAll("comment_id=$comment_id");
 				$flaggernames = array();
@@ -595,11 +599,12 @@ class ProjectsController extends AppController {
 				$flagger_ids = implode(',', $flagger_ids);
 				
                 $flaggernames = implode(', ', $flaggernames);
-				
-				$this->Pcomment->saveField("comment_visibility", "censbycomm") ;
-				$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
-                $this->Pcomment->deleteCommentsFromMemcache($pid);
-				
+				if(!$isAdminComment)
+				{
+					$this->Pcomment->saveField("comment_visibility", "censbycomm") ;
+					$this->__deleteChildrenComments($pid, $comment_id, 'parentcommentcensored', true);
+					$this->Pcomment->deleteCommentsFromMemcache($pid);
+				}
 				$subject = "Attention: more than $max_count users have flagged $linked_creatorname's comment on '$pname'";
 				$msg = "Users  $flaggernames have flagged this comment by  $linked_creatorname :\n$content\n $project_creater_url";
 				$this->Email->email(REPLY_TO_FLAGGED_PCOMMENT,  $flaggername, $msg, $subject, TO_FLAGGED_PCOMMENT, $userflagger['User']['email']);
@@ -3016,10 +3021,14 @@ class ProjectsController extends AppController {
 			$this->cakeError('error404');
 		}
 		
-		if($this->Pcomment->del($comment_id)) {
-            $this->__deleteChildrenComments($project_id, $comment_id, 'delbyparentcomment', true);
+		if($isProjectOwner || $isCommentOwner) {
+			$this->hide_pcomment($comment_id, "delbyusr");
+		} else {
+			$this->hide_pcomment($comment_id, "delbyadmin");
 		}
-        $this->Pcomment->deleteCommentsFromMemcache($project_id);
+		
+        $this->__deleteChildrenComments($project_id, $comment_id, 'delbyparentcomment', true);
+		$this->Pcomment->deleteCommentsFromMemcache($project_id);
 		exit;
 	}
 	
