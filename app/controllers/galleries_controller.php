@@ -2252,12 +2252,14 @@ Class GalleriesController extends AppController {
 		$max_count = NUM_MAX_COMMENT_FLAGS;
 		$inappropriate_count = $this->Mgcomment->findCount("comment_id = $comment_id");
 		$gallery_creater_url =TOPLEVEL_URL.'/galleries/view/'.$gallery_id;
-		if (($inappropriate_count > $max_count || $isMine || $isAdmin || $isCM) && !$isAdminComment) {
+		if ($inappropriate_count > $max_count || $isMine || $isAdmin || $isCM) {
 			if ($isMine)
 			{
+				if(!$isAdminComment){
 				$this->hide_gcomment($comment_id, "delbyusr");
 				$this->__deleteChildrenComments($gallery_id, $comment_id, 'parentcommentcensored', true);
                 $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
+				}
 				$subject= "Comment deleted because it was flagged by creator of '$gallery_name'";
 				$msg = "Comment by '$linked_creatorname' deleted because it was flagged by the project owner:\n$content\n $gallery_creater_url";
 				$flag_data = array(
@@ -2272,10 +2274,12 @@ Class GalleriesController extends AppController {
 			}
 			else if ($isCM)
 			{
-			  		$this->hide_gcomment($comment_id, "delbyusr");
+			  		if(!$isAdminComment){
+					$this->hide_gcomment($comment_id, "delbyusr");
 					$this->__deleteChildrenComments($gallery_id, $comment_id, 'parentcommentcensored', true);
                     $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
-					$subject= "Gallery comment deleted because it was flagged by a community moderator ($flaggername)";
+					
+					}$subject= "Gallery comment deleted because it was flagged by a community moderator ($flaggername)";
 					$msg = "Comment by '$linked_creatorname' deleted because it was flagged by $flaggername:\n$content\n $gallery_creater_url";
 					$this->notify('gcomment_removed', $creator_id,
 								array('gallery_id' => $gallery_id),
@@ -2343,7 +2347,7 @@ Class GalleriesController extends AppController {
 					
 				}			
 			}
-			if ($inappropriate_count > $max_count && !$isAdminComment)
+			if ($inappropriate_count > $max_count)
 			{
 				$this->Mgcomment->bindUser();
 				$linked_stringwflaggernames = "";
@@ -2358,11 +2362,11 @@ Class GalleriesController extends AppController {
 				}
 				$flagger_ids = implode(',', $flagger_ids);
 				$flaggernames = implode(', ', $flaggernames);
-				
+				if(!$isAdminComment){
 				$this->hide_gcomment($comment_id, "censbycomm");
 				$this->__deleteChildrenComments($gallery_id, $comment_id, 'parentcommentcensored', true);
                 $this->Gcomment->deleteCommentsFromMemcache($gallery_id);
-					
+				}	
 				$subject = "Attention: more than $max_count users have flaggeed $creatorname's comment on the gallery: '$gallery_name'";
 				$msg = "Users  $flaggernames have flagged this comment by  $linked_creatorname :\n$content\n $gallery_creater_url";
 				
