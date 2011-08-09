@@ -2625,6 +2625,7 @@ class ProjectsController extends AppController {
 		$this->modelClass = "GalleryProject";
 		$options = Array("sortBy"=>"timestamp", "sortByClass" => "GalleryProject", 
 					"direction"=> "DESC", "url"=>"gallerylist/$uname/$pid");
+		$this->Pagination->total = $this->getGalleryCount($pid);
 		list($order,$limit,$page) = $this->Pagination->init("project_id = $pid", Array(), $options);
 
 		$this->set('data', $this->getGalleryList($pid, $order, $limit, $page));
