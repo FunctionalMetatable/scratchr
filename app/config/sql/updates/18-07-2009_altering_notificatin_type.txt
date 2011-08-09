@@ -8,7 +8,7 @@ UPDATE `notification_types` SET `negative` = '1' WHERE  is_admin =1;
 
 
 
-UPDATE `notification_types` SET `template` = 'This account has been blocked by the Scratch Team. Please review the <a href="/terms">Terms of Use</a> and contact us if you have any questions.' WHERE `notification_types`.`type` = 'account_lock' LIMIT 1;
+UPDATE `notification_types` SET `template` = 'This account has been blocked by the Scratch Team. Please review the <a href="/terms">Community Guidelines</a> and contact us if you have any questions.' WHERE `notification_types`.`type` = 'account_lock' LIMIT 1;
 
 
 INSERT INTO `notification_types` (
@@ -20,7 +20,7 @@ INSERT INTO `notification_types` (
 )
 VALUES (
 NULL , 'account_temp_lock',
-'Because your project was flagged by multiple members of the Scratch community, your account has been temporarily blocked. The Scratch Team will review your project based on the <a href="/terms">Terms of Use</a> and make a final decision.', '0', '0'
+'Because your project was flagged by multiple members of the Scratch community, your account has been temporarily blocked. The Scratch Team will review your project based on the <a href="/terms">Community Guidelines</a> and make a final decision.', '0', '0'
 );
 
 
@@ -44,8 +44,8 @@ INSERT INTO `notification_types` (
 `negative`
 )
 VALUES (
-NULL , 'project_removed_admin_confirm', 'The Scratch Team has reviewed your project <a href="/projects/{to_user_name}/{project_id}">{project_name}</a> and has decided to remove it because it was considered inappropriate for the Scratch community. Please read the <a href="/terms">Terms of Use</a> or contact us for more info. Thank you and Scratch on!', '0', '1'
+NULL , 'project_removed_admin_confirm', 'The Scratch Team has reviewed your project <a href="/projects/{to_user_name}/{project_id}">{project_name}</a> and has decided to remove it because it was considered inappropriate for the Scratch community. Please read the <a href="/terms">Community Guidelines</a> or contact us for more info. Thank you and Scratch on!', '0', '1'
 );
 
 
-UPDATE `notification_types` SET `template` = 'The Scratch Team removed your project <a href="/projects/{to_user_name}/{project_id}">{project_name}</a> because it was considered inappropriate for the Scratch community. Please read the <a href="/terms">Terms of Use</a> or contact us for more info. <br/> Thank you and Scratch on!' WHERE `notification_types`.`type` = 'project_removed_admin' LIMIT 1 ;
+UPDATE `notification_types` SET `template` = 'The Scratch Team removed your project <a href="/projects/{to_user_name}/{project_id}">{project_name}</a> because it was considered inappropriate for the Scratch community. Please read the <a href="/terms">Community Guidelines</a> or contact us for more info. <br/> Thank you and Scratch on!' WHERE `notification_types`.`type` = 'project_removed_admin' LIMIT 1 ;

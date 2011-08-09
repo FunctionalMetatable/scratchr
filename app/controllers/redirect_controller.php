@@ -31,7 +31,7 @@ function copyright(){
 
 function terms(){
 	$browser_lang = $this->_get_browser_lang();
-	$this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang). 'Terms_of_use');
+	$this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang). 'Community_Guidelines');
 }
 
 function privacy(){

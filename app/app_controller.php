@@ -169,7 +169,7 @@ class AppController extends Controller {
 				$ban_reason = $ban_record['BlockedUser']['reason'];
 				/*if user temporary blocked then set ban reason . */
 				if(!$ban_reason && $temporary_locked === true){
-					$ban_reason = sprintf(___('Because your project was flagged by multiple members of the Scratch community, your account has been temporarily blocked. The Scratch Team will review your project based on the <a href="%s">Terms of Use</a> and make a final decision.', true), TOS_URL);
+					$ban_reason = sprintf(___('Because your project was flagged by multiple members of the Scratch community, your account has been temporarily blocked. The Scratch Team will review your project based on the <a href="%s">Community Guidelines</a> and make a final decision.', true), TOS_URL);
 				}
 				if ($controller == "contact") {
 					$this->set('ban_reason', $ban_reason);

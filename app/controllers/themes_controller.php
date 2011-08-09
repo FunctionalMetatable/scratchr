@@ -55,7 +55,7 @@ Class ThemesController extends AppController {
 			{
 			        $user_record = $this->Session->read('User');
 				$user_id = $user_record['id'];
-				$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);
+				$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Community Guidelines</a>', false, false);
 			}
 			else
 			{
@@ -104,7 +104,7 @@ Class ThemesController extends AppController {
 	    {
 		$user_record = $this->Session->read('User');
 		$user_id = $user_record['id'];
-		$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);
+		$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Community Guidelines</a>', false, false);
 	    }
 	    else
 	    {
@@ -418,7 +418,7 @@ Class ThemesController extends AppController {
 				$name = "Untitled";
 			        $user_record = $this->Session->read('User');
 				$user_id = $user_record['id'];
-				$this->notify($user_id, 'We remind you to use language appropriate for all ages when choosing the title of a gallery. Please read the <a href="/terms">Terms of Use</a>', false);
+				$this->notify($user_id, 'We remind you to use language appropriate for all ages when choosing the title of a gallery. Please read the <a href="/terms">Community Guidelines</a>', false);
 			}
 			$description = $this->params["form"]["theme_description"];
 			if(isInappropriate($description))
@@ -426,7 +426,7 @@ Class ThemesController extends AppController {
 				$description = "";
 			        $user_record = $this->Session->read('User');
 				$user_id = $user_record['id'];
-				$this->notify($user_id, 'We remind you to use language appropriate for all ages when choosing the description of a gallery. Please read the <a href="/terms">Terms of Use</a>', false);
+				$this->notify($user_id, 'We remind you to use language appropriate for all ages when choosing the description of a gallery. Please read the <a href="/terms">Community Guidelines</a>', false);
 			}
 			$visibility = 1; #intval($this->params["form"]["visibility"]);
 			// TODO: assert 'visibility' is within range, 1-3
@@ -793,7 +793,7 @@ Class ThemesController extends AppController {
                 $comment = htmlspecialchars($this->params['form']['tcomment_textarea']);
 				if(isInappropriate($comment)) {
 					$vis = 0;
-					$this->notify($commenter_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);
+					$this->notify($commenter_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Community Guidelines</a>', false, false);
 				} else {
 					$vis = 1;
 				}

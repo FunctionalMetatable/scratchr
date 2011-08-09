@@ -155,7 +155,7 @@
 		$this->autoRender = false;
 		$banned_users = $this->User->findAll("User.status = 'locked'");
 		foreach ($banned_users as $user) {
-			$default_reason = "You have violated our Terms of Use. ";
+			$default_reason = "You have violated our Community Guidelines. ";
 			$current_user_id = $user['User']['id'];
 			$ban_record = $this->BlockedUser->find("BlockedUser.user_id = $current_user_id");
 			if (empty($ban_record)) {
@@ -564,7 +564,7 @@
     	$message = 'Your project <a href="/projects/'.$username.'/'.$project_id.'">'.$project_title.'</a> has
 			been removed because multiple Scratch members considered it
 			inappropriate for the Scratch community. Please read the <a
-			href="/terms">Terms of Use</a> or contact us for more info. Thank you
+			href="/terms">Community Guidelines</a> or contact us for more info. Thank you
 			and Scratch on!';
 			
     	$this->Project->censor($project_id, $urlname, $this->getLoggedInUrlname());
@@ -3029,17 +3029,17 @@
 				case 'gc_by_creator':
 				case 'gc_by_multiuser':
 					$render = "comment_action";
-					$ban_reason = "This account has been blocked for posting inappropriate comments.  Please see the Scratch Terms of Use at the bottom of each page.";
+					$ban_reason = "This account has been blocked for posting inappropriate comments.  Please see the Scratch Community Guidelines at the bottom of each page.";
 					break;
 				case 'pcensor_by_cm':
 				case 'pcensor_by_multiuser':
 				case 'pflag_by_user':
 					$render = "project_action";
-					$ban_reason = "This account has been blocked for sharing inappropriate projects.  Please see the Scratch Terms of Use at the bottom of each page.";
+					$ban_reason = "This account has been blocked for sharing inappropriate projects.  Please see the Scratch Community Guidelines at the bottom of each page.";
 					break;
 				default:
 					$render = "comment_action";
-					$ban_reason = "This account has been blocked for posting inappropriate comments.  Please see the Scratch Terms of Use at the bottom of each page.";
+					$ban_reason = "This account has been blocked for posting inappropriate comments.  Please see the Scratch Community Guidelines at the bottom of each page.";
 					break;
 			}
 				
