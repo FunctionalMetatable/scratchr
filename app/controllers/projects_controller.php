@@ -2271,9 +2271,7 @@ class ProjectsController extends AppController {
             }
             $isGalleryOwner = !empty($gallery_count);
 
-            //TODO: we only need number of galleries, we can avoid 4 queries here
-            $gallery_list = $this->getGalleryList($pid);
-            $this->set('gallerylist', $gallery_list);
+            $this->set('gallery_count', $this->getGalleryCount($pid));
 
             $this->set('downloadcount', $this->Downloader->findCount(array('project_id' => $pid)));
 
@@ -2637,11 +2635,16 @@ class ProjectsController extends AppController {
 	/**
 	* List of galleries a project belong's to
 	**/
-	function getGalleryList($pid=null, $order=null, $limit=null, $page=null) {
+	function getGalleryList($pid=null, $order=null, $limit=null, $page=null, $for_count = false) {
 		$project = $this->Project->find("Project.id = $pid");
 		$creator_id = $project['Project']['user_id'];
 		$isLogged = $this->isLoggedIn();
 		$gallerylist = array();
+		
+		if($for_count) { //we do not need project data for count 
+			$this->GalleryProject->belongsTo = null; 
+		}
+		
 		$this->GalleryProject->bindGallery();
 		$results = $this->GalleryProject->findAll("project_id = $pid", NULL, $order, $limit, $page);
 		foreach ($results as $result) {
@@ -2665,8 +2668,22 @@ class ProjectsController extends AppController {
 			array_push($gallerylist, $temp_gallery);
 		}
         
-		$gallerylist = $this->finalize_galleries($gallerylist);
+		if(!$for_count) { //if it is not for count then we will need user data, image etc.
+			$gallerylist = $this->finalize_galleries($gallerylist);
+		}
 		return $gallerylist;
+	}
+	
+	/**
+	* Number of galleries a project belong's to
+	**/
+	function getGalleryCount($pid) {
+		$count = 0;
+		$gallerylist = $this->getGalleryList($pid, null, null, null, true);
+		foreach($gallerylist as $gallery) {
+        	if(! $gallery['Gallery']['ignored']) { $count++; }
+		}
+		return $count;
 	}
 	
 	/**

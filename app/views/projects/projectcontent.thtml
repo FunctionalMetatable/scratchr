@@ -264,17 +264,11 @@ else {
 		if($downloadtxt)
 		$project_details[] = $downloadtxt;
 		
-		$numgals = 0;
 		$ingals = '';
-		foreach($gallerylist as $gallery) {
-        		if(! $gallery['Gallery']['ignored']) {
-                		$numgals++;
-        		}
-		}
 		$gallerytag = $html->url('/projects/'.$urlname.'/'.$pid.'/gallerylist');
-		if($numgals > 0) {
-			$ingals .=  ___("in", true) . " <a href='$gallerytag'>$numgals ";
-			if($numgals > 1)
+		if($gallery_count > 0) {
+			$ingals .=  ___("in", true) . " <a href='$gallerytag'>$gallery_count ";
+			if($gallery_count > 1)
 				$ingals .= ___('galleries', true);
 			else
 				$ingals .= ___('gallery', true);
