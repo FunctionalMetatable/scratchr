@@ -29,7 +29,7 @@
 		echo "</div>";
 	} elseif (in_array("name_inappropriate", $errors)) {
 		echo "<div class='gallery_create_error'>";
-			echo "<p> " . __('That name is inappropriate according to our Terms of Use') . "</p><br/>";
+			echo "<p> " . __('That name is inappropriate according to our Community Guidelines') . "</p><br/>";
 		echo "</div>";
 	} elseif (in_array("empty_name", $errors)) {
 		echo "<div class='gallery_create_error'>";
@@ -50,7 +50,7 @@
 <?php
 	if (in_array("description_inappropriate", $errors)) {
 		echo "<div class='gallery_create_error'>";
-			echo "<p> " . __('That description is inappropriate according to our Terms of Use') . "</p> <br/>";
+			echo "<p> " . __('That description is inappropriate according to our Community Guidelines') . "</p> <br/>";
 		echo "</div>";
 	} elseif (in_array("empty_description", $errors)) {
 		echo "<div class='gallery_create_error'>";

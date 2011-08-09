@@ -67,7 +67,7 @@ class ShariablesController extends AppController {
 				{
 					$user_record = $this->Session->read('User');
 					$user_id = $user_record['id'];
-					$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);
+					$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Community Guidelines</a>', false, false);
 				}
 				else
 				{
@@ -102,7 +102,7 @@ class ShariablesController extends AppController {
 				{
 					$user_record = $this->Session->read('User');
 					$user_id = $user_record['id'];
-					$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);
+					$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Community Guidelines</a>', false, false);
 				}
 				else
 				{
@@ -156,7 +156,7 @@ class ShariablesController extends AppController {
 					{
 						$user_record = $this->Session->read('User');
 						$user_id = $user_record['id'];
-						$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Terms of Use</a>', false, false);
+						$this->notify($user_id, 'We remind you to use appropriate language for all ages, please read the <a href="/terms">Community Guidelines</a>', false, false);
 					}
 					else
 					{

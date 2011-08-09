@@ -1,7 +1,7 @@
 <div id="footer" class="clearme">
 <a href="/privacy"><?php ___('Privacy Policy')?></a> | 
 
-<a href="/terms"><?php ___('Terms of Use')?></a> | 
+<a href="/terms"><?php ___('Community Guidelines')?></a> | 
 <a href="/copyright"><?php ___('Copyright Policy')?></a> | 
 
 <a href="<?php echo $html->url('/contact/us')?>"><?php ___('Contact Us')?> </a>

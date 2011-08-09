@@ -19,10 +19,10 @@
 		foreach($errors as $error) {
 			echo "<span class='std_error'>";
 			if ($error == 'name_inappropriate') {
-				echo "<p> -" . __('That name is inappropriate according to our Terms of Use') . "</p><br/>";
+				echo "<p> -" . __('That name is inappropriate according to our Community Guidelines') . "</p><br/>";
 			}
 			if ($error == 'description_inappropriate') {
-				echo "<p> -" . __('That description is inappropriate according to our Terms of Use') . "</p> <br/>";
+				echo "<p> -" . __('That description is inappropriate according to our Community Guidelines') . "</p> <br/>";
 			}
 			if ($error == 'name_taken') {
 				echo "<p> -" . __('That name has already been taken') . "</p> <br/>";

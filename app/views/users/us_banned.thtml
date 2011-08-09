@@ -2,7 +2,7 @@
 <?php if($isBannedUser):?>
 <h3><?php ___("Sorry, creation of new accounts from your network address has been suspended...")?></h3>
 <p>
-<?php printf(___('Another account accessing the Scratch Website from the same IP address was used to post comments or projects that fall outside of the guidelines described in the Scratch Website %sTerms of Use%s.', true), '<a href="'.TOS_URL.'" >', '</a>'); ?>
+<?php printf(___('Another account accessing the Scratch Website from the same IP address was used to post comments or projects that fall outside of the guidelines described in the Scratch Website %sCommunity guidelines%s.', true), '<a href="'.TOS_URL.'" >', '</a>'); ?>
 </p>
 <?php ___('Account : ')?><?php echo $blockedusername?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
