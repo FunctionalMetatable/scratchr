@@ -92,6 +92,22 @@ function fetchIP(row_id, user_id)
 	});
 }
 
+function fetchIPMulti(row_id, ip) {
+    collapseInsert(row_id);
+    new Ajax.Request('/administration/execute_search/users', {
+        method: 'post',
+        parameters: {column: 'ipaddress', admin_search_textarea: ip},
+        onSuccess: function(transport) {
+		    ip_info = transport.responseText.replace(/\<a/g, '<a target="_blank"');
+		    
+			new Insertion.After('r_' + row_id, '<tr id="insert_' + row_id + '"> \
+				<td colspan="3"> \
+				<div style="float:right"><h2><a href="javascript:collapseInsert(' + row_id + ')">[X]</a></h2></div>'
+				 + ip_info + '</td></tr>');
+        }
+    });
+}
+
 // Functions for IP tools - stripped by AJAX
 function update_resolve(update_field, ip)
 { 

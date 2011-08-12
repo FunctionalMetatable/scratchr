@@ -2,13 +2,14 @@
 <p>
 <?php
 // Create String for Showing Users List
-$users_from_same_ip=array();
+$users_from_same_ip = "<table><tr><th>" . ___('User', true) . "</th><th>" . ___('Block date', true) . "</th><th>" . ___('Reason', true) . "</th></tr>";
 foreach($user_records as $user) {
 	$urlname=$user['User']['urlname'];
-	array_push($users_from_same_ip, $html->link($urlname, '/users/'.$urlname));
+	$blockedDate = $user['BlockedUser']['timestamp'];
+	$reason = $user['BlockedUser']['reason'];
+  $users_from_same_ip .= "<tr><td>" . $html->link($urlname, '/users/'.$urlname) . "</td><td>$blockedDate</td><td>$reason</td></tr>";
 }
-
-$users_from_same_ip = implode(', ', $users_from_same_ip);
+$users_from_same_ip .= "</table>";
 
 /*if(isset($activity_from_same_ip_signup_interval)) {
 ?>
@@ -26,18 +27,25 @@ $users_from_same_ip = implode(', ', $users_from_same_ip);
 else {*/
 ?>
 
-<p><?php ___('Seems like the following accounts were created from the same computer or network:')?> </p>
-<p><?php echo $users_from_same_ip; ?></p>
+<p><span style='font-size: 35px'><?php ___('Uh oh'); ?></span>, <?php ___('it looks like one or more Scratch accounts using your network were recently blocked. Accounts are blocked when they\'re used in ways that break the'); ?> <a href='/redirect/terms'><?php ___('Scratch Community Guidelines'); ?></a>. <?php ___('In short, the guidelines say'); ?>:
+<ul><li><?php ___('Be respectful of other Scratchers'); ?></li>
+<li><?php ___('Be constructive when commenting'); ?></li>
+<li><?php ___('Help keep the site friendly'); ?></li></ul>
+</p>
 <p>
-<?php ___("Please note that creating multiple accounts can lead to blocking of your computer or network if they are used to post inappropriate content, harass others, avoid a block on another account or try to trick the system to get to front page."); ?>
+<?php ___('Here are the accounts that have recently been blocked:'); ?>
 </p>
 
-<p><b><?php ___("If you're a school or household sharing the same IP for multiple people, no worries, you're welcome to create multiple accounts");?></b>
+<p><?php echo $users_from_same_ip; ?></p>
+
+<p><span style='font-size: 35px'><?php ___('If you are the owner');?></span> <?php ___('of one or more of these account(s), login to the account and contact us using the form on the block page to request that we unblock it. As long as you promise to follow the '); ?> <a href='/redirect/terms'><?php ___('Community Guidelines'); ?></a>, <?php ___('and we feel that we can trust your promise, we will unblock your account. Don\'t create more accounts, or they may be removed without warning.'); ?></p>
+
+<p><span style='font-size: 35px'><?php ___('If you are a school'); ?></span> <?php ___('or share your network with others, don\'t panic!  If you recognize any of the accounts that were blocked, it would be a good idea to talk with their owners and make sure they understand the'); ?> <a href='/redirect/terms'><?php ___('Scratch Community Guidelines'); ?></a>.
+ <?php ___("Networks that are used to make disrespectful comments or projects may be blocked from accessing the Scratch website or signing up for new accounts. If that happens, there is a form that can be used to appeal the block on the block page.");?>
 </p> 
 <p><?php ___('What do you want to do?')?></p>
-<a href="<?php echo $html->url('/signup')?>" ><span class='button2'><?php ___('Create account')?></span></a>
-<a href="<?php echo $html->url('/password_recovery')?>" ><span class='button2'><?php ___('Recover password for existing account')?></span></a>
-<a href="<?php echo $html->url('/')?>" ><span class='button2'><?php ___('Cancel')?></span></a>
+<a href="<?php echo $html->url('/signup')?>" ><span class='button2'><?php ___('Continue and create a new account')?></span></a>
+<a href="<?php echo $html->url('/login')?>"><span class='button2'><?php ___('Login to an existing account')?></span></a>
 
 <!-- <a href="<?php echo $html->url('/users/whitelistip')?>">Send request for create multiple account from same Ip</a> //-->
 <?php

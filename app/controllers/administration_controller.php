@@ -3037,6 +3037,10 @@
 					$render = "project_action";
 					$ban_reason = "This account has been blocked for sharing inappropriate projects.  Please see the Scratch Community Guidelines at the bottom of each page.";
 					break;
+				case 'multiaccount':
+				    $render = "mc_action";
+				    $ban_reason = "This account was blocked because it was used to go around a block on another account. Instead of making new accounts, use the contact us link to request that the original be unblocked.";
+				    break;
 				default:
 					$render = "comment_action";
 					$ban_reason = "This account has been blocked for posting inappropriate comments.  Please see the Scratch Community Guidelines at the bottom of each page.";

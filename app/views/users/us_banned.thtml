@@ -2,16 +2,29 @@
 <?php if($isBannedUser):?>
 <h3><?php ___("Sorry, creation of new accounts from your network address has been suspended...")?></h3>
 <p>
-<?php printf(___('Another account accessing the Scratch Website from the same IP address was used to post comments or projects that fall outside of the guidelines described in the Scratch Website %sCommunity guidelines%s.', true), '<a href="'.TOS_URL.'" >', '</a>'); ?>
+<p><span style='font-size: 35px'><?php ___('Uh oh'); ?></span>, <?php ___('it looks like one or more Scratch accounts using your network were recently blocked. Accounts are blocked when they\'re used in ways that break the'); ?> <a href='/redirect/terms'><?php ___('Scratch Community Guidelines'); ?></a>. <?php ___('In short, the guidelines say'); ?>:
+<ul><li><?php ___('Be respectful of other Scratchers'); ?></li>
+<li><?php ___('Be constructive when commenting'); ?></li>
+<li><?php ___('Help keep the site friendly'); ?></li></ul>
 </p>
-<?php ___('Account : ')?><?php echo $blockedusername?>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<?php ___('Blocked On : ')?><?php echo $blockedon?>
-<br /><br />
-<?php ___('Reason : ')?>
-<div style="border:#CCCCCC 1px solid; padding:2px;margin:5px 0px 5px 0px;"><?php echo $reasonsforblocking;?></div>
-<br /><br />
-<?php ___("Please contact us with the form below to discuss this issue.")?>
+<p>
+<?php ___('Here are the accounts that have recently been blocked:'); ?>
+</p>
+
+<table>
+<tr><th><?php ___('Account'); ?></th><th><?php ___('Block date'); ?></th><th><?php ___('Reason'); ?></th></tr>
+<?php foreach($br_extended as $br): ?>
+<tr><td><a href='<?php echo TOPLEVEL_URL . "/users/" . $br['blocked_username']; ?>'><?php echo $br['blocked_username']; ?></a></td><td><?php echo $br['blocked_date']; ?></td><td><?php echo $br['blocked_reason']; ?></td></tr>
+<?php endforeach; ?>
+</table>
+
+<p><span style='font-size: 35px'><?php ___('If you are the owner');?></span> <?php ___('of one or more of these account(s), login to the account and contact us using the form on the block page to request that we unblock it. As long as you promise to follow the'); ?> <a href='/redirect/terms'><?php ___('Community Guidelines'); ?></a><?php ___(', and we feel that we can trust your promise, we will unblock your account. Don\'t create more accounts, or they may be removed without warning.'); ?></p>
+
+<p><span style='font-size: 35px'><?php ___('If you are a school'); ?></span> <?php ___('or share your network with others, don\'t panic!  If you recognize any of the accounts that were blocked, it would be a good idea to talk with their owners and make sure they understand the '); ?>  <a href='/redirect/terms'><?php ___('Scratch Community Guidelines.'); ?></a></p> 
+
+</p>
+
+<?php ___("You can contact us using the form below to request that we remove the block on new account creation. We'll reply within 3 days via email, so be sure to check your spam folders for messages from help@scratch.mit.edu."); ?>
 
 <?php endif?>
 <?php
@@ -39,9 +52,9 @@
 
 </p>
 <p>
- <label for="User" ><?php ___('Email'); ?>&nbsp;:</label>
+ <label for="User" ><?php ___('Email (use the official email address of your organization)'); ?>&nbsp;:</label>
 <?php echo $form->input('User.email',array('size'=>46,'label'=>''))?>
-
+<em><?php ___('Please be sure this is correct! It\'s our only way to reply.'); ?></em>
 </p>
 
 <p>

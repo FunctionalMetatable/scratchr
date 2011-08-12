@@ -91,6 +91,19 @@ $this->params['webservices']
  //Used in  users password recovery reply email id.
  define("REPLY_TO_PASSWORD_RECOVERY", "help@scratch.mit.edu");
  
+/**
+ * Configuration for multiple banned account registration warnings
+ */
+ 
+ // Number of banned accounts which will trigger warning
+ define("MULTI_WARN_ACCOUNTS", 1);
+ 
+ // Number of banned accounts which will prevent registration
+ define("MULTI_PREVENT_ACCOUNTS", 2);
+ 
+ // Number of days to check for access from banned IPs
+ define("MULTI_DAYS_CHECK", 30);
+ 
  /**
   * Themes config
   */
