@@ -6,7 +6,7 @@ class UsersController extends AppController {
 	var $uses = array('IgnoredUser', 'KarmaRating', 'GalleryProject', 'Flagger', 'Lover', 'Gcomment', 'Mpcomment', 'Mgcomment', 'Tag', 
 	'ProjectTag', 'GalleryTag', 'MgalleryTag', 'MprojectTag', 'FeaturedProject','AdminComment', 'User','Project','Favorite', 'Pcomment',
 	'UserStat', 'Relationship', 'RelationshipType', 'Theme', 'GalleryMembership', 'Gallery',  'ThemeRequest', 'FriendRequest', 'Notification',
-	'Shariable','Thank', 'ViewStat','Curator','WhitelistedIpAddress','BlockedIp', 'DisposableDomain','BlockedUser');
+	'Shariable','Thank', 'ViewStat','Curator','WhitelistedIpAddress','BlockedIp', 'DisposableDomain','BlockedUser', 'Integraflag');
 	
 
 	function admin_index() {
@@ -58,62 +58,75 @@ class UsersController extends AppController {
 	  die;
 	}
 	
+	function getAccountsTriggerSignupBan($client_ip) {
+        /* Get all the users who have accessed the projects or created a profile using same IP */
+		$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = INET_ATON('$client_ip')", array('timestamp', 'user_id'));
+		$user_ids_accessing_same_ip = array();
+		foreach($view_stats as $view_stat) {
+			if(strtotime($view_stat['ViewStat']['timestamp']) > time()-(60*60*24*MULTI_DAYS_CHECK))
+				array_push($user_ids_accessing_same_ip, $view_stat['ViewStat']['user_id']); 
+		}
+
+        $user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
+        
+		if(!empty($user_ids_accessing_same_ip)) {
+			$user_records = $this->User->findAll("User.id in ($user_ids_accessing_same_ip) AND User.status='locked'", array('urlname', 'status', 'id'),'created DESC');
+        }
+        
+        // Add the ban reasons
+        for($i = 0; $i < count($user_records); $i++) {
+            $ur = $user_records[$i];
+			$ban_record = $this->BlockedUser->find("BlockedUser.user_id = {$ur[User][id]}");
+			$user_records[$i]['BlockedUser'] = $ban_record['BlockedUser'];
+			$user_records[$i]['BlockedUser']['timestamp'] = stampToDate($user_records[$i]['BlockedUser']['timestamp']);
+        }
+        
+        return $user_records;
+	}
+	
 	function multiaccountwarn() {
 		$this->pageTitle = ___("Scratch | Signup", true);
         $client_ip = $this->RequestHandler->getClientIP();
 		
         $ip_whitelisted = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = INET_ATON('$client_ip')");
 		$ip_blocked = false;
-		$user_blcoked = false;
+		$user_blocked = false;
 
 		if(!$ip_whitelisted){
 			//find if the ip is blocked
-            $ip_blocked = $this->BlockedIp->findCount("ip = INET_ATON('$client_ip')");
-			//check if any blocked user used this ip in last one month
-			$user_blocked = $this->checkLockedUser();
+			$ip_blocked = $this->BlockedIp->findCount("ip = INET_ATON('$client_ip')");
+			if($ip_blocked) {
+				$this->redirect('/users/us_banned');
+				exit;
+			}
 		}
-        
-        if(!$ip_whitelisted && ($ip_blocked || $user_blocked)) {
-            //store to session
-            if($user_blocked) {
-                $this->redirect('/users/us_banned/'.$user_blocked);
-            }
-            else {
-                $this->redirect('/users/us_banned');
-            }
-            exit;
-        }
-        
-		// After discussion, we have decided not to display the multi-account warning anymore.
-		// Instead, after checking for bans, we'll go directly to the signup page.
 
-		$this->redirect('/signup');
-		exit;
-        
 		/* First we find if the IP has been used before or not, if not then simply redirect him to sign up page */
 		$creation_from_same_ip = $this->User->hasAny("User.ipaddress = INET_ATON('$client_ip')");
 		$access_from_same_ip = $this->ViewStat->hasAny("ViewStat.ipaddress = INET_ATON('$client_ip')");
 		
 		/* Some Activity from Same IP in past */
-		if(($creation_from_same_ip || $access_from_same_ip) && !$ip_whitelisted) {
-	
-			/* Get All the users who have accessed the projects or created a profile using same IP */
-			$view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = INET_ATON('$client_ip')", 'DISTINCT user_id');
-			$user_ids_accessing_same_ip = array();
-			foreach($view_stats as $view_stat) {
-				array_push($user_ids_accessing_same_ip, $view_stat['ViewStat']['user_id']); 
-			}
-
-            $user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
+		if($creation_from_same_ip || $access_from_same_ip) {
+	        $user_records = $this->getAccountsTriggerSignupBan($client_ip);
             
-			if(!empty($user_ids_accessing_same_ip)) {
-                $user_records = $this->User->findAll("User.ipaddress = INET_ATON('$client_ip') or User.id in ($user_ids_accessing_same_ip)",'urlname','created DESC');
-            }
-			else {
-                $user_records = $this->User->findAll("User.ipaddress = INET_ATON('$client_ip') ",'urlname','created DESC');
+            if(count($user_records) < MULTI_WARN_ACCOUNTS) {
+            	// Not enough banned accounts, proceed to sign up.
+				$this->redirect('/signup');
+				exit;
+            } else if((count($user_records) >= MULTI_PREVENT_ACCOUNTS) && !$ip_whitelisted) {
+            	// Too many banned accounts, proceed to banned.
+            	$this->redirect('/users/us_banned');
+            	exit;
             }
             
-			/* Some activity in past from same IP so we need to show the message with user records and ipaddress (send them to view) */
+            $iflag_content = array();
+            foreach($user_records as $ur) {
+            	$iflag_content[] = $ur['User']['id'];
+            }	
+           	$iflag_content = implode(',', $iflag_content);
+           	
+            // Otherwise, issue a multiple-account warning which will also trigger an Integraflag.
+            $this->Session->write('iflag_trigger', $iflag_content);
 			$this->set('user_records', $user_records);
 			$this->set('ip_address',$client_ip);
 		}
@@ -354,6 +367,16 @@ class UsersController extends AppController {
 						$user_record = $this->User->find("User.id = $saved_user_id");
 //						$this->Session->write('newUser', true);
 						$this->Session->write('User', $user_record['User']);
+						
+						 if($this->Session->read('iflag_trigger')) {
+							$flag_data = array(
+								'type' => 'multiaccount',
+								'flagger_ids' => $this->Session->read('iflag_trigger'), 
+								'flagged_id' => $this->data['User']['id'],
+							);
+							$this->Integraflag->save($flag_data);
+						 }
+						
 						$this->redirect('/users/'.$this->data['User']['username']);
 					} else {
 						$this->data['User']['password'] = '';
@@ -2329,21 +2352,24 @@ class UsersController extends AppController {
 	function us_banned($locked_id =null){
 			$this->autoRender = false;
 			$this->pageTitle = ___('Scratch | Blocked Account | Contact us', true);
-			$client_ip = ip2long($this->RequestHandler->getClientIP());
+			$client_ip = $this->RequestHandler->getClientIP();
 			if($locked_id)
-			$blocked_record =$this->User->find("User.id = $locked_id AND User.status='locked'");
+		      $blocked_records = $this->User->findAll("User.id = $locked_id AND User.status='locked'");
 			else
-			$blocked_record =$this->User->find("User.ipaddress = $client_ip and User.status='locked'",array(),'User.timestamp DESC');
-			if($blocked_record){
-				$blocked_user_id =$blocked_record['User']['id'];
-				$blockedusername =$blocked_record['User']['urlname'];
-				$author_ip =$blocked_record['User']['ipaddress'];
-				$ban_record = $this->BlockedUser->find("BlockedUser.user_id = $blocked_user_id");
-				$reasonsforblocking = $ban_record['BlockedUser']['reason'];
-				$blocked_date = stampToDate($ban_record['BlockedUser']['timestamp']);
-				$this->set('blockedon',stampToDate($ban_record['BlockedUser']['timestamp']));
-				$this->set('reasonsforblocking',$reasonsforblocking);
-				$this->set('blockedusername',$blockedusername);
+		      $blocked_records = $this->getAccountsTriggerSignupBan($client_ip);
+
+			$br_extended = array();
+			foreach($blocked_records as $blocked_record) {
+			    $bb = array();
+			    $bb['blocked_user_id'] = $blocked_record['User']['id'];
+			    $bb['blocked_username'] = $blocked_record['User']['urlname'];
+			    $bb['author_ip'] = $blocked_record['User']['ipaddress'];
+  				$bb['blocked_reason'] = $blocked_record['BlockedUser']['reason'];
+  				$bb['blocked_date'] = stampToDate($blocked_record['BlockedUser']['timestamp']);
+  				$br_extended[] = $bb;
+			}
+			if(count($br_extended) > 0){
+			  $this->set('br_extended', $br_extended);
 				$this->set('isBannedUser',true);
 			}
 			else
@@ -2354,14 +2380,15 @@ class UsersController extends AppController {
 			$user_agent = $_SERVER['HTTP_USER_AGENT'];
 			$name = $this->data['User']['name'];
 			$email = $this->data['User']['email'];
-			$subject = ___("Message from " . $name . ' at IP: '. long2ip($client_ip),true);
+			$subject = "Message from " . $name . ' at IP: '. $client_ip;
 			$message = $this->data['User']['message']. "<br/><br/>";
-			$message = $message.___("Blocked Account Name : ". $blockedusername,true). "<br/>";
-			$message = $message.___("Blocked On : ".$blocked_date,true). "<br/>";
-			$message = $message.___("Reason : "."<div style='border:#CCCCCC 1px solid; padding:2px;margin:5px 0px 5px 0px;'>".$reasonsforblocking."</div>",true);
 			
-			//$message = $message.___("Author's Ip address : ".long2ip($author_ip),true). " ";
-			$message = $message.___("User agent Info : ".$user_agent,true);
+			foreach($br_extended as $br) {
+			  $message .= "Blocked account: <a href='" . TOPLEVEL_URL . "/users/$br[blocked_username]'>$br[blocked_username]</a> (Blocked $br[blocked_date]): $br[blocked_reason]<br />";
+			}
+			
+			$message .= "<br />IP Info: $client_ip (<a href='" . TOPLEVEL_URL . "/administration/search'>Search tool</a>)<br />";
+			$message .= "User agent Info : ".$user_agent;
 			
 			
 			if(empty($this->data['User']['name']))
