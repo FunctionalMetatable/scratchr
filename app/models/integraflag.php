@@ -24,7 +24,7 @@ class Integraflag extends AppModel
                       COUNT(*) AS count
               FROM `integraflags`
               WHERE `created` >= '$start' AND `created` <= '$end'
-              GROUP BY DATE(`created`), `action`
+              GROUP BY DATE(`created`), `type`
               ORDER BY `created`";
       return $this->query($sql);
     }

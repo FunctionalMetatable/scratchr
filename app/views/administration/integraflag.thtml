@@ -31,7 +31,7 @@
     }
     
     .popout div {
-        width: 735px;
+        width: 705px;
         word-wrap: break-word;
     }
     .button2 {
@@ -41,6 +41,10 @@
     .button2_closed {
         padding: 0;
         font-size: 12px;
+    }
+    .button2_selected {
+        font-size: 10px !important;
+        font-weight: normal !important;
     }
 </style>
 
@@ -140,7 +144,7 @@ function deleteComment(user_id, comment_id, type) {
 	{
 		method: 'get',
 		onSuccess: function(transport) {
-			$('c_' + comment_id).remove();
+			$('c_' + comment_id).setStyle({backgroundColor: '#FFC7C7'});
 		}
 	});
 }
