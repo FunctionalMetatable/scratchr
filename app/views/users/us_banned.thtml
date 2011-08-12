@@ -1,18 +1,15 @@
 <div class="fullcontent">
 <?php if($isBannedUser):?>
-<h3><?php ___("Sorry, creation of new accounts from your network address has been suspended...")?></h3>
 <p>
 <p><span style='font-size: 35px'><?php ___('Uh oh'); ?></span>, <?php ___('it looks like one or more Scratch accounts using your network were recently blocked. Accounts are blocked when they\'re used in ways that break the'); ?> <a href='/redirect/terms'><?php ___('Scratch Community Guidelines'); ?></a>. <?php ___('In short, the guidelines say'); ?>:
 <ul><li><?php ___('Be respectful of other Scratchers'); ?></li>
 <li><?php ___('Be constructive when commenting'); ?></li>
 <li><?php ___('Help keep the site friendly'); ?></li></ul>
-</p>
-<p>
 <?php ___('Here are the accounts that have recently been blocked:'); ?>
 </p>
 
 <table>
-<tr><th><?php ___('Account'); ?></th><th><?php ___('Block date'); ?></th><th><?php ___('Reason'); ?></th></tr>
+<tr><td style='width:150px;font-weight:bold'><?php ___('Account'); ?></td><td style='width:150px;font-weight:bold'><?php ___('Block date'); ?></td><td style='font-weight:bold'><?php ___('Reason'); ?></td></tr>
 <?php foreach($br_extended as $br): ?>
 <tr><td><a href='<?php echo TOPLEVEL_URL . "/users/" . $br['blocked_username']; ?>'><?php echo $br['blocked_username']; ?></a></td><td><?php echo $br['blocked_date']; ?></td><td><?php echo $br['blocked_reason']; ?></td></tr>
 <?php endforeach; ?>
