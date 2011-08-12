@@ -2,7 +2,7 @@
 <p>
 <?php
 // Create String for Showing Users List
-$users_from_same_ip = "<table><tr><th>" . ___('User', true) . "</th><th>" . ___('Block date', true) . "</th><th>" . ___('Reason', true) . "</th></tr>";
+$users_from_same_ip = "<table><tr><td style='width:150px;font-weight:bold'>" . ___('User', true) . "</td><td style='width:150px;font-weight:bold'>" . ___('Block date', true) . "</td><td style='font-weight:bold'>" . ___('Reason', true) . "</td></tr>";
 foreach($user_records as $user) {
 	$urlname=$user['User']['urlname'];
 	$blockedDate = $user['BlockedUser']['timestamp'];
@@ -31,8 +31,6 @@ else {*/
 <ul><li><?php ___('Be respectful of other Scratchers'); ?></li>
 <li><?php ___('Be constructive when commenting'); ?></li>
 <li><?php ___('Help keep the site friendly'); ?></li></ul>
-</p>
-<p>
 <?php ___('Here are the accounts that have recently been blocked:'); ?>
 </p>
 
