@@ -12,7 +12,7 @@ switch($status) {
     <a target='_blank' href='/projects/<?php echo $project['User']['urlname']; ?>/<?php echo $project['Project']['id'] ?>'>
     <img src='/static/projects/<?php echo $project['User']['urlname']; ?>/<?php echo $project['Project']['id'] ?>_sm.png' style='float:left; margin-right: 5px'/>
     </a>
-    <a target='_blank' href='/projects/<?php echo echo $project['User']['urlname']; ?>/<?php echo $project['Project']['id'] ?>'>
+    <a target='_blank' href='/projects/<?php echo $project['User']['urlname']; ?>/<?php echo $project['Project']['id'] ?>'>
         <?php echo $project['Project']['name'] ?></a> (<abbr title='<?php echo $abbrtitle; ?>'><?php echo $abbrcontent; ?></abbr>)  censored by a CM.
         <?php e($this->renderElement('admin/integraflag/flagger_user_data', array('flag' => $flag, 'flaggers' => $flaggers))); ?>
     <blockquote><strong>Reason:</strong>  <?php echo $flag['flag_message'] ?></blockquote>

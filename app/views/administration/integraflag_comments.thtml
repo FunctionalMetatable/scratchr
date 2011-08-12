@@ -13,7 +13,21 @@
 		$user = $comment['User'];
 		$gallery = $comment['Gallery'];
 		$comment = $comment['Gcomment'];
-		$bg = '#FFF';
+		$deleted = false;
+		switch($comment['comment_visibility']) {
+		  case 'delbyadmin':
+		  case 'censbyadmin':
+		    $bg = '#FFE3FF'; 
+		    $deleted = true;
+		    break;
+		  case 'censbycomm':
+		  case 'delbyusr':
+		    $bg = '#FFFBC2'; 
+		    $deleted = true;
+		    break;
+		  default:
+        $bg = '#FFF'; break;
+		}
 	}
 	else
 	{
@@ -21,7 +35,21 @@
 		$user = $comment['User'];
 		$project = $comment['Project'];
 		$comment = $comment['Pcomment'];
-		$bg = '#F2F2FF';
+		$deleted = false;
+		switch($comment['comment_visibility']) {
+		  case 'delbyadmin':
+		  case 'censbyadmin':
+		    $deleted = true;
+		    $bg = '#FFE3FF';
+		    break;
+		  case 'censbycomm':
+		  case 'delbyuse':
+		    $deleted = true;
+		    $bg = '#FFFBC2';
+		    break;
+		  default:
+        $bg = '#F2F2FF'; break;
+		}
 	}
 	$id = $notification['id'];
 ?>
@@ -37,7 +65,8 @@
 				} else {
 					echo " | <a target='_blank' href='/projects/$project[username]/$project[id]'>$project[name]</a>";
 				}
-				echo " | <a href='javascript:deleteComment($user[id], $comment[id], \"{$type}comment\")'>[X]</a>";
+				if(!$deleted)
+				  echo " | <a href='javascript:deleteComment($user[id], $comment[id], \"{$type}comment\")'>[X]</a>";
 				?>
 			</small>
 		</div>

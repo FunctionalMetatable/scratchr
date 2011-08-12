@@ -3094,6 +3094,9 @@
 			    case 'pflag_by_user':
 				    $type = 'PFlags';
 				    break;
+			    case 'multiaccount':
+			      $type = 'Multiple Account';
+			      break;
 		    }
 		    $graphs[$type][$vertex[0]['date']] += $vertex[0]['count'];
 	    }
@@ -3162,8 +3165,8 @@
 		
 		$this->modelClass = "Pcomment";
 		$options = Array("sortBy"=>"timestamp", "sortByClass" => "Pcomment", "direction"=> "DESC", 'show'=>50);
-		list($order,$limit,$page) = $this->Pagination->init("Pcomment.user_id = $user_id AND Pcomment.comment_visibility = 'visible'", Array(), $options);
-		$pdt = $this->Pcomment->findAll("Pcomment.user_id = $user_id AND Pcomment.comment_visibility = 'visible'", null, $order, $limit, $page);
+		list($order,$limit,$page) = $this->Pagination->init("Pcomment.user_id = $user_id", Array(), $options);
+		$pdt = $this->Pcomment->findAll("Pcomment.user_id = $user_id", null, $order, $limit, $page);
 		$pdata = array(); $counter = 0;
 		
 		foreach ($pdt as $pcomment) {
@@ -3178,8 +3181,8 @@
 		
 		$this->modelClass = "Gcomment";
 		$options = Array("sortBy"=>"timestamp", "sortByClass" => "Gcomment",  "direction"=> "DESC", 'show'=>50);
-		list($order, $limit,$page) = $this->Pagination->init("Gcomment.user_id = $user_id AND Gcomment.comment_visibility = 'visible'", Array(), $options);
-		$gdata = $this->Gcomment->findAll("Gcomment.user_id = $user_id AND Gcomment.comment_visibility = 'visible'", null, $order, $limit, $page);
+		list($order, $limit,$page) = $this->Pagination->init("Gcomment.user_id = $user_id", Array(), $options);
+		$gdata = $this->Gcomment->findAll("Gcomment.user_id = $user_id", null, $order, $limit, $page);
 		
 		$merged_arrays = array_merge($pdata, $gdata);
 		
