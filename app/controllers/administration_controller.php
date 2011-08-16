@@ -2977,8 +2977,12 @@
 			$flags = $this->Integraflag->findAll("Integraflag.status='closed'", null, $order, $limit, $page);
 		}
 		else
-		{
-			$flags = $this->Integraflag->findAllByStatus($status, array(), array('Integraflag.created' => 'ASC'));
+		{ 
+		  $direction = 'ASC';
+		  if ($status == 'review') {
+		    $direction = 'DESC';
+		  }
+			$flags = $this->Integraflag->findAllByStatus($status, array(), array('Integraflag.created' => $direction));
 		}
 		$flag_data = array();
 		
