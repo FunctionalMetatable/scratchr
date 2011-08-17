@@ -2978,11 +2978,7 @@
 		}
 		else
 		{ 
-		  $direction = 'ASC';
-		  if ($status == 'review') {
-		    $direction = 'DESC';
-		  }
-			$flags = $this->Integraflag->findAllByStatus($status, array(), array('Integraflag.created' => $direction));
+			$flags = $this->Integraflag->findAllByStatus($status, array(), array('Integraflag.created' => "DESC"));
 		}
 		$flag_data = array();
 		
