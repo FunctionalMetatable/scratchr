@@ -470,7 +470,7 @@ else {
     </div>
 
     <?php
-    if ($isExperimentalUser) {
+    if ($isAdmin) {
         echo '<div id="beta">';
         echo '<h3>';
         echo ___('Play with the code');
