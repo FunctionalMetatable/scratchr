@@ -37,6 +37,9 @@ $this->params['webservices']
  
  define("NUM_MAX_COMMENT_FLAGS", 1);
  define("NUM_MAX_PROJECT_FLAGS", 3);
+ // Max project flags for a community censor on a new user account
+ define("NUM_MAX_PROJECT_FLAGS_NEWUSER", 1);
+ define("NUM_MAX_PROJECT_FLAGS_NEWUSER_TIME", 60*60*24);
  define("NUM_MAX_TAG_FLAGS", 1);
  define("MAX_COMMENT_LENGTH", 500);
   define("COMMENT_LENGTH", 10);
