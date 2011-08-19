@@ -1010,9 +1010,17 @@ class ProjectsController extends AppController {
 				$this->set('just_flagged', true);
 				$this->set('pid', $pid);
 				$this->set('urlname', $urlname);
+
+                $num_max_flags = NUM_MAX_PROJECT_FLAGS;
+
+                // Decrease the number of flags to censor if the project is extremely new
+                if (strtotime($creator['User']['created']) > time()-(NUM_MAX_PROJECT_FLAGS_NEWUSER_TIME)) {
+                        $num_max_flags = NUM_MAX_PROJECT_FLAGS_NEWUSER;
+                }
+
 				
 				//if the number of flags on this project exceeds the current maximum, automatically censor this project
-				if (($flags >= NUM_MAX_PROJECT_FLAGS && $project_status == 'notreviewed') || ($isCM && $cmcensor)) {
+				if (($flags >= $num_max_flags && $project_status == 'notreviewed') || ($isCM && $cmcensor)) {
 					//if the project is not censored already
 					if($project['Project']['proj_visibility'] == 'visible') {
 						$this->Project->censor($pid, $urlname, $this->isAdmin(), $user_id, $isCM);
