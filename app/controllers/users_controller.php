@@ -2432,6 +2432,7 @@ class UsersController extends AppController {
 	
 	
 	function close_account($user_id){
+		$this->cakeError('error404'); // disabling
 		$session_user_id = $this->getLoggedInUserID();
 		$this->User->id = $user_id;
         $user = $this->User->read();
