@@ -471,8 +471,23 @@ class ApiController extends AppController {
 		echo $projects = $this->Project->find('count',array('conditions'=>$final_criteria));
 		exit;
 	}
-	
-	
+   /**
+
+        * This function returns number of visible comments created by user (on projects and galleries
+        * Parameter: username
+        * Output: number of comments.
+        * Example:  http://scratch.mit.edu/api/getnumcommentsbyuser/ashok
+        * Example output: 53620
+        */
+
+        function getnumcommentsbyuser($username){
+
+                Configure::write('debug', 0);
+                $user_id = $this->User->field('id', array('User.username' => $username));
+		echo $comment_count = $this->Pcomment->findCount(array('Pcomment.user_id' => $user_id,'comment_visibility'=>'visible')) + $this->Gcomment->findCount(array('Gcomment.user_id' => $user_id,'comment_visibility'=>'visible'));
+                exit;
+        }
+
 	/** 
     * This function returns all visible comments of a project. Result contains one comment details per line.
 	* Parameter: project id
