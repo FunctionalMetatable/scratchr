@@ -11,7 +11,7 @@
 <?php else:?>
 
 <script type="text/javascript">
-var explainFlagMsg = "<?php ___('Please explain why you think this project is inappropriate. This is required for you to flag.'); ?>";
+var explainFlagMsg = "<?php ___('To flag this project, you must explain why you feel it is disrespectful or inappropriate. Please don\'t flag projects because they are broken, or because you don\'t like them. The Scratch Team will read your message and decide what to do. Thanks!'); ?>";
 var explainFlagTxt = '';
 </script>
 <h5><a href="#" onclick="$('flagMessageDiv').toggle();$('loveitDiv').toggle();$('favoriteDiv').toggle();$('flagMessageDivTb').value=explainFlagMsg;return false;"><?php ___('Flag as inappropriate?'); ?></a></h5>
