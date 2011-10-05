@@ -1369,7 +1369,8 @@
 			}
 			
 			if ($search_column == 'ipaddress') {
-				$search_ip =ip2long($search_term);
+				$search_term = trim($search_term);
+                $search_ip =ip2long($search_term);
 				$users_records = array();
 
 				$users = $this->User->findAll("User.ipaddress = INET_ATON('$search_term')");
@@ -1496,18 +1497,23 @@
 		$this->set('search_column', $search_column);
 		$this->set('search_table', $search_table);
 		if($search_column == 'ipaddress') {
-            $search_ip =ip2long($search_term);
+            $search_ip =ip2long(trim($search_term));
 			$is_allow_account_creation = true;
 			$this->BlockedIp->unbindModel(
                 array('belongsTo' => array('User'))
             );
-             $locked_id = $this->checkLockedUser($search_term); 
-			 if($locked_id){
-			 	$is_allow_account_creation = false;
-				}
-			$this->set('is_allow_account_creation', $is_allow_account_creation);
+            $ip_whitelisted = $this->WhitelistedIpAddress->find("WhitelistedIpAddress.ipaddress = $search_ip");
+            $bad_records = $this->getAccountsTriggerSignupBan($search_term);
+			if(count($bad_records) < MULTI_WARN_ACCOUNTS) {
+                $is_allow_account_creation = "Open"; 
+            } else if (count($bad_records) >= MULTI_PREVENT_ACCOUNTS && !$ip_whitelisted) {
+                $is_allow_account_creation = "Blocked";
+            } else {
+                $is_allow_account_creation = "Warning";
+            }
+            $this->set('is_allow_account_creation', $is_allow_account_creation);
 			$this->set('banned',$this->BlockedIp->find("BlockedIp.ip=$search_ip"));
-			$this->set('isWhitelisted',$this->WhitelistedIpAddress->find("WhitelistedIpAddress.ipaddress =$search_ip"));
+			$this->set('isWhitelisted', $is_whitelisted);
             $this->set('orig_ip',$search_ip);
             $this->set('search_term',$search_term);
             $this->render('admin_search_ip', 'ajax');
@@ -1515,6 +1521,33 @@
 		else {
             $this->render('admin_search', 'ajax');
         }
+	}
+
+    function getAccountsTriggerSignupBan($client_ip) {
+        /* Get all the users who have accessed the projects or created a profile using same IP */
+		/* Track this to users_controller.php */
+        $view_stats = $this->ViewStat->findAll("ViewStat.ipaddress = INET_ATON('$client_ip')", array('timestamp', 'user_id'));
+		$user_ids_accessing_same_ip = array();
+		foreach($view_stats as $view_stat) {
+			if(strtotime($view_stat['ViewStat']['timestamp']) > time()-(60*60*24*MULTI_DAYS_CHECK))
+				array_push($user_ids_accessing_same_ip, $view_stat['ViewStat']['user_id']); 
+		}
+
+        $user_ids_accessing_same_ip = implode(',', $user_ids_accessing_same_ip);
+        
+		if(!empty($user_ids_accessing_same_ip)) {
+			$user_records = $this->User->findAll("User.id in ($user_ids_accessing_same_ip) AND User.status='locked'", array('urlname', 'status', 'id'),'created DESC');
+        }
+        
+        // Add the ban reasons
+        for($i = 0; $i < count($user_records); $i++) {
+            $ur = $user_records[$i];
+			$ban_record = $this->BlockedUser->find("BlockedUser.user_id = {$ur[User][id]}");
+			$user_records[$i]['BlockedUser'] = $ban_record['BlockedUser'];
+			$user_records[$i]['BlockedUser']['timestamp'] = stampToDate($user_records[$i]['BlockedUser']['timestamp']);
+        }
+        
+        return $user_records;
 	}
 	
 	function set_view_date_time($ip, $user_id){
