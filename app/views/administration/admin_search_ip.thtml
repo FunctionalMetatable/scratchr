@@ -16,13 +16,7 @@ Access :
 <br />
 Account Creation :
 <?php 
-if($is_allow_account_creation){
-echo "Open";
-}
-else{
-echo "Blocked\t\t";
-}
-
+echo $is_allow_account_creation;
 ?>
 &nbsp;&nbsp;&nbsp;
 <?php if($isWhitelisted):?>
