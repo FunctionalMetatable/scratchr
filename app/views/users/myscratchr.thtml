@@ -274,6 +274,9 @@ function langList($countries) {
 			
 		<?php endif;?>
         
+        <?php if(($isAdmin || $isCM) && in_array($user['status'], array('locked', 'blockedtemporarily'))): ?>
+            <br /><strong style='color:#F00'>User blocked</strong><br />
+        <?php endif; ?>
         
         <?php if((isset($users_permission['block_account']) || $isAdmin) && $isLoggedIn):?>
         <br /><a href="<?php echo $html->url('/administration/ban_user/')?><?php echo $user_id?>">Ban User</a>
