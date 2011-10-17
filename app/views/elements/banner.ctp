@@ -18,7 +18,21 @@
 <a href="download"><img width="194" height="44" src="static-locale/img/download2_<?= $postfix; ?>.png"/></a>
 </div>
     <div style="margin: 25px 20px 0px 0px; float: right;">
-        <a href="static-locale/html/video_<?= $postfix; ?>.html?width=647&height=485" class="thickbox" rel="AjaxGroup" title="Video showing what people can do in Scratch" target="_blank"><img width="244" height="182" src="/img/video.png"/></a>
+<?php 
+	// If the country is US, change dimensions of pop-up video window to suit HD video.
+	if($postfix == 'us'){
+		?>
+        	<a href="static-locale/html/video_<?= $postfix; ?>.html?width=640&height=368" class="thickbox" rel="AjaxGroup" title="Video showing what people can do in Scratch" target="_blank"><img width="244" height="182" src="/img/video.png"/></a>
+		<?
+	}
+	else {
+		?>
+		<a href="static-locale/html/video_<?= $postfix; ?>.html?width=647&height=485" class="thickbox" rel="AjaxGroup" title="Video showing what people can do in Scratch" target="_blank"><img width="244" height="182" src="/img/video.png"/></a>
+		<?
+	}
+
+?>
     </div>
 </div>
+
 <?php endif; ?>
