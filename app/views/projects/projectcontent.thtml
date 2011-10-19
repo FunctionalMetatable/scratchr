@@ -368,6 +368,7 @@ else {
    ?>
    <?php if(!$isLocked && !$user_locked || $isMine): ?>
     <h4><?php ___('Add a Comment'); ?> </h4>
+    <?php echo $comment_prompt; ?>
     <form id="pcomment" action="<?php e("/projects/$urlname/$pid/comment")?>" method="post">
 
         <p><textarea id='pcomment_textarea' name="pcomment_textarea" cols="55" rows="3"></textarea>
