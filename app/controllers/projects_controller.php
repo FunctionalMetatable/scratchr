@@ -1,7 +1,7 @@
 <?php
 class ProjectsController extends AppController {
 
-    var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject', 'AnonViewStat', 'ExperimentalUser', 'Integraflag');
+    var $uses = array('Gallery', 'RemixedProject', 'IgnoredUser', 'TagFlag', 'Mpcomment','Project','Tagger','FeaturedProject', 'ProjectFlag', 'User','Pcomment','Gcomment','ViewStat','ProjectTag', 'Tag','Lover', 'Favorite', 'Downloader','Flagger', 'Notification', 'ProjectShare', 'ProjectSave', 'GalleryProject', 'AnonViewStat', 'ExperimentalUser', 'Integraflag');
     var $components = array('RequestHandler','Pagination', 'Email', 'PaginationSecondary','Thumb');
     var $helpers = array('Javascript', 'Ajax', 'Html', 'Pagination', 'Util');
 
@@ -2325,6 +2325,29 @@ class ProjectsController extends AppController {
             else
                 $this->set('isExperimentalUser', FALSE);
 
+            /** Experiment October 2011 on the effect of comment prompting. **/
+            $comment_prompt = ""; // By default, display no prompt.
+
+            // Experiment bounds:
+            $comment_prompt_begin = mktime(0, 0, 0, 10, 19, 2011);
+
+            // Test group is EVEN USER IDs, control group is ODD USER IDs
+            $comment_prompt_in_id = ($logged_id % 2 == 0);
+            // Test group will only include accounts created after the test has begun
+            $comment_prompt_in_time = (strtotime($uview['User']['created']) > $comment_prompt_begin);
+
+            if ($comment_prompt_in_id && $comment_prompt_in_time) {
+                // We're in the experiment.  Which prompt to display?
+                // Let's check the number of comments we have.
+                $comment_count = $this->Pcomment->findCount(array('Pcomment.user_id'=>$logged_id));
+                $comment_count += $this->Gcomment->findCount(array('Gcomment.user_id'=>$logged_id));
+                if ($comment_count <= 5) {
+                    $comment_prompt = ___("Many of the projects you'll see are by people who are just getting started with Scratch.  Please be <a href='/terms'>friendly and constructive</a> in your comments.", true);
+                } else {
+                    $comment_prompt = ___("Please be <a href='/terms'>friendly and constructive</a> in your comments.", true);
+                }
+            }
+            $this->set('comment_prompt', $comment_prompt);
 
             $this->render('projectcontent','scratchr_projectpage');
         }
