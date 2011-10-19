@@ -393,6 +393,7 @@ class UsersController extends AppController {
 				$this->validateErrors($this->User);
 			}
 		}
+        $this->data['User']['username_botck'] = $this->data['User']['username'];
 		$this->set('ipNotAllowed',$ipNotAllowed);
 		$this->set_signup_variables();
 		$this->set('errors', $errors);
