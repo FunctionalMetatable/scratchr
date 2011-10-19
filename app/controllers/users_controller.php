@@ -192,7 +192,8 @@ class UsersController extends AppController {
 
 		$this->set('username_error', ___('username must be at least 3 letters and/or numbers, no spaces', true));
 		if(!empty($this->data['User'])) {
-			$this->data['User']['username']  = str_replace(" ", "", $this->data['User']['username']);
+			$this->data['User']['username']  = str_replace(" ", "", $this->data['User']['username_botck']);
+            unset($this->data['User']['username_botck']);
 			if(strlen($this->data['User']['username']) < 3 || strlen($this->data['User']['username']) > 19) {
 				$this->User->invalidate('username');
 				$errors['name_length'] = ___('Username must be between 3 to 20 characters', true);

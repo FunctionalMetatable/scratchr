@@ -40,12 +40,12 @@
   </div>
   <div class="signup_row">
 		<div class="signup_label">
-			<label for="data[User][username]"><?php ___('Username'); ?>*</label>
+			<label for="data[User][username_botck]"><?php ___('Username'); ?>*</label>
 		</div>
 		<div class="signup_input">
 			<?php
 				echo $form->text
-					('User/username', array('type'=>'text', 'size'=>'30',
+					('User/username_botck', array('type'=>'text', 'size'=>'30',
 					'onkeyup'=> '',
 					'onblur'=> '', 'maxlength' => '20'));
 			?>
