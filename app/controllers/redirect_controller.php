@@ -41,7 +41,7 @@ function privacy(){
 
 function download(){
 	$browser_lang = $this->_get_browser_lang();
-	$this->redirect('http://' . INFO_URL . '/' . trim($browser_lang) . 'Scratch_1.4_Download');
+	$this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang) . 'Scratch_1.4_Download');
 }
 
 function _get_browser_lang(){
