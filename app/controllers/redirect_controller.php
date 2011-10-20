@@ -39,6 +39,11 @@ function privacy(){
 	$this->redirect('http://' . SUPPORT_URL . '/' . trim($browser_lang) . 'Privacy_Policy');
 }
 
+function download(){
+	$browser_lang = $this->_get_browser_lang();
+	$this->redirect('http://' . INFO_URL . '/' . trim($browser_lang) . 'Scratch_1.4_Download');
+}
+
 function _get_browser_lang(){
 	   $cookie_lang = $this->Cookie->read('lang');
 	   $set_lang = get_client_language($cookie_lang);
