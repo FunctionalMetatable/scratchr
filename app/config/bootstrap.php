@@ -33,7 +33,7 @@ $this->params['webservices']
  define("NUM_NEW_MEMBERS", 4);
  define("NUM_RECENT_VISITORS", 4);
  define("MAX_LENGTH_PNAME_HOME", 20);
- define("MEMCACHE_PREFIX", "scratch.mit.edu");
+ define("MEMCACHE_PREFIX", "prd");
  
  define("NUM_MAX_COMMENT_FLAGS", 1);
  define("NUM_MAX_PROJECT_FLAGS", 3);
@@ -93,19 +93,27 @@ $this->params['webservices']
  define("CONTACTUS_EMAIL", "help@scratch.mit.edu");
  //Used in  users password recovery reply email id.
  define("REPLY_TO_PASSWORD_RECOVERY", "help@scratch.mit.edu");
- 
-/**
+
+ /**
+
  * Configuration for multiple banned account registration warnings
+
  */
- 
+
+
  // Number of banned accounts which will trigger warning
+
  define("MULTI_WARN_ACCOUNTS", 1);
  
+
  // Number of banned accounts which will prevent registration
+
  define("MULTI_PREVENT_ACCOUNTS", 2);
  
+
  // Number of days to check for access from banned IPs
  define("MULTI_DAYS_CHECK", 30);
+
  
  /**
   * Themes config
@@ -164,7 +172,7 @@ $this->params['webservices']
  /**
   * External webservices interface key for scratchr
   */
- define("SCRATCH_KEY", "XXXXX");
+ define("SCRATCH_KEY", "ch4ng3me");
 
  /**
   * Tag cloud consts
@@ -212,7 +220,6 @@ $this->params['webservices']
   define("API_PROJECT_BLOCK_TTL", 60); //1 hours
   define("API_GETBLOCKCOUNT_PER_CATEGORY_TTL", 60); //1 hours
   define("API_GETBLOCKCATEGORYCOUNT_BYPID_TTL", 60); //1 hours
-  define("API_PCOMMENTS_BY_UID_TTL", 60); //1 hours
 
  /**
   * IMAGE EXTENSIONS
@@ -239,7 +246,6 @@ $this->params['webservices']
  define("FLASH_NOTICE_KEY", "notice");
 
 /**
-
  * Resource URLs
  */
 define ('INFO_URL', 'http://info.scratch.mit.edu'); 
@@ -280,7 +286,7 @@ define('WHITELISTED_URL', '\.edu');
 //remix notification related constants
 define('SEND_REMIX_NOTIFICATION', true);
 define('ASSIGN_REMIX_NOTIFICATION', true);
-define('REMIX_NOTIFICATION_DAYS_SPAN', 30);
+define('REMIX_NOTIFICATION_DAYS_SPAN', 60);
 define('REMIX_NOTIFICATION_TO_ROOT_BASED', true);
 define('REMIX_NOTIFICATION_TO_LAST_BASED', true);
 
@@ -309,13 +315,13 @@ define('CACHE_DURATION', '4 days');
 /**
  * Memcache constants
  */
-define("MEMCACHE_SERVER", 'scratchdb'); //memcache server
+define("MEMCACHE_SERVER", 'scratchdb.media.mit.edu'); //memcache server, 
 define("MEMCACHE_PORT", 11211); //memcache port
 define("HOMEL_PAGE_TTL", 60); //for home page
 define("HOMEL_NEW_PROJECTS_TTL", 5);
 define("HOME_SCRATCH_CLUB_TTL", 15);
 define("HOME_FEATURED_THEMES_TTL", 60);
-define("HOME_FRIENDS_PROJECTS_TTL", 60);
+define("HOME_FRIENDS_PROJECTS_TTL", 360);
 define("HOME_RECENT_VISITORS_TTL", 10);
 define("HOME_NEW_MEMBERS_TTL", 10);
 define("HOME_TOTAL_VISIBLE_PROJECTS_TTL", 240);
@@ -402,7 +408,7 @@ define('USER_UNBLOCK_DAYS', '3 days');
 /***
 *authentication_key to get latest project
 **/
-define('GET_LATEST_PROJECT_AUTH_KEY', 'XXXXXX');
+define('GET_LATEST_PROJECT_AUTH_KEY','df820d800daa7aa3c3d79507ce7bdf14');
 
 /**
   * Returns theme url for html link destination
@@ -486,7 +492,12 @@ define('GET_LATEST_PROJECT_AUTH_KEY', 'XXXXXX');
 			$prefix.="static".$ds."icons".$ds."buddy".$ds.$userid."_sm";
 		else
 			$prefix.="static".$ds."icons".$ds."buddy".$ds.$userid."_med";
-
+/*
+		if($type == 'mini')
+			$prefix.="static".$ds."icons".$ds."fools_sm";
+		else
+			$prefix.="static".$ds."icons".$ds."fools_med";
+*/
 		if($withExtension)
 		{
 			/*
@@ -703,7 +714,19 @@ function friendlyDate($original) {
 
 function isInappropriate($content) {
     $whitelist = array("grape", "packing", "skyscraper");
-    $blacklist = array("pendej","chinga","chingo", "verga","cabron","pucha","ash0le", "ashole","asshole", "assface","assh0le","asswipe","azzhole","bassterds","bastard","basterd","bitch","blow job","butthole","buttwipe","c0ck", "c0k", "cockbiter", "cock-biter", "cockhead","cock-head","cocksucker",  "dild0","dild0s","dildo","dildos","dilld0","dilld0s","dyke", "f u c k","fag1t","faget","fagg1t","faggit","faggot","fagit","fuck", "ƒuck", "fukah","fuken","fuker","fukin","fukk","fukkah","fukken","fukker","fukkin","g00k","h00r","h0ar","h0re","hoar","hoore","jackoff","jerk-off","jisim","jiss","jizm","jizz", "lezzian","massterbait","masst", "masstrbate","masterbate","masterbates","motha fuker","n1gr","nigga", "nastt","nigger","nigur","niiger","niigr","packi","packie","packy","paki","pakie","pecker","phuc","phuck","phuk","phuker","phukker","polac","polack","polak","poonani","pr1c","pr1ck","pr1k","pusse","pussee","pussy","puuke","puuker","scank","schlong","sh1t","sh1ter","sh1ts","shtter","sh1tz","shit","shyt","skanck","skank", "slut", "wh00r","wh0re","whore","rape","gay", "g4y", "it sux", "it sucks","lemonparty","goatse","meatspin","tubgirl","hai2u","bottleguy","goregasm","tubboy","youraresogay","bagslap","ls.gd", "OctopusGirl.com", "KidsInSandbox.info", "ScrollBelow.com", "2girls1cup.ws", "PainOlympics.info", "1man2needles.com", "lolshock.com", "ProlapseMan.com", "WalkTheDinosaur.com", "TheMacUser.org", "LolTrain.com", "FruitLauncher.com", "MilkFountain.com", "Homewares.org", "JapScat.org", "DadParty.com", "Hai2U.com", "BottleGuy.com", "Turdgasm.com", "VomitGirl.org", "1Priest1Nun.com", "BowlGirl.com", "EelSoup.net", "GoatseGirl.org", "ClownSong.com", "PhoneJapan.com", "WormGush.com", "WhipCrack.org", "FunnelChair.com", "LOLHello.com", "MudMonster.org", "NutAbuse.com", "SuckDude.com", "TubGirl.me", "LemonParty.biz", "1man1jar.org", "Meatspin.biz", "TheHomo.org", "Selfpwn.org", "Goatse.bz", "BlueWaffle.biz", "MerryHolidays.org", "HowToTroll.org", "2Girls1Finger.org", "2Guys1Stump.org", "3guys1hammer.ws", "1guy1cock.com", "1girl1pitcher.org", "4girlsfingerpaint.org", "donotwatch.org");
+    $blacklist = array("pendej","chinga","chingo", 
+"verga","cabron","pucha","ash0le", "ashole","asshole", 
+"assface","assh0le","asswipe","azzhole","bassterds","bastard","basterd","bitch","blow 
+job","butthole","buttwipe","c0ck", "c0k", "cockbiter", "cock-biter", 
+"cockhead","cock-head","cocksucker",  
+"dild0","dild0s","dildo","dildos","dilld0","dilld0s","dyke", "f u c 
+k","fag1t","faget","fagg1t","faggit","faggot","fagit","fuck", 
+"fukah","fuken","fuker","fukin","fukk","fukkah","fukken","fukker","fukkin","g00k","h00r","h0ar","h0re","hoar","hoore","jackoff","jerk-off","jisim","jiss","jizm","jizz", 
+"lezzian","massterbait","masst", 
+"masstrbate","masterbate","masterbates","motha fuker","n1gr","nigga", 
+"nastt","nigger","nigur","niiger","niigr","packi","packie","packy","paki","pakie","pecker","phuc","phuck","phuk","phuker","phukker","polac","polack","polak","poonani","pr1c","pr1ck","pr1k","pusse","pussee","pussy","puuke","puuker","scank","schlong","sh1t","sh1ter","sh1ts","shtter","sh1tz","shit","shyt","skanck","skank", 
+"slut", "wh00r","wh0re","whore","rape","gay", "g4y", "it sux", "it 
+sucks","lemonparty","goatse","meatspin","tubgirl","hai2u","bottleguy","goregasm","tubboy","youraresogay","bagslap","ls.gd","fullmalls.com");
 // while the word gay is not inappropriate, our analysis show that it is almost always used as a derogatory term and given our resources moderating the website we decided to add it to this list
 
     $content = strtolower($content);
