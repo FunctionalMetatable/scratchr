@@ -172,7 +172,7 @@ $this->params['webservices']
  /**
   * External webservices interface key for scratchr
   */
- define("SCRATCH_KEY", "ch4ng3me");
+ define("SCRATCH_KEY", "changeMe");
 
  /**
   * Tag cloud consts
@@ -408,7 +408,7 @@ define('USER_UNBLOCK_DAYS', '3 days');
 /***
 *authentication_key to get latest project
 **/
-define('GET_LATEST_PROJECT_AUTH_KEY','df820d800daa7aa3c3d79507ce7bdf14');
+define('GET_LATEST_PROJECT_AUTH_KEY','xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
 
 /**
   * Returns theme url for html link destination
