@@ -713,7 +713,7 @@ function friendlyDate($original) {
 
 
 function isInappropriate($content) {
-    $whitelist = array("grape", "packing", "skyscraper");
+    $whitelist = array("grape", "grapes", "packing", "skyscraper", "trapezoid", "trapezoids", "craps");
     $blacklist = array("pendej","chinga","chingo", 
 "verga","cabron","pucha","ash0le", "ashole","asshole", 
 "assface","assh0le","asswipe","azzhole","bassterds","bastard","basterd","bitch","blow 
