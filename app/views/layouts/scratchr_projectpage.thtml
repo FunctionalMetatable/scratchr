@@ -49,7 +49,7 @@ echo $javascript->link('scriptaculous.js');
 if ($isLoggedIn) {
 	
     $areyousure = ___('Are you sure this project is disrespectful or inappropriate as defined by the Scratch Community Guidelines?', true); 
- $pleaseexplain = ___("Please explain more about why you think it\'s inapprorpiate.", true);
+ $pleaseexplain = ___("Please explain more about why you think this project is inappropriate.", true);
      $have2desc = ___("You have to describe why you\'re reporting a project before you can report it!", true);
     e($javascript->codeBlock("
 	
