@@ -22,7 +22,12 @@ class DusersController extends AppController
 	
 	function add()
 	{
-	$this->set('content_status', $this->getContentStatus());
+	// This function is pointed to by 'scratch.mit.edu/download' on the current site.
+	// Due to a lack of understanding on my part of how to make the main site accept changes
+	// to the config/routes.php, the current solution taken is to replace the functionality here
+	// with that of the new function that we want to use at 'scratch.mit.edu/redirect/download
+	$this->redirect("/redirect/download");
+	/*$this->set('content_status', $this->getContentStatus());
 	$this->pageTitle = ___("Scratch Download Form", true);
 	//$this->autoLayout = false;
 	if (!empty($this->data['Duser']))
@@ -64,8 +69,8 @@ class DusersController extends AppController
             $this->redirect("/pages/download");
            }
        }
-	   
- }
+	   */
+	}
 
 }
 ?>
