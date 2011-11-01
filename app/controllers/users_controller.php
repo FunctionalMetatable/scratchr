@@ -2434,7 +2434,7 @@ class UsersController extends AppController {
 	
 	
 	function close_account($user_id){
-		$this->cakeError('error404'); // disabling
+		// $this->cakeError('error404'); // disabling
 		$session_user_id = $this->getLoggedInUserID();
 		$this->User->id = $user_id;
         $user = $this->User->read();
@@ -2446,8 +2446,9 @@ class UsersController extends AppController {
 		//count user's project
 		$num_project = $this->Project->find('count', array('conditions' => array('Project.user_id' => $user['User']['id'])));
 		//allow user to delete account who have never posted any projects.
-		if (!$this->isAdmin() && $user['User']['id'] !== $session_user_id && $num_project > 0) {
-			$this->__err();
+		if ( $user['User']['id'] !== 
+$session_user_id || $num_project > 0) {
+			$this->cakeError('error404');
 		}
 		if(!empty($this->data))
 		{
