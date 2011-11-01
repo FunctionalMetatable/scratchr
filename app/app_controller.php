@@ -873,6 +873,7 @@ ini_restore ("memory_limit");
 		$this->Gcomment->id = $gcomment_id;
 		$gcomment = $this->Gcomment->read();
 		$this->Gcomment->saveField("comment_visibility", $visibility);
+		$this->Gcomment->deleteCommentsFromMemcache($gcomment['Gallery']['id']);
 	}
 	
 	/**
@@ -882,6 +883,7 @@ ini_restore ("memory_limit");
 		$this->Pcomment->id = $pcomment_id;
 		$pcomment = $this->Pcomment->read();
 		$this->Pcomment->saveField("comment_visibility", $visibility);
+		$this->Pcomment->deleteCommentsFromMemcache($pcomment['Project']['id']);
 	}
 	
 	/**
