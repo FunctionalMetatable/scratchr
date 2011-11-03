@@ -713,7 +713,7 @@ function friendlyDate($original) {
 
 
 function isInappropriate($content) {
-    $whitelist = array("grape", "grapes", "packing", "skyscraper", "trapezoid", "trapezoids", "craps");
+    $whitelist = array("packing", "craps", "antirape","bedrape","bedraped","bedrapes","cameraperson","camerapersons","chemotherapeutic","chemotherapeutically","chemotherapeutics","crape","craped","crapes","drape","drapeabilities","drapeability","drapeable","draped","draper","draperies","drapers","drapery","drapes","drapey","grape","grapefruit","grapefruits","grapelike","graperies","grapery","grapes","grapeshot","grapevine","grapevines","grapey","immunotherapeutic","intraperitoneal","intraperitoneally","intrapersonal","nontherapeutic","parapet","parapeted","parapets","psychotherapeutic","psychotherapeutically","rapeseed","rapeseeds","sarape","sarapes","scrape","scraped","scraper","scrapers","scrapes","serape","serapes","skyscraper","skyscrapers","subtherapeutic","therapeuses","therapeusis","therapeutic","therapeutically","therapeutics","trapes","trapesed","trapeses","trapesing","trapeze","trapezes","trapezia","trapezii","trapezist","trapezists","trapezium","trapeziums","trapezius","trapeziuses","trapezohedra","trapezohedron","trapezohedrons","trapezoid","trapezoidal","trapezoids","undrape","undraped","undrapes" );
     $blacklist = array("pendej","chinga","chingo", 
 "verga","cabron","pucha","ash0le", "ashole","asshole", 
 "assface","assh0le","asswipe","azzhole","bassterds","bastard","basterd","bitch","blow 
