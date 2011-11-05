@@ -749,6 +749,56 @@ class ProjectsController extends AppController {
         return;
     }
 
+	/**
+     * add new credits for the given project
+     * @param string $urlname => user url
+     * @parm int $pid => project id
+     */
+    function credits($urlname=null, $pid=null) {
+		Configure::write('debug',0);
+        $this->exitOnInvalidArgCount(2);
+        $this->autoRender=false;
+        $this->Project->id=$pid;
+        $project = $this->Project->read();
+		
+		$this->loadModel('ProjectCredit');
+		$credit = $this->ProjectCredit->find('first', array('conditions' =>array('ProjectCredit.project_id' => $pid),'order' =>'ProjectCredit.timestamp DESC'));
+		
+		if (empty($project) || ($project['User']['urlname'] !== $urlname))
+			$this->cakeError('error404');
+
+		if (!$this->isAdmin())
+			if (!$this->activeSession($project['User']['id']))
+				$this->cakeError('error404');
+
+        if (isset($this->params['form']['credit_text'])) {
+            $new_credits = strip_tags($this->params['form']['credit_text']);
+			$new_credits = trim($new_credits);
+			if(!empty($new_credits) && $new_credits != $credit['ProjectCredit']['credits_text'])
+			{
+				$this->data['ProjectCredit']['project_id'] = $pid;
+				$this->data['ProjectCredit']['credits_text'] = $new_credits;
+				if($this->ProjectCredit->save($this->data['ProjectCredit'])) 
+				{
+					$this->set('linkify', true);
+					$this->set('new_credits', $new_credits);
+					$this->render('project_credits_ajax','ajax');
+					return;
+				}
+			}	
+        }
+		if($credit['ProjectCredit']['credits_text'])
+		{
+			$new_credits = $credit['ProjectCredit']['credits_text'];
+		}
+		else
+		{
+			$new_credits = '';
+		}
+        $this->set('new_credits',$new_credits);
+        $this->render('project_credits_ajax','ajax');
+        return;
+    }
 
     /**
      * Search action on all projects or
@@ -2299,6 +2349,10 @@ class ProjectsController extends AppController {
             //close memcache connection
             $this->Project->mc_close();
             */
+			//set project credit
+			$this->loadModel('ProjectCredit');
+			$credit = $this->ProjectCredit->find('first', array('conditions' =>array('ProjectCredit.project_id' => $pid),'order' =>'ProjectCredit.timestamp DESC'));
+			$this->set('credits_text', $credit['ProjectCredit']['credits_text']);
 			//set project player type.
 			$player_type = null;
 			if ($isLogged) {

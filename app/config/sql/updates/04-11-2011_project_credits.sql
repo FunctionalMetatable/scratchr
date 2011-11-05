@@ -1,0 +1,7 @@
+CREATE TABLE `project_credits` (
+`id` INT UNSIGNED NOT NULL AUTO_INCREMENT ,
+`project_id` INT UNSIGNED NOT NULL ,
+`credits_text` TEXT NOT NULL ,
+`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+PRIMARY KEY ( `id` )
+);

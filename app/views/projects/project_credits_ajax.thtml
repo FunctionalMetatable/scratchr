@@ -1,0 +1,7 @@
+<?php
+$new_credits = preg_replace('[\n]', '<br>', $new_credits);
+if(isset($linkify)) {
+    $new_credits = $util->linkify($new_credits);
+}
+echo $new_credits;
+?>
