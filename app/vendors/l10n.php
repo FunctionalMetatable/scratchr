@@ -221,6 +221,7 @@ class L10n extends Object {
 										'en-tt' => array('language' => 'English (Trinidad)', 'locale' => 'en_tt', 'localeFallback' => 'eng', 'charset' => 'utf-8'),
 										'en-us' => array('language' => 'English (United States)', 'locale' => 'en_us', 'localeFallback' => 'eng', 'charset' => 'utf-8'),
 										'en-za' => array('language' => 'English (South Africa)', 'locale' => 'en_za', 'localeFallback' => 'eng', 'charset' => 'utf-8'),
+										'eo' => array('language' => 'Esperanto', 'locale' => 'eo', 'localeFallback' => 'eo', 'charset' => 'utf-8'),										
 										'es' => array('language' => 'Spanish (Spain - Traditional)', 'locale' => 'spa', 'localeFallback' => 'es_es', 'charset' => 'utf-8'),
 										'es-ar' => array('language' => 'Spanish (Argentina)', 'locale' => 'es_ar', 'localeFallback' => 'es_es', 'charset' => 'utf-8'),
 										'es-bo' => array('language' => 'Spanish (Bolivia)', 'locale' => 'es_bo', 'localeFallback' => 'es_es', 'charset' => 'utf-8'),
