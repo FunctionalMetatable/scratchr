@@ -57,6 +57,7 @@ $lang = array(
                array("Deutsch", "/lang/de-de", "Sprache"),
                array("English", "/lang/en-us", "Language"),
                array("Español", "/lang/es-es", "Español"),
+                           array("Esperanto", "/lang/eo", "Esperanto"),
 			   array("Estonian", "/lang/est", "Language"),
 			   array("Faroese", "/lang/fao", "Language"),
 			   array("Finnish", "/lang/fin", "Language"),
