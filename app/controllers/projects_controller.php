@@ -2026,8 +2026,9 @@ class ProjectsController extends AppController {
 
 			if ($isLogged) {
                 $this->ViewStat->recursive = -1;
+		// This should really be called visits_from_this_ip_or_user
                 $visits_from_this_ip =
-                $this->ViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid")
+                $this->ViewStat->findCount("(ipaddress = INET_ATON('$client_ip') OR user_id = $logged_id) && project_id = $pid")
                 + $this->AnonViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid");
 
                 //first visit to this project from this ip
