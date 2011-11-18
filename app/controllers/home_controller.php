@@ -149,6 +149,12 @@ Class HomeController extends AppController {
             //$topdownloaded  = $home_projects['topdownloaded'];
 			$clubedprojects   = $home_projects['clubedprojects'];
         }
+        shuffle($topviewed);
+        shuffle($toploved);
+        shuffle($topremixed);
+        $topviewed = array_slice($topviewed, 0, NUM_TOP_VIEWED);
+        $toploved  = array_slice($toploved, 0, NUM_TOP_RATED);
+        $topremixed = array_slice($topremixed, 0, NUM_TOP_REMIXED);
 		
 	shuffle($clubedprojects); 
  	$clubedprojects = array_slice($clubedprojects,0,NUM_DESIGN_STUDIO_PROJECT); 
@@ -389,7 +395,7 @@ Class HomeController extends AppController {
 			$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$country'";
 		}
 		$topviewedProjects = $this->Project->getTopProjects('`views`', '`views` DESC', $days,
-            $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED, $condition);
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_VIEWED_CACHE, $condition);
 		if(SHOW_RIBBON ==1){
 			$topviewedProjects = $this->set_ribbon($topviewedProjects);
 		}
@@ -408,7 +414,7 @@ Class HomeController extends AppController {
 			$condition = "remixer > 0 AND totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$country'";
 		}
         $topRemixedProjects =  $this->Project->getTopProjects('`remixer`', '`remixer` DESC', $days,
-            $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED, $condition);
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_REMIXED_CACHE, $condition);
 		if(SHOW_RIBBON ==1){
 			$topRemixedProjects = $this->set_ribbon($topRemixedProjects);
 		}
@@ -422,7 +428,7 @@ Class HomeController extends AppController {
 			$condition = "totalScripts >= $num_script AND totalScripts IS NOT NULL AND `projects`.`country`= '$country'";
 		}
 		$topLovedProjects =  $this->Project->getTopProjects('`loveitsuniqueip`', '`loveitsuniqueip` DESC', TOP_LOVED_DAY_INTERVAL,
-            $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED, $condition);
+            $exclude_project_ids, $exclude_user_ids, NUM_TOP_RATED_CACHE, $condition);
 		if(SHOW_RIBBON ==1){
 			$topLovedProjects = $this->set_ribbon($topLovedProjects);
 		}
