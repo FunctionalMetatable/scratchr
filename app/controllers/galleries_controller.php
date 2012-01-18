@@ -1122,6 +1122,12 @@ Class GalleriesController extends AppController {
         $isUserIgnored = false;
         
 		if ($user_id) {
+			/**
+			* OWNER: 0
+			* MEMBER: 2
+			* BOOKMARKER: 3
+			* MEMBER (BOOKMARKER): 5
+			**/
 			$member_record = $this->GalleryMembership->find("GalleryMembership.gallery_id = $gallery_id AND GalleryMembership.user_id = $user_id");
 			if (!empty($member_record)) {
 				$membership_type = $member_record['GalleryMembership']['type'];
@@ -2044,6 +2050,76 @@ Class GalleriesController extends AppController {
 				);
 				$membership_type = 5;
 				$isGalleryMember = true;
+			}
+			if ($gallery['Gallery']['usage'] == 'public') {
+				$isPublic = true;
+			}
+		}
+		
+		$friend_record = $this->Relationship->find("Relationship.user_id = $owner_id AND Relationship.friend_id = $logged_id");
+		
+		$gallery_usage = $gallery['Gallery']['usage'];
+		
+		if (empty($friend_record)) {
+			$isFriend = 0;
+		} else {
+			if ($gallery_usage == 'friends') {
+				$isFriend = 1;
+			} else {
+				$isFriend = 0;
+			}
+		}
+		
+		$this->set('gallery_id', $gallery_id);
+		$this->set('membership_type', $membership_type);
+		$this->set('isFriend', $isFriend);
+		$this->set('isThemeOwner', $isGalleryOwner);
+		$this->set('isThemeMember', $isGalleryMember);
+		$this->set('isPublic', $isPublic);
+		$this->set('membership_type', $membership_type);
+		$this->render('user_actions_ajax', 'ajax');
+	}
+
+	/*
+ 	* Removes the bookmark for target gallery
+	* @param $gallery_id => gallery identifier
+	* REDIRECT: /galleries/view/$gallery_id
+ 	*/
+	function unbookmark($gallery_id) {
+		$this->autoRender=false;
+
+		$logged_id = $this->getLoggedInUserID();
+		$this->User->id = $logged_id;
+		$logged_user = $this->User->read();
+		
+		$this->Gallery->id = $gallery_id;
+		$gallery = $this->Gallery->read();
+		$gallery_name = $gallery['Gallery']['name'];
+		$owner_id = $gallery['Gallery']['user_id'];
+		
+		$isGalleryOwner = $owner_id == $logged_id;
+		$isPublic = false;
+		$isGalleryMember = false;
+		$membership_type = -1;
+		
+		$this->User->id = $logged_id;
+		$this->GalleryMembership->bindUser();
+		$membership_record = $this->GalleryMembership->find("GalleryMembership.gallery_id = $gallery_id AND GalleryMembership.user_id = $logged_id");
+		
+		if ($isGalleryOwner)
+		{
+			$this->set('isGalleryOwner', true);
+		} else {
+			if ($membership_record['GalleryMembership']['type'] == 5) {
+				$this->GalleryMembership->updateAll(
+					array('GalleryMembership.type' => 2),
+					array('GalleryMembership.gallery_id' => $gallery_id, 'GalleryMembership.user_id' => $logged_id)
+				);
+				$membership_type = 2;
+				$isGalleryMember = true;
+			}
+			elseif ($membership_record['GalleryMembership']['type'] == 3){
+				$this->GalleryMembership->del($membership_record['GalleryMembership']['id']);
 			}
 			if ($gallery['Gallery']['usage'] == 'public') {
 				$isPublic = true;

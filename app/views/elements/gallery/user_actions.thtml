@@ -26,6 +26,12 @@
 			<?php
 				if ($membership_type == 5) {
 					echo ___("You have bookmarked this gallery");
+					echo "<br><br>";
+					$unbookmark_link = "/galleries/unbookmark/$gallery_id";
+						echo $ajax->link("<span class='button2'>" . ___('unbookmark gallery', true) . "</span>", '#', 
+						array("url"=>$unbookmark_link, "update"=>"action_wrapper", 
+								"id"=>"unbookmark_link"), 
+								NULL, false);
 				} else {
 					$bookmark_link = "/galleries/bookmark/$gallery_id";
 						echo $ajax->link("<span class='button2'>" . ___('bookmark gallery', true) . "</span>", '#', 
@@ -48,6 +54,12 @@
 			<?php
 				if ($membership_type == 3) {
 					echo ___("You have bookmarked this gallery");
+					echo "<br><br>";
+					$unbookmark_link = "/galleries/unbookmark/$gallery_id";
+						echo $ajax->link("<span class='button2'>" . ___('unbookmark gallery', true) . "</span>", '#', 
+						array("url"=>$unbookmark_link, "update"=>"action_wrapper", 
+								"id"=>"unbookmark_link"), 
+								NULL, false);
 				} else {
 					$bookmark_link = "/galleries/bookmark/$gallery_id";
 						echo $ajax->link("<span class='button2'>" . ___('bookmark gallery', true) . "</span>", '#', 
@@ -62,6 +74,12 @@
 			<?php
 				if ($membership_type == 3) {
 					echo ___("You have bookmarked this gallery, but you don't have permission to modify its contents");
+					echo "<br><br>";
+					$unbookmark_link = "/galleries/unbookmark/$gallery_id";
+						echo $ajax->link("<span class='button2'>" . ___('unbookmark gallery', true) . "</span>", '#', 
+						array("url"=>$unbookmark_link, "update"=>"action_wrapper", 
+								"id"=>"unbookmark_link"), 
+								NULL, false);
 				} else {
 					$bookmark_link = "/galleries/bookmark/$gallery_id";
 						echo $ajax->link("<span class='button2'>" . ___('bookmark gallery', true) . "</span>", '#', 
