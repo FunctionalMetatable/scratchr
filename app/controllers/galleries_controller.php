@@ -1290,7 +1290,7 @@ Class GalleriesController extends AppController {
 				array_push($final_memberships, $final_membership);
 			}
 		} elseif ($option == "public") {
-			$all_memberships = $this->GalleryMembership->findAll("GalleryMembership.user_id = $logged_id AND GalleryMembership.rank = 'bookmarker' AND Gallery.usage = 'public'");
+			$all_memberships = $this->GalleryMembership->findAll("GalleryMembership.user_id = $logged_id AND (GalleryMembership.rank = 'bookmarker' OR GalleryMembership.type = 5) AND Gallery.usage = 'public'");
 			foreach ($all_memberships as $membership) {
 				$final_membership = $membership;
 				$gallery_id = $membership['GalleryMembership']['gallery_id'];
@@ -2037,8 +2037,12 @@ Class GalleriesController extends AppController {
 			$this->set('isGalleryOwner', true);
 		} else {
 			$membership_record = $this->GalleryMembership->find("GalleryMembership.rank = 'member' AND GalleryMembership.gallery_id = $gallery_id AND GalleryMembership.user_id = $logged_id");
-			if (!empty($member_record)) {
-				$membership_type = $member_record['GalleryMembership']['type'];
+			if (!empty($membership_record)) {
+				$this->GalleryMembership->updateAll(
+					array('GalleryMembership.type' => 5),
+					array('GalleryMembership.gallery_id' => $gallery_id, 'GalleryMembership.user_id' => $logged_id)
+				);
+				$membership_type = 5;
 				$isGalleryMember = true;
 			}
 			if ($gallery['Gallery']['usage'] == 'public') {

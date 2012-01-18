@@ -21,9 +21,20 @@
 		<div id="removeprojectmember">
 			<?php e($ajax->link("<span class='button2'>" . ___('remove my projects', true) . "</span>", '#', array('url'=>'/galleries/removeprojectmember/' . $gallery_id, 'update'=>'gallery_removeproject', 'condition'=>'checkLogin()'), NULL, false)) ?>
 		</div>
-	<?php elseif($membership_type == 3): ?>
-		<?php ___("You have bookmarked this gallery, but you don't have permission to modify its contents"); ?>
 	<?php endif; ?>
+	<div class="themeaction">
+			<?php
+				if ($membership_type == 5) {
+					echo ___("You have bookmarked this gallery");
+				} else {
+					$bookmark_link = "/galleries/bookmark/$gallery_id";
+						echo $ajax->link("<span class='button2'>" . ___('bookmark gallery', true) . "</span>", '#', 
+						array("url"=>$bookmark_link, "update"=>"action_wrapper", 
+								"id"=>"bookmark_link"), 
+								NULL, false);
+				}
+			?>
+		</div>
 <?php elseif($isPublic): ?>
 	<?php if(!$isUserIgnored):?>
 		<div id="addprojectmember">
