@@ -1296,7 +1296,7 @@ Class GalleriesController extends AppController {
 				array_push($final_memberships, $final_membership);
 			}
 		} elseif ($option == "public") {
-			$all_memberships = $this->GalleryMembership->findAll("GalleryMembership.user_id = $logged_id AND (GalleryMembership.rank = 'bookmarker' OR GalleryMembership.type = 5) AND Gallery.usage = 'public'");
+			$all_memberships = $this->GalleryMembership->findAll("GalleryMembership.user_id = $logged_id AND ((GalleryMembership.rank = 'bookmarker'  AND Gallery.usage = 'public') OR GalleryMembership.type = 5)");
 			foreach ($all_memberships as $membership) {
 				$final_membership = $membership;
 				$gallery_id = $membership['GalleryMembership']['gallery_id'];
