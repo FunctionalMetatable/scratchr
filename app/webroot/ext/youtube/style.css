@@ -1,0 +1,173 @@
+/* ------------- reusable ----------------*/
+.box_fullwidth {
+	clear: both;
+	padding: 10px 15px 0px 15px;
+	width: 750px; /* +padding: 780px */
+	min-height: 500px; /* min height hack */
+    height: auto !important;
+    height: 500px; /* end hack */
+    background-image: url(http://scratch.mit.edu/img/bg_fullwidth.png);
+	background-repeat: no-repeat;
+}
+.bar_fullwidth {
+	clear: both;
+	width: 780px;
+	height: 30px; /* +padding: 30px */
+	background-image: url(http://scratch.mit.edu/img/bg_footer.png);
+	background-repeat: no-repeat;
+	line-height: 30px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+	
+/* --------------- basic ---------------- */
+html,body {
+	text-align: center;
+	background-color: #FFFFFF;
+	font-family: "Trebuchet MS", "Luxi Sans",Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+}
+
+a, a:link{
+	color: #2A54AA;
+	outline: none;
+}
+
+a:visited{
+	color: #22468C;
+}
+
+a:hover, a:visited:hover{
+	color: #3060C1;
+}
+
+a:active{
+	color: #FF9933;
+}
+
+a img{
+	border: 0;
+}
+
+p{
+	text-align: left;
+	margin: 0;
+	padding: 6px 0;
+}
+
+h1 {
+	line-height: 50px;
+	font-size: 25px;
+	font-weight: bold;
+	color: #000000;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+h2{
+	color: #222222;
+	font-size: 20px;
+	font-weight: bold;
+	margin: 0;
+	padding: 0px;
+	text-align: left;
+}
+
+h3{
+	color: #333333;
+	font-size: 18px;
+	font-weight: normal;
+	margin: 5px 0 5px 0;
+	padding: 0;
+	text-align: left;
+}
+
+h4{
+	font-size: 16px;
+	margin: 0;
+	padding: 0 0 5px 0px;
+	text-align: left;
+}
+
+h5{
+	font-size: 14px;
+	margin: 0;
+	padding: 0 0 5px 0;
+	text-align: left;
+}
+
+h6{
+	font-size: 1em;
+	margin: 0 10px;
+	padding: 0;
+	text-align: left;
+}
+
+table {
+	border-width: 1px;
+	border-spacing: 0px;
+	border-style: inset;
+	border-color: #DDDDDD;
+	border-collapse: collapse;
+}
+th {
+	background-color: #DDDDDD;
+	font-weight: bold;
+}
+td, th {
+	padding: 8px 5px 8px 5px;
+	border-width: 1px;
+	border-style: inset;
+	border-color: #DDDDDD;
+}
+/* --------------- header ----------------- */
+#header {
+	width: 780px;
+	height: 80px;
+	margin-bottom: 10px;
+}
+
+.logo {
+	float: left;
+	width: 230px;
+	height: 80px;
+	background: url(http://scratch.mit.edu/img/gr_logo_scratchr.png);
+	background-repeat: no-repeat;
+}
+.logo a {
+	display: block; 
+	width: 100%;
+	height: 100%;
+}
+
+/* --------------- specific ---------------- */
+
+/* default page containers */
+#maincontainer {
+	width: 780px;
+	margin: 0 auto;
+	text-align: left;
+}
+#maincontent {
+	width: 750px;
+	min-height: 300px;
+    height: auto !important;
+    height: 300px;
+	text-align: left;
+	margin-left: 15px;
+	margin-right: 15px;
+	margin-top: 5px;
+}
+#footer {
+	clear: both;
+	width: 780px;
+	height: 30px;
+	background-image: url(http://scratch.mit.edu/img/bg_footer.png);
+	background-repeat: no-repeat;
+	padding-top: 7px;
+	margin-top: 15px;
+	font-size: 12px;
+	text-align: center;
+}
