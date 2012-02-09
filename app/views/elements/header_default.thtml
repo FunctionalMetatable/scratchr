@@ -12,20 +12,7 @@ var WRInitTime=(new Date()).getTime();
 
 <div id="header" class="clearme">
     <div id="logo">
-<?php
-if(isset($ishomepage) && $ishomepage) {
-?>
-      <h1><a href="<?php echo $html->url('/holidaylogos')?>"></a></h1>
-	  
-<?php
-} else {
-?>
          <h1><a href="<?php echo $html->url('/')?>"></a></h1>
-		
-<?php
-}
-?>
-
       <h2><?php ___('imagine'); ?> &bull; <?php ___('program'); ?> &bull; <?php ___('share'); ?></h2>
     </div>
 <!-- |||||| Begin main menu ||||||| -->
