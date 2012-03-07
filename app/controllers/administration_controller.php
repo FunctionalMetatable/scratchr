@@ -2077,6 +2077,7 @@
                         $this->User->saveField("blocked_till", '0000-00-00 00:00:00'); // remove any temp block in the system
                         $info = Array('BlockedUser' => Array('id' => null, 'user_id' => $current_user_id, 'admin_id' => $admin_id, 'reason' => $reason, 'unblock_date' => $unblock_date));
                         $this->BlockedUser->save($info);
+						$this->notify('aaBlank',$current_user_id, array(), array($reason));
                     }
                     else {
                         array_push($errors, "Unknown exception, please contact andresmh@media.mit.edu");
