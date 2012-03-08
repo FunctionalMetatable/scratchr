@@ -86,7 +86,7 @@ $this->params['webservices']
  define("REPLY_TO_FLAGGED_GTAG", "caution@scratch.mit.edu");
  define("TO_FLAGGED_GTAG", "caution@scratch.mit.edu");
  //Emais id to send mail to request create multiple account using same ip.
- define("TO_REQUEST_FOR_MULTIPLE_ACCOUNT", "help@scratch.mit.edu");
+ define("TO_REQUEST_FOR_MULTIPLE_ACCOUNT", "appeals@scratch.mit.edu");
  //Put on/off change of email on MyStuff should also change it on the forums.1 for ON and 0 for OFF.
  define("ENABLE_TO_CHANGE_FORUM_EMAIL", 1);
  
@@ -94,8 +94,12 @@ $this->params['webservices']
  //Used in componenets/email 
  define("DEFAULT_EMAIL_TO", "help@scratch.mit.edu");
  define("CONTACTUS_EMAIL", "help@scratch.mit.edu");
+ define("APPEALS_CONTACT_EMAIL", "appeals@scratch.mit.edu");
  //Used in  users password recovery reply email id.
  define("REPLY_TO_PASSWORD_RECOVERY", "help@scratch.mit.edu");
+
+
+
 
  /**
 
