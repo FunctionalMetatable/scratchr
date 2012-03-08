@@ -30,7 +30,7 @@ class ContactController extends AppController {
 #		$this->set('content_status', $this->getContentStatus());
 		if (!empty($this->data))
 		{
-			$this->sendmsg();
+			$this->sendmsg(APPEALS_CONTACT_EMAIL);
 		} else {
 			$this->render('us_banned','scratchr_default');
 		}
