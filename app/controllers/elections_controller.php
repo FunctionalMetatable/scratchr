@@ -9,8 +9,8 @@ class ElectionsController extends AppController {
 	// Modify this for new elections.
 	function enabled() {
 	    date_default_timezone_set('EDT');
-        $startTime = mktime(11, 0, 0, 7, 21, 2011); // 9AM  EDT 7/21/2011
-        $endTime   = mktime(23, 0, 0, 7, 21, 2011); // 11PM EDT 7/21/2011
+        $startTime = mktime(11, 0, 0, 4, 11, 2012); // example: 11AM EDT 4/11/2012
+        $endTime   = mktime(23, 0, 0, 4, 11, 2012); // example: 11PM EDT 4/11/2012
         return (time() > $startTime && time() < $endTime);
 	}
 	
