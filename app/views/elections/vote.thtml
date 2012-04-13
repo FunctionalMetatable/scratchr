@@ -12,6 +12,7 @@ function errorChecking()
 	var j = 0;
 	for (i = 0; i < document.forms["myform"].elements.length; i++){
 		if (document.forms["myform"].elements[i].checked){
+	// Update number after modulus to number of candidates.
 			candidates[j] = (i%6);
 			j++;
 		}
@@ -55,6 +56,7 @@ else
 <br>
 <div class="signup_error" id="error" style= "height: 20px; visibility: hidden">
 </div>
+<br>
 <br>
 <div align="center">
 <table cellspacing="10">
@@ -125,6 +127,9 @@ else
 <input type="hidden" name="user" value="<?php echo $user;?>">
 
 <input type="submit" class="button2" name="Vote" onclick="return errorChecking()">
+
+<br>
+<br>
 
 </form>
 </div>
