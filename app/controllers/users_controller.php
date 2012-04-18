@@ -369,7 +369,8 @@ class UsersController extends AppController {
 //						$this->Session->write('newUser', true);
 						$this->Session->write('User', $user_record['User']);
 						
-						 if($this->Session->read('iflag_trigger')) {
+						$ip_whitelisted = $this->WhitelistedIpAddress->hasAny("WhitelistedIpAddress.ipaddress = INET_ATON('$client_ip')");
+						 if($this->Session->read('iflag_trigger') && !$ip_whitelisted) {
 							$flag_data = array(
 								'type' => 'multiaccount',
 								'flagger_ids' => $this->Session->read('iflag_trigger'), 
