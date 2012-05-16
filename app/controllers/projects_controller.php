@@ -726,7 +726,9 @@ class ProjectsController extends AppController {
 				$this->cakeError('error404');
 
         if (isset($this->params['form']['description'])) {
-            $newdesc = strip_tags($this->params['form']['description']);
+			$pattern = "/<[^>]+>/i";
+			$replacement = "";
+            $newdesc = preg_replace($pattern,$replacement,$this->params['form']['description']);
             if(isInappropriate($newdesc)) {
                 $user_record = $this->Session->read('User');
                 $user_id = $user_record['id'];
