@@ -2454,8 +2454,8 @@ $session_user_id || $num_project > 0) {
 		if(!empty($this->data))
 		{
 			if(empty($this->data['User']['reasons']))
-			$this->User->invalidate('reasons',___('Please write a quick explanation. Thanks!',true));
-			if($this->User->validates($this->data['User'])){
+				$this->User->invalidate('reasons',___('Please write a quick explanation. Thanks!',true));
+			else{
 				$client_ip = $this->RequestHandler->getClientIP();
 				$reasons = $this->data['User']['reasons'];
 				$sql = "INSERT INTO `closure_reasons` (`id`,`user_id`,`ipaddress`,`reasons`) VALUES"
