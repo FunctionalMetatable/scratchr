@@ -288,7 +288,7 @@ class ProjectsController extends AppController {
 				  $excessive_commenting = false;
 				}
 				$nowhite_comment = ereg_replace("[ \t\n\r\f\v]{1,}", "[ \\t\\n\\r\\f\\v]*", $comment);
-				if (!$this->isAdmin() && $user_id != $project_owner_id){
+		if (!$this->isAdmin() && $user_id != $project_owner_id){			
 					$similar_comments = $this->Pcomment->findAll("Pcomment.content RLIKE '".$nowhite_comment."' AND Pcomment.created > now() - interval $days  day AND Pcomment.user_id = $commenter_id");
 					preg_match_all("/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/", $comment, $url_matches);
 					for($i=0; $i<count($url_matches[0]); $i++)
@@ -726,24 +726,24 @@ class ProjectsController extends AppController {
 				$this->cakeError('error404');
 
         if (isset($this->params['form']['description'])) {
-			$pattern = "/<[^>]+>/i";
-			$replacement = "";
-            $newdesc = preg_replace($pattern,$replacement,$this->params['form']['description']);
-            if(isInappropriate($newdesc)) {
-                $user_record = $this->Session->read('User');
-                $user_id = $user_record['id'];
-                $this->notify('inappropriate_pdesc', $user_id,
-                array('project_id' => $pid));
-            }
-            else {
-                if($this->Project->saveField('description', $newdesc)) {
-                    $this->set('linkify', true);
-					$this->set('modified',true);
-                    $this->set('pdesc', $newdesc);
-                    $this->render('projectdescription_ajax','ajax');
-                    return;
-                }
-            }
+        	$pattern = "/<[^>]+>/i";
+		$replacement = "";
+		$newdesc = preg_replace($pattern,$replacement,$this->params['form']['description']);
+		if(isInappropriate($newdesc)) {
+                	$user_record = $this->Session->read('User');
+               		$user_id = $user_record['id'];
+                	$this->notify('inappropriate_pdesc', $user_id,
+                	array('project_id' => $pid));
+            	}
+            	else {
+			if($this->Project->saveField('description', $newdesc)) {
+                    	$this->set('linkify', true);
+			$this->set('modified',true);
+                    	$this->set('pdesc', $newdesc);
+                    	$this->render('projectdescription_ajax','ajax');
+                    	return;
+                	}
+		}	
         }
         $this->set('modified',false);
         $this->set('pdesc',$project['Project']['description']);
@@ -751,56 +751,6 @@ class ProjectsController extends AppController {
         return;
     }
 
-	/**
-     * add new credits for the given project
-     * @param string $urlname => user url
-     * @parm int $pid => project id
-     */
-    function credits($urlname=null, $pid=null) {
-		Configure::write('debug',0);
-        $this->exitOnInvalidArgCount(2);
-        $this->autoRender=false;
-        $this->Project->id=$pid;
-        $project = $this->Project->read();
-		
-		$this->loadModel('ProjectCredit');
-		$credit = $this->ProjectCredit->find('first', array('conditions' =>array('ProjectCredit.project_id' => $pid),'order' =>'ProjectCredit.timestamp DESC'));
-		
-		if (empty($project) || ($project['User']['urlname'] !== $urlname))
-			$this->cakeError('error404');
-
-		if (!$this->isAdmin())
-			if (!$this->activeSession($project['User']['id']))
-				$this->cakeError('error404');
-
-        if (isset($this->params['form']['credit_text'])) {
-            $new_credits = strip_tags($this->params['form']['credit_text']);
-			$new_credits = trim($new_credits);
-			if(!empty($new_credits) && $new_credits != $credit['ProjectCredit']['credits_text'])
-			{
-				$this->data['ProjectCredit']['project_id'] = $pid;
-				$this->data['ProjectCredit']['credits_text'] = $new_credits;
-				if($this->ProjectCredit->save($this->data['ProjectCredit'])) 
-				{
-					$this->set('linkify', true);
-					$this->set('new_credits', $new_credits);
-					$this->render('project_credits_ajax','ajax');
-					return;
-				}
-			}	
-        }
-		if($credit['ProjectCredit']['credits_text'])
-		{
-			$new_credits = $credit['ProjectCredit']['credits_text'];
-		}
-		else
-		{
-			$new_credits = '';
-		}
-        $this->set('new_credits',$new_credits);
-        $this->render('project_credits_ajax','ajax');
-        return;
-    }
 
     /**
      * Search action on all projects or
@@ -2028,9 +1978,8 @@ class ProjectsController extends AppController {
 
 			if ($isLogged) {
                 $this->ViewStat->recursive = -1;
-		// This should really be called visits_from_this_ip_or_user
                 $visits_from_this_ip =
-                $this->ViewStat->findCount("(ipaddress = INET_ATON('$client_ip') OR user_id = $logged_id) && project_id = $pid")
+                $this->ViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid")
                 + $this->AnonViewStat->findCount("ipaddress = INET_ATON('$client_ip') && project_id = $pid");
 
                 //first visit to this project from this ip
@@ -2352,10 +2301,6 @@ class ProjectsController extends AppController {
             //close memcache connection
             $this->Project->mc_close();
             */
-			//set project credit
-			$this->loadModel('ProjectCredit');
-			$credit = $this->ProjectCredit->find('first', array('conditions' =>array('ProjectCredit.project_id' => $pid),'order' =>'ProjectCredit.timestamp DESC'));
-			$this->set('credits_text', $credit['ProjectCredit']['credits_text']);
 			//set project player type.
 			$player_type = null;
 			if ($isLogged) {
