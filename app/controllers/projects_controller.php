@@ -2899,7 +2899,7 @@ class ProjectsController extends AppController {
 				}
 				$nowhite_comment = ereg_replace("[ \t\n\r\f\v]{1,}", "[ \\t\\n\\r\\f\\v]*", $comment);
 				if($comment_length > COMMENT_LENGTH):
-					if (!$this->isAdmin()){
+					if (!$this->isAdmin() && $user_id != $project_owner_id){
 						$similar_comments = $this->Pcomment->findAll("Pcomment.content RLIKE '".$nowhite_comment."' AND Pcomment.created > now() - interval $days  day AND Pcomment.user_id = $commenter_id");
 						preg_match_all("/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/", $comment, $url_matches);
 						for($i=0; $i<count($url_matches[0]); $i++)
@@ -2953,7 +2953,7 @@ class ProjectsController extends AppController {
 				
 					$duplicate_record = $this->Pcomment->find("Pcomment.project_id = $project_id AND Pcomment.user_id = $user_id AND Pcomment.content = '$comment' AND Pcomment.reply_to!= -100");
 					if($comment_length > COMMENT_LENGTH):
-					if (empty($duplicate_record)) {
+					if (empty($duplicate_record) || $user_id == $project_owner_id) {
 						$duplicate = false;
 					} else {
 						$original = $duplicate_record['Pcomment']['created'];
