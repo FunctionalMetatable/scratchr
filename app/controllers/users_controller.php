@@ -1048,9 +1048,9 @@ class UsersController extends AppController {
         }
 
 		$user_id = $user_record['User']['id'];
+		$user_creation_date = $user_record['User']['created'];
 		$isMe = $this->activeSession($user_id);
 		$username = $user_record['User']['username'];
-		
 		$user_status = trim($user_record['User']['status']);
 		if ($user_status == 'delbyadmin' || $user_status == 'delbyusr') {
 			if( !$this->isAdmin() ) {
@@ -1337,14 +1337,31 @@ class UsersController extends AppController {
 			$this->Session->del('upload_error');
 		}
 		
-		/* welcoming message */
-		$welcome_option_number = false;
-		if($isMe && (count($final_projects) < 1)) {
+		// Welcoming committee area on my stuff page
+		// If this is the owner, they have less than 2 projects, and
+		// the account is less than 30 days old,
+		// And the user_id is odd (so that init. test size is 1/2)
+		// show welcoming committee block and links.
+	
+		if(	$isMe 
+			&& (count($final_projects) < 2) 
+			&& (strtotime($user_creation_date) > strtotime('-30 days'))
+			&& ($user_id%2)) {
+
+			$wcGallery_id = WELCOMING_COMMITTEE_GALLERY_ID; // Defined in bootstrap
+			$welcome_option_number = 1;
+			$this->set('welcome_option_number', $welcome_option_number);
 			$this->loadModel('UserWelcome');
-			$welcome_option_number = $this->UserWelcome->getWelcomeOption($user_id);
+
+			$wcProject = $this->getRandomProjectFromGallery($wcGallery_id);
+			$pid = $wcProject['Project']['id'];
+			$owner = $wcProject['User']['urlname'];	
+			$wcProjectURL = "/projects/".$owner."/".$pid; 
+			$this->set('wcProjectURL', $wcProjectURL);
+
+
 		}
-		$this->set('welcome_option_number', $welcome_option_number);
-		
+	 	
 		$this->set('notification_count',$this->Notification->countAllNotification($user_id));
 		$this->set('isCuratored', $this->Curator->hasAny("user_id = $user_id AND Curator.visibility = 'visible'"));
 		$this->set('isCM', ($user_record['User']['role'] === 'cm') ? true : false);
@@ -1362,17 +1379,20 @@ class UsersController extends AppController {
 		$this->set('urlname', $user_record['User']['urlname']);
 		$this->set('age', $this->getUserAge($user_record) );
 		$this->set('isMe', $isMe);
-/*
-		if ($this->Session->read('newUser')) {				// This is true if this user has just been created
-		  $this->set('new', true);					// This tells the myscratchr view page to submit the username to the LSO
-		  $this->Session->write('newUser', false);
-		}
-		else {
-		  $this->set('new', false);
-		}
-*/
+		
 		$this->render('myscratchr', 'scratchr_userpage');
 	}
+
+	// Get a random project from a gallery. Used for WC project.
+	function getRandomProjectFromGallery($gallery_id) {
+	
+		$condition = '`gallery_id` = '. $gallery_id         .' AND `projects`.`id` = `gallery_projects`.`project_id`';
+		$project = $this->Project->getTopProjects('', 'RAND()', null, null,null, 1, $condition, '`gallery_projects`');
+		return $project[0];
+	
+	}//function
+
+
 
 
 	/**
