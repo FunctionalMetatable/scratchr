@@ -413,6 +413,11 @@ define('MAX_LOGIN_ATTEMPT', 2);
 define('USER_UNBLOCK_DAYS', '3 days');
 
 /***
+*Welcoming Committee Gallery ID
+**/
+define('WELCOMING_COMMITTEE_GALLERY_ID', '146521');
+
+/***
 *authentication_key to get latest project
 **/
 define('GET_LATEST_PROJECT_AUTH_KEY','xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
