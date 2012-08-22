@@ -3,8 +3,7 @@
 	<div class="mystuff_header">
 <a href="<?php echo $html->url('/download')?>">
 <?php ___("Download Scratch");?></a>
-<?php ___(' and learn ')?><a href="<?php echo $html->url('http://info.scratch.mit.edu/Support/Get_Started')?>"><?php ___('how to get started')?></a>!
-	
+<?php ___(" and projects you share will appear here")?></a>!	
 	</div>
 <?php elseif(count($data) > 0):?>
 		
