@@ -60,6 +60,20 @@ function scratch_faq(){
 	$this->redirect('http://' . SUPPORT_URL . '/' . 'Support/Scratch_FAQ');
 }
 
+function recordWCclicks( $p_user_name, $p_id ){
+	$p_user_name = $_GET['p_user_name'];
+	$p_id = $_GET['p_id'];
+
+	App::import('model', 'UserWelcome');
+        $this->UserWelcome = new UserWelcome();
+	$logged_id  = $this->Session->read('User.id');
+	$sql = "INSERT INTO `user_clicks` (`id`,`user_id`,`page`) VALUES"
+			                        ." (NULL, $logged_id,$p_id)";
+	$this->UserWelcome->query($sql);
+	$this->redirect('/projects/'.$p_user_name.'/'.$p_id);
+}
+
+
 function about_scratch(){
 	App::import('model', 'UserWelcome');
 	$this->UserWelcome = new UserWelcome();
