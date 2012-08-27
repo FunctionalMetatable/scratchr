@@ -1355,10 +1355,16 @@ class UsersController extends AppController {
 
 			$wcProject = $this->getRandomProjectFromGallery($wcGallery_id);
 			$pid = $wcProject['Project']['id'];
-			$owner = $wcProject['User']['urlname'];	
-			$wcProjectURL = "/projects/".$owner."/".$pid; 
-			$this->set('wcProjectURL', $wcProjectURL);
+			$owner = $wcProject['User']['urlname'];
 
+			// This would just set the URL to the random project
+		//	$wcProjectURL = "/projects/".$owner."/".$pid; 
+		//	$this->set('wcProjectURL', $wcProjectURL);
+
+			// This passes the info to the redirect controller, which counts
+			// the clicks, and then forwards the new user to the WC project.
+			$wcProjectURL = "/redirect/recordWCclicks?p_user_name=".$owner."&p_id=".$pid;
+			$this->set('wcProjectURL', $wcProjectURL);
 
 		}
 	 	
