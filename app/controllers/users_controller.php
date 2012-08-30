@@ -1340,13 +1340,11 @@ class UsersController extends AppController {
 		// Welcoming committee area on my stuff page
 		// If this is the owner, they have less than 2 projects, and
 		// the account is less than 30 days old,
-		// And the user_id is odd (so that init. test size is 1/2)
 		// show welcoming committee block and links.
 	
 		if(	$isMe 
 			&& (count($final_projects) < 2) 
-			&& (strtotime($user_creation_date) > strtotime('-30 days'))
-			&& ($user_id%2)) {
+			&& (strtotime($user_creation_date) > strtotime('-30 days'))){
 
 			$wcGallery_id = WELCOMING_COMMITTEE_GALLERY_ID; // Defined in bootstrap
 			$welcome_option_number = 1;
