@@ -173,7 +173,7 @@ if (isset($head)) echo $head->print_registered();
 <?php if(trim($player_type) == 'java' || empty($player_type)):?>
 <body onload="initProjectbox(); initScratchPlayer();">
 <?php elseif(trim($player_type) == 'flash'):?>
-<body onload="initProjectbox();installPlayer('/static/misc/PlayerOnly.swf', 'PlayerOnly');">
+<body onload="initProjectbox();installPlayer('/static/misc/Scratch.swf', 'PlayerOnly');">
 <?php endif;?>
 	<div id="overlay">
 	</div>

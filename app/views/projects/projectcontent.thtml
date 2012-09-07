@@ -71,30 +71,32 @@ else {
 					       project: '<?php echo $embed_project4flash?>'};
 				       var params = {
 					       allowScriptAccess: 'sameDomain',
-					       allowFullScreen: true,
+					       allowFullScreen: true
 				       };
 				       var attributes = {};
-				       swfobject.embedSWF(swfName, swfID, 482, 387, '10.0', false, flashvars, params, attributes);
+				       swfobject.embedSWF(swfName, swfID, 482, 401, '10.0', false, flashvars, params, attributes);
 				       flashapp = document.getElementById(swfID);
 				       flashapp.style.position = 'relative';
+				       flashapp.style.marginLeft = '19px';
 				       flashapp.parentNode.parentNode.style.overflow = 'visible'; // override CSS
 				       flashapp.style.zIndex = 1000; // put in front
-				       setPlayerSize(482, 387);
+				       setPlayerSize(482, 401);
 			       }
 
-			       function JSFillScreen(fillScreen) {
+			       function JSsetPresentationMode(fillScreen) {
 				       if (fillScreen) {
 					       var r = flashapp.getBoundingClientRect();
 					       flashapp.style.left = -r.left + 'px';
 					       flashapp.style.top = -r.top + 'px';
 					       var h = window.innerHeight;
+					       var w = window.innerWidth;
 					       if (typeof(w) != 'number') { // If IE:
 							w = document.documentElement.clientWidth;
 							h = document.documentElement.clientHeight;
 						}
 					       setPlayerSize(w, h - 10);
 				       } else {
-					       setPlayerSize(482, 387);
+					       setPlayerSize(482, 401);
 					       flashapp.style.left = flashapp.style.top = '0px';
 				       }
 			       }
