@@ -522,35 +522,8 @@ else {
       <?php if ($isMine || $isAdmin) echo $ajax->editor("pdesc", "/projects/$urlname/$pid/describe", Array("callback"=>"return 'description=' + encodeURIComponent(value);", "rows" => 4, "cols" => 20)); ?>
     </div>
     <!-- ::: End notes ::: -->
-	<?php if ($isMine || $isAdmin) :?>
-	<!-- ::: Begin credits ::: -->
-    <div id="credits">
-      <h3><?php ___('Credits');?> </h3>
-	  <?php
-	   $notes = $project['Project']['description'];
-       $pattern = '/[\n\r]{4,}/';
-       $rep = '<br><br><br>';
-	   $notes = preg_replace($pattern, $rep, $notes);
-	  ?>
-      <p id="project_credits">
-	
-      <?php
-	  if(!$credits_text)
-	  {
-	  ___('if someone has inspired you,helped you, or contributed to your project, enter their name here.');
-	  }else{
-		$credits_text = preg_replace('[\n]', '<br>', $credits_text);
-	    echo $util->linkify($credits_text); 
-	  
-	  }
-	  ?>
-      </p>
-      <?php echo $ajax->editor("project_credits", "/projects/$urlname/$pid/credits", Array("callback"=>"return 'credit_text=' + encodeURIComponent(value);", "rows" => 4, "cols" => 20)); ?>
-    </div>
-    <!-- ::: End credits ::: -->
-	<?php endif;?>
 
-	<!-- ::: Begin tags ::: -->
+    <!-- ::: Begin tags ::: -->
     <?php if($content_status == "all"): ?>
     <div id="club" class="sidecontainer">
        <h4><?php ___('Tags');?></h4>
