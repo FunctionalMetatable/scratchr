@@ -55,12 +55,12 @@ else {
       <h2 id="project_title"><?php $project_title =htmlspecialchars($project['Project']['name']); e($project_title);?> </h2>
 		<?php  if ($isMine || $isAdmin) echo $ajax->editor("project_title", "/projects/$urlname/$pid/name", Array("callback"=>"return 'name=' + encodeURIComponent(value)")); ?>
 		<div id="projectwrapper">
-		<?php if(trim($player_type) == 'java' || empty($player_type)):?>
+		<?php if(trim($player_type) == 'java' ):?>
 			<!--Play with Java Player -->
 			<div id="projectload" style="display:block;" align="center">
 				<applet id="ProjectApplet" style="display:block" code="ScratchApplet" codebase="/static/misc/" archive="ScratchApplet.jar" height="387" width="482"><param name="project" value="<?php echo $embed_project;?>"><param name="java_arguments" value="-Xmx128m"><h3><a href="http://www.java.com/getjava/"><? ___('Install Java'); ?></a> <? ___('to view this project right on your browser!'); ?><a href="/projects/<? echo "$urlname/$pid"; ?>/downloadsb"><img src="/static/projects/<?php echo "$urlname/${pid}_med.png"; ?>"></a></h3></applet>
 			</div>
-			<?php elseif(trim($player_type) == 'flash'):?>
+			<?php elseif(trim($player_type) == 'flash' || empty($player_type)):?>
 				<!--Play with Flash Player -->
 				<script type="text/javascript" src="/js/swfobject.js"></script> 
 				<script type="text/javascript"> 
@@ -489,15 +489,16 @@ else {
 	<!-- ::: Begin switch to player ::: -->
 	<?php if($isLogged):?>
 	<div id="beta">
-		<?php if(trim($player_type) == 'java' || empty($player_type)):?>
-		<h3><?php ___('Try the new player');?></h3>
-		<?php ___('You can play this project (and all others) using our new Flash-based player.');?>
-		<?php echo $html->link(___('Try it out now!',true), array('action' => 'set_player/flash',$urlname,$pid))?>
-		<?php elseif(trim($player_type) == 'flash'):?>
-		<h3><?php ___('Want to switch back?');?></h3>
+		<?php if(trim($player_type) == 'java'):?>
+		<h3><?php ___('Java project player');?></h3>
+		<?php ___('You\'re viewing this project in the old Java project player.');?> 
+		<?php echo $html->link(___('Click here',true), array('action' => 'set_player/flash',$urlname,$pid))?>
+		<?php ___(' to switch to the newer Flash-based player.');?>
+		<?php elseif(trim($player_type) == 'flash' || empty($player_type)):?>
+		<h3><?php ___('Flash project player');?></h3>
+		<?php ___('You\'re viewing this project in the new flash-based project player. Found a glitch? Help us fix it by <a href="http://scratch.mit.edu/forums/viewtopic.php?pid=1415663#p1415663">posting a description</a> here!</br>');?>
 		<?php echo $html->link(___('Click here',true), array('action' => 'set_player/java',$urlname,$pid))?>
-		<?php ___('to switch back to the default Java player.');?>
-		<?php ___('Please <a href="http://j.mp/feedbackflashplayer">let us know</a> what you think of the new Flash player.');?>
+		<?php ___('to switch to the old Java player.');?>
 		<?php endif;?>
 	</div>
 	<?php endif;?>
