@@ -170,10 +170,10 @@ if (isset($head)) echo $head->print_registered();
 
 </head>
 <!--init scratch player or flash player-->
-<?php if(trim($player_type) == 'java' || empty($player_type)):?>
-<body onload="initProjectbox(); initScratchPlayer();">
-<?php elseif(trim($player_type) == 'flash'):?>
+<?php if(trim($player_type) == 'flash' || empty($player_type)):?>
 <body onload="initProjectbox();installPlayer('/static/misc/Scratch.swf', 'PlayerOnly');">
+<?php elseif(trim($player_type) == 'java'):?>
+<body onload="initProjectbox(); initScratchPlayer();">
 <?php endif;?>
 	<div id="overlay">
 	</div>
