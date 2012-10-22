@@ -115,7 +115,7 @@ else {
 				</script>
 				<div id="PlayerOnly"> 
 				<p><img src="/static/projects/<?php echo "$urlname/${pid}_med.png"; ?>" alt="You need Adobe Flash to play this."> </p> 
-<p style = " background-color: white; font-weight: bold; left: 70px; position: absolute; top: 160px; padding:1em"> You need to install <a href="http://get.adobe.com/flashplayer/">Adobe Flash</a> to view this project.</p>
+<p style = " background-color: white; left: 90px; width: 270px; position: absolute; top: 140px; text-align:center; padding:1em"> Loading project...</br>If project does not load after a few moments,</br>make sure you have <a href="http://get.adobe.com/flashplayer/">Adobe Flash</a> installed.</p>
 				</div> 
 				
 			<?php endif;?>
