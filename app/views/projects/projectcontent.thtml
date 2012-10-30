@@ -84,34 +84,35 @@ else {
 			       }
 
 			       function JSsetPresentationMode(fillScreen) {
-				       if (fillScreen) {
-					       var r = flashapp.getBoundingClientRect();
-					       flashapp.style.left = -r.left + 'px';
-					       flashapp.style.top = -r.top + 'px';
-					       var h = window.innerHeight;
-					       var w = window.innerWidth;
-					       if (typeof(w) != 'number') { // If IE:
-							w = document.documentElement.clientWidth;
-							h = document.documentElement.clientHeight;
+					if (fillScreen) {
+						var r = flashapp.getBoundingClientRect();
+						flashapp.style.left = -r.left + 'px';
+						flashapp.style.top = -r.top + 'px';
+						var h = window.innerHeight;
+						var w = window.innerWidth;
+						if (navigator.appName == 'Microsoft Internet Explorer') {
+							w = Math.max(document.documentElement.clientWidth, document.body.clientWidth);
+							h = Math.max(document.documentElement.clientHeight, document.body.clientHeight);
 						}
-					       setPlayerSize(w, h - 10);
-				       } else {
-					       setPlayerSize(482, 401);
-					       flashapp.style.left = flashapp.style.top = '0px';
-				       }
-			       }
+						setPlayerSize(w, h - 10);
+					} else {
+						setPlayerSize(482, 401);
+						flashapp.style.left = flashapp.style.top = '0px';
+					}
+				}
 
-			       function setPlayerSize(w, h) {
-				       var isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > 0;
-				       if (isFirefox) w += 1;
-				       if (navigator.appName == 'Microsoft Internet Explorer') {
-					       flashapp.style.width = w;
-					       flashapp.style.height = h;
-				       } else {
-					       flashapp.width = w;
-					       flashapp.height = h;
-				       }
-			       }
+
+				function setPlayerSize(w, h) {
+					var isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > 0;
+					if (isFirefox) w += 1;
+					if (navigator.appName == 'Microsoft Internet Explorer') {
+						flashapp.style.width = w + 'px';
+						flashapp.style.height = h + 'px';
+					} else {
+						flashapp.width = w;
+						flashapp.height = h;
+					}
+				}
 				</script>
 				<div id="PlayerOnly"> 
 				<p><img src="/static/projects/<?php echo "$urlname/${pid}_med.png"; ?>" alt="You need Adobe Flash to play this."> </p> 
